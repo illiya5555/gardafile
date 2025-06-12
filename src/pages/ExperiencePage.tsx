@@ -1,0 +1,425 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Play, Clock, Users, Award, Camera, Wind, Anchor, MapPin, CheckCircle, Star, Calendar } from 'lucide-react';
+
+const ExperiencePage = () => {
+  const [activeTab, setActiveTab] = useState('overview');
+  const [selectedImage, setSelectedImage] = useState(0);
+
+  const galleryImages = [
+    {
+      url: "https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=800",
+      caption: "Racing on Lake Garda"
+    },
+    {
+      url: "https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=800",
+      caption: "Riva del Garda Harbor"
+    },
+    {
+      url: "https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=800",
+      caption: "Professional Instruction"
+    },
+    {
+      url: "https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=800",
+      caption: "Medal Ceremony"
+    }
+  ];
+
+  const schedule = [
+    { time: "08:30", activity: "Welcome & Registration", description: "Meet your skipper and fellow sailors" },
+    { time: "09:00", activity: "Safety Briefing", description: "Essential safety procedures and equipment overview" },
+    { time: "09:30", activity: "Sailing Basics", description: "Learn fundamental sailing techniques" },
+    { time: "10:30", activity: "First Race", description: "Practice race to get comfortable" },
+    { time: "12:00", activity: "Lunch Break", description: "Enjoy local cuisine at the marina" },
+    { time: "13:30", activity: "Championship Race", description: "The main racing event" },
+    { time: "15:30", activity: "Final Race", description: "Last chance to improve your position" },
+    { time: "16:30", activity: "Medal Ceremony", description: "Awards and certificate presentation" },
+    { time: "17:00", activity: "Photo Session", description: "Professional photos with your medals" }
+  ];
+
+  const equipment = [
+    "Professional racing yacht (Bavaria 34 or similar)",
+    "All safety equipment (life jackets, harnesses)",
+    "Professional sailing gear",
+    "Racing flags and timing equipment",
+    "First aid kit and emergency equipment",
+    "Waterproof bags for personal items"
+  ];
+
+  const weatherConditions = [
+    { condition: "Wind Speed", value: "8-15 knots", icon: Wind },
+    { condition: "Temperature", value: "18-28°C", icon: Clock },
+    { condition: "Visibility", value: "Excellent", icon: Star },
+    { condition: "Water Temp", value: "16-24°C", icon: Anchor }
+  ];
+
+  const faqs = [
+    {
+      question: "Do I need sailing experience?",
+      answer: "No sailing experience is required! Our professional skippers will teach you everything you need to know. We welcome complete beginners and experienced sailors alike."
+    },
+    {
+      question: "What should I bring?",
+      answer: "Bring comfortable clothes, sunscreen, a hat, and a change of clothes. We provide all sailing equipment, safety gear, and waterproof bags for your belongings."
+    },
+    {
+      question: "What if the weather is bad?",
+      answer: "Safety is our priority. If conditions are unsafe, we'll reschedule your experience at no extra cost. Light rain doesn't stop us - it's part of the adventure!"
+    },
+    {
+      question: "How many people per boat?",
+      answer: "Each yacht accommodates 6-8 participants plus the professional skipper. This ensures personalized attention and an intimate experience."
+    },
+    {
+      question: "Are meals included?",
+      answer: "Lunch is not included in the base price, but we can arrange catering at the marina restaurant. Many participants enjoy the local Italian cuisine as part of their experience."
+    },
+    {
+      question: "Can I bring my camera?",
+      answer: "Absolutely! We also provide professional photography services. You'll receive high-quality photos and videos of your racing experience within 24 hours."
+    }
+  ];
+
+  return (
+    <div className="pt-20">
+      {/* Hero Section */}
+      <section className="relative py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h1 className="text-4xl md:text-6xl font-bold mb-6 font-serif">
+                The Complete Racing Experience
+              </h1>
+              <p className="text-xl text-white/90 mb-8 leading-relaxed">
+                From beginner to champion in one day. Experience authentic yacht racing 
+                on Lake Garda with professional instruction, competitive races, and 
+                official recognition of your achievement.
+              </p>
+              <div className="flex flex-wrap gap-4 mb-8">
+                <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
+                  <Clock className="h-5 w-5 text-gold-400" />
+                  <span>8.5 hours</span>
+                </div>
+                <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
+                  <Users className="h-5 w-5 text-gold-400" />
+                  <span>6-8 people</span>
+                </div>
+                <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
+                  <Award className="h-5 w-5 text-gold-400" />
+                  <span>Medal included</span>
+                </div>
+              </div>
+              <Link
+                to="/booking"
+                className="bg-gold-500 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gold-600 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
+              >
+                Book Your Experience - €199
+              </Link>
+            </div>
+            <div className="relative">
+              <img
+                src={galleryImages[selectedImage].url}
+                alt={galleryImages[selectedImage].caption}
+                className="rounded-2xl shadow-2xl w-full h-96 object-cover"
+              />
+              <div className="absolute bottom-4 left-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-3">
+                <p className="text-white text-center">{galleryImages[selectedImage].caption}</p>
+              </div>
+              <button className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-2xl hover:bg-black/30 transition-colors duration-300 group">
+                <div className="bg-white/20 backdrop-blur-sm rounded-full p-4 group-hover:scale-110 transition-transform duration-300">
+                  <Play className="h-8 w-8 text-white" />
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Navigation Tabs */}
+      <section className="bg-white border-b border-gray-200 sticky top-20 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex space-x-8 overflow-x-auto">
+            {[
+              { id: 'overview', label: 'Overview' },
+              { id: 'schedule', label: 'Schedule' },
+              { id: 'gallery', label: 'Gallery' },
+              { id: 'weather', label: 'Weather' },
+              { id: 'equipment', label: 'Equipment' },
+              { id: 'faq', label: 'FAQ' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-300 ${
+                  activeTab === tab.id
+                    ? 'border-primary-600 text-primary-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </section>
+
+      {/* Content Sections */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Overview */}
+        {activeTab === 'overview' && (
+          <div className="space-y-16 animate-fade-in">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">What Makes Our Experience Special</h2>
+                <div className="space-y-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="bg-primary-100 p-3 rounded-lg">
+                      <Users className="h-6 w-6 text-primary-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">Professional Instruction</h3>
+                      <p className="text-gray-600">Learn from certified sailing professionals with years of racing experience on Lake Garda.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-4">
+                    <div className="bg-primary-100 p-3 rounded-lg">
+                      <Award className="h-6 w-6 text-primary-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">Authentic Racing</h3>
+                      <p className="text-gray-600">Participate in real yacht races with official timing, scoring, and medal ceremonies.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-4">
+                    <div className="bg-primary-100 p-3 rounded-lg">
+                      <Camera className="h-6 w-6 text-primary-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">Professional Documentation</h3>
+                      <p className="text-gray-600">High-quality photos and videos of your experience, delivered within 24 hours.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">Racing Format</h2>
+                <div className="bg-gray-50 p-6 rounded-xl">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Three-Race Championship</h3>
+                  <ul className="space-y-3">
+                    <li className="flex items-center space-x-3">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-gray-700">Practice race for skill building</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-gray-700">Championship race with full scoring</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-gray-700">Final race to determine overall winner</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-gray-700">Medal ceremony with certificates</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Schedule */}
+        {activeTab === 'schedule' && (
+          <div className="animate-fade-in">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Daily Schedule</h2>
+            <div className="max-w-4xl mx-auto">
+              <div className="space-y-6">
+                {schedule.map((item, index) => (
+                  <div key={index} className="flex items-start space-x-6 p-6 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
+                    <div className="bg-primary-600 text-white px-4 py-2 rounded-lg font-semibold min-w-fit">
+                      {item.time}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.activity}</h3>
+                      <p className="text-gray-600">{item.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Gallery */}
+        {activeTab === 'gallery' && (
+          <div className="animate-fade-in">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Experience Gallery</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {galleryImages.map((image, index) => (
+                <div
+                  key={index}
+                  className="relative group cursor-pointer overflow-hidden rounded-xl"
+                  onClick={() => setSelectedImage(index)}
+                >
+                  <img
+                    src={image.url}
+                    alt={image.caption}
+                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <p className="text-white font-semibold text-center px-4">{image.caption}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-12 text-center">
+              <p className="text-gray-600 mb-6">Want to see more? Follow us on social media for daily updates!</p>
+              <div className="flex justify-center space-x-4">
+                <a href="#" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-300">
+                  Facebook
+                </a>
+                <a href="#" className="bg-pink-600 text-white px-6 py-3 rounded-lg hover:bg-pink-700 transition-colors duration-300">
+                  Instagram
+                </a>
+                <a href="#" className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors duration-300">
+                  YouTube
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Weather */}
+        {activeTab === 'weather' && (
+          <div className="animate-fade-in">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Weather Conditions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              {weatherConditions.map((item, index) => (
+                <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
+                  <item.icon className="h-12 w-12 text-primary-600 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.condition}</h3>
+                  <p className="text-2xl font-bold text-primary-600">{item.value}</p>
+                </div>
+              ))}
+            </div>
+            <div className="bg-blue-50 p-8 rounded-xl">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">Why Lake Garda is Perfect for Sailing</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h4 className="text-xl font-semibold text-gray-900 mb-4">Consistent Winds</h4>
+                  <p className="text-gray-700 mb-4">
+                    Lake Garda enjoys reliable thermal winds that develop daily, creating perfect sailing conditions. 
+                    The morning "Peler" wind from the north and afternoon "Ora" wind from the south provide 
+                    consistent sailing throughout the day.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="text-xl font-semibold text-gray-900 mb-4">Protected Waters</h4>
+                  <p className="text-gray-700 mb-4">
+                    Surrounded by mountains, Lake Garda offers protected waters that are ideal for learning 
+                    and racing. The lake's size provides enough space for proper racing while maintaining 
+                    safe conditions for all skill levels.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Equipment */}
+        {activeTab === 'equipment' && (
+          <div className="animate-fade-in">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Equipment Provided</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              <div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-6">What's Included</h3>
+                <div className="space-y-4">
+                  {equipment.map((item, index) => (
+                    <div key={index} className="flex items-center space-x-3">
+                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0" />
+                      <span className="text-gray-700">{item}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-8 p-6 bg-gold-50 rounded-xl">
+                  <h4 className="text-xl font-semibold text-gray-900 mb-3">Premium Yachts</h4>
+                  <p className="text-gray-700">
+                    We use modern Bavaria 34 cruiser-racers and similar high-performance yachts. 
+                    These boats are specifically chosen for their racing capabilities while 
+                    maintaining comfort and safety for our participants.
+                  </p>
+                </div>
+              </div>
+              <div>
+                <img
+                  src="https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=600"
+                  alt="Professional sailing equipment"
+                  className="rounded-xl shadow-lg w-full h-96 object-cover"
+                />
+                <div className="mt-6 p-6 bg-primary-50 rounded-xl">
+                  <h4 className="text-xl font-semibold text-gray-900 mb-3">Safety First</h4>
+                  <p className="text-gray-700">
+                    All safety equipment meets international standards. Our boats are regularly 
+                    inspected and maintained to the highest standards. Every participant receives 
+                    a comprehensive safety briefing before departure.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* FAQ */}
+        {activeTab === 'faq' && (
+          <div className="animate-fade-in">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Frequently Asked Questions</h2>
+            <div className="max-w-4xl mx-auto space-y-6">
+              {faqs.map((faq, index) => (
+                <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">{faq.question}</h3>
+                  <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-12 text-center">
+              <p className="text-gray-600 mb-6">Still have questions? We're here to help!</p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href="tel:+393456789012"
+                  className="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300"
+                >
+                  Call +39 345 678 9012
+                </a>
+                <a
+                  href="mailto:info@gardaracing.com"
+                  className="bg-gray-100 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors duration-300"
+                >
+                  Email Us
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-primary-600 text-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Start Racing?</h2>
+          <p className="text-xl text-white/90 mb-8">
+            Book your yacht racing experience today and create memories that will last a lifetime.
+          </p>
+          <Link
+            to="/booking"
+            className="bg-white text-primary-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
+          >
+            Book Now - €199 per person
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default ExperiencePage;

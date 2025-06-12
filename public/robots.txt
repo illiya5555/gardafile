@@ -1,0 +1,31 @@
+User-agent: *
+Allow: /
+
+# Основные страницы
+Allow: /
+Allow: /experience
+Allow: /booking
+
+# Статические ресурсы
+Allow: /assets/
+Allow: /*.css
+Allow: /*.js
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.webp
+Allow: /*.svg
+Allow: /*.ico
+
+# Запрещаем индексацию служебных файлов
+Disallow: /src/
+Disallow: /.env
+Disallow: /package.json
+Disallow: /vite.config.ts
+Disallow: /tsconfig.json
+
+# Sitemap
+Sitemap: https://gardaracing.com/sitemap.xml
+
+# Время задержки для ботов (в миллисекундах)
+Crawl-delay: 1

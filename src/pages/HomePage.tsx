@@ -1,33 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Users, Award, Camera, MapPin, Star, Wind, Anchor, Trophy, Shield, Clock, CheckCircle } from 'lucide-react';
+import { supabase, Testimonial } from '../lib/supabase';
 
 const HomePage = () => {
   const [selectedDate, setSelectedDate] = useState('');
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
 
-  const testimonials = [
-    {
-      name: "Marco Rossi",
-      location: "Munich, Germany",
-      rating: 5,
-      text: "Incredible experience! The professional skipper made us feel safe while we enjoyed the thrill of racing. The photos they took are amazing memories.",
-      image: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop"
-    },
-    {
-      name: "Sarah Johnson",
-      location: "London, UK",
-      rating: 5,
-      text: "Perfect day on Lake Garda! No sailing experience needed - they taught us everything. The medal ceremony was a nice touch. Highly recommended!",
-      image: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop"
-    },
-    {
-      name: "Andreas Mueller",
-      location: "Vienna, Austria",
-      rating: 5,
-      text: "Brought our corporate team here for a unique experience. Everyone loved it! Great organization, beautiful location, and unforgettable memories.",
-      image: "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop"
+  useEffect(() => {
+    fetchTestimonials();
+  }, []);
+
+  const fetchTestimonials = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('testimonials')
+        .select('*')
+        .eq('is_featured', true)
+        .order('created_at', { ascending: false })
+        .limit(3);
+
+      if (error) throw error;
+      setTestimonials(data || []);
+    } catch (error) {
+      console.error('Error fetching testimonials:', error);
+      // Fallback to static testimonials if database fails
+      setTestimonials([
+        {
+          id: '1',
+          name: "Marco Rossi",
+          location: "Munich, Germany",
+          rating: 5,
+          text: "Incredible experience! The professional skipper made us feel safe while we enjoyed the thrill of racing. The photos they took are amazing memories.",
+          image_url: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
+          is_featured: true,
+          created_at: new Date().toISOString()
+        },
+        {
+          id: '2',
+          name: "Sarah Johnson",
+          location: "London, UK",
+          rating: 5,
+          text: "Perfect day on Lake Garda! No sailing experience needed - they taught us everything. The medal ceremony was a nice touch. Highly recommended!",
+          image_url: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
+          is_featured: true,
+          created_at: new Date().toISOString()
+        },
+        {
+          id: '3',
+          name: "Andreas Mueller",
+          location: "Vienna, Austria",
+          rating: 5,
+          text: "Brought our corporate team here for a unique experience. Everyone loved it! Great organization, beautiful location, and unforgettable memories.",
+          image_url: "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
+          is_featured: true,
+          created_at: new Date().toISOString()
+        }
+      ]);
     }
-  ];
+  };
 
   const features = [
     {
@@ -125,6 +156,7 @@ const HomePage = () => {
                   type="date"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
+                  min={new Date().toISOString().split('T')[0]}
                   className="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-gold-400"
                 />
                 <Link
@@ -268,8 +300,8 @@ const HomePage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-gray-50 p-8 rounded-2xl hover:shadow-lg transition-shadow duration-300">
+            {testimonials.map((testimonial) => (
+              <div key={testimonial.id} className="bg-gray-50 p-8 rounded-2xl hover:shadow-lg transition-shadow duration-300">
                 <div className="flex items-center mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star key={i} className="h-5 w-5 text-gold-400 fill-current" />
@@ -277,11 +309,13 @@ const HomePage = () => {
                 </div>
                 <p className="text-gray-700 mb-6 leading-relaxed">"{testimonial.text}"</p>
                 <div className="flex items-center space-x-4">
-                  <img
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
+                  {testimonial.image_url && (
+                    <img
+                      src={testimonial.image_url}
+                      alt={testimonial.name}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                  )}
                   <div>
                     <p className="font-semibold text-gray-900">{testimonial.name}</p>
                     <p className="text-sm text-gray-600">{testimonial.location}</p>

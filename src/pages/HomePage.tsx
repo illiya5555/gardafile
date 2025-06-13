@@ -217,22 +217,26 @@ const HomePage = () => {
             {/* Price & CTA */}
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 mb-8 max-w-md mx-auto border border-white/20">
               <div className="text-center mb-6">
-                <div className="text-5xl font-bold text-gold-300 mb-2">€199</div>
+                <div className="text-5xl font-bold text-gold-300 mb-2">€195</div>
                 <p className="text-white/80">per person • Full day experience</p>
               </div>
               
               <div className="space-y-3 mb-6 text-left">
                 <div className="flex items-center space-x-3 text-white/90">
                   <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>Professional skipper included</span>
+                  <span>Real yacht racing format</span>
                 </div>
                 <div className="flex items-center space-x-3 text-white/90">
                   <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>Racing medal & certificate</span>
+                  <span>Professional skipper on every boat</span>
                 </div>
                 <div className="flex items-center space-x-3 text-white/90">
                   <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>Professional photos & videos</span>
+                  <span>Open to all skill levels – no experience needed</span>
+                </div>
+                <div className="flex items-center space-x-3 text-white/90">
+                  <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+                  <span>Professional photos & videos from the race</span>
                 </div>
                 <div className="flex items-center space-x-3 text-white/90">
                   <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
@@ -517,7 +521,7 @@ const HomePage = () => {
               to="/booking"
               className="bg-white text-primary-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-lg"
             >
-              Book Now - €199
+              Book Now - €195
             </Link>
             <a
               href="tel:+393456789012"

@@ -43,25 +43,26 @@ const BookingCalendarPage = () => {
   const [loading, setLoading] = useState(false);
   const [bookingData, setBookingData] = useState<Partial<BookingData>>({});
 
-  // Generate available time slots (9:00-17:00, minimum 4 hours)
-  const timeSlots = [
-    '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'
+  // Fixed regatta time slots - only 8:30 and 13:00
+  const regattaTimeSlots = [
+    { start: '08:30', end: '12:30', name: 'Morning Regatta' },
+    { start: '13:00', end: '17:00', name: 'Afternoon Regatta' }
   ];
 
-  // Yacht data with J-70 fleet and proper UUID format
+  // J-70 yacht fleet with 5-person capacity
   const yachts = [
-    { id: 'a1b2c3d4-e5f6-7890-1234-567890abcdef', name: 'J-70 "Adriatic Wind"', capacity: 8 },
-    { id: 'b2c3d4e5-f6g7-8901-2345-678901bcdefg', name: 'J-70 "Lake Spirit"', capacity: 8 },
-    { id: 'c3d4e5f6-g7h8-9012-3456-789012cdefgh', name: 'J-70 "Garda Dream"', capacity: 8 },
-    { id: 'd4e5f6g7-h8i9-0123-4567-890123defghi', name: 'J-70 "Mountain View"', capacity: 8 },
-    { id: 'e5f6g7h8-i9j0-1234-5678-901234efghij', name: 'J-70 "Blue Horizon"', capacity: 8 },
-    { id: 'f6g7h8i9-j0k1-2345-6789-012345fghijk', name: 'J-70 "Wind Dancer"', capacity: 8 },
-    { id: 'g7h8i9j0-k1l2-3456-7890-123456ghijkl', name: 'J-70 "Sunset Sail"', capacity: 8 },
-    { id: 'h8i9j0k1-l2m3-4567-8901-234567hijklm', name: 'J-70 "Alpine Breeze"', capacity: 8 },
-    { id: 'i9j0k1l2-m3n4-5678-9012-345678ijklmn', name: 'J-70 "Crystal Waters"', capacity: 8 },
-    { id: 'j0k1l2m3-n4o5-6789-0123-456789jklmno', name: 'J-70 "Freedom"', capacity: 8 },
-    { id: 'k1l2m3n4-o5p6-7890-1234-567890klmnop', name: 'J-70 "Serenity"', capacity: 8 },
-    { id: 'l2m3n4o5-p6q7-8901-2345-678901lmnopq', name: 'J-70 "Majestic"', capacity: 8 }
+    { id: 'a1b2c3d4-e5f6-7890-1234-567890abcdef', name: 'J-70 "Adriatic Wind"', capacity: 5 },
+    { id: 'b2c3d4e5-f6g7-8901-2345-678901bcdefg', name: 'J-70 "Lake Spirit"', capacity: 5 },
+    { id: 'c3d4e5f6-g7h8-9012-3456-789012cdefgh', name: 'J-70 "Garda Dream"', capacity: 5 },
+    { id: 'd4e5f6g7-h8i9-0123-4567-890123defghi', name: 'J-70 "Mountain View"', capacity: 5 },
+    { id: 'e5f6g7h8-i9j0-1234-5678-901234efghij', name: 'J-70 "Blue Horizon"', capacity: 5 },
+    { id: 'f6g7h8i9-j0k1-2345-6789-012345fghijk', name: 'J-70 "Wind Dancer"', capacity: 5 },
+    { id: 'g7h8i9j0-k1l2-3456-7890-123456ghijkl', name: 'J-70 "Sunset Sail"', capacity: 5 },
+    { id: 'h8i9j0k1-l2m3-4567-8901-234567hijklm', name: 'J-70 "Alpine Breeze"', capacity: 5 },
+    { id: 'i9j0k1l2-m3n4-5678-9012-345678ijklmn', name: 'J-70 "Crystal Waters"', capacity: 5 },
+    { id: 'j0k1l2m3-n4o5-6789-0123-456789jklmno', name: 'J-70 "Freedom"', capacity: 5 },
+    { id: 'k1l2m3n4-o5p6-7890-1234-567890klmnop', name: 'J-70 "Serenity"', capacity: 5 },
+    { id: 'l2m3n4o5-p6q7-8901-2345-678901lmnopq', name: 'J-70 "Majestic"', capacity: 5 }
   ];
 
   useEffect(() => {
@@ -81,20 +82,19 @@ const BookingCalendarPage = () => {
         // Randomly make some slots unavailable for realism
         const isAvailable = Math.random() > 0.3;
         
-        timeSlots.forEach((time, index) => {
-          if (index < timeSlots.length - 3) { // Minimum 4 hours
-            slots.push({
-              id: `${yacht.id}-${date.toISOString().split('T')[0]}-${time}`,
-              yacht_id: yacht.id,
-              yacht_name: yacht.name,
-              date: date.toISOString().split('T')[0],
-              start_time: time,
-              end_time: timeSlots[index + 4] || '17:00', // Minimum 4 hours
-              available: isAvailable,
-              price_per_person: 195, // Fixed price for 4-hour block
-              max_participants: yacht.capacity
-            });
-          }
+        // Only create slots for the two fixed regatta times
+        regattaTimeSlots.forEach((timeSlot) => {
+          slots.push({
+            id: `${yacht.id}-${date.toISOString().split('T')[0]}-${timeSlot.start}`,
+            yacht_id: yacht.id,
+            yacht_name: yacht.name,
+            date: date.toISOString().split('T')[0],
+            start_time: timeSlot.start,
+            end_time: timeSlot.end,
+            available: isAvailable,
+            price_per_person: 195, // Fixed price for 4-hour regatta
+            max_participants: yacht.capacity
+          });
         });
       });
     }
@@ -142,10 +142,8 @@ const BookingCalendarPage = () => {
 
   const calculateTotalPrice = () => {
     if (!selectedStartTime || !selectedEndTime) return 0;
-    const duration = calculateDuration(selectedStartTime, selectedEndTime);
-    // Calculate number of 4-hour blocks needed (minimum 1 block)
-    const blocks = Math.max(1, Math.ceil(duration / 4));
-    return blocks * 195 * participants;
+    // Fixed price of €195 per person for 4-hour regatta
+    return 195 * participants;
   };
 
   const handleDateSelect = (date: Date) => {
@@ -237,11 +235,25 @@ const BookingCalendarPage = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">
-            Book a J-70 Yacht
+            Book a J-70 Regatta
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Choose a date, time, and J-70 yacht for an unforgettable sailing adventure on Lake Garda
+            Choose a date and time for an unforgettable J-70 yacht racing experience on Lake Garda
           </p>
+          <div className="mt-4 flex justify-center space-x-8 text-sm text-gray-600">
+            <div className="flex items-center space-x-2">
+              <Clock className="h-4 w-4" />
+              <span>Morning: 8:30-12:30</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Clock className="h-4 w-4" />
+              <span>Afternoon: 13:00-17:00</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Users className="h-4 w-4" />
+              <span>Max 5 people per yacht</span>
+            </div>
+          </div>
         </div>
 
         {/* Progress Steps */}
@@ -371,7 +383,7 @@ const BookingCalendarPage = () => {
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
                     <label htmlFor="singleDay" className="text-gray-700">
-                      One-day booking
+                      One-day regatta
                     </label>
                   </div>
 
@@ -409,7 +421,7 @@ const BookingCalendarPage = () => {
                   {/* Participants Selection */}
                   <div>
                     <label className="block text-lg font-semibold text-gray-900 mb-4">
-                      Number of participants
+                      Number of participants (max 5 per yacht)
                     </label>
                     <div className="flex items-center space-x-4">
                       <button
@@ -422,7 +434,7 @@ const BookingCalendarPage = () => {
                         {participants}
                       </span>
                       <button
-                        onClick={() => setParticipants(Math.min(8, participants + 1))}
+                        onClick={() => setParticipants(Math.min(5, participants + 1))}
                         className="w-12 h-12 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all duration-300 flex items-center justify-center text-xl font-semibold"
                       >
                         +
@@ -432,14 +444,14 @@ const BookingCalendarPage = () => {
 
                   {/* Available Time Slots */}
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Available time slots</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Available regatta times</h3>
                     <div className="space-y-4">
                       {getAvailableYachtsForDate(selectedStartDate).slice(0, 6).map((slot) => {
                         const duration = calculateDuration(slot.start_time, slot.end_time);
-                        const blocks = Math.max(1, Math.ceil(duration / 4));
-                        const totalPrice = blocks * 195 * participants;
+                        const totalPrice = 195 * participants;
                         const isSelected = selectedYacht === slot.yacht_id && 
                           selectedStartTime === slot.start_time;
+                        const regattaName = slot.start_time === '08:30' ? 'Morning Regatta' : 'Afternoon Regatta';
 
                         return (
                           <div
@@ -459,7 +471,7 @@ const BookingCalendarPage = () => {
                                 <div>
                                   <h4 className="font-semibold text-gray-900">{slot.yacht_name}</h4>
                                   <p className="text-gray-600">
-                                    {slot.start_time} - {slot.end_time} ({duration} hours)
+                                    {regattaName}: {slot.start_time} - {slot.end_time} ({duration} hours)
                                   </p>
                                   <p className="text-sm text-gray-500">
                                     Up to {slot.max_participants} participants
@@ -471,7 +483,7 @@ const BookingCalendarPage = () => {
                                   €{totalPrice}
                                 </p>
                                 <p className="text-sm text-gray-600">
-                                  €195 per person for {blocks} block{blocks > 1 ? 's' : ''}
+                                  €195 per person
                                 </p>
                               </div>
                             </div>
@@ -672,7 +684,7 @@ const BookingCalendarPage = () => {
           {/* Booking Summary Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-32">
-              <h3 className="text-xl font-bold text-gray-900 mb-6">Booking Summary</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-6">Regatta Summary</h3>
               
               <div className="space-y-4 mb-6">
                 {selectedStartDate && (
@@ -688,7 +700,11 @@ const BookingCalendarPage = () => {
                 {selectedStartTime && selectedEndTime && (
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Time:</span>
-                    <span className="font-semibold">{selectedStartTime} - {selectedEndTime}</span>
+                    <span className="font-semibold">
+                      {selectedStartTime === '08:30' ? 'Morning' : 'Afternoon'} Regatta
+                      <br />
+                      <span className="text-sm text-gray-500">{selectedStartTime} - {selectedEndTime}</span>
+                    </span>
                   </div>
                 )}
                 
@@ -709,9 +725,7 @@ const BookingCalendarPage = () => {
                 {selectedStartTime && selectedEndTime && (
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Duration:</span>
-                    <span className="font-semibold">
-                      {calculateDuration(selectedStartTime, selectedEndTime)} hours
-                    </span>
+                    <span className="font-semibold">4 hours</span>
                   </div>
                 )}
               </div>
@@ -726,7 +740,7 @@ const BookingCalendarPage = () => {
                     </span>
                   </div>
                   <p className="text-sm text-gray-600 mt-2">
-                    €195 per person for every 4-hour block
+                    €195 per person for 4-hour regatta
                   </p>
                 </div>
               )}
@@ -742,11 +756,15 @@ const BookingCalendarPage = () => {
                 </div>
                 <div className="flex items-start space-x-2">
                   <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span>Instruction and training</span>
+                  <span>Racing instruction and training</span>
                 </div>
                 <div className="flex items-start space-x-2">
                   <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span>Adventure photography</span>
+                  <span>Medal ceremony</span>
+                </div>
+                <div className="flex items-start space-x-2">
+                  <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span>Professional photography</span>
                 </div>
               </div>
 

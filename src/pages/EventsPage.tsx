@@ -29,12 +29,9 @@ const EventsPage = () => {
     { time: "08:30", activity: "Welcome & Registration", description: "Meet your skipper and fellow sailors" },
     { time: "09:00", activity: "Safety Briefing", description: "Essential safety procedures and equipment overview" },
     { time: "09:30", activity: "Sailing Basics", description: "Learn fundamental sailing techniques" },
-    { time: "10:30", activity: "First Race", description: "Practice race to get comfortable" },
-    { time: "12:00", activity: "Lunch Break", description: "Enjoy local cuisine at the marina" },
-    { time: "13:30", activity: "Championship Race", description: "The main racing event" },
-    { time: "15:30", activity: "Final Race", description: "Last chance to improve your position" },
-    { time: "16:30", activity: "Medal Ceremony", description: "Awards and certificate presentation" },
-    { time: "17:00", activity: "Photo Session", description: "Professional photos with your medals" }
+    { time: "10:00", activity: "First Race", description: "Practice race to get comfortable" },
+    { time: "13:30", activity: "Medal Ceremony", description: "Awards and certificate presentation" },
+    { time: "13:30", activity: "Photo Session", description: "Professional photos with your medals" }
   ];
 
   const equipment = [

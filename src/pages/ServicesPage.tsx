@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Award, Camera, Phone, Mail, CheckCircle, Star, Calendar, MapPin, Clock, Music, Utensils, Car, Video } from 'lucide-react';
+import { Users, Award, Calendar, Phone, Mail, CheckCircle, Star, MapPin, Clock, Music, Utensils, Car, Video } from 'lucide-react';
 import { supabase, CorporatePackage, AdditionalService, CorporateInquiry } from '../lib/supabase';
 
 const ServicesPage = () => {
@@ -211,7 +211,7 @@ const ServicesPage = () => {
       {/* Services Overview */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
             <div className="text-center group hover:scale-105 transition-transform duration-300">
               <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-200 transition-colors duration-300">
                 <Users className="h-8 w-8 text-primary-600" />
@@ -225,20 +225,6 @@ const ServicesPage = () => {
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">Gift Certificates</h3>
               <p className="text-gray-600">Perfect gift for sailing enthusiasts</p>
-            </div>
-            <div className="text-center group hover:scale-105 transition-transform duration-300">
-              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-200 transition-colors duration-300">
-                <Calendar className="h-8 w-8 text-primary-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Private Events</h3>
-              <p className="text-gray-600">Personalized events for special occasions</p>
-            </div>
-            <div className="text-center group hover:scale-105 transition-transform duration-300">
-              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-200 transition-colors duration-300">
-                <Star className="h-8 w-8 text-primary-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Training & Courses</h3>
-              <p className="text-gray-600">Professional sailing instruction</p>
             </div>
           </div>
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Lock, Eye, EyeOff } from 'lucide-react';
+import { X, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface AdminLoginProps {
@@ -24,7 +24,14 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.message === 'Invalid login credentials') {
+          setError('Неверный email или пароль. Убедитесь, что пользователь зарегистрирован в системе.');
+        } else {
+          setError(error.message);
+        }
+        return;
+      }
 
       if (data.user) {
         // Проверяем, является ли пользователь администратором
@@ -69,10 +76,34 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
             </button>
           </div>
 
+          {/* Setup Instructions */}
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-start space-x-3">
+              <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+              <div>
+                <h3 className="text-sm font-semibold text-blue-900 mb-1">
+                  Настройка администратора
+                </h3>
+                <p className="text-xs text-blue-700 mb-2">
+                  Для входа необходимо создать пользователя в Supabase:
+                </p>
+                <ol className="text-xs text-blue-700 space-y-1 list-decimal list-inside">
+                  <li>Откройте Supabase Dashboard</li>
+                  <li>Перейдите в Authentication → Users</li>
+                  <li>Создайте пользователя с email: admin@gardaracing.com</li>
+                  <li>Используйте созданные credentials для входа</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
           {/* Error Message */}
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-600">{error}</p>
+              <div className="flex items-start space-x-2">
+                <AlertCircle className="h-4 w-4 text-red-600 mt-0.5 flex-shrink-0" />
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
             </div>
           )}
 

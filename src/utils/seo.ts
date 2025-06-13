@@ -10,7 +10,7 @@ export interface SEOData {
 export const seoData: Record<string, SEOData> = {
   home: {
     title: "Garda Racing Yacht Club - Premium Sailing Experiences on Lake Garda",
-    description: "Daily yacht racing experiences in world-famous Lake Garda. Professional skipper, racing medals, and unforgettable memories. Book your €199 sailing adventure today!",
+    description: "Daily yacht racing experiences in world-famous Lake Garda. Professional skipper, racing medals, and unforgettable memories. Book your €195 sailing adventure today!",
     keywords: "Lake Garda sailing, yacht racing, Riva del Garda, sailing experience, yacht charter, racing course",
     ogImage: "/IMG_0967.webp"
   },
@@ -34,7 +34,7 @@ export const seoData: Record<string, SEOData> = {
   },
   booking: {
     title: "Book Your Yacht Racing Adventure | Garda Racing Yacht Club",
-    description: "Book your yacht racing experience on Lake Garda. €199 per person includes professional skipper, equipment, racing medal, and photos. Easy online booking.",
+    description: "Book your yacht racing experience on Lake Garda. €195 per person includes professional skipper, equipment, racing medal, and photos. Easy online booking.",
     keywords: "book yacht racing, Lake Garda booking, sailing reservation, yacht charter booking",
     ogImage: "/IMG_0967.webp"
   }

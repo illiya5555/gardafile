@@ -59,31 +59,6 @@ const Header = () => {
 
           {/* Right Side Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* Social Media Icons */}
-            <div className="flex items-center space-x-2">
-              <a 
-                href="#" 
-                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
-                title="Facebook"
-              >
-                <Facebook className="h-4 w-4" />
-              </a>
-              <a 
-                href="#" 
-                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
-                title="Instagram"
-              >
-                <Instagram className="h-4 w-4" />
-              </a>
-              <a 
-                href="#" 
-                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
-                title="YouTube"
-              >
-                <Youtube className="h-4 w-4" />
-              </a>
-            </div>
-
             {/* Language Selector */}
             <div className="relative group">
               <button className="flex items-center space-x-1 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-all duration-300">
@@ -111,6 +86,31 @@ const Header = () => {
               <Calendar className="h-4 w-4" />
               <span>Book Now</span>
             </Link>
+
+            {/* Social Media Icons - moved to the right */}
+            <div className="flex items-center space-x-2 ml-4">
+              <a 
+                href="#" 
+                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
+                title="Facebook"
+              >
+                <Facebook className="h-4 w-4" />
+              </a>
+              <a 
+                href="#" 
+                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
+                title="Instagram"
+              >
+                <Instagram className="h-4 w-4" />
+              </a>
+              <a 
+                href="#" 
+                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
+                title="YouTube"
+              >
+                <Youtube className="h-4 w-4" />
+              </a>
+            </div>
           </div>
 
           {/* Mobile menu button */}

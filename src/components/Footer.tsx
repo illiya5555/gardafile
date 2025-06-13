@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Anchor, MapPin, Phone, Mail, Facebook, Instagram, Youtube, Award, Shield, Clock } from 'lucide-react';
+import { Anchor, MapPin, Phone, Mail, Facebook, Instagram, Youtube, Award, Shield, Clock, Lock } from 'lucide-react';
+import AdminLogin from './AdminLogin';
 
 const Footer = () => {
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
+
   return (
     <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -125,6 +128,14 @@ const Footer = () => {
               <a href="#" className="hover:text-primary-500 transition-colors duration-300">Terms & Conditions</a>
               <a href="#" className="hover:text-primary-500 transition-colors duration-300">Cancellation Policy</a>
               <a href="#" className="hover:text-primary-500 transition-colors duration-300">GDPR</a>
+              {/* Малозаметная кнопка администратора */}
+              <button
+                onClick={() => setShowAdminLogin(true)}
+                className="text-gray-600 hover:text-gray-400 transition-colors duration-300 opacity-30 hover:opacity-60"
+                title="Admin Access"
+              >
+                <Lock className="h-3 w-3" />
+              </button>
             </div>
             <p className="text-sm text-gray-400">
               © 2024 Garda Racing Yacht Club. All rights reserved.
@@ -132,6 +143,11 @@ const Footer = () => {
           </div>
         </div>
       </div>
+
+      {/* Admin Login Modal */}
+      {showAdminLogin && (
+        <AdminLogin onClose={() => setShowAdminLogin(false)} />
+      )}
     </footer>
   );
 };

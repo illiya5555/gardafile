@@ -8,6 +8,7 @@ import EventsPage from './pages/EventsPage';
 import ServicesPage from './pages/ServicesPage';
 import ContactPage from './pages/ContactPage';
 import BookingPage from './pages/BookingPage';
+import AdminDashboard from './pages/AdminDashboard';
 import ChatWidget from './components/ChatWidget';
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/booking" element={<BookingPage />} />
+            <Route path="/admin" element={<AdminDashboard />} />
           </Routes>
         </main>
         <Footer />

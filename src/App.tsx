@@ -7,7 +7,6 @@ import HomePage from './pages/HomePage';
 import EventsPage from './pages/EventsPage';
 import ServicesPage from './pages/ServicesPage';
 import ContactPage from './pages/ContactPage';
-import BookingPage from './pages/BookingPage';
 import BookingCalendarPage from './pages/BookingCalendarPage';
 import AdminDashboard from './pages/AdminDashboard';
 import ChatWidget from './components/ChatWidget';
@@ -24,7 +23,7 @@ function App() {
             <Route path="/events" element={<EventsPage />} />
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/contact" element={<ContactPage />} />
-            <Route path="/booking" element={<BookingPage />} />
+            <Route path="/booking" element={<BookingCalendarPage />} />
             <Route path="/забронировать" element={<BookingCalendarPage />} />
             <Route path="/admin" element={<AdminDashboard />} />
           </Routes>

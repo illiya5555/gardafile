@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Users, Award, Camera, MapPin, Star, Wind, Anchor, Trophy, Shield, Clock, CheckCircle } from 'lucide-react';
-import { supabase, Testimonial } from '../lib/supabase';
+import { supabase, Testimonial, testConnection } from '../lib/supabase';
 
 const HomePage = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [connectionError, setConnectionError] = useState(false);
 
   // Hero gallery images that rotate every 7 seconds
   const heroImages = [
@@ -13,6 +14,40 @@ const HomePage = () => {
     'https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=1920',
     'https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=1920',
     'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1920'
+  ];
+
+  // Fallback testimonials
+  const fallbackTestimonials: Testimonial[] = [
+    {
+      id: '1',
+      name: "Marco Rossi",
+      location: "Munich, Germany",
+      rating: 5,
+      text: "Incredible experience! The professional skipper made us feel safe while we enjoyed the thrill of racing. The photos they took are amazing memories.",
+      image_url: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
+      is_featured: true,
+      created_at: new Date().toISOString()
+    },
+    {
+      id: '2',
+      name: "Sarah Johnson",
+      location: "London, UK",
+      rating: 5,
+      text: "Perfect day on Lake Garda! No sailing experience needed - they taught us everything. The medal ceremony was a nice touch. Highly recommended!",
+      image_url: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
+      is_featured: true,
+      created_at: new Date().toISOString()
+    },
+    {
+      id: '3',
+      name: "Andreas Mueller",
+      location: "Vienna, Austria",
+      rating: 5,
+      text: "Brought our corporate team here for a unique experience. Everyone loved it! Great organization, beautiful location, and unforgettable memories.",
+      image_url: "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
+      is_featured: true,
+      created_at: new Date().toISOString()
+    }
   ];
 
   useEffect(() => {
@@ -32,6 +67,15 @@ const HomePage = () => {
 
   const fetchTestimonials = async () => {
     try {
+      // First test the connection
+      const isConnected = await testConnection();
+      if (!isConnected) {
+        console.warn('Supabase connection failed, using fallback testimonials');
+        setConnectionError(true);
+        setTestimonials(fallbackTestimonials);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('testimonials')
         .select('*')
@@ -39,43 +83,24 @@ const HomePage = () => {
         .order('created_at', { ascending: false })
         .limit(3);
 
-      if (error) throw error;
-      setTestimonials(data || []);
+      if (error) {
+        console.error('Error fetching testimonials:', error);
+        throw error;
+      }
+
+      if (data && data.length > 0) {
+        setTestimonials(data);
+        setConnectionError(false);
+      } else {
+        // No testimonials found in database, use fallback
+        console.log('No testimonials found in database, using fallback');
+        setTestimonials(fallbackTestimonials);
+      }
     } catch (error) {
       console.error('Error fetching testimonials:', error);
-      // Fallback to static testimonials if database fails
-      setTestimonials([
-        {
-          id: '1',
-          name: "Marco Rossi",
-          location: "Munich, Germany",
-          rating: 5,
-          text: "Incredible experience! The professional skipper made us feel safe while we enjoyed the thrill of racing. The photos they took are amazing memories.",
-          image_url: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
-          is_featured: true,
-          created_at: new Date().toISOString()
-        },
-        {
-          id: '2',
-          name: "Sarah Johnson",
-          location: "London, UK",
-          rating: 5,
-          text: "Perfect day on Lake Garda! No sailing experience needed - they taught us everything. The medal ceremony was a nice touch. Highly recommended!",
-          image_url: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
-          is_featured: true,
-          created_at: new Date().toISOString()
-        },
-        {
-          id: '3',
-          name: "Andreas Mueller",
-          location: "Vienna, Austria",
-          rating: 5,
-          text: "Brought our corporate team here for a unique experience. Everyone loved it! Great organization, beautiful location, and unforgettable memories.",
-          image_url: "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
-          is_featured: true,
-          created_at: new Date().toISOString()
-        }
-      ]);
+      setConnectionError(true);
+      // Use fallback testimonials when database fails
+      setTestimonials(fallbackTestimonials);
     }
   };
 
@@ -331,6 +356,11 @@ const HomePage = () => {
             <p className="text-xl text-gray-600">
               Join thousands of satisfied customers who've experienced the magic of Lake Garda racing
             </p>
+            {connectionError && (
+              <p className="text-sm text-amber-600 mt-2">
+                Currently showing sample testimonials - database connection unavailable
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

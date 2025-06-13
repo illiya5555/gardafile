@@ -16,7 +16,7 @@ function App() {
       <div className="min-h-screen bg-white">
         <SEOHead />
         <Header />
-        <main>
+        <main className="pt-20">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/events" element={<EventsPage />} />

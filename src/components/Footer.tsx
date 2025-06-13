@@ -64,15 +64,15 @@ const Footer = () => {
               <li className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-primary-500 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="text-gray-300">Via del Porto 15</p>
-                  <p className="text-gray-300">38066 Riva del Garda, TN</p>
-                  <p className="text-gray-300">Italy</p>
+                  <p className="text-gray-300">Viale Giancarlo Maroni 4</p>
+                  <p className="text-gray-300">38066 Riva del Garda TN</p>
+                  <p className="text-gray-300">Italia</p>
                 </div>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-primary-500" />
-                <a href="tel:+393456789012" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  +39 345 678 9012
+                <a href="tel:+393447770077" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  +39 344 777 00 77
                 </a>
               </li>
               <li className="flex items-center space-x-3">

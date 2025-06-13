@@ -381,10 +381,10 @@ const EventsPage = () => {
               <p className="text-gray-600 mb-6">Still have questions? We're here to help!</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
-                  href="tel:+393456789012"
+                  href="tel:+393447770077"
                   className="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300"
                 >
-                  Call +39 345 678 9012
+                  Call +39 344 777 00 77
                 </a>
                 <a
                   href="mailto:info@gardaracing.com"

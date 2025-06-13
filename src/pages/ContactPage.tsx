@@ -91,9 +91,9 @@ const ContactPage = () => {
                 <div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Address</h3>
                   <p className="text-gray-600">
-                    Via del Porto 15<br />
-                    38066 Riva del Garda, TN<br />
-                    Italy
+                    Viale Giancarlo Maroni 4<br />
+                    38066 Riva del Garda TN<br />
+                    Italia
                   </p>
                 </div>
               </div>
@@ -105,10 +105,10 @@ const ContactPage = () => {
                 <div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Phone</h3>
                   <a 
-                    href="tel:+393456789012" 
+                    href="tel:+393447770077" 
                     className="text-primary-600 hover:text-primary-700 transition-colors duration-300"
                   >
-                    +39 345 678 9012
+                    +39 344 777 00 77
                   </a>
                 </div>
               </div>
@@ -288,14 +288,14 @@ const ContactPage = () => {
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Need quick help?</h3>
               <div className="flex flex-col sm:flex-row gap-4">
                 <a
-                  href="tel:+393456789012"
+                  href="tel:+393447770077"
                   className="flex items-center justify-center space-x-2 bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300"
                 >
                   <Phone className="h-4 w-4" />
                   <span>Call now</span>
                 </a>
                 <a
-                  href="https://wa.me/393456789012"
+                  href="https://wa.me/393447770077"
                   className="flex items-center justify-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300"
                 >
                   <span>WhatsApp</span>

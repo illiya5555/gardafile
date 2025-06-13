@@ -66,7 +66,7 @@ const ChatWidget = () => {
       setTimeout(async () => {
         const botResponse: ChatMessage = {
           id: (Date.now() + 1).toString(),
-          message: "Thanks for your message! Our team will get back to you shortly. In the meantime, feel free to check our booking page or call us at +39 345 678 9012.",
+          message: "Thanks for your message! Our team will get back to you shortly. In the meantime, feel free to check our booking page or call us at +39 344 777 00 77.",
           sender_type: 'bot',
           created_at: new Date().toISOString()
         };

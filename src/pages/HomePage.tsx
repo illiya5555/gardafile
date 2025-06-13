@@ -615,10 +615,10 @@ const HomePage = () => {
               Book Now - €195
             </Link>
             <a
-              href="tel:+393456789012"
+              href="tel:+393447770077"
               className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-primary-600 transition-all duration-300"
             >
-              Call +39 345 678 9012
+              Call +39 344 777 00 77
             </a>
           </div>
         </div>

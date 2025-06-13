@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Anchor, MapPin, Phone, Mail, Facebook, Instagram, Youtube, Award, Shield, Clock, Lock } from 'lucide-react';
+import { Anchor, MapPin, Phone, Mail, Award, Shield, Clock, Lock } from 'lucide-react';
 import AdminLogin from './AdminLogin';
 
 const Footer = () => {
@@ -23,17 +23,6 @@ const Footer = () => {
               Experience the thrill of yacht racing on the world-famous Lake Garda. 
               Professional instruction, premium equipment, and unforgettable memories.
             </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-primary-500 transition-colors duration-300">
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-primary-500 transition-colors duration-300">
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-primary-500 transition-colors duration-300">
-                <Youtube className="h-5 w-5" />
-              </a>
-            </div>
           </div>
 
           {/* Quick Links */}
@@ -46,8 +35,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/experience" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  Experience
+                <Link to="/events" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  Events
                 </Link>
               </li>
               <li>

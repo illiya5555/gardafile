@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Globe, Phone, Calendar } from 'lucide-react';
+import { Menu, X, Globe, Calendar, Facebook, Instagram, Youtube } from 'lucide-react';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -59,6 +59,31 @@ const Header = () => {
 
           {/* Right Side Actions */}
           <div className="hidden md:flex items-center space-x-4">
+            {/* Social Media Icons */}
+            <div className="flex items-center space-x-2">
+              <a 
+                href="#" 
+                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
+                title="Facebook"
+              >
+                <Facebook className="h-4 w-4" />
+              </a>
+              <a 
+                href="#" 
+                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
+                title="Instagram"
+              >
+                <Instagram className="h-4 w-4" />
+              </a>
+              <a 
+                href="#" 
+                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
+                title="YouTube"
+              >
+                <Youtube className="h-4 w-4" />
+              </a>
+            </div>
+
             {/* Language Selector */}
             <div className="relative group">
               <button className="flex items-center space-x-1 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-all duration-300">
@@ -86,15 +111,6 @@ const Header = () => {
               <Calendar className="h-4 w-4" />
               <span>Book Now</span>
             </Link>
-
-            {/* Contact */}
-            <a
-              href="tel:+393456789012"
-              className="flex items-center space-x-2 px-4 py-2 rounded-lg font-medium border border-gray-300 text-gray-700 hover:bg-gray-50 transition-all duration-300 hover:scale-105"
-            >
-              <Phone className="h-4 w-4" />
-              <span className="hidden lg:inline">Call Now</span>
-            </a>
           </div>
 
           {/* Mobile menu button */}
@@ -136,7 +152,20 @@ const Header = () => {
                   <span>Book Now</span>
                 </Link>
 
+                {/* Mobile Social Icons and Language */}
                 <div className="flex items-center justify-between">
+                  <div className="flex space-x-4">
+                    <a href="#" className="text-gray-600 hover:text-primary-600 transition-colors duration-300">
+                      <Facebook className="h-5 w-5" />
+                    </a>
+                    <a href="#" className="text-gray-600 hover:text-primary-600 transition-colors duration-300">
+                      <Instagram className="h-5 w-5" />
+                    </a>
+                    <a href="#" className="text-gray-600 hover:text-primary-600 transition-colors duration-300">
+                      <Youtube className="h-5 w-5" />
+                    </a>
+                  </div>
+                  
                   <div className="flex space-x-2">
                     {languages.map((lang) => (
                       <button
@@ -152,13 +181,6 @@ const Header = () => {
                       </button>
                     ))}
                   </div>
-                  <a
-                    href="tel:+393456789012"
-                    className="flex items-center space-x-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors duration-300"
-                  >
-                    <Phone className="h-4 w-4" />
-                    <span>Call</span>
-                  </a>
                 </div>
               </div>
             </div>

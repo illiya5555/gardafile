@@ -22,10 +22,10 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
 
-  // Генерируем srcset для responsive изображений
+  // Generate srcset for responsive images
   const generateSrcSet = (baseSrc: string) => {
     if (baseSrc.includes('pexels.com')) {
-      // Для Pexels изображений используем их API для разных размеров
+      // For Pexels images use their API for different sizes
       const baseUrl = baseSrc.split('?')[0];
       return [
         `${baseUrl}?auto=compress&cs=tinysrgb&w=400 400w`,
@@ -48,14 +48,14 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   if (hasError) {
     return (
       <div className={`bg-gray-200 flex items-center justify-center ${className}`}>
-        <span className="text-gray-500 text-sm">Изображение недоступно</span>
+        <span className="text-gray-500 text-sm">Image unavailable</span>
       </div>
     );
   }
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
-      {/* Placeholder пока изображение загружается */}
+      {/* Placeholder while image loads */}
       {!isLoaded && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse" />
       )}

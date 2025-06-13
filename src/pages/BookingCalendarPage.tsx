@@ -43,12 +43,12 @@ const BookingCalendarPage = () => {
   const [loading, setLoading] = useState(false);
   const [bookingData, setBookingData] = useState<Partial<BookingData>>({});
 
-  // Генерируем доступные временные слоты (9:00-17:00, минимум 4 часа)
+  // Generate available time slots (9:00-17:00, minimum 4 hours)
   const timeSlots = [
     '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'
   ];
 
-  // Симуляция данных о яхтах (в реальном приложении это будет из базы данных)
+  // Yacht data simulation (in real app this would be from database)
   const yachts = [
     { id: '1', name: 'Bavaria 34 "Adriatic Wind"', capacity: 8 },
     { id: '2', name: 'Bavaria 34 "Lake Spirit"', capacity: 8 },
@@ -72,24 +72,24 @@ const BookingCalendarPage = () => {
     const slots: YachtSlot[] = [];
     const today = new Date();
     
-    // Генерируем слоты на 30 дней вперед
+    // Generate slots for 30 days ahead
     for (let day = 0; day < 30; day++) {
       const date = new Date(today);
       date.setDate(today.getDate() + day);
       
       yachts.forEach(yacht => {
-        // Случайно делаем некоторые слоты недоступными для реалистичности
+        // Randomly make some slots unavailable for realism
         const isAvailable = Math.random() > 0.3;
         
         timeSlots.forEach((time, index) => {
-          if (index < timeSlots.length - 3) { // Минимум 4 часа
+          if (index < timeSlots.length - 3) { // Minimum 4 hours
             slots.push({
               id: `${yacht.id}-${date.toISOString().split('T')[0]}-${time}`,
               yacht_id: yacht.id,
               yacht_name: yacht.name,
               date: date.toISOString().split('T')[0],
               start_time: time,
-              end_time: timeSlots[index + 4] || '17:00', // Минимум 4 часа
+              end_time: timeSlots[index + 4] || '17:00', // Minimum 4 hours
               available: isAvailable,
               price_per_person: 199,
               max_participants: yacht.capacity
@@ -112,12 +112,12 @@ const BookingCalendarPage = () => {
 
     const days = [];
     
-    // Добавляем пустые дни в начале месяца
+    // Add empty days at the beginning of the month
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(null);
     }
     
-    // Добавляем дни месяца
+    // Add days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       days.push(new Date(year, month, day));
     }
@@ -143,7 +143,7 @@ const BookingCalendarPage = () => {
   const calculateTotalPrice = () => {
     if (!selectedStartTime || !selectedEndTime) return 0;
     const duration = calculateDuration(selectedStartTime, selectedEndTime);
-    const basePrice = Math.max(4, duration) * 199; // Минимум 4 часа
+    const basePrice = Math.max(4, duration) * 199; // Minimum 4 hours
     return basePrice * participants;
   };
 
@@ -152,7 +152,7 @@ const BookingCalendarPage = () => {
     
     if (!selectedStartDate) {
       setSelectedStartDate(dateStr);
-      setSelectedEndDate(dateStr); // По умолчанию один день
+      setSelectedEndDate(dateStr); // Default to one day
     } else if (!selectedEndDate || dateStr < selectedStartDate) {
       setSelectedStartDate(dateStr);
       setSelectedEndDate(dateStr);
@@ -171,8 +171,8 @@ const BookingCalendarPage = () => {
     setLoading(true);
     
     try {
-      // Здесь будет интеграция с платежной системой
-      // Пока что симулируем успешную оплату
+      // Here would be payment system integration
+      // For now simulate successful payment
       
       const booking = {
         yacht_id: selectedYacht,
@@ -189,16 +189,16 @@ const BookingCalendarPage = () => {
         created_at: new Date().toISOString()
       };
 
-      // Сохраняем в базу данных
+      // Save to database
       const { error } = await supabase
         .from('yacht_bookings')
         .insert(booking);
 
       if (error) throw error;
 
-      alert('Бронирование успешно создано! Вы получите подтверждение на email.');
+      alert('Booking successfully created! You will receive confirmation by email.');
       
-      // Сброс формы
+      // Reset form
       setStep(1);
       setSelectedStartDate('');
       setSelectedEndDate('');
@@ -209,7 +209,7 @@ const BookingCalendarPage = () => {
       
     } catch (error: any) {
       console.error('Booking error:', error);
-      alert('Ошибка при создании бронирования: ' + error.message);
+      alert('Error creating booking: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -224,11 +224,11 @@ const BookingCalendarPage = () => {
   };
 
   const monthNames = [
-    'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-    'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
-  const dayNames = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8">
@@ -236,10 +236,10 @@ const BookingCalendarPage = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">
-            Забронировать яхту
+            Book a Yacht
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Выберите дату, время и яхту для незабываемого парусного приключения на озере Гарда
+            Choose a date, time, and yacht for an unforgettable sailing adventure on Lake Garda
           </p>
         </div>
 
@@ -247,10 +247,10 @@ const BookingCalendarPage = () => {
         <div className="max-w-4xl mx-auto mb-8">
           <div className="flex items-center justify-between">
             {[
-              { step: 1, title: 'Выбор даты', icon: Calendar },
-              { step: 2, title: 'Время и яхта', icon: Clock },
-              { step: 3, title: 'Детали', icon: Users },
-              { step: 4, title: 'Оплата', icon: CreditCard }
+              { step: 1, title: 'Select Date', icon: Calendar },
+              { step: 2, title: 'Time and Yacht', icon: Clock },
+              { step: 3, title: 'Details', icon: Users },
+              { step: 4, title: 'Payment', icon: CreditCard }
             ].map((item, index) => (
               <div key={item.step} className="flex items-center">
                 <div className={`flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all duration-500 ${
@@ -266,7 +266,7 @@ const BookingCalendarPage = () => {
                 </div>
                 <div className="ml-4 hidden sm:block">
                   <p className={`font-semibold transition-colors duration-300 ${step >= item.step ? 'text-blue-600' : 'text-gray-400'}`}>
-                    Шаг {item.step}
+                    Step {item.step}
                   </p>
                   <p className={`text-sm transition-colors duration-300 ${step >= item.step ? 'text-gray-900' : 'text-gray-500'}`}>
                     {item.title}
@@ -290,7 +290,7 @@ const BookingCalendarPage = () => {
               {/* Step 1: Calendar */}
               {step === 1 && (
                 <div className="space-y-6">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Выберите дату</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Select Date</h2>
                   
                   {/* Calendar Header */}
                   <div className="flex items-center justify-between mb-6">
@@ -370,7 +370,7 @@ const BookingCalendarPage = () => {
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
                     <label htmlFor="singleDay" className="text-gray-700">
-                      Бронирование на один день
+                      One-day booking
                     </label>
                   </div>
 
@@ -379,7 +379,7 @@ const BookingCalendarPage = () => {
                       onClick={() => setStep(2)}
                       className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105"
                     >
-                      Выбрать время и яхту
+                      Select time and yacht
                     </button>
                   )}
                 </div>
@@ -389,18 +389,18 @@ const BookingCalendarPage = () => {
               {step === 2 && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-bold text-gray-900">Выберите время и яхту</h2>
+                    <h2 className="text-2xl font-bold text-gray-900">Select time and yacht</h2>
                     <button
                       onClick={() => setStep(1)}
                       className="text-blue-600 hover:text-blue-700 font-medium"
                     >
-                      ← Изменить дату
+                      ← Change date
                     </button>
                   </div>
 
                   <div className="bg-blue-50 p-4 rounded-lg">
                     <p className="text-blue-800">
-                      <strong>Выбранная дата:</strong> {selectedStartDate}
+                      <strong>Selected date:</strong> {selectedStartDate}
                       {selectedEndDate !== selectedStartDate && ` - ${selectedEndDate}`}
                     </p>
                   </div>
@@ -408,7 +408,7 @@ const BookingCalendarPage = () => {
                   {/* Participants Selection */}
                   <div>
                     <label className="block text-lg font-semibold text-gray-900 mb-4">
-                      Количество участников
+                      Number of participants
                     </label>
                     <div className="flex items-center space-x-4">
                       <button
@@ -431,7 +431,7 @@ const BookingCalendarPage = () => {
 
                   {/* Available Time Slots */}
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Доступные временные слоты</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Available time slots</h3>
                     <div className="space-y-4">
                       {getAvailableYachtsForDate(selectedStartDate).slice(0, 6).map((slot) => {
                         const duration = calculateDuration(slot.start_time, slot.end_time);
@@ -456,10 +456,10 @@ const BookingCalendarPage = () => {
                                 <div>
                                   <h4 className="font-semibold text-gray-900">{slot.yacht_name}</h4>
                                   <p className="text-gray-600">
-                                    {slot.start_time} - {slot.end_time} ({duration} часов)
+                                    {slot.start_time} - {slot.end_time} ({duration} hours)
                                   </p>
                                   <p className="text-sm text-gray-500">
-                                    До {slot.max_participants} участников
+                                    Up to {slot.max_participants} participants
                                   </p>
                                 </div>
                               </div>
@@ -468,7 +468,7 @@ const BookingCalendarPage = () => {
                                   €{duration * slot.price_per_person * participants}
                                 </p>
                                 <p className="text-sm text-gray-600">
-                                  €{slot.price_per_person}/час/чел
+                                  €{slot.price_per_person}/hour/person
                                 </p>
                               </div>
                             </div>
@@ -483,7 +483,7 @@ const BookingCalendarPage = () => {
                       onClick={() => setStep(3)}
                       className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105"
                     >
-                      Продолжить
+                      Continue
                     </button>
                   )}
                 </div>
@@ -493,19 +493,19 @@ const BookingCalendarPage = () => {
               {step === 3 && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-bold text-gray-900">Ваши данные</h2>
+                    <h2 className="text-2xl font-bold text-gray-900">Your details</h2>
                     <button
                       onClick={() => setStep(2)}
                       className="text-blue-600 hover:text-blue-700 font-medium"
                     >
-                      ← Назад
+                      ← Back
                     </button>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Полное имя *
+                        Full Name *
                       </label>
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -514,7 +514,7 @@ const BookingCalendarPage = () => {
                           value={bookingData.customer_name || ''}
                           onChange={(e) => setBookingData({...bookingData, customer_name: e.target.value})}
                           className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Иван Иванов"
+                          placeholder="John Smith"
                           required
                         />
                       </div>
@@ -531,7 +531,7 @@ const BookingCalendarPage = () => {
                           value={bookingData.customer_email || ''}
                           onChange={(e) => setBookingData({...bookingData, customer_email: e.target.value})}
                           className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="ivan@example.com"
+                          placeholder="john@example.com"
                           required
                         />
                       </div>
@@ -539,7 +539,7 @@ const BookingCalendarPage = () => {
 
                     <div className="md:col-span-2">
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Телефон *
+                        Phone *
                       </label>
                       <div className="relative">
                         <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -548,7 +548,7 @@ const BookingCalendarPage = () => {
                           value={bookingData.customer_phone || ''}
                           onChange={(e) => setBookingData({...bookingData, customer_phone: e.target.value})}
                           className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="+7 (999) 123-45-67"
+                          placeholder="+39 345 678 9012"
                           required
                         />
                       </div>
@@ -560,7 +560,7 @@ const BookingCalendarPage = () => {
                       onClick={() => setStep(4)}
                       className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105"
                     >
-                      Перейти к оплате
+                      Proceed to payment
                     </button>
                   )}
                 </div>
@@ -570,12 +570,12 @@ const BookingCalendarPage = () => {
               {step === 4 && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-bold text-gray-900">Оплата</h2>
+                    <h2 className="text-2xl font-bold text-gray-900">Payment</h2>
                     <button
                       onClick={() => setStep(3)}
                       className="text-blue-600 hover:text-blue-700 font-medium"
                     >
-                      ← Назад
+                      ← Back
                     </button>
                   </div>
 
@@ -583,9 +583,9 @@ const BookingCalendarPage = () => {
                     <div className="flex items-start space-x-3">
                       <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
                       <div>
-                        <h3 className="font-semibold text-green-900 mb-2">Безопасная оплата</h3>
+                        <h3 className="font-semibold text-green-900 mb-2">Secure payment</h3>
                         <p className="text-green-800 text-sm">
-                          Ваши данные защищены SSL-шифрованием. Мы не храним данные банковских карт.
+                          Your data is protected by SSL encryption. We do not store credit card data.
                         </p>
                       </div>
                     </div>
@@ -594,7 +594,7 @@ const BookingCalendarPage = () => {
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Номер карты *
+                        Card Number *
                       </label>
                       <div className="relative">
                         <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -613,7 +613,7 @@ const BookingCalendarPage = () => {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-semibold text-gray-900 mb-2">
-                          Срок действия *
+                          Expiry Date *
                         </label>
                         <input
                           type="text"
@@ -656,7 +656,7 @@ const BookingCalendarPage = () => {
                       ) : (
                         <>
                           <Lock className="h-5 w-5" />
-                          <span>Оплатить €{calculateTotalPrice()}</span>
+                          <span>Pay €{calculateTotalPrice()}</span>
                         </>
                       )}
                     </button>
@@ -669,12 +669,12 @@ const BookingCalendarPage = () => {
           {/* Booking Summary Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-32">
-              <h3 className="text-xl font-bold text-gray-900 mb-6">Сводка бронирования</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-6">Booking Summary</h3>
               
               <div className="space-y-4 mb-6">
                 {selectedStartDate && (
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Дата:</span>
+                    <span className="text-gray-600">Date:</span>
                     <span className="font-semibold">
                       {selectedStartDate}
                       {selectedEndDate !== selectedStartDate && ` - ${selectedEndDate}`}
@@ -684,14 +684,14 @@ const BookingCalendarPage = () => {
                 
                 {selectedStartTime && selectedEndTime && (
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Время:</span>
+                    <span className="text-gray-600">Time:</span>
                     <span className="font-semibold">{selectedStartTime} - {selectedEndTime}</span>
                   </div>
                 )}
                 
                 {selectedYacht && (
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Яхта:</span>
+                    <span className="text-gray-600">Yacht:</span>
                     <span className="font-semibold text-sm">
                       {yachts.find(y => y.id === selectedYacht)?.name}
                     </span>
@@ -699,15 +699,15 @@ const BookingCalendarPage = () => {
                 )}
                 
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Участники:</span>
+                  <span className="text-gray-600">Participants:</span>
                   <span className="font-semibold">{participants}</span>
                 </div>
                 
                 {selectedStartTime && selectedEndTime && (
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Длительность:</span>
+                    <span className="text-gray-600">Duration:</span>
                     <span className="font-semibold">
-                      {calculateDuration(selectedStartTime, selectedEndTime)} часов
+                      {calculateDuration(selectedStartTime, selectedEndTime)} hours
                     </span>
                   </div>
                 )}
@@ -716,14 +716,14 @@ const BookingCalendarPage = () => {
               {selectedStartTime && selectedEndTime && (
                 <div className="border-t border-gray-200 pt-4 mb-6">
                   <div className="flex justify-between items-center text-lg font-bold">
-                    <span>Итого:</span>
+                    <span>Total:</span>
                     <span className="text-blue-600 flex items-center">
                       <Euro className="h-5 w-5 mr-1" />
                       {calculateTotalPrice()}
                     </span>
                   </div>
                   <p className="text-sm text-gray-600 mt-2">
-                    €199 за час на человека (минимум 4 часа)
+                    €199 per hour per person (minimum 4 hours)
                   </p>
                 </div>
               )}
@@ -731,30 +731,30 @@ const BookingCalendarPage = () => {
               <div className="space-y-4 text-sm text-gray-600">
                 <div className="flex items-start space-x-2">
                   <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span>Профессиональный шкипер</span>
+                  <span>Professional skipper</span>
                 </div>
                 <div className="flex items-start space-x-2">
                   <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span>Все оборудование для безопасности</span>
+                  <span>All safety equipment</span>
                 </div>
                 <div className="flex items-start space-x-2">
                   <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span>Инструктаж и обучение</span>
+                  <span>Instruction and training</span>
                 </div>
                 <div className="flex items-start space-x-2">
                   <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span>Фотосъемка приключения</span>
+                  <span>Adventure photography</span>
                 </div>
               </div>
 
               <div className="mt-6 pt-6 border-t border-gray-200">
                 <div className="flex items-center space-x-2 text-sm text-gray-600 mb-2">
                   <AlertCircle className="h-4 w-4" />
-                  <span>Бесплатная отмена за 48 часов</span>
+                  <span>Free cancellation 48 hours prior</span>
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <CheckCircle className="h-4 w-4" />
-                  <span>Полная страховка включена</span>
+                  <span>Full insurance included</span>
                 </div>
               </div>
             </div>

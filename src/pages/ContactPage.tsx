@@ -43,11 +43,11 @@ const ContactPage = () => {
       <section className="relative py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 font-serif">
-            Свяжитесь с нами
+            Contact Us
           </h1>
           <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Мы готовы ответить на все ваши вопросы и помочь организовать 
-            незабываемое парусное приключение на озере Гарда
+            We are ready to answer all your questions and help organize 
+            an unforgettable sailing adventure on Lake Garda
           </p>
         </div>
       </section>
@@ -56,7 +56,7 @@ const ContactPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Contact Information */}
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Контактная информация</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">Contact Information</h2>
             
             <div className="space-y-8">
               <div className="flex items-start space-x-4">
@@ -64,7 +64,7 @@ const ContactPage = () => {
                   <MapPin className="h-6 w-6 text-primary-600" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Адрес</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Address</h3>
                   <p className="text-gray-600">
                     Via del Porto 15<br />
                     38066 Riva del Garda, TN<br />
@@ -78,7 +78,7 @@ const ContactPage = () => {
                   <Phone className="h-6 w-6 text-primary-600" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Телефон</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Phone</h3>
                   <a 
                     href="tel:+393456789012" 
                     className="text-primary-600 hover:text-primary-700 transition-colors duration-300"
@@ -116,10 +116,10 @@ const ContactPage = () => {
                   <Clock className="h-6 w-6 text-primary-600" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Часы работы</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Operating Hours</h3>
                   <div className="text-gray-600">
-                    <p>Ежедневно: 8:00 - 19:00</p>
-                    <p>Сезон: Март - Октябрь</p>
+                    <p>Daily: 8:00 AM - 7:00 PM</p>
+                    <p>Season: March - October</p>
                   </div>
                 </div>
               </div>
@@ -127,9 +127,9 @@ const ContactPage = () => {
 
             {/* Map */}
             <div className="mt-12">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Как нас найти</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">How to find us</h3>
               <div className="bg-gray-200 rounded-xl h-64 flex items-center justify-center">
-                <p className="text-gray-600">Интерактивная карта</p>
+                <p className="text-gray-600">Interactive map</p>
               </div>
             </div>
           </div>
@@ -137,20 +137,20 @@ const ContactPage = () => {
           {/* Contact Form */}
           <div>
             <div className="bg-white rounded-2xl shadow-lg p-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Отправить сообщение</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">Send a message</h2>
               
               {submitted ? (
                 <div className="text-center py-8">
                   <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                     <CheckCircle className="h-8 w-8 text-green-600" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Сообщение отправлено!</h3>
-                  <p className="text-gray-600">Мы свяжемся с вами в ближайшее время.</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Message sent!</h3>
+                  <p className="text-gray-600">We will contact you shortly.</p>
                   <button
                     onClick={() => setSubmitted(false)}
                     className="mt-4 text-primary-600 hover:text-primary-700 transition-colors duration-300"
                   >
-                    Отправить еще одно сообщение
+                    Send another message
                   </button>
                 </div>
               ) : (
@@ -158,7 +158,7 @@ const ContactPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Имя *
+                        Name *
                       </label>
                       <input
                         type="text"
@@ -187,7 +187,7 @@ const ContactPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Телефон
+                        Phone
                       </label>
                       <input
                         type="tel"
@@ -199,7 +199,7 @@ const ContactPage = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Тема *
+                        Subject *
                       </label>
                       <select
                         name="subject"
@@ -208,19 +208,19 @@ const ContactPage = () => {
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         required
                       >
-                        <option value="">Выберите тему</option>
-                        <option value="booking">Бронирование</option>
-                        <option value="corporate">Корпоративные мероприятия</option>
-                        <option value="general">Общие вопросы</option>
-                        <option value="partnership">Партнерство</option>
-                        <option value="other">Другое</option>
+                        <option value="">Select subject</option>
+                        <option value="booking">Booking</option>
+                        <option value="corporate">Corporate Events</option>
+                        <option value="general">General Questions</option>
+                        <option value="partnership">Partnership</option>
+                        <option value="other">Other</option>
                       </select>
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Сообщение *
+                      Message *
                     </label>
                     <textarea
                       name="message"
@@ -228,7 +228,7 @@ const ContactPage = () => {
                       onChange={handleInputChange}
                       rows={6}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                      placeholder="Расскажите нам о ваших вопросах или пожеланиях..."
+                      placeholder="Tell us about your questions or wishes..."
                       required
                     />
                   </div>
@@ -243,7 +243,7 @@ const ContactPage = () => {
                     ) : (
                       <>
                         <Send className="h-5 w-5" />
-                        <span>Отправить сообщение</span>
+                        <span>Send message</span>
                       </>
                     )}
                   </button>
@@ -253,14 +253,14 @@ const ContactPage = () => {
 
             {/* Quick Contact */}
             <div className="mt-8 bg-primary-50 rounded-2xl p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Нужна быстрая помощь?</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Need quick help?</h3>
               <div className="flex flex-col sm:flex-row gap-4">
                 <a
                   href="tel:+393456789012"
                   className="flex items-center justify-center space-x-2 bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300"
                 >
                   <Phone className="h-4 w-4" />
-                  <span>Позвонить сейчас</span>
+                  <span>Call now</span>
                 </a>
                 <a
                   href="https://wa.me/393456789012"
@@ -275,34 +275,34 @@ const ContactPage = () => {
 
         {/* FAQ Section */}
         <div className="mt-20">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Часто задаваемые вопросы</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Frequently asked questions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Как забронировать?</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">How to book?</h3>
               <p className="text-gray-600">
-                Вы можете забронировать через наш сайт, позвонить нам или написать на email. 
-                Мы подтвердим бронирование в течение 24 часов.
+                You can book through our website, call us, or email us. 
+                We will confirm your booking within 24 hours.
               </p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Какая погода подходит для парусного спорта?</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">What weather is suitable for sailing?</h3>
               <p className="text-gray-600">
-                Мы выходим в море при ветре от 5 до 25 узлов. При неблагоприятных условиях 
-                мы предложим перенос или полный возврат средств.
+                We go to sea with winds from 5 to 25 knots. In adverse conditions, 
+                we will offer a reschedule or a full refund.
               </p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Нужен ли опыт парусного спорта?</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Is sailing experience required?</h3>
               <p className="text-gray-600">
-                Нет, опыт не требуется. Наши профессиональные инструкторы научат вас всему необходимому 
-                и обеспечат безопасность на воде.
+                No, experience is not required. Our professional instructors will teach you everything you need 
+                and ensure safety on the water.
               </p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Что включено в стоимость?</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">What is included in the price?</h3>
               <p className="text-gray-600">
-                В стоимость включены: профессиональный шкипер, все оборудование, инструктаж, 
-                медаль участника и профессиональные фотографии.
+                The price includes: professional skipper, all equipment, instruction, 
+                participant medal, and professional photos.
               </p>
             </div>
           </div>

@@ -24,7 +24,7 @@ function App() {
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/booking" element={<BookingCalendarPage />} />
-            <Route path="/забронировать" element={<BookingCalendarPage />} />
+            <Route path="/book-now" element={<BookingCalendarPage />} />
             <Route path="/admin" element={<AdminDashboard />} />
           </Routes>
         </main>

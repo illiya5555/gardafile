@@ -272,33 +272,6 @@ const ServicesPage = () => {
         </div>
       </section>
 
-      {/* Additional Services */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">Additional Services</h2>
-            <p className="text-xl text-gray-600">Make your event even more special</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {additionalServices.map((service, index) => {
-              const icons = [Car, Utensils, Music, Video];
-              const IconComponent = icons[index % icons.length];
-              
-              return (
-                <div key={service.id} className="text-center p-6 bg-gray-50 rounded-xl hover:shadow-md transition-all duration-300 hover:scale-105">
-                  <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <IconComponent className="h-8 w-8 text-primary-600" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{service.name}</h3>
-                  <p className="text-gray-600">{service.description}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
       {/* Testimonials */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

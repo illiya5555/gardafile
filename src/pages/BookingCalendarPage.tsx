@@ -48,20 +48,20 @@ const BookingCalendarPage = () => {
     '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'
   ];
 
-  // Yacht data simulation (in real app this would be from database)
+  // Yacht data with proper UUID format
   const yachts = [
-    { id: '1', name: 'Bavaria 34 "Adriatic Wind"', capacity: 8 },
-    { id: '2', name: 'Bavaria 34 "Lake Spirit"', capacity: 8 },
-    { id: '3', name: 'Jeanneau 349 "Garda Dream"', capacity: 8 },
-    { id: '4', name: 'Bavaria 37 "Mountain View"', capacity: 10 },
-    { id: '5', name: 'Hanse 345 "Blue Horizon"', capacity: 8 },
-    { id: '6', name: 'Bavaria 34 "Wind Dancer"', capacity: 8 },
-    { id: '7', name: 'Jeanneau 349 "Sunset Sail"', capacity: 8 },
-    { id: '8', name: 'Bavaria 37 "Alpine Breeze"', capacity: 10 },
-    { id: '9', name: 'Hanse 345 "Crystal Waters"', capacity: 8 },
-    { id: '10', name: 'Bavaria 34 "Freedom"', capacity: 8 },
-    { id: '11', name: 'Jeanneau 349 "Serenity"', capacity: 8 },
-    { id: '12', name: 'Bavaria 37 "Majestic"', capacity: 10 }
+    { id: 'a1b2c3d4-e5f6-7890-1234-567890abcdef', name: 'Bavaria 34 "Adriatic Wind"', capacity: 8 },
+    { id: 'b2c3d4e5-f6g7-8901-2345-678901bcdefg', name: 'Bavaria 34 "Lake Spirit"', capacity: 8 },
+    { id: 'c3d4e5f6-g7h8-9012-3456-789012cdefgh', name: 'Jeanneau 349 "Garda Dream"', capacity: 8 },
+    { id: 'd4e5f6g7-h8i9-0123-4567-890123defghi', name: 'Bavaria 37 "Mountain View"', capacity: 10 },
+    { id: 'e5f6g7h8-i9j0-1234-5678-901234efghij', name: 'Hanse 345 "Blue Horizon"', capacity: 8 },
+    { id: 'f6g7h8i9-j0k1-2345-6789-012345fghijk', name: 'Bavaria 34 "Wind Dancer"', capacity: 8 },
+    { id: 'g7h8i9j0-k1l2-3456-7890-123456ghijkl', name: 'Jeanneau 349 "Sunset Sail"', capacity: 8 },
+    { id: 'h8i9j0k1-l2m3-4567-8901-234567hijklm', name: 'Bavaria 37 "Alpine Breeze"', capacity: 10 },
+    { id: 'i9j0k1l2-m3n4-5678-9012-345678ijklmn', name: 'Hanse 345 "Crystal Waters"', capacity: 8 },
+    { id: 'j0k1l2m3-n4o5-6789-0123-456789jklmno', name: 'Bavaria 34 "Freedom"', capacity: 8 },
+    { id: 'k1l2m3n4-o5p6-7890-1234-567890klmnop', name: 'Jeanneau 349 "Serenity"', capacity: 8 },
+    { id: 'l2m3n4o5-p6q7-8901-2345-678901lmnopq', name: 'Bavaria 37 "Majestic"', capacity: 10 }
   ];
 
   useEffect(() => {

@@ -32,9 +32,12 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
-  XCircle
+  XCircle,
+  Edit3,
+  Home
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import HomeContentEditor from '../components/admin/HomeContentEditor';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -166,6 +169,7 @@ const AdminDashboard = () => {
 
   const menuItems = [
     { id: 'dashboard', label: 'Дашборд', icon: BarChart3 },
+    { id: 'home-editor', label: 'Редактор главной', icon: Home },
     { id: 'bookings', label: 'Бронирования', icon: Calendar },
     { id: 'clients', label: 'Клиенты', icon: Users },
     { id: 'analytics', label: 'Аналитика', icon: TrendingUp },
@@ -335,7 +339,10 @@ const AdminDashboard = () => {
         </div>
 
         {/* Content Area */}
-        <div className="p-4 sm:p-6 lg:p-8">
+        <div className={activeTab === 'home-editor' ? '' : 'p-4 sm:p-6 lg:p-8'}>
+          {/* Home Content Editor */}
+          {activeTab === 'home-editor' && <HomeContentEditor />}
+
           {/* Dashboard Tab */}
           {activeTab === 'dashboard' && (
             <div className="space-y-8">
@@ -761,7 +768,7 @@ const AdminDashboard = () => {
           )}
 
           {/* Other tabs placeholder */}
-          {!['dashboard', 'bookings', 'clients', 'analytics'].includes(activeTab) && (
+          {!['dashboard', 'home-editor', 'bookings', 'clients', 'analytics'].includes(activeTab) && (
             <div className="bg-white p-12 rounded-2xl shadow-sm border border-gray-100 text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 {React.createElement(menuItems.find(item => item.id === activeTab)?.icon || Settings, {

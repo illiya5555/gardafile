@@ -16,20 +16,29 @@ function App() {
     <Router>
       <div className="min-h-screen bg-white">
         <SEOHead />
-        <Header />
-        <main className="pt-20">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/events" element={<EventsPage />} />
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/booking" element={<BookingCalendarPage />} />
-            <Route path="/book-now" element={<BookingCalendarPage />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-          </Routes>
-        </main>
-        <Footer />
-        <ChatWidget />
+        <Routes>
+          {/* Admin route without header/footer */}
+          <Route path="/admin" element={<AdminDashboard />} />
+          
+          {/* Regular routes with header/footer */}
+          <Route path="/*" element={
+            <>
+              <Header />
+              <main className="pt-20">
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/events" element={<EventsPage />} />
+                  <Route path="/services" element={<ServicesPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/booking" element={<BookingCalendarPage />} />
+                  <Route path="/book-now" element={<BookingCalendarPage />} />
+                </Routes>
+              </main>
+              <Footer />
+              <ChatWidget />
+            </>
+          } />
+        </Routes>
       </div>
     </Router>
   );

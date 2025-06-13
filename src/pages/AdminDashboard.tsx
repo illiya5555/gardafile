@@ -35,11 +35,13 @@ import {
   XCircle,
   Edit3,
   Home,
-  CalendarDays
+  CalendarDays,
+  Briefcase
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import HomeContentEditor from '../components/admin/HomeContentEditor';
 import EventsContentEditor from '../components/admin/EventsContentEditor';
+import ServicesContentEditor from '../components/admin/ServicesContentEditor';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -173,6 +175,7 @@ const AdminDashboard = () => {
     { id: 'dashboard', label: 'Дашборд', icon: BarChart3 },
     { id: 'home-editor', label: 'Редактор главной', icon: Home },
     { id: 'events-editor', label: 'Редактор Events', icon: CalendarDays },
+    { id: 'services-editor', label: 'Редактор Services', icon: Briefcase },
     { id: 'bookings', label: 'Бронирования', icon: Calendar },
     { id: 'clients', label: 'Клиенты', icon: Users },
     { id: 'analytics', label: 'Аналитика', icon: TrendingUp },
@@ -342,12 +345,15 @@ const AdminDashboard = () => {
         </div>
 
         {/* Content Area */}
-        <div className={activeTab === 'home-editor' || activeTab === 'events-editor' ? '' : 'p-4 sm:p-6 lg:p-8'}>
+        <div className={activeTab === 'home-editor' || activeTab === 'events-editor' || activeTab === 'services-editor' ? '' : 'p-4 sm:p-6 lg:p-8'}>
           {/* Home Content Editor */}
           {activeTab === 'home-editor' && <HomeContentEditor />}
 
           {/* Events Content Editor */}
           {activeTab === 'events-editor' && <EventsContentEditor />}
+
+          {/* Services Content Editor */}
+          {activeTab === 'services-editor' && <ServicesContentEditor />}
 
           {/* Dashboard Tab */}
           {activeTab === 'dashboard' && (
@@ -774,7 +780,7 @@ const AdminDashboard = () => {
           )}
 
           {/* Other tabs placeholder */}
-          {!['dashboard', 'home-editor', 'events-editor', 'bookings', 'clients', 'analytics'].includes(activeTab) && (
+          {!['dashboard', 'home-editor', 'events-editor', 'services-editor', 'bookings', 'clients', 'analytics'].includes(activeTab) && (
             <div className="bg-white p-12 rounded-2xl shadow-sm border border-gray-100 text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 {React.createElement(menuItems.find(item => item.id === activeTab)?.icon || Settings, {

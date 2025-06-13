@@ -83,11 +83,37 @@ const HomePage = () => {
     }
   ];
 
-  const stats = [
-    { number: "2000+", label: "Happy Sailors" },
-    { number: "500+", label: "Races Completed" },
-    { number: "15", label: "Years Experience" },
-    { number: "4.9", label: "Average Rating" }
+  const partners = [
+    {
+      name: "Bavaria Yachts",
+      logo: "https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop",
+      description: "Premium yacht manufacturer"
+    },
+    {
+      name: "Garmin Marine",
+      logo: "https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop",
+      description: "Navigation technology"
+    },
+    {
+      name: "Helly Hansen",
+      logo: "https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop",
+      description: "Professional sailing gear"
+    },
+    {
+      name: "Musto Sailing",
+      logo: "https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop",
+      description: "Technical sailing clothing"
+    },
+    {
+      name: "Raymarine",
+      logo: "https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop",
+      description: "Marine electronics"
+    },
+    {
+      name: "Spinlock",
+      logo: "https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop",
+      description: "Safety equipment"
+    }
   ];
 
   return (
@@ -178,22 +204,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center animate-fade-in">
-                <div className="text-4xl md:text-5xl font-bold text-primary-600 mb-2">
-                  {stat.number}
-                </div>
-                <div className="text-gray-600 font-medium">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Features Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -260,7 +270,7 @@ const HomePage = () => {
               </div>
               <div className="mt-8">
                 <Link
-                  to="/experience"
+                  to="/events"
                   className="bg-primary-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
                 >
                   Learn More About the Experience
@@ -372,6 +382,49 @@ const HomePage = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Partners Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-serif">
+              Our Trusted Partners
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              We work with the world's leading yacht and marine equipment manufacturers 
+              to provide you with the best possible sailing experience.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+            {partners.map((partner, index) => (
+              <div key={index} className="group text-center">
+                <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 group-hover:scale-105">
+                  <img
+                    src={partner.logo}
+                    alt={partner.name}
+                    className="w-full h-16 object-cover rounded-lg mb-4 grayscale group-hover:grayscale-0 transition-all duration-300"
+                  />
+                  <h3 className="font-semibold text-gray-900 mb-1">{partner.name}</h3>
+                  <p className="text-sm text-gray-600">{partner.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-12 text-center">
+            <p className="text-gray-600 mb-6">
+              Interested in partnering with us? We're always looking for quality brands that share our passion for sailing.
+            </p>
+            <Link
+              to="/contact"
+              className="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300 inline-block"
+            >
+              Contact Us About Partnerships
+            </Link>
           </div>
         </div>
       </section>

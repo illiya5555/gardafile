@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Play, Clock, Users, Award, Camera, Wind, Anchor, MapPin, CheckCircle, Star, Calendar } from 'lucide-react';
 
-const ExperiencePage = () => {
+const EventsPage = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedImage, setSelectedImage] = useState(0);
 
@@ -422,4 +422,4 @@ const ExperiencePage = () => {
   );
 };
 
-export default ExperiencePage;
+export default EventsPage;

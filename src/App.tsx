@@ -5,7 +5,9 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import SEOHead from './components/SEOHead';
 import HomePage from './pages/HomePage';
-import ExperiencePage from './pages/ExperiencePage';
+import EventsPage from './pages/EventsPage';
+import ServicesPage from './pages/ServicesPage';
+import ContactPage from './pages/ContactPage';
 import BookingPage from './pages/BookingPage';
 import MyBookingsPage from './pages/MyBookingsPage';
 import ProfilePage from './pages/ProfilePage';
@@ -21,7 +23,9 @@ function App() {
           <main>
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/experience" element={<ExperiencePage />} />
+              <Route path="/events" element={<EventsPage />} />
+              <Route path="/services" element={<ServicesPage />} />
+              <Route path="/contact" element={<ContactPage />} />
               <Route path="/booking" element={<BookingPage />} />
               <Route path="/my-bookings" element={<MyBookingsPage />} />
               <Route path="/profile" element={<ProfilePage />} />

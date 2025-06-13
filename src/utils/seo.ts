@@ -14,10 +14,22 @@ export const seoData: Record<string, SEOData> = {
     keywords: "Lake Garda sailing, yacht racing, Riva del Garda, sailing experience, yacht charter, racing course",
     ogImage: "/IMG_0967.webp"
   },
-  experience: {
-    title: "Yacht Racing Experience - Complete Day Program | Garda Racing",
+  events: {
+    title: "Yacht Racing Events - Complete Day Program | Garda Racing",
     description: "Discover our complete yacht racing program on Lake Garda. Professional instruction, authentic racing, medal ceremony, and professional photos included.",
-    keywords: "yacht racing program, sailing lessons Lake Garda, racing experience, sailing instruction",
+    keywords: "yacht racing program, sailing lessons Lake Garda, racing events, sailing instruction",
+    ogImage: "/IMG_0967.webp"
+  },
+  services: {
+    title: "Corporate Services & Team Building | Garda Racing Yacht Club",
+    description: "Professional corporate sailing events and team building activities on Lake Garda. Custom packages for groups from 12 to 96 participants.",
+    keywords: "corporate sailing, team building Lake Garda, corporate events, sailing team building",
+    ogImage: "/IMG_0967.webp"
+  },
+  contact: {
+    title: "Contact Us - Garda Racing Yacht Club | Lake Garda Sailing",
+    description: "Get in touch with Garda Racing Yacht Club. Located in Riva del Garda, Italy. Phone: +39 345 678 9012. Professional sailing experiences since 2008.",
+    keywords: "contact Garda Racing, Riva del Garda sailing, yacht club contact, Lake Garda sailing contact",
     ogImage: "/IMG_0967.webp"
   },
   booking: {

@@ -61,3 +61,37 @@ export interface ChatMessage {
   sender_type: 'user' | 'bot';
   created_at: string;
 }
+
+export interface CorporatePackage {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  participants_range: string;
+  duration: string;
+  features: string[];
+  is_popular: boolean;
+  created_at: string;
+}
+
+export interface AdditionalService {
+  id: string;
+  name: string;
+  description: string;
+  created_at: string;
+}
+
+export interface CorporateInquiry {
+  id: string;
+  package_id: string;
+  user_id?: string;
+  company_name: string;
+  contact_person: string;
+  email: string;
+  phone: string;
+  participants_count: number;
+  preferred_date?: string;
+  message?: string;
+  status: 'pending' | 'contacted' | 'quoted' | 'confirmed' | 'cancelled';
+  created_at: string;
+}

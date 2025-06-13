@@ -25,7 +25,17 @@ const HomePage = () => {
     'https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=800'
   ];
 
+  // Location section gallery images - Lake Garda specific
+  const locationImages = [
+    'https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=800',
+    'https://images.pexels.com/photos/2422915/pexels-photo-2422915.jpeg?auto=compress&cs=tinysrgb&w=800',
+    'https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=800',
+    'https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=800',
+    'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=800'
+  ];
+
   const [experienceImageIndex, setExperienceImageIndex] = useState(0);
+  const [locationImageIndex, setLocationImageIndex] = useState(0);
 
   // Fallback testimonials
   const fallbackTestimonials: Testimonial[] = [
@@ -86,6 +96,17 @@ const HomePage = () => {
 
     return () => clearInterval(interval);
   }, [experienceImages.length]);
+
+  // Auto-rotate location images every 6 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLocationImageIndex((prevIndex) => 
+        (prevIndex + 1) % locationImages.length
+      );
+    }, 6000);
+
+    return () => clearInterval(interval);
+  }, [locationImages.length]);
 
   const fetchTestimonials = async () => {
     try {
@@ -460,7 +481,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Location Section */}
+      {/* Location Section with Auto-rotating Gallery */}
       <section className="py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -493,11 +514,35 @@ const HomePage = () => {
               </div>
             </div>
             <div className="relative">
-              <img
-                src="https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=800"
-                alt="Riva del Garda harbor"
-                className="rounded-2xl shadow-2xl"
-              />
+              {/* Auto-rotating location images */}
+              <div className="relative rounded-2xl shadow-2xl overflow-hidden">
+                {locationImages.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`Lake Garda location ${index + 1}`}
+                    className={`w-full h-96 object-cover transition-opacity duration-1000 ${
+                      index === locationImageIndex ? 'opacity-100' : 'opacity-0 absolute inset-0'
+                    }`}
+                  />
+                ))}
+              </div>
+              
+              {/* Image indicators */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                {locationImages.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setLocationImageIndex(index)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      index === locationImageIndex 
+                        ? 'bg-white scale-110' 
+                        : 'bg-white/50 hover:bg-white/75'
+                    }`}
+                  />
+                ))}
+              </div>
+              
               <div className="absolute -top-6 -right-6 bg-gold-500 text-white p-4 rounded-xl shadow-lg">
                 <div className="text-center">
                   <p className="text-2xl font-bold">4.9★</p>

@@ -40,7 +40,13 @@ import {
   Contact,
   ClipboardList,
   UserCheck,
-  BookOpen
+  BookOpen,
+  Image,
+  Globe,
+  Palette,
+  Database,
+  Shield,
+  Activity
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import HomeContentEditor from '../components/admin/HomeContentEditor';
@@ -51,6 +57,7 @@ import BookingContentEditor from '../components/admin/BookingContentEditor';
 import InquiriesManagement from '../components/admin/InquiriesManagement';
 import ClientsManagement from '../components/admin/ClientsManagement';
 import BookingsCalendar from '../components/admin/BookingsCalendar';
+import MediaLibrary from '../components/admin/MediaLibrary';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -66,7 +73,10 @@ const AdminDashboard = () => {
     monthlyTarget: 220,
     currentMonth: 180,
     conversionRate: 68,
-    avgBookingValue: 199
+    avgBookingValue: 195,
+    mediaFiles: 0,
+    websiteViews: 0,
+    systemHealth: 98
   });
 
   const [bookings, setBookings] = useState([]);
@@ -74,7 +84,9 @@ const AdminDashboard = () => {
   const [notifications, setNotifications] = useState([
     { id: 1, type: 'booking', message: 'New booking from Marco Rossi', time: '2 hours ago', read: false },
     { id: 2, type: 'corporate', message: 'Corporate inquiry from TechCorp', time: '5 hours ago', read: false },
-    { id: 3, type: 'review', message: 'New review (5 stars)', time: '1 day ago', read: true }
+    { id: 3, type: 'review', message: 'New review (5 stars)', time: '1 day ago', read: true },
+    { id: 4, type: 'system', message: 'Media library updated', time: '2 days ago', read: true },
+    { id: 5, type: 'content', message: 'Homepage content published', time: '3 days ago', read: true }
   ]);
 
   useEffect(() => {
@@ -137,7 +149,10 @@ const AdminDashboard = () => {
         monthlyTarget: 220,
         currentMonth: monthlyBookings,
         conversionRate: 68,
-        avgBookingValue: totalRevenue / (bookings?.length || 1)
+        avgBookingValue: totalRevenue / (bookings?.length || 1),
+        mediaFiles: 156, // Mock data
+        websiteViews: 12450, // Mock data
+        systemHealth: 98 // Mock data
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -181,22 +196,35 @@ const AdminDashboard = () => {
   };
 
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
-    { id: 'home-editor', label: 'Home Editor', icon: Home },
-    { id: 'events-editor', label: 'Events Editor', icon: CalendarDays },
-    { id: 'services-editor', label: 'Services Editor', icon: Briefcase },
-    { id: 'contact-editor', label: 'Contact Editor', icon: Contact },
-    { id: 'booking-editor', label: 'Booking Editor', icon: BookOpen },
-    { id: 'inquiries', label: 'Inquiries', icon: ClipboardList },
-    { id: 'bookings', label: 'Bookings Calendar', icon: Calendar },
-    { id: 'clients', label: 'Client Management', icon: UserCheck },
-    { id: 'analytics', label: 'Analytics', icon: TrendingUp },
-    { id: 'payments', label: 'Payments', icon: CreditCard },
-    { id: 'fleet', label: 'Fleet', icon: Ship },
-    { id: 'media', label: 'Media', icon: Camera },
-    { id: 'reports', label: 'Reports', icon: FileText },
-    { id: 'notifications', label: 'Notifications', icon: Bell },
-    { id: 'settings', label: 'Settings', icon: Settings }
+    { id: 'dashboard', label: 'Dashboard', icon: BarChart3, category: 'main' },
+    { id: 'home-editor', label: 'Home Editor', icon: Home, category: 'content' },
+    { id: 'events-editor', label: 'Events Editor', icon: CalendarDays, category: 'content' },
+    { id: 'services-editor', label: 'Services Editor', icon: Briefcase, category: 'content' },
+    { id: 'contact-editor', label: 'Contact Editor', icon: Contact, category: 'content' },
+    { id: 'booking-editor', label: 'Booking Editor', icon: BookOpen, category: 'content' },
+    { id: 'media-library', label: 'Media Library', icon: Image, category: 'content' },
+    { id: 'inquiries', label: 'Inquiries', icon: ClipboardList, category: 'management' },
+    { id: 'bookings', label: 'Bookings Calendar', icon: Calendar, category: 'management' },
+    { id: 'clients', label: 'Client Management', icon: UserCheck, category: 'management' },
+    { id: 'analytics', label: 'Analytics', icon: TrendingUp, category: 'insights' },
+    { id: 'seo', label: 'SEO & Marketing', icon: Globe, category: 'insights' },
+    { id: 'payments', label: 'Payments', icon: CreditCard, category: 'business' },
+    { id: 'fleet', label: 'Fleet Management', icon: Ship, category: 'business' },
+    { id: 'reports', label: 'Reports', icon: FileText, category: 'business' },
+    { id: 'design', label: 'Design System', icon: Palette, category: 'system' },
+    { id: 'database', label: 'Database', icon: Database, category: 'system' },
+    { id: 'security', label: 'Security', icon: Shield, category: 'system' },
+    { id: 'notifications', label: 'Notifications', icon: Bell, category: 'system' },
+    { id: 'settings', label: 'Settings', icon: Settings, category: 'system' }
+  ];
+
+  const menuCategories = [
+    { id: 'main', label: 'Main', color: 'text-blue-600' },
+    { id: 'content', label: 'Content Management', color: 'text-green-600' },
+    { id: 'management', label: 'Business Management', color: 'text-purple-600' },
+    { id: 'insights', label: 'Analytics & Insights', color: 'text-orange-600' },
+    { id: 'business', label: 'Business Operations', color: 'text-red-600' },
+    { id: 'system', label: 'System & Settings', color: 'text-gray-600' }
   ];
 
   const getStatusColor = (status: string) => {
@@ -264,28 +292,39 @@ const AdminDashboard = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="p-4 space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto">
-          {menuItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                setActiveTab(item.id);
-                setSidebarOpen(false);
-              }}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
-                activeTab === item.id
-                  ? 'bg-blue-600 text-white shadow-lg scale-105'
-                  : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
-              }`}
-            >
-              <item.icon className="h-5 w-5" />
-              <span className="font-medium">{item.label}</span>
-              {item.id === 'notifications' && notifications.filter(n => !n.read).length > 0 && (
-                <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1 ml-auto">
-                  {notifications.filter(n => !n.read).length}
-                </span>
-              )}
-            </button>
+        <nav className="p-4 space-y-6 max-h-[calc(100vh-200px)] overflow-y-auto">
+          {menuCategories.map((category) => (
+            <div key={category.id}>
+              <h3 className={`text-xs font-semibold uppercase tracking-wider mb-3 ${category.color}`}>
+                {category.label}
+              </h3>
+              <div className="space-y-1">
+                {menuItems
+                  .filter(item => item.category === category.id)
+                  .map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setActiveTab(item.id);
+                        setSidebarOpen(false);
+                      }}
+                      className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-300 text-sm ${
+                        activeTab === item.id
+                          ? 'bg-blue-600 text-white shadow-lg scale-105'
+                          : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+                      }`}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span className="font-medium">{item.label}</span>
+                      {item.id === 'notifications' && notifications.filter(n => !n.read).length > 0 && (
+                        <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1 ml-auto">
+                          {notifications.filter(n => !n.read).length}
+                        </span>
+                      )}
+                    </button>
+                  ))}
+              </div>
+            </div>
           ))}
         </nav>
 
@@ -341,6 +380,15 @@ const AdminDashboard = () => {
               </div>
               
               <div className="flex items-center space-x-4">
+                {/* System Health Indicator */}
+                <div className="flex items-center space-x-2">
+                  <div className={`w-2 h-2 rounded-full ${
+                    stats.systemHealth >= 95 ? 'bg-green-500' :
+                    stats.systemHealth >= 80 ? 'bg-yellow-500' : 'bg-red-500'
+                  }`}></div>
+                  <span className="text-sm text-gray-600">System: {stats.systemHealth}%</span>
+                </div>
+
                 <div className="relative">
                   <button className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-300">
                     <Bell className="h-6 w-6" />
@@ -357,13 +405,14 @@ const AdminDashboard = () => {
         </div>
 
         {/* Content Area */}
-        <div className={activeTab === 'home-editor' || activeTab === 'events-editor' || activeTab === 'services-editor' || activeTab === 'contact-editor' || activeTab === 'booking-editor' ? '' : 'p-4 sm:p-6 lg:p-8'}>
+        <div className={activeTab === 'home-editor' || activeTab === 'events-editor' || activeTab === 'services-editor' || activeTab === 'contact-editor' || activeTab === 'booking-editor' || activeTab === 'media-library' ? '' : 'p-4 sm:p-6 lg:p-8'}>
           {/* Content Editors */}
           {activeTab === 'home-editor' && <HomeContentEditor />}
           {activeTab === 'events-editor' && <EventsContentEditor />}
           {activeTab === 'services-editor' && <ServicesContentEditor />}
           {activeTab === 'contact-editor' && <ContactContentEditor />}
           {activeTab === 'booking-editor' && <BookingContentEditor />}
+          {activeTab === 'media-library' && <MediaLibrary />}
 
           {/* Management Components */}
           {activeTab === 'inquiries' && <InquiriesManagement />}
@@ -373,12 +422,12 @@ const AdminDashboard = () => {
           {/* Dashboard Tab */}
           {activeTab === 'dashboard' && (
             <div className="space-y-8">
-              {/* Stats Grid */}
+              {/* Enhanced Stats Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 mb-1">Bookings</p>
+                      <p className="text-sm text-gray-600 mb-1">Total Bookings</p>
                       <p className="text-3xl font-bold text-gray-900">{stats.totalBookings}</p>
                       <p className="text-xs text-green-600 mt-1">+12% this month</p>
                     </div>
@@ -391,7 +440,7 @@ const AdminDashboard = () => {
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 mb-1">Revenue</p>
+                      <p className="text-sm text-gray-600 mb-1">Total Revenue</p>
                       <p className="text-3xl font-bold text-gray-900">€{stats.totalRevenue.toLocaleString()}</p>
                       <p className="text-xs text-green-600 mt-1">+8% this month</p>
                     </div>
@@ -404,7 +453,7 @@ const AdminDashboard = () => {
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 mb-1">Clients</p>
+                      <p className="text-sm text-gray-600 mb-1">Active Clients</p>
                       <p className="text-3xl font-bold text-gray-900">{stats.activeUsers}</p>
                       <p className="text-xs text-blue-600 mt-1">+15% this month</p>
                     </div>
@@ -417,13 +466,46 @@ const AdminDashboard = () => {
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 mb-1">Conversion</p>
+                      <p className="text-sm text-gray-600 mb-1">Conversion Rate</p>
                       <p className="text-3xl font-bold text-gray-900">{stats.conversionRate}%</p>
                       <p className="text-xs text-green-600 mt-1">+3% this month</p>
                     </div>
                     <div className="bg-orange-100 p-3 rounded-xl">
                       <TrendingUp className="h-8 w-8 text-orange-600" />
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Additional Stats Row */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">Media Files</p>
+                      <p className="text-2xl font-bold text-gray-900">{stats.mediaFiles}</p>
+                    </div>
+                    <Image className="h-8 w-8 text-blue-600" />
+                  </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">Website Views</p>
+                      <p className="text-2xl font-bold text-gray-900">{stats.websiteViews.toLocaleString()}</p>
+                    </div>
+                    <Globe className="h-8 w-8 text-green-600" />
+                  </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">System Health</p>
+                      <p className="text-2xl font-bold text-gray-900">{stats.systemHealth}%</p>
+                    </div>
+                    <Activity className="h-8 w-8 text-purple-600" />
                   </div>
                 </div>
               </div>
@@ -501,7 +583,7 @@ const AdminDashboard = () => {
 
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-xl font-bold text-gray-900">Notifications</h3>
+                    <h3 className="text-xl font-bold text-gray-900">Recent Activity</h3>
                     <button 
                       onClick={() => setActiveTab('notifications')}
                       className="text-blue-600 hover:text-blue-700 text-sm font-medium"
@@ -519,6 +601,41 @@ const AdminDashboard = () => {
                       </div>
                     ))}
                   </div>
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h3 className="text-xl font-bold text-gray-900 mb-6">Quick Actions</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <button
+                    onClick={() => setActiveTab('home-editor')}
+                    className="flex flex-col items-center p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors duration-300"
+                  >
+                    <Edit3 className="h-8 w-8 text-blue-600 mb-2" />
+                    <span className="text-sm font-medium text-blue-900">Edit Homepage</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('media-library')}
+                    className="flex flex-col items-center p-4 bg-green-50 rounded-xl hover:bg-green-100 transition-colors duration-300"
+                  >
+                    <Image className="h-8 w-8 text-green-600 mb-2" />
+                    <span className="text-sm font-medium text-green-900">Media Library</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('bookings')}
+                    className="flex flex-col items-center p-4 bg-purple-50 rounded-xl hover:bg-purple-100 transition-colors duration-300"
+                  >
+                    <Calendar className="h-8 w-8 text-purple-600 mb-2" />
+                    <span className="text-sm font-medium text-purple-900">View Calendar</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('analytics')}
+                    className="flex flex-col items-center p-4 bg-orange-50 rounded-xl hover:bg-orange-100 transition-colors duration-300"
+                  >
+                    <BarChart3 className="h-8 w-8 text-orange-600 mb-2" />
+                    <span className="text-sm font-medium text-orange-900">View Analytics</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -589,7 +706,7 @@ const AdminDashboard = () => {
           )}
 
           {/* Other tabs placeholder */}
-          {!['dashboard', 'home-editor', 'events-editor', 'services-editor', 'contact-editor', 'booking-editor', 'inquiries', 'bookings', 'clients', 'analytics'].includes(activeTab) && (
+          {!['dashboard', 'home-editor', 'events-editor', 'services-editor', 'contact-editor', 'booking-editor', 'media-library', 'inquiries', 'bookings', 'clients', 'analytics'].includes(activeTab) && (
             <div className="bg-white p-12 rounded-2xl shadow-sm border border-gray-100 text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 {React.createElement(menuItems.find(item => item.id === activeTab)?.icon || Settings, {

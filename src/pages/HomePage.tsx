@@ -13,8 +13,19 @@ const HomePage = () => {
     '/IMG_0967.webp',
     'https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=1920',
     'https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=1920',
-    'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1920'
+    'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    'https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=1920'
   ];
+
+  // Experience section gallery images
+  const experienceImages = [
+    'https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=800',
+    'https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=800',
+    'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=800',
+    'https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=800'
+  ];
+
+  const [experienceImageIndex, setExperienceImageIndex] = useState(0);
 
   // Fallback testimonials
   const fallbackTestimonials: Testimonial[] = [
@@ -64,6 +75,17 @@ const HomePage = () => {
 
     return () => clearInterval(interval);
   }, [heroImages.length]);
+
+  // Auto-rotate experience images every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setExperienceImageIndex((prevIndex) => 
+        (prevIndex + 1) % experienceImages.length
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [experienceImages.length]);
 
   const fetchTestimonials = async () => {
     try {
@@ -303,7 +325,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Experience Preview */}
+      {/* Experience Preview with Auto-rotating Images */}
       <section className="py-20 bg-gradient-to-br from-blue-50 to-primary-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -350,11 +372,35 @@ const HomePage = () => {
               </div>
             </div>
             <div className="relative">
-              <img
-                src="https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=800"
-                alt="Yacht racing on Lake Garda"
-                className="rounded-2xl shadow-2xl"
-              />
+              {/* Auto-rotating experience images */}
+              <div className="relative rounded-2xl shadow-2xl overflow-hidden">
+                {experienceImages.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`Yacht racing experience ${index + 1}`}
+                    className={`w-full h-96 object-cover transition-opacity duration-1000 ${
+                      index === experienceImageIndex ? 'opacity-100' : 'opacity-0 absolute inset-0'
+                    }`}
+                  />
+                ))}
+              </div>
+              
+              {/* Image indicators */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                {experienceImages.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setExperienceImageIndex(index)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      index === experienceImageIndex 
+                        ? 'bg-white scale-110' 
+                        : 'bg-white/50 hover:bg-white/75'
+                    }`}
+                  />
+                ))}
+              </div>
+              
               <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-lg">
                 <div className="flex items-center space-x-3">
                   <Wind className="h-8 w-8 text-blue-500" />

@@ -35,12 +35,10 @@ const EventsPage = () => {
   ];
 
   const equipment = [
-    "Professional racing yacht (Bavaria 34 or similar)",
-    "All safety equipment (life jackets, harnesses)",
+    "Professional racing yacht (J-70)",
+    "All safety equipment (life jackets, water)",
     "Professional sailing gear",
-    "Racing flags and timing equipment",
-    "First aid kit and emergency equipment",
-    "Waterproof bags for personal items"
+    "First aid kit and emergency equipment"
   ];
 
   const weatherConditions = [
@@ -346,7 +344,7 @@ const EventsPage = () => {
                 <div className="mt-8 p-6 bg-gold-50 rounded-xl">
                   <h4 className="text-xl font-semibold text-gray-900 mb-3">Premium Yachts</h4>
                   <p className="text-gray-700">
-                    We use modern Bavaria 34 cruiser-racers and similar high-performance yachts. 
+                    We use modern J-70 high-performance yachts. 
                     These boats are specifically chosen for their racing capabilities while 
                     maintaining comfort and safety for our participants.
                   </p>

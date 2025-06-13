@@ -31,7 +31,7 @@ import {
   MapPin,
   Clock,
   CheckCircle,
-  AlertCircle,
+  AlertTriangle,
   XCircle,
   Edit3,
   Home,
@@ -39,13 +39,15 @@ import {
   Briefcase,
   Contact,
   ClipboardList,
-  UserCheck
+  UserCheck,
+  BookOpen
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import HomeContentEditor from '../components/admin/HomeContentEditor';
 import EventsContentEditor from '../components/admin/EventsContentEditor';
 import ServicesContentEditor from '../components/admin/ServicesContentEditor';
 import ContactContentEditor from '../components/admin/ContactContentEditor';
+import BookingContentEditor from '../components/admin/BookingContentEditor';
 import InquiriesManagement from '../components/admin/InquiriesManagement';
 import ClientsManagement from '../components/admin/ClientsManagement';
 import BookingsCalendar from '../components/admin/BookingsCalendar';
@@ -184,6 +186,7 @@ const AdminDashboard = () => {
     { id: 'events-editor', label: 'Events Editor', icon: CalendarDays },
     { id: 'services-editor', label: 'Services Editor', icon: Briefcase },
     { id: 'contact-editor', label: 'Contact Editor', icon: Contact },
+    { id: 'booking-editor', label: 'Booking Editor', icon: BookOpen },
     { id: 'inquiries', label: 'Inquiries', icon: ClipboardList },
     { id: 'bookings', label: 'Bookings Calendar', icon: Calendar },
     { id: 'clients', label: 'Client Management', icon: UserCheck },
@@ -212,7 +215,7 @@ const AdminDashboard = () => {
       case 'pending': return <Clock className="h-4 w-4" />;
       case 'cancelled': return <XCircle className="h-4 w-4" />;
       case 'completed': return <CheckCircle className="h-4 w-4" />;
-      default: return <AlertCircle className="h-4 w-4" />;
+      default: return <AlertTriangle className="h-4 w-4" />;
     }
   };
 
@@ -354,12 +357,13 @@ const AdminDashboard = () => {
         </div>
 
         {/* Content Area */}
-        <div className={activeTab === 'home-editor' || activeTab === 'events-editor' || activeTab === 'services-editor' || activeTab === 'contact-editor' ? '' : 'p-4 sm:p-6 lg:p-8'}>
+        <div className={activeTab === 'home-editor' || activeTab === 'events-editor' || activeTab === 'services-editor' || activeTab === 'contact-editor' || activeTab === 'booking-editor' ? '' : 'p-4 sm:p-6 lg:p-8'}>
           {/* Content Editors */}
           {activeTab === 'home-editor' && <HomeContentEditor />}
           {activeTab === 'events-editor' && <EventsContentEditor />}
           {activeTab === 'services-editor' && <ServicesContentEditor />}
           {activeTab === 'contact-editor' && <ContactContentEditor />}
+          {activeTab === 'booking-editor' && <BookingContentEditor />}
 
           {/* Management Components */}
           {activeTab === 'inquiries' && <InquiriesManagement />}
@@ -585,7 +589,7 @@ const AdminDashboard = () => {
           )}
 
           {/* Other tabs placeholder */}
-          {!['dashboard', 'home-editor', 'events-editor', 'services-editor', 'contact-editor', 'inquiries', 'bookings', 'clients', 'analytics'].includes(activeTab) && (
+          {!['dashboard', 'home-editor', 'events-editor', 'services-editor', 'contact-editor', 'booking-editor', 'inquiries', 'bookings', 'clients', 'analytics'].includes(activeTab) && (
             <div className="bg-white p-12 rounded-2xl shadow-sm border border-gray-100 text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 {React.createElement(menuItems.find(item => item.id === activeTab)?.icon || Settings, {

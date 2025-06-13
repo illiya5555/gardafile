@@ -48,20 +48,20 @@ const BookingCalendarPage = () => {
     '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'
   ];
 
-  // Yacht data with proper UUID format
+  // J-70 yacht fleet with proper UUID format
   const yachts = [
-    { id: 'a1b2c3d4-e5f6-7890-1234-567890abcdef', name: 'Bavaria 34 "Adriatic Wind"', capacity: 8 },
-    { id: 'b2c3d4e5-f6g7-8901-2345-678901bcdefg', name: 'Bavaria 34 "Lake Spirit"', capacity: 8 },
-    { id: 'c3d4e5f6-g7h8-9012-3456-789012cdefgh', name: 'Jeanneau 349 "Garda Dream"', capacity: 8 },
-    { id: 'd4e5f6g7-h8i9-0123-4567-890123defghi', name: 'Bavaria 37 "Mountain View"', capacity: 10 },
-    { id: 'e5f6g7h8-i9j0-1234-5678-901234efghij', name: 'Hanse 345 "Blue Horizon"', capacity: 8 },
-    { id: 'f6g7h8i9-j0k1-2345-6789-012345fghijk', name: 'Bavaria 34 "Wind Dancer"', capacity: 8 },
-    { id: 'g7h8i9j0-k1l2-3456-7890-123456ghijkl', name: 'Jeanneau 349 "Sunset Sail"', capacity: 8 },
-    { id: 'h8i9j0k1-l2m3-4567-8901-234567hijklm', name: 'Bavaria 37 "Alpine Breeze"', capacity: 10 },
-    { id: 'i9j0k1l2-m3n4-5678-9012-345678ijklmn', name: 'Hanse 345 "Crystal Waters"', capacity: 8 },
-    { id: 'j0k1l2m3-n4o5-6789-0123-456789jklmno', name: 'Bavaria 34 "Freedom"', capacity: 8 },
-    { id: 'k1l2m3n4-o5p6-7890-1234-567890klmnop', name: 'Jeanneau 349 "Serenity"', capacity: 8 },
-    { id: 'l2m3n4o5-p6q7-8901-2345-678901lmnopq', name: 'Bavaria 37 "Majestic"', capacity: 10 }
+    { id: 'a1b2c3d4-e5f6-7890-1234-567890abcdef', name: 'J-70 "Adriatic Wind"', capacity: 8 },
+    { id: 'b2c3d4e5-f6g7-8901-2345-678901bcdefg', name: 'J-70 "Lake Spirit"', capacity: 8 },
+    { id: 'c3d4e5f6-g7h8-9012-3456-789012cdefgh', name: 'J-70 "Garda Dream"', capacity: 8 },
+    { id: 'd4e5f6g7-h8i9-0123-4567-890123defghi', name: 'J-70 "Mountain View"', capacity: 8 },
+    { id: 'e5f6g7h8-i9j0-1234-5678-901234efghij', name: 'J-70 "Blue Horizon"', capacity: 8 },
+    { id: 'f6g7h8i9-j0k1-2345-6789-012345fghijk', name: 'J-70 "Wind Dancer"', capacity: 8 },
+    { id: 'g7h8i9j0-k1l2-3456-7890-123456ghijkl', name: 'J-70 "Sunset Sail"', capacity: 8 },
+    { id: 'h8i9j0k1-l2m3-4567-8901-234567hijklm', name: 'J-70 "Alpine Breeze"', capacity: 8 },
+    { id: 'i9j0k1l2-m3n4-5678-9012-345678ijklmn', name: 'J-70 "Crystal Waters"', capacity: 8 },
+    { id: 'j0k1l2m3-n4o5-6789-0123-456789jklmno', name: 'J-70 "Freedom"', capacity: 8 },
+    { id: 'k1l2m3n4-o5p6-7890-1234-567890klmnop', name: 'J-70 "Serenity"', capacity: 8 },
+    { id: 'l2m3n4o5-p6q7-8901-2345-678901lmnopq', name: 'J-70 "Majestic"', capacity: 8 }
   ];
 
   useEffect(() => {
@@ -91,7 +91,7 @@ const BookingCalendarPage = () => {
               start_time: time,
               end_time: timeSlots[index + 4] || '17:00', // Minimum 4 hours
               available: isAvailable,
-              price_per_person: 199,
+              price_per_person: 195, // €195 for 4 hours per person
               max_participants: yacht.capacity
             });
           }
@@ -143,8 +143,16 @@ const BookingCalendarPage = () => {
   const calculateTotalPrice = () => {
     if (!selectedStartTime || !selectedEndTime) return 0;
     const duration = calculateDuration(selectedStartTime, selectedEndTime);
-    const basePrice = Math.max(4, duration) * 199; // Minimum 4 hours
-    return basePrice * participants;
+    
+    // Base price for 4 hours is €195 per person
+    // Additional hours are €48.75 per hour per person (195/4)
+    let totalPrice = 195; // Base 4-hour price
+    if (duration > 4) {
+      const additionalHours = duration - 4;
+      totalPrice += additionalHours * 48.75; // €48.75 per additional hour
+    }
+    
+    return totalPrice * participants;
   };
 
   const handleDateSelect = (date: Date) => {
@@ -236,10 +244,10 @@ const BookingCalendarPage = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">
-            Book a Yacht
+            Book a J-70 Yacht
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Choose a date, time, and yacht for an unforgettable sailing adventure on Lake Garda
+            Choose a date, time, and J-70 yacht for an unforgettable sailing adventure on Lake Garda
           </p>
         </div>
 
@@ -421,7 +429,7 @@ const BookingCalendarPage = () => {
                         {participants}
                       </span>
                       <button
-                        onClick={() => setParticipants(Math.min(10, participants + 1))}
+                        onClick={() => setParticipants(Math.min(8, participants + 1))}
                         className="w-12 h-12 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all duration-300 flex items-center justify-center text-xl font-semibold"
                       >
                         +
@@ -437,6 +445,13 @@ const BookingCalendarPage = () => {
                         const duration = calculateDuration(slot.start_time, slot.end_time);
                         const isSelected = selectedYacht === slot.yacht_id && 
                           selectedStartTime === slot.start_time;
+
+                        // Calculate price for this specific slot
+                        let slotPrice = 195; // Base 4-hour price
+                        if (duration > 4) {
+                          const additionalHours = duration - 4;
+                          slotPrice += additionalHours * 48.75;
+                        }
 
                         return (
                           <div
@@ -465,10 +480,10 @@ const BookingCalendarPage = () => {
                               </div>
                               <div className="text-right">
                                 <p className="text-2xl font-bold text-blue-600">
-                                  €{duration * slot.price_per_person * participants}
+                                  €{Math.round(slotPrice * participants)}
                                 </p>
                                 <p className="text-sm text-gray-600">
-                                  €{slot.price_per_person}/hour/person
+                                  €{Math.round(slotPrice)}/person
                                 </p>
                               </div>
                             </div>
@@ -723,7 +738,7 @@ const BookingCalendarPage = () => {
                     </span>
                   </div>
                   <p className="text-sm text-gray-600 mt-2">
-                    €199 per hour per person (minimum 4 hours)
+                    €195 for 4 hours per person (then €48.75 per additional hour)
                   </p>
                 </div>
               )}

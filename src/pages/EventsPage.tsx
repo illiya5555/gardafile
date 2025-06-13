@@ -55,7 +55,7 @@ const EventsPage = () => {
     },
     {
       question: "What should I bring?",
-      answer: "Bring comfortable clothes, sunscreen, a hat, and a change of clothes. We provide all sailing equipment, safety gear, and waterproof bags for your belongings."
+      answer: "Bring comfortable clothes, sunscreen, a hat, and a change of clothes. We provide all sailing equipment, safety gear."
     },
     {
       question: "What if the weather is bad?",
@@ -63,11 +63,7 @@ const EventsPage = () => {
     },
     {
       question: "How many people per boat?",
-      answer: "Each yacht accommodates 6-8 participants plus the professional skipper. This ensures personalized attention and an intimate experience."
-    },
-    {
-      question: "Are meals included?",
-      answer: "Lunch is not included in the base price, but we can arrange catering at the marina restaurant. Many participants enjoy the local Italian cuisine as part of their experience."
+      answer: "Each yacht accommodates 4-5 participants plus the professional skipper. This ensures personalized attention."
     },
     {
       question: "Can I bring my camera?",

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Anchor, Globe, Phone } from 'lucide-react';
+import { Menu, X, Anchor, Globe, Phone, Calendar } from 'lucide-react';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -74,10 +74,19 @@ const Header = () => {
               </div>
             </div>
 
+            {/* Book Now Button */}
+            <Link
+              to="/booking"
+              className="flex items-center space-x-2 px-6 py-2 rounded-lg font-medium bg-primary-600 text-white hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg"
+            >
+              <Calendar className="h-4 w-4" />
+              <span>Book Now</span>
+            </Link>
+
             {/* Contact */}
             <a
               href="tel:+393456789012"
-              className="flex items-center space-x-2 px-4 py-2 rounded-lg font-medium bg-primary-600 text-white hover:bg-primary-700 transition-all duration-300 hover:scale-105"
+              className="flex items-center space-x-2 px-4 py-2 rounded-lg font-medium border border-gray-300 text-gray-700 hover:bg-gray-50 transition-all duration-300 hover:scale-105"
             >
               <Phone className="h-4 w-4" />
               <span className="hidden lg:inline">Call Now</span>
@@ -113,6 +122,16 @@ const Header = () => {
               ))}
               
               <div className="pt-4 border-t border-gray-200">
+                {/* Mobile Book Now Button */}
+                <Link
+                  to="/booking"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center justify-center space-x-2 w-full bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300 mb-4"
+                >
+                  <Calendar className="h-4 w-4" />
+                  <span>Book Now</span>
+                </Link>
+
                 <div className="flex items-center justify-between">
                   <div className="flex space-x-2">
                     {languages.map((lang) => (
@@ -131,7 +150,7 @@ const Header = () => {
                   </div>
                   <a
                     href="tel:+393456789012"
-                    className="flex items-center space-x-2 px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors duration-300"
+                    className="flex items-center space-x-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors duration-300"
                   >
                     <Phone className="h-4 w-4" />
                     <span>Call</span>

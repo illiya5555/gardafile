@@ -84,3 +84,35 @@ export interface CorporateInquiry {
   status: 'pending' | 'contacted' | 'quoted' | 'confirmed' | 'cancelled';
   created_at: string;
 }
+
+// New yacht booking interface
+export interface YachtBooking {
+  id: string;
+  yacht_id: string;
+  user_id?: string;
+  start_date: string;
+  end_date: string;
+  start_time: string;
+  end_time: string;
+  participants: number;
+  total_price: number;
+  customer_name: string;
+  customer_email: string;
+  customer_phone: string;
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
+  created_at: string;
+  updated_at: string;
+}
+
+// Yacht interface
+export interface Yacht {
+  id: string;
+  name: string;
+  model: string;
+  capacity: number;
+  hourly_rate: number;
+  is_active: boolean;
+  description?: string;
+  image_url?: string;
+  created_at: string;
+}

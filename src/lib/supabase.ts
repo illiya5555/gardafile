@@ -10,19 +10,10 @@ if (!supabaseUrl || !supabaseAnonKey) {
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Database types
-export interface Profile {
-  id: string;
-  email: string;
-  first_name?: string;
-  last_name?: string;
-  phone?: string;
-  created_at: string;
-  updated_at: string;
-}
-
 export interface Booking {
   id: string;
-  user_id: string;
+  customer_name: string;
+  customer_email: string;
   booking_date: string;
   time_slot: string;
   participants: number;
@@ -56,7 +47,6 @@ export interface Testimonial {
 
 export interface ChatMessage {
   id: string;
-  user_id: string;
   message: string;
   sender_type: 'user' | 'bot';
   created_at: string;
@@ -84,7 +74,6 @@ export interface AdditionalService {
 export interface CorporateInquiry {
   id: string;
   package_id: string;
-  user_id?: string;
   company_name: string;
   contact_person: string;
   email: string;

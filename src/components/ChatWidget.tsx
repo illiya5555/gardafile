@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { MessageCircle, X, Send, User, Bot } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import { supabase, ChatMessage } from '../lib/supabase';
+import { ChatMessage } from '../lib/supabase';
 
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
-  const { user, profile } = useAuth();
 
   const quickReplies = [
     "What's included in the €199 package?",
@@ -18,89 +16,30 @@ const ChatWidget = () => {
     "Group discounts available?"
   ];
 
-  useEffect(() => {
-    if (user && isOpen) {
-      loadChatHistory();
-    }
-  }, [user, isOpen]);
-
-  const loadChatHistory = async () => {
-    if (!user) return;
-
-    try {
-      const { data, error } = await supabase
-        .from('chat_messages')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: true })
-        .limit(50);
-
-      if (error) throw error;
-
-      if (data && data.length > 0) {
-        setMessages(data);
-      } else {
-        // Add welcome message for new users
-        const welcomeMessage: ChatMessage = {
-          id: 'welcome',
-          user_id: user.id,
-          message: `Hello ${profile?.first_name || 'there'}! I'm here to help you with your sailing experience. How can I assist you today?`,
-          sender_type: 'bot',
-          created_at: new Date().toISOString()
-        };
-        setMessages([welcomeMessage]);
-      }
-    } catch (error) {
-      console.error('Error loading chat history:', error);
-    }
-  };
-
-  const saveChatMessage = async (message: string, senderType: 'user' | 'bot') => {
-    if (!user) return;
-
-    try {
-      const { error } = await supabase
-        .from('chat_messages')
-        .insert({
-          user_id: user.id,
-          message,
-          sender_type: senderType
-        });
-
-      if (error) throw error;
-    } catch (error) {
-      console.error('Error saving chat message:', error);
-    }
-  };
-
   const handleSendMessage = async () => {
-    if (!inputText.trim() || !user) return;
+    if (!inputText.trim()) return;
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
-      user_id: user.id,
       message: inputText,
       sender_type: 'user',
       created_at: new Date().toISOString()
     };
 
     setMessages(prev => [...prev, userMessage]);
-    await saveChatMessage(inputText, 'user');
     setInputText('');
     setLoading(true);
 
     // Simulate bot response
-    setTimeout(async () => {
+    setTimeout(() => {
       const botResponse: ChatMessage = {
         id: (Date.now() + 1).toString(),
-        user_id: user.id,
         message: "Thanks for your message! Our team will get back to you shortly. In the meantime, feel free to check our booking page or call us at +39 345 678 9012.",
         sender_type: 'bot',
         created_at: new Date().toISOString()
       };
       
       setMessages(prev => [...prev, botResponse]);
-      await saveChatMessage(botResponse.message, 'bot');
       setLoading(false);
     }, 1000);
   };
@@ -111,16 +50,14 @@ const ChatWidget = () => {
 
   const handleOpenChat = () => {
     setIsOpen(true);
-    if (!user) {
-      // Show login prompt for non-authenticated users
-      const guestMessage: ChatMessage = {
-        id: 'guest',
-        user_id: 'guest',
-        message: "Hello! To use our chat support, please sign in or create an account. This helps us provide you with personalized assistance and keep track of your conversations.",
+    if (messages.length === 0) {
+      const welcomeMessage: ChatMessage = {
+        id: 'welcome',
+        message: "Hello! I'm here to help you with your sailing experience. How can I assist you today?",
         sender_type: 'bot',
         created_at: new Date().toISOString()
       };
-      setMessages([guestMessage]);
+      setMessages([welcomeMessage]);
     }
   };
 
@@ -148,9 +85,7 @@ const ChatWidget = () => {
               </div>
               <div>
                 <h3 className="font-semibold">Garda Racing Support</h3>
-                <p className="text-xs text-white/80">
-                  {user ? 'Online now' : 'Sign in for support'}
-                </p>
+                <p className="text-xs text-white/80">Online now</p>
               </div>
             </div>
             <button
@@ -204,7 +139,7 @@ const ChatWidget = () => {
           </div>
 
           {/* Quick Replies */}
-          {user && messages.length <= 1 && (
+          {messages.length <= 1 && (
             <div className="px-4 pb-2">
               <p className="text-xs text-gray-500 mb-2">Quick questions:</p>
               <div className="flex flex-wrap gap-1">
@@ -223,36 +158,24 @@ const ChatWidget = () => {
 
           {/* Input */}
           <div className="p-4 border-t border-gray-200">
-            {user ? (
-              <div className="flex space-x-2">
-                <input
-                  type="text"
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  placeholder="Type your message..."
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
-                  disabled={loading}
-                />
-                <button
-                  onClick={handleSendMessage}
-                  disabled={loading || !inputText.trim()}
-                  className="bg-primary-600 text-white p-2 rounded-lg hover:bg-primary-700 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <Send className="h-4 w-4" />
-                </button>
-              </div>
-            ) : (
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mb-2">Sign in to start chatting</p>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="bg-primary-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-primary-700 transition-colors duration-300"
-                >
-                  Sign In
-                </button>
-              </div>
-            )}
+            <div className="flex space-x-2">
+              <input
+                type="text"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                placeholder="Type your message..."
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+                disabled={loading}
+              />
+              <button
+                onClick={handleSendMessage}
+                disabled={loading || !inputText.trim()}
+                className="bg-primary-600 text-white p-2 rounded-lg hover:bg-primary-700 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Send className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         </div>
       )}

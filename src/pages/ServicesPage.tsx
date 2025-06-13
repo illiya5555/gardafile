@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Award, Camera, Phone, Mail, CheckCircle, Star, Calendar, MapPin, Clock, Music, Utensils, Car, Video } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
 import { supabase, CorporatePackage, AdditionalService, CorporateInquiry } from '../lib/supabase';
 
 const ServicesPage = () => {
@@ -10,7 +9,6 @@ const ServicesPage = () => {
   const [showInquiryForm, setShowInquiryForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [formLoading, setFormLoading] = useState(false);
-  const { user, profile } = useAuth();
 
   const [inquiryForm, setInquiryForm] = useState({
     company_name: '',
@@ -47,15 +45,15 @@ const ServicesPage = () => {
           name: 'Team Spirit',
           description: 'Perfect for small teams looking to build stronger connections',
           price: 2400,
-          participants_range: '12-24 человека',
-          duration: '4 часа',
+          participants_range: '12-24 people',
+          duration: '4 hours',
           features: [
-            'Профессиональные шкиперы',
-            'Инструктаж по безопасности',
-            'Командные гонки',
-            'Фотосъемка мероприятия',
-            'Сертификаты участников',
-            'Легкий обед на берегу'
+            'Professional skippers',
+            'Safety briefing',
+            'Team races',
+            'Event photography',
+            'Participant certificates',
+            'Light lunch on shore'
           ],
           is_popular: false,
           created_at: new Date().toISOString()
@@ -65,16 +63,16 @@ const ServicesPage = () => {
           name: 'Corporate Challenge',
           description: 'Our most popular package for medium-sized corporate groups',
           price: 4800,
-          participants_range: '24-48 человек',
-          duration: '6 часов',
+          participants_range: '24-48 people',
+          duration: '6 hours',
           features: [
-            'Все из пакета Team Spirit',
-            'Профессиональная видеосъемка',
-            'Церемония награждения',
-            'Кубки и медали',
-            'Банкет с итальянской кухней',
-            'Трансфер от отеля',
-            'Персональный координатор'
+            'Everything from Team Spirit',
+            'Professional videography',
+            'Award ceremony',
+            'Trophies and medals',
+            'Italian cuisine banquet',
+            'Hotel transfer',
+            'Personal coordinator'
           ],
           is_popular: true,
           created_at: new Date().toISOString()
@@ -84,16 +82,16 @@ const ServicesPage = () => {
           name: 'Executive Regatta',
           description: 'Premium experience for large corporate events',
           price: 9600,
-          participants_range: '48-96 человек',
-          duration: '8 часов',
+          participants_range: '48-96 people',
+          duration: '8 hours',
           features: [
-            'Все из пакета Corporate Challenge',
-            'VIP-зона для руководства',
-            'Живая музыка и развлечения',
-            'Премиальные напитки',
-            'Персонализированные подарки',
-            'Профессиональный ведущий',
-            'Организация дополнительных активностей'
+            'Everything from Corporate Challenge',
+            'VIP area for executives',
+            'Live music and entertainment',
+            'Premium beverages',
+            'Personalized gifts',
+            'Professional host',
+            'Additional activities organization'
           ],
           is_popular: false,
           created_at: new Date().toISOString()
@@ -103,26 +101,26 @@ const ServicesPage = () => {
       setAdditionalServices([
         {
           id: '1',
-          name: 'Трансфер',
-          description: 'Комфортабельные автобусы от отеля',
+          name: 'Transfer',
+          description: 'Comfortable buses from hotel',
           created_at: new Date().toISOString()
         },
         {
           id: '2',
-          name: 'Кейтеринг',
-          description: 'Итальянская кухня и напитки',
+          name: 'Catering',
+          description: 'Italian cuisine and beverages',
           created_at: new Date().toISOString()
         },
         {
           id: '3',
-          name: 'Развлечения',
-          description: 'Живая музыка и ведущий',
+          name: 'Entertainment',
+          description: 'Live music and host',
           created_at: new Date().toISOString()
         },
         {
           id: '4',
-          name: 'Фото/Видео',
-          description: 'Профессиональная съемка',
+          name: 'Photo/Video',
+          description: 'Professional filming',
           created_at: new Date().toISOString()
         }
       ]);
@@ -141,16 +139,6 @@ const ServicesPage = () => {
   const handlePackageSelect = (packageId: string) => {
     setSelectedPackage(packageId);
     setShowInquiryForm(true);
-    
-    // Pre-fill form if user is logged in
-    if (profile) {
-      setInquiryForm(prev => ({
-        ...prev,
-        contact_person: `${profile.first_name} ${profile.last_name}`.trim(),
-        email: profile.email,
-        phone: profile.phone || ''
-      }));
-    }
   };
 
   const handleSubmitInquiry = async (e: React.FormEvent) => {
@@ -161,7 +149,6 @@ const ServicesPage = () => {
     try {
       const inquiryData: Partial<CorporateInquiry> = {
         package_id: selectedPackage,
-        user_id: user?.id,
         company_name: inquiryForm.company_name,
         contact_person: inquiryForm.contact_person,
         email: inquiryForm.email,
@@ -178,7 +165,7 @@ const ServicesPage = () => {
 
       if (error) throw error;
 
-      alert('Ваш запрос отправлен! Мы свяжемся с вами в ближайшее время.');
+      alert('Your inquiry has been sent! We will contact you shortly.');
       setShowInquiryForm(false);
       setSelectedPackage(null);
       setInquiryForm({
@@ -192,7 +179,7 @@ const ServicesPage = () => {
       });
     } catch (error: any) {
       console.error('Error submitting inquiry:', error);
-      alert('Ошибка при отправке запроса: ' + error.message);
+      alert('Error submitting inquiry: ' + error.message);
     } finally {
       setFormLoading(false);
     }
@@ -211,12 +198,12 @@ const ServicesPage = () => {
       {/* Hero Section */}
       <section className="relative py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 font-serif">
-            Корпоративные услуги
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 font-serif animate-fade-in">
+            Corporate Services
           </h1>
-          <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Создайте незабываемые корпоративные мероприятия на озере Гарда. 
-            Профессионально организованные регаты для укрепления командного духа.
+          <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed animate-slide-up">
+            Create unforgettable corporate events on Lake Garda. 
+            Professionally organized regattas to strengthen team spirit.
           </p>
         </div>
       </section>
@@ -225,60 +212,60 @@ const ServicesPage = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            <div className="text-center">
-              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-center group hover:scale-105 transition-transform duration-300">
+              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-200 transition-colors duration-300">
                 <Users className="h-8 w-8 text-primary-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Корпоративные регаты</h3>
-              <p className="text-gray-600">Укрепите командный дух и создайте незабываемые воспоминания</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Corporate Regattas</h3>
+              <p className="text-gray-600">Strengthen team spirit and create unforgettable memories</p>
             </div>
-            <div className="text-center">
-              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-center group hover:scale-105 transition-transform duration-300">
+              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-200 transition-colors duration-300">
                 <Award className="h-8 w-8 text-primary-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Подарочные сертификаты</h3>
-              <p className="text-gray-600">Идеальный подарок для любителей парусного спорта</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Gift Certificates</h3>
+              <p className="text-gray-600">Perfect gift for sailing enthusiasts</p>
             </div>
-            <div className="text-center">
-              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-center group hover:scale-105 transition-transform duration-300">
+              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-200 transition-colors duration-300">
                 <Calendar className="h-8 w-8 text-primary-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Частные мероприятия</h3>
-              <p className="text-gray-600">Персонализированные события для особых случаев</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Private Events</h3>
+              <p className="text-gray-600">Personalized events for special occasions</p>
             </div>
-            <div className="text-center">
-              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-center group hover:scale-105 transition-transform duration-300">
+              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-200 transition-colors duration-300">
                 <Star className="h-8 w-8 text-primary-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Обучение и курсы</h3>
-              <p className="text-gray-600">Профессиональное обучение парусному спорту</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Training & Courses</h3>
+              <p className="text-gray-600">Professional sailing instruction</p>
             </div>
           </div>
 
           {/* Corporate Benefits */}
-          <div className="bg-gradient-to-br from-blue-50 to-primary-50 rounded-2xl p-8 mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Преимущества корпоративных регат</h2>
+          <div className="bg-gradient-to-br from-blue-50 to-primary-50 rounded-2xl p-8 mb-16 animate-fade-in">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Benefits of Corporate Regattas</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="text-center group">
+                <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
                   <Users className="h-8 w-8 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Командная работа</h3>
-                <p className="text-gray-700">Парусный спорт требует слаженной работы команды. Идеальная метафора для бизнеса и отличный способ укрепить связи между коллегами.</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Teamwork</h3>
+                <p className="text-gray-700">Sailing requires coordinated teamwork. Perfect metaphor for business and excellent way to strengthen colleague bonds.</p>
               </div>
-              <div className="text-center">
-                <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="text-center group">
+                <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
                   <Award className="h-8 w-8 text-green-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Здоровая конкуренция</h3>
-                <p className="text-gray-700">Соревновательный элемент мотивирует сотрудников и создает позитивную атмосферу. Победители получают награды и признание.</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Healthy Competition</h3>
+                <p className="text-gray-700">Competitive element motivates employees and creates positive atmosphere. Winners receive awards and recognition.</p>
               </div>
-              <div className="text-center">
-                <div className="bg-gold-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="text-center group">
+                <div className="bg-gold-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
                   <Star className="h-8 w-8 text-gold-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Энергия и мотивация</h3>
-                <p className="text-gray-700">Активный отдых на свежем воздухе заряжает энергией и повышает мотивацию. Сотрудники возвращаются в офис вдохновленными.</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Energy & Motivation</h3>
+                <p className="text-gray-700">Active outdoor recreation energizes and increases motivation. Employees return to office inspired.</p>
               </div>
             </div>
           </div>
@@ -289,18 +276,18 @@ const ServicesPage = () => {
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">Корпоративные пакеты</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">Corporate Packages</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Выберите пакет, который лучше всего подходит для вашей команды
+              Choose the package that best suits your team
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {packages.map((pkg) => (
-              <div key={pkg.id} className={`bg-white rounded-2xl shadow-lg overflow-hidden ${pkg.is_popular ? 'ring-2 ring-primary-600' : ''}`}>
+              <div key={pkg.id} className={`bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl ${pkg.is_popular ? 'ring-2 ring-primary-600' : ''}`}>
                 {pkg.is_popular && (
                   <div className="bg-primary-600 text-white text-center py-2 px-4">
-                    <span className="font-semibold">Популярный</span>
+                    <span className="font-semibold">Most Popular</span>
                   </div>
                 )}
                 <div className="p-8">
@@ -326,13 +313,13 @@ const ServicesPage = () => {
 
                   <button
                     onClick={() => handlePackageSelect(pkg.id)}
-                    className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 ${
+                    className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:scale-105 ${
                       pkg.is_popular
-                        ? 'bg-primary-600 text-white hover:bg-primary-700'
+                        ? 'bg-primary-600 text-white hover:bg-primary-700 shadow-lg'
                         : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
                     }`}
                   >
-                    Заказать пакет
+                    Order Package
                   </button>
                 </div>
               </div>
@@ -345,8 +332,8 @@ const ServicesPage = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">Дополнительные услуги</h2>
-            <p className="text-xl text-gray-600">Сделайте ваше мероприятие еще более особенным</p>
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">Additional Services</h2>
+            <p className="text-xl text-gray-600">Make your event even more special</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -355,7 +342,7 @@ const ServicesPage = () => {
               const IconComponent = icons[index % icons.length];
               
               return (
-                <div key={service.id} className="text-center p-6 bg-gray-50 rounded-xl hover:shadow-md transition-shadow duration-300">
+                <div key={service.id} className="text-center p-6 bg-gray-50 rounded-xl hover:shadow-md transition-all duration-300 hover:scale-105">
                   <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                     <IconComponent className="h-8 w-8 text-primary-600" />
                   </div>
@@ -372,19 +359,19 @@ const ServicesPage = () => {
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">Отзывы корпоративных клиентов</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">Corporate Client Reviews</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-white p-8 rounded-2xl shadow-sm">
+            <div className="bg-white p-8 rounded-2xl shadow-sm transition-all duration-300 hover:shadow-md">
               <div className="flex items-center mb-4">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="h-5 w-5 text-gold-400 fill-current" />
                 ))}
               </div>
               <p className="text-gray-700 mb-6 leading-relaxed">
-                "Отличная организация корпоративного мероприятия! Наша команда получила незабываемые впечатления. 
-                Профессиональные инструкторы, качественное оборудование и потрясающие виды озера Гарда."
+                "Excellent organization of corporate event! Our team got unforgettable impressions. 
+                Professional instructors, quality equipment and stunning views of Lake Garda."
               </p>
               <div className="flex items-center space-x-4">
                 <img
@@ -393,21 +380,21 @@ const ServicesPage = () => {
                   className="w-12 h-12 rounded-full object-cover"
                 />
                 <div>
-                  <p className="font-semibold text-gray-900">Михаил Петров</p>
+                  <p className="font-semibold text-gray-900">Michael Peterson</p>
                   <p className="text-sm text-gray-600">HR Director, TechCorp</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white p-8 rounded-2xl shadow-sm">
+            <div className="bg-white p-8 rounded-2xl shadow-sm transition-all duration-300 hover:shadow-md">
               <div className="flex items-center mb-4">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="h-5 w-5 text-gold-400 fill-current" />
                 ))}
               </div>
               <p className="text-gray-700 mb-6 leading-relaxed">
-                "Идеальное место для team building! Сотрудники до сих пор обсуждают этот день. 
-                Рекомендуем всем компаниям, которые хотят укрепить командный дух."
+                "Perfect place for team building! Employees still discuss this day. 
+                We recommend to all companies that want to strengthen team spirit."
               </p>
               <div className="flex items-center space-x-4">
                 <img
@@ -416,7 +403,7 @@ const ServicesPage = () => {
                   className="w-12 h-12 rounded-full object-cover"
                 />
                 <div>
-                  <p className="font-semibold text-gray-900">Анна Смирнова</p>
+                  <p className="font-semibold text-gray-900">Anna Smith</p>
                   <p className="text-sm text-gray-600">CEO, Digital Solutions</p>
                 </div>
               </div>
@@ -428,22 +415,22 @@ const ServicesPage = () => {
       {/* Contact CTA */}
       <section className="py-20 bg-primary-600 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold mb-6 font-serif">Готовы организовать корпоративное мероприятие?</h2>
+          <h2 className="text-4xl font-bold mb-6 font-serif">Ready to organize a corporate event?</h2>
           <p className="text-xl text-white/90 mb-8">
-            Свяжитесь с нами для обсуждения деталей и получения персонального предложения
+            Contact us to discuss details and get a personalized offer
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="tel:+393456789012"
-              className="bg-white text-primary-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-colors duration-300"
+              className="bg-white text-primary-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105"
             >
-              Позвонить +39 345 678 9012
+              Call +39 345 678 9012
             </a>
             <a
               href="mailto:corporate@gardaracing.com"
               className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-primary-600 transition-all duration-300"
             >
-              Написать Email
+              Send Email
             </a>
           </div>
         </div>
@@ -452,35 +439,35 @@ const ServicesPage = () => {
       {/* Inquiry Form Modal */}
       {showInquiryForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto animate-slide-up">
             <div className="p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Запрос на корпоративный пакет</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Corporate Package Inquiry</h2>
               
               <form onSubmit={handleSubmitInquiry} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Название компании *
+                      Company Name *
                     </label>
                     <input
                       type="text"
                       name="company_name"
                       value={inquiryForm.company_name}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-300"
                       required
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Контактное лицо *
+                      Contact Person *
                     </label>
                     <input
                       type="text"
                       name="contact_person"
                       value={inquiryForm.contact_person}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-300"
                       required
                     />
                   </div>
@@ -496,20 +483,20 @@ const ServicesPage = () => {
                       name="email"
                       value={inquiryForm.email}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-300"
                       required
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Телефон *
+                      Phone *
                     </label>
                     <input
                       type="tel"
                       name="phone"
                       value={inquiryForm.phone}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-300"
                       required
                     />
                   </div>
@@ -518,28 +505,28 @@ const ServicesPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Количество участников *
+                      Number of Participants *
                     </label>
                     <input
                       type="number"
                       name="participants_count"
                       value={inquiryForm.participants_count}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-300"
                       min="1"
                       required
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Предпочтительная дата
+                      Preferred Date
                     </label>
                     <input
                       type="date"
                       name="preferred_date"
                       value={inquiryForm.preferred_date}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-300"
                       min={new Date().toISOString().split('T')[0]}
                     />
                   </div>
@@ -547,15 +534,15 @@ const ServicesPage = () => {
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-2">
-                    Дополнительные пожелания
+                    Additional Requests
                   </label>
                   <textarea
                     name="message"
                     value={inquiryForm.message}
                     onChange={handleInputChange}
                     rows={4}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    placeholder="Расскажите о ваших пожеланиях к мероприятию..."
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-300"
+                    placeholder="Tell us about your event requirements..."
                   />
                 </div>
 
@@ -565,14 +552,14 @@ const ServicesPage = () => {
                     onClick={() => setShowInquiryForm(false)}
                     className="px-6 py-3 text-gray-600 hover:text-gray-800 transition-colors duration-300"
                   >
-                    Отмена
+                    Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={formLoading}
-                    className="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300 disabled:opacity-50"
+                    className="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 disabled:opacity-50 hover:scale-105"
                   >
-                    {formLoading ? 'Отправка...' : 'Отправить запрос'}
+                    {formLoading ? 'Sending...' : 'Send Inquiry'}
                   </button>
                 </div>
               </form>

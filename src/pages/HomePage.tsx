@@ -287,7 +287,10 @@ const HomePage = () => {
           <div className="flex justify-center mt-12">
             <div className="text-center group hover:scale-105 transition-transform duration-300 max-w-sm">
               <div className="bg-primary-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-100 transition-colors duration-300">
-                <features[4].icon className="h-10 w-10 text-primary-600" />
+                {(() => {
+                  const IconComponent = features[4].icon;
+                  return <IconComponent className="h-10 w-10 text-primary-600" />;
+                })()}
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">{features[4].title}</h3>
               <p className="text-gray-600 leading-relaxed">{features[4].description}</p>

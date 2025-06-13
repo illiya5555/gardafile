@@ -150,15 +150,19 @@ const HomePage = () => {
               <div className="space-y-3 mb-6 text-left">
                 <div className="flex items-center space-x-3 text-white/90">
                   <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>Professional skipper included</span>
+                  <span>Real yacht racing format</span>
                 </div>
                 <div className="flex items-center space-x-3 text-white/90">
                   <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>Racing medal & certificate</span>
+                  <span>Professional skipper on every boat</span>
                 </div>
                 <div className="flex items-center space-x-3 text-white/90">
                   <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>Professional photos & videos</span>
+                  <span>Open to all skill levels – no experience needed</span>
+                </div>
+                <div className="flex items-center space-x-3 text-white/90">
+                  <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+                  <span>Professional photos & videos from the race</span>
                 </div>
                 <div className="flex items-center space-x-3 text-white/90">
                   <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Anchor, Globe, Phone, Calendar } from 'lucide-react';
+import { Menu, X, Globe, Phone, Calendar } from 'lucide-react';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,7 +23,11 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="relative">
-              <Anchor className="h-8 w-8 text-primary-600 group-hover:text-primary-500 transition-colors duration-300" />
+              <img
+                src="/gardalogo.png"
+                alt="Garda Racing Yacht Club"
+                className="h-8 w-8 object-contain group-hover:scale-110 transition-transform duration-300"
+              />
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-gold-400 rounded-full animate-pulse"></div>
             </div>
             <div className="hidden sm:block">

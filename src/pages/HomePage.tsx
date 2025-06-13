@@ -4,7 +4,6 @@ import { Calendar, Users, Award, Camera, MapPin, Star, Wind, Anchor, Trophy, Shi
 import { supabase, Testimonial } from '../lib/supabase';
 
 const HomePage = () => {
-  const [selectedDate, setSelectedDate] = useState('');
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -217,26 +216,6 @@ const HomePage = () => {
               >
                 Book Your Adventure
               </Link>
-            </div>
-
-            {/* Quick Booking Widget */}
-            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 max-w-lg mx-auto border border-white/10">
-              <p className="text-white/80 mb-4">Quick booking for today:</p>
-              <div className="flex space-x-3">
-                <input
-                  type="date"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  min={new Date().toISOString().split('T')[0]}
-                  className="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-gold-400"
-                />
-                <Link
-                  to="/booking"
-                  className="bg-gold-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gold-600 transition-colors duration-300"
-                >
-                  Check
-                </Link>
-              </div>
             </div>
           </div>
         </div>

@@ -98,11 +98,11 @@ const EventsPage = () => {
               <div className="flex flex-wrap gap-4 mb-8">
                 <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
                   <Clock className="h-5 w-5 text-gold-400" />
-                  <span>8.5 hours</span>
+                  <span>3-4 hours</span>
                 </div>
                 <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
                   <Users className="h-5 w-5 text-gold-400" />
-                  <span>6-8 people</span>
+                  <span>4-5 people</span>
                 </div>
                 <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
                   <Award className="h-5 w-5 text-gold-400" />
@@ -113,7 +113,7 @@ const EventsPage = () => {
                 to="/booking"
                 className="bg-gold-500 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gold-600 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
               >
-                Book Your Experience - €199
+                Book Your Experience - €195
               </Link>
             </div>
             <div className="relative">
@@ -414,7 +414,7 @@ const EventsPage = () => {
             to="/booking"
             className="bg-white text-primary-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
           >
-            Book Now - €199 per person
+            Book Now - €195 per person
           </Link>
         </div>
       </section>

@@ -1,20 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MessageCircle, X, Send, User, Bot } from 'lucide-react';
-import { ChatMessage } from '../lib/supabase';
+import { supabase } from '../lib/supabase';
+
+interface ChatMessage {
+  id: string;
+  message: string;
+  sender_type: 'user' | 'bot';
+  created_at: string;
+}
 
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
 
   const quickReplies = [
-    "What's included in the €199 package?",
+    "What's included in the €195 package?",
     "Do I need sailing experience?",
     "What's the weather like?",
     "How do I book?",
     "Group discounts available?"
   ];
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setCurrentUser(user);
+    };
+    checkUser();
+  }, []);
 
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
@@ -30,25 +47,58 @@ const ChatWidget = () => {
     setInputText('');
     setLoading(true);
 
-    // Simulate bot response
-    setTimeout(() => {
-      const botResponse: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        message: "Thanks for your message! Our team will get back to you shortly. In the meantime, feel free to check our booking page or call us at +39 345 678 9012.",
-        sender_type: 'bot',
-        created_at: new Date().toISOString()
-      };
-      
-      setMessages(prev => [...prev, botResponse]);
+    try {
+      // Save user message to Supabase
+      const { error } = await supabase
+        .from('chat_messages')
+        .insert({
+          user_id: currentUser?.id || null, // null if user is not authenticated
+          message: userMessage.message,
+          sender_type: 'user'
+        });
+
+      if (error) {
+        console.error('Error saving chat message:', error);
+        // Continue with bot response even if saving fails
+      }
+
+      // Simulate bot response
+      setTimeout(async () => {
+        const botResponse: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          message: "Thanks for your message! Our team will get back to you shortly. In the meantime, feel free to check our booking page or call us at +39 345 678 9012.",
+          sender_type: 'bot',
+          created_at: new Date().toISOString()
+        };
+        
+        setMessages(prev => [...prev, botResponse]);
+
+        // Save bot response to Supabase
+        try {
+          await supabase
+            .from('chat_messages')
+            .insert({
+              user_id: currentUser?.id || null,
+              message: botResponse.message,
+              sender_type: 'bot'
+            });
+        } catch (error) {
+          console.error('Error saving bot response:', error);
+        }
+
+        setLoading(false);
+      }, 1000);
+    } catch (error) {
+      console.error('Error in chat handling:', error);
       setLoading(false);
-    }, 1000);
+    }
   };
 
   const handleQuickReply = (reply: string) => {
     setInputText(reply);
   };
 
-  const handleOpenChat = () => {
+  const handleOpenChat = async () => {
     setIsOpen(true);
     if (messages.length === 0) {
       const welcomeMessage: ChatMessage = {
@@ -58,6 +108,19 @@ const ChatWidget = () => {
         created_at: new Date().toISOString()
       };
       setMessages([welcomeMessage]);
+
+      // Save welcome message to Supabase
+      try {
+        await supabase
+          .from('chat_messages')
+          .insert({
+            user_id: currentUser?.id || null,
+            message: welcomeMessage.message,
+            sender_type: 'bot'
+          });
+      } catch (error) {
+        console.error('Error saving welcome message:', error);
+      }
     }
   };
 

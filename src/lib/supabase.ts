@@ -77,8 +77,20 @@ export interface Testimonial {
 
 export interface ChatMessage {
   id: string;
+  user_id?: string;
   message: string;
   sender_type: 'user' | 'bot';
+  created_at: string;
+}
+
+export interface ContactInquiry {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  subject: string;
+  message: string;
+  status: 'new' | 'in_progress' | 'resolved' | 'closed';
   created_at: string;
 }
 

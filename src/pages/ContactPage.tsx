@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -11,21 +12,40 @@ const ContactPage = () => {
   });
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value
     }));
+    // Clear error when user starts typing
+    if (error) setError('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError('');
 
-    // Simulate form submission
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      // Insert contact inquiry into Supabase
+      const { error: insertError } = await supabase
+        .from('contact_inquiries')
+        .insert({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || null,
+          subject: formData.subject,
+          message: formData.message,
+          status: 'new'
+        });
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      // Success - show confirmation and reset form
       setSubmitted(true);
       setFormData({
         name: '',
@@ -34,7 +54,12 @@ const ContactPage = () => {
         subject: '',
         message: ''
       });
-    }, 1000);
+    } catch (error: any) {
+      console.error('Error submitting contact form:', error);
+      setError(error.message || 'An error occurred while sending your message. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -155,6 +180,13 @@ const ContactPage = () => {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Error Message */}
+                  {error && (
+                    <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                      <p className="text-red-600 text-sm">{error}</p>
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">

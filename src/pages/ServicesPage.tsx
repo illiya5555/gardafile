@@ -272,62 +272,6 @@ const ServicesPage = () => {
         </div>
       </section>
 
-      {/* Corporate Packages */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">Corporate Packages</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Choose the package that best suits your team
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {packages.map((pkg) => (
-              <div key={pkg.id} className={`bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl ${pkg.is_popular ? 'ring-2 ring-primary-600' : ''}`}>
-                {pkg.is_popular && (
-                  <div className="bg-primary-600 text-white text-center py-2 px-4">
-                    <span className="font-semibold">Most Popular</span>
-                  </div>
-                )}
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{pkg.name}</h3>
-                  <p className="text-gray-600 mb-6">{pkg.description}</p>
-                  
-                  <div className="text-center mb-6">
-                    <div className="text-4xl font-bold text-primary-600 mb-2">€{pkg.price}</div>
-                    <div className="text-gray-600">
-                      <p>{pkg.participants_range}</p>
-                      <p>{pkg.duration}</p>
-                    </div>
-                  </div>
-
-                  <ul className="space-y-3 mb-8">
-                    {pkg.features.map((feature, index) => (
-                      <li key={index} className="flex items-start space-x-3">
-                        <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-gray-700">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <button
-                    onClick={() => handlePackageSelect(pkg.id)}
-                    className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:scale-105 ${
-                      pkg.is_popular
-                        ? 'bg-primary-600 text-white hover:bg-primary-700 shadow-lg'
-                        : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                    }`}
-                  >
-                    Order Package
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Additional Services */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

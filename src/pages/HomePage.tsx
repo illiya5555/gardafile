@@ -106,24 +106,29 @@ const HomePage = () => {
 
   const features = [
     {
-      icon: Users,
-      title: "Professional Skipper",
-      description: "Expert guidance from certified sailing professionals"
+      icon: Trophy,
+      title: "Real Racing Format",
+      description: "Authentic yacht regatta with team dynamics, medals, and true competition."
     },
     {
-      icon: Trophy,
-      title: "Racing Experience",
-      description: "Authentic yacht racing with medals and certificates"
+      icon: Users,
+      title: "Professional Skipper",
+      description: "Certified and experienced sailing captains on every boat."
     },
     {
       icon: Camera,
       title: "Photo & Video",
-      description: "Professional documentation of your sailing adventure"
+      description: "Professional photos and videos of your race day to remember and share."
     },
     {
       icon: Shield,
       title: "Fully Insured",
-      description: "Complete safety coverage and premium equipment"
+      description: "Complete safety coverage and modern equipment included."
+    },
+    {
+      icon: Star,
+      title: "Accessible & Premium",
+      description: "A top-level regatta experience open to everyone — no experience needed."
     }
   ];
 
@@ -267,7 +272,7 @@ const HomePage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
+            {features.slice(0, 4).map((feature, index) => (
               <div key={index} className="text-center group hover:scale-105 transition-transform duration-300">
                 <div className="bg-primary-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-100 transition-colors duration-300">
                   <feature.icon className="h-10 w-10 text-primary-600" />
@@ -276,6 +281,17 @@ const HomePage = () => {
                 <p className="text-gray-600 leading-relaxed">{feature.description}</p>
               </div>
             ))}
+          </div>
+
+          {/* Fifth feature centered below */}
+          <div className="flex justify-center mt-12">
+            <div className="text-center group hover:scale-105 transition-transform duration-300 max-w-sm">
+              <div className="bg-primary-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-100 transition-colors duration-300">
+                <features[4].icon className="h-10 w-10 text-primary-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">{features[4].title}</h3>
+              <p className="text-gray-600 leading-relaxed">{features[4].description}</p>
+            </div>
           </div>
         </div>
       </section>

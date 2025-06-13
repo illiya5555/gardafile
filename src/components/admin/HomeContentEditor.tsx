@@ -26,7 +26,9 @@ import {
   AlertTriangle,
   RefreshCw,
   Download,
-  Copy
+  Copy,
+  ArrowUp,
+  ArrowDown
 } from 'lucide-react';
 
 interface ContentBlock {
@@ -48,6 +50,7 @@ interface ContentBlock {
     currency: string;
   };
   features?: string[];
+  heroImages?: string[]; // New property for hero gallery
   isVisible: boolean;
   order: number;
 }
@@ -78,7 +81,7 @@ const HomeContentEditor = () => {
   const [loading, setLoading] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
 
-  // Content blocks state
+  // Content blocks state with hero gallery support
   const [contentBlocks, setContentBlocks] = useState<ContentBlock[]>([
     {
       id: 'hero',
@@ -101,6 +104,12 @@ const HomeContentEditor = () => {
         'Racing medal & certificate',
         'Professional photos & videos',
         'All equipment provided'
+      ],
+      heroImages: [
+        '/IMG_0967.webp',
+        'https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=1920',
+        'https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=1920',
+        'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1920'
       ],
       isVisible: true,
       order: 1
@@ -143,7 +152,9 @@ const HomeContentEditor = () => {
   const [mediaLibrary, setMediaLibrary] = useState([
     { id: '1', url: '/IMG_0967.webp', name: 'Hero Image', type: 'image' },
     { id: '2', url: 'https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg', name: 'Racing', type: 'image' },
-    { id: '3', url: 'https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg', name: 'Harbor', type: 'image' }
+    { id: '3', url: 'https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg', name: 'Harbor', type: 'image' },
+    { id: '4', url: 'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg', name: 'Instruction', type: 'image' },
+    { id: '5', url: 'https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg', name: 'Medal Ceremony', type: 'image' }
   ]);
 
   const handleSaveDraft = async () => {
@@ -152,9 +163,9 @@ const HomeContentEditor = () => {
       // Simulate saving to database
       await new Promise(resolve => setTimeout(resolve, 1000));
       setIsDraft(true);
-      alert('Черновик сохранен!');
+      alert('Draft saved successfully!');
     } catch (error) {
-      alert('Ошибка сохранения черновика');
+      alert('Error saving draft');
     } finally {
       setLoading(false);
     }
@@ -166,9 +177,9 @@ const HomeContentEditor = () => {
       // Simulate publishing
       await new Promise(resolve => setTimeout(resolve, 1500));
       setIsDraft(false);
-      alert('Изменения опубликованы!');
+      alert('Changes published successfully!');
     } catch (error) {
-      alert('Ошибка публикации');
+      alert('Error publishing changes');
     } finally {
       setLoading(false);
     }
@@ -186,8 +197,8 @@ const HomeContentEditor = () => {
     const newBlock: ContentBlock = {
       id: `block-${Date.now()}`,
       type,
-      title: 'Новый блок',
-      content: 'Содержимое блока',
+      title: 'New Block',
+      content: 'Block content',
       backgroundColor: '#ffffff',
       textColor: '#1f2937',
       isVisible: true,
@@ -197,7 +208,7 @@ const HomeContentEditor = () => {
   };
 
   const deleteContentBlock = (id: string) => {
-    if (confirm('Удалить этот блок?')) {
+    if (confirm('Delete this block?')) {
       setContentBlocks(prev => prev.filter(block => block.id !== id));
     }
   };
@@ -216,18 +227,53 @@ const HomeContentEditor = () => {
     }
   };
 
+  const addHeroImage = (blockId: string) => {
+    const block = contentBlocks.find(b => b.id === blockId);
+    if (block && block.heroImages) {
+      const newImages = [...block.heroImages, ''];
+      updateContentBlock(blockId, { heroImages: newImages });
+    }
+  };
+
+  const updateHeroImage = (blockId: string, imageIndex: number, url: string) => {
+    const block = contentBlocks.find(b => b.id === blockId);
+    if (block && block.heroImages) {
+      const newImages = [...block.heroImages];
+      newImages[imageIndex] = url;
+      updateContentBlock(blockId, { heroImages: newImages });
+    }
+  };
+
+  const removeHeroImage = (blockId: string, imageIndex: number) => {
+    const block = contentBlocks.find(b => b.id === blockId);
+    if (block && block.heroImages && block.heroImages.length > 1) {
+      const newImages = block.heroImages.filter((_, index) => index !== imageIndex);
+      updateContentBlock(blockId, { heroImages: newImages });
+    }
+  };
+
+  const moveHeroImage = (blockId: string, fromIndex: number, toIndex: number) => {
+    const block = contentBlocks.find(b => b.id === blockId);
+    if (block && block.heroImages) {
+      const newImages = [...block.heroImages];
+      const [movedImage] = newImages.splice(fromIndex, 1);
+      newImages.splice(toIndex, 0, movedImage);
+      updateContentBlock(blockId, { heroImages: newImages });
+    }
+  };
+
   const tabs = [
-    { id: 'content', label: 'Контент', icon: Edit3 },
-    { id: 'design', label: 'Дизайн', icon: Palette },
-    { id: 'media', label: 'Медиа', icon: Image },
+    { id: 'content', label: 'Content', icon: Edit3 },
+    { id: 'design', label: 'Design', icon: Palette },
+    { id: 'media', label: 'Media', icon: Image },
     { id: 'seo', label: 'SEO', icon: Settings },
-    { id: 'preview', label: 'Превью', icon: Eye }
+    { id: 'preview', label: 'Preview', icon: Eye }
   ];
 
   const previewModes = [
-    { id: 'desktop', label: 'Десктоп', icon: Monitor },
-    { id: 'tablet', label: 'Планшет', icon: Tablet },
-    { id: 'mobile', label: 'Мобильный', icon: Smartphone }
+    { id: 'desktop', label: 'Desktop', icon: Monitor },
+    { id: 'tablet', label: 'Tablet', icon: Tablet },
+    { id: 'mobile', label: 'Mobile', icon: Smartphone }
   ];
 
   return (
@@ -237,17 +283,17 @@ const HomeContentEditor = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Редактор главной страницы</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Home Page Editor</h1>
               <p className="text-gray-600">
                 {isDraft ? (
                   <span className="flex items-center space-x-2">
                     <AlertTriangle className="h-4 w-4 text-yellow-500" />
-                    <span>Есть несохраненные изменения</span>
+                    <span>Unsaved changes</span>
                   </span>
                 ) : (
                   <span className="flex items-center space-x-2">
                     <CheckCircle className="h-4 w-4 text-green-500" />
-                    <span>Опубликовано</span>
+                    <span>Published</span>
                   </span>
                 )}
               </p>
@@ -279,7 +325,7 @@ const HomeContentEditor = () => {
                 className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-300 disabled:opacity-50"
               >
                 <Save className="h-4 w-4" />
-                <span>Сохранить</span>
+                <span>Save</span>
               </button>
               
               <button
@@ -292,7 +338,7 @@ const HomeContentEditor = () => {
                 ) : (
                   <CheckCircle className="h-4 w-4" />
                 )}
-                <span>Опубликовать</span>
+                <span>Publish</span>
               </button>
             </div>
           </div>
@@ -331,21 +377,21 @@ const HomeContentEditor = () => {
               {activeTab === 'content' && (
                 <div className="p-6">
                   <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl font-bold text-gray-900">Блоки контента</h2>
+                    <h2 className="text-xl font-bold text-gray-900">Content Blocks</h2>
                     <div className="flex items-center space-x-2">
                       <select
                         onChange={(e) => addContentBlock(e.target.value as ContentBlock['type'])}
                         className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         defaultValue=""
                       >
-                        <option value="" disabled>Добавить блок</option>
-                        <option value="hero">Главный баннер</option>
-                        <option value="features">Преимущества</option>
-                        <option value="experience">Опыт</option>
-                        <option value="testimonials">Отзывы</option>
-                        <option value="location">Локация</option>
-                        <option value="partners">Партнеры</option>
-                        <option value="cta">Призыв к действию</option>
+                        <option value="" disabled>Add Block</option>
+                        <option value="hero">Hero Banner</option>
+                        <option value="features">Features</option>
+                        <option value="experience">Experience</option>
+                        <option value="testimonials">Testimonials</option>
+                        <option value="location">Location</option>
+                        <option value="partners">Partners</option>
+                        <option value="cta">Call to Action</option>
                       </select>
                     </div>
                   </div>
@@ -371,7 +417,7 @@ const HomeContentEditor = () => {
                                 onChange={(e) => updateContentBlock(block.id, { isVisible: e.target.checked })}
                                 className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                               />
-                              <span className="text-sm text-gray-600">Видимый</span>
+                              <span className="text-sm text-gray-600">Visible</span>
                             </label>
                             <button
                               onClick={() => deleteContentBlock(block.id)}
@@ -385,7 +431,7 @@ const HomeContentEditor = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Заголовок
+                              Title
                             </label>
                             <input
                               type="text"
@@ -398,7 +444,7 @@ const HomeContentEditor = () => {
                           {block.subtitle !== undefined && (
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Подзаголовок
+                                Subtitle
                               </label>
                               <input
                                 type="text"
@@ -412,7 +458,7 @@ const HomeContentEditor = () => {
 
                         <div className="mt-4">
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Содержимое
+                            Content
                           </label>
                           <textarea
                             value={block.content}
@@ -422,12 +468,87 @@ const HomeContentEditor = () => {
                           />
                         </div>
 
+                        {/* Hero Gallery Management */}
+                        {block.type === 'hero' && block.heroImages && (
+                          <div className="mt-6">
+                            <div className="flex justify-between items-center mb-4">
+                              <label className="block text-sm font-medium text-gray-700">
+                                Hero Gallery Images (Auto-rotate every 7 seconds)
+                              </label>
+                              <button
+                                onClick={() => addHeroImage(block.id)}
+                                className="flex items-center space-x-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
+                              >
+                                <Plus className="h-4 w-4" />
+                                <span>Add Image</span>
+                              </button>
+                            </div>
+                            <div className="space-y-3">
+                              {block.heroImages.map((imageUrl, imageIndex) => (
+                                <div key={imageIndex} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                                  <div className="flex items-center space-x-2">
+                                    <button
+                                      onClick={() => moveHeroImage(block.id, imageIndex, Math.max(0, imageIndex - 1))}
+                                      disabled={imageIndex === 0}
+                                      className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-50"
+                                    >
+                                      <ArrowUp className="h-4 w-4" />
+                                    </button>
+                                    <button
+                                      onClick={() => moveHeroImage(block.id, imageIndex, Math.min(block.heroImages!.length - 1, imageIndex + 1))}
+                                      disabled={imageIndex === block.heroImages!.length - 1}
+                                      className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-50"
+                                    >
+                                      <ArrowDown className="h-4 w-4" />
+                                    </button>
+                                  </div>
+                                  <span className="text-sm font-medium text-gray-600 min-w-[2rem]">
+                                    #{imageIndex + 1}
+                                  </span>
+                                  <input
+                                    type="text"
+                                    value={imageUrl}
+                                    onChange={(e) => updateHeroImage(block.id, imageIndex, e.target.value)}
+                                    placeholder="Image URL"
+                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  />
+                                  {imageUrl && (
+                                    <div className="w-12 h-12 bg-gray-200 rounded-lg overflow-hidden">
+                                      <img
+                                        src={imageUrl}
+                                        alt={`Hero ${imageIndex + 1}`}
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                          (e.target as HTMLImageElement).style.display = 'none';
+                                        }}
+                                      />
+                                    </div>
+                                  )}
+                                  <button
+                                    onClick={() => removeHeroImage(block.id, imageIndex)}
+                                    disabled={block.heroImages!.length <= 1}
+                                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="mt-3 p-3 bg-blue-50 rounded-lg">
+                              <p className="text-sm text-blue-700">
+                                <strong>Gallery Settings:</strong> Images will automatically rotate every 7 seconds. 
+                                The first image will be shown initially. Use the arrows to reorder images.
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
                         {/* Button Settings */}
                         {block.buttonText !== undefined && (
                           <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Текст кнопки
+                                Button Text
                               </label>
                               <input
                                 type="text"
@@ -438,28 +559,28 @@ const HomeContentEditor = () => {
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Ссылка
+                                Link
                               </label>
                               <input
                                 type="text"
                                 value={block.buttonAction || ''}
                                 onChange={(e) => updateContentBlock(block.id, { buttonAction: e.target.value })}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="/booking или https://..."
+                                placeholder="/booking or https://..."
                               />
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Стиль кнопки
+                                Button Style
                               </label>
                               <select
                                 value={block.buttonStyle || 'primary'}
                                 onChange={(e) => updateContentBlock(block.id, { buttonStyle: e.target.value })}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
-                                <option value="primary">Основная</option>
-                                <option value="secondary">Вторичная</option>
-                                <option value="outline">Контурная</option>
+                                <option value="primary">Primary</option>
+                                <option value="secondary">Secondary</option>
+                                <option value="outline">Outline</option>
                               </select>
                             </div>
                           </div>
@@ -470,7 +591,7 @@ const HomeContentEditor = () => {
                           <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Текущая цена
+                                Current Price
                               </label>
                               <input
                                 type="number"
@@ -483,7 +604,7 @@ const HomeContentEditor = () => {
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Старая цена (опционально)
+                                Old Price (optional)
                               </label>
                               <input
                                 type="number"
@@ -496,7 +617,7 @@ const HomeContentEditor = () => {
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Валюта
+                                Currency
                               </label>
                               <select
                                 value={block.price.currency}
@@ -517,7 +638,7 @@ const HomeContentEditor = () => {
                         {block.features && (
                           <div className="mt-4">
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Список преимуществ
+                              Features List
                             </label>
                             <div className="space-y-2">
                               {block.features.map((feature, featureIndex) => (
@@ -545,13 +666,13 @@ const HomeContentEditor = () => {
                               ))}
                               <button
                                 onClick={() => {
-                                  const newFeatures = [...block.features!, 'Новое преимущество'];
+                                  const newFeatures = [...block.features!, 'New feature'];
                                   updateContentBlock(block.id, { features: newFeatures });
                                 }}
                                 className="flex items-center space-x-2 px-3 py-2 border border-dashed border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 w-full"
                               >
                                 <Plus className="h-4 w-4" />
-                                <span>Добавить преимущество</span>
+                                <span>Add Feature</span>
                               </button>
                             </div>
                           </div>
@@ -565,24 +686,24 @@ const HomeContentEditor = () => {
               {/* Design Tab */}
               {activeTab === 'design' && (
                 <div className="p-6">
-                  <h2 className="text-xl font-bold text-gray-900 mb-6">Настройки дизайна</h2>
+                  <h2 className="text-xl font-bold text-gray-900 mb-6">Design Settings</h2>
                   
                   <div className="space-y-8">
                     {/* Color Scheme */}
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Цветовая схема</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Color Scheme</h3>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {Object.entries(colorScheme).map(([key, value]) => (
                           <div key={key}>
                             <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
-                              {key === 'primary' ? 'Основной' :
-                               key === 'secondary' ? 'Вторичный' :
-                               key === 'accent' ? 'Акцент' :
-                               key === 'text' ? 'Текст' :
-                               key === 'background' ? 'Фон' :
-                               key === 'button' ? 'Кнопка' :
-                               key === 'buttonHover' ? 'Кнопка (hover)' :
-                               key === 'link' ? 'Ссылка' : key}
+                              {key === 'primary' ? 'Primary' :
+                               key === 'secondary' ? 'Secondary' :
+                               key === 'accent' ? 'Accent' :
+                               key === 'text' ? 'Text' :
+                               key === 'background' ? 'Background' :
+                               key === 'button' ? 'Button' :
+                               key === 'buttonHover' ? 'Button (hover)' :
+                               key === 'link' ? 'Link' : key}
                             </label>
                             <div className="flex items-center space-x-2">
                               <input
@@ -605,14 +726,14 @@ const HomeContentEditor = () => {
 
                     {/* Typography */}
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Типографика</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Typography</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Основной шрифт
+                            Main Font
                           </label>
                           <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="Inter">Inter (текущий)</option>
+                            <option value="Inter">Inter (current)</option>
                             <option value="Roboto">Roboto</option>
                             <option value="Open Sans">Open Sans</option>
                             <option value="Lato">Lato</option>
@@ -620,10 +741,10 @@ const HomeContentEditor = () => {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Шрифт заголовков
+                            Heading Font
                           </label>
                           <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="Playfair Display">Playfair Display (текущий)</option>
+                            <option value="Playfair Display">Playfair Display (current)</option>
                             <option value="Merriweather">Merriweather</option>
                             <option value="Lora">Lora</option>
                             <option value="Crimson Text">Crimson Text</option>
@@ -634,37 +755,37 @@ const HomeContentEditor = () => {
 
                     {/* Layout Settings */}
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Настройки макета</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Layout Settings</h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Максимальная ширина контента
+                            Max Content Width
                           </label>
                           <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="1280px">1280px (текущий)</option>
+                            <option value="1280px">1280px (current)</option>
                             <option value="1200px">1200px</option>
                             <option value="1440px">1440px</option>
-                            <option value="100%">Полная ширина</option>
+                            <option value="100%">Full width</option>
                           </select>
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Отступы секций
+                            Section Spacing
                           </label>
                           <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="normal">Обычные</option>
-                            <option value="compact">Компактные</option>
-                            <option value="spacious">Просторные</option>
+                            <option value="normal">Normal</option>
+                            <option value="compact">Compact</option>
+                            <option value="spacious">Spacious</option>
                           </select>
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Стиль кнопок
+                            Button Style
                           </label>
                           <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="rounded">Скругленные</option>
-                            <option value="square">Квадратные</option>
-                            <option value="pill">Капсула</option>
+                            <option value="rounded">Rounded</option>
+                            <option value="square">Square</option>
+                            <option value="pill">Pill</option>
                           </select>
                         </div>
                       </div>
@@ -677,10 +798,10 @@ const HomeContentEditor = () => {
               {activeTab === 'media' && (
                 <div className="p-6">
                   <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl font-bold text-gray-900">Медиа библиотека</h2>
+                    <h2 className="text-xl font-bold text-gray-900">Media Library</h2>
                     <label className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer transition-colors duration-300">
                       <Upload className="h-4 w-4" />
-                      <span>Загрузить файл</span>
+                      <span>Upload File</span>
                       <input
                         type="file"
                         accept="image/*,video/*"
@@ -710,7 +831,7 @@ const HomeContentEditor = () => {
                             <button
                               onClick={() => navigator.clipboard.writeText(media.url)}
                               className="p-2 bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors duration-300"
-                              title="Копировать URL"
+                              title="Copy URL"
                             >
                               <Copy className="h-4 w-4" />
                             </button>
@@ -722,7 +843,7 @@ const HomeContentEditor = () => {
                                 link.click();
                               }}
                               className="p-2 bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors duration-300"
-                              title="Скачать"
+                              title="Download"
                             >
                               <Download className="h-4 w-4" />
                             </button>
@@ -741,12 +862,12 @@ const HomeContentEditor = () => {
               {/* SEO Tab */}
               {activeTab === 'seo' && (
                 <div className="p-6">
-                  <h2 className="text-xl font-bold text-gray-900 mb-6">SEO настройки</h2>
+                  <h2 className="text-xl font-bold text-gray-900 mb-6">SEO Settings</h2>
                   
                   <div className="space-y-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Заголовок страницы (Title)
+                        Page Title
                       </label>
                       <input
                         type="text"
@@ -756,13 +877,13 @@ const HomeContentEditor = () => {
                         maxLength={60}
                       />
                       <p className="text-sm text-gray-500 mt-1">
-                        {seoSettings.title.length}/60 символов
+                        {seoSettings.title.length}/60 characters
                       </p>
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Описание (Meta Description)
+                        Meta Description
                       </label>
                       <textarea
                         value={seoSettings.description}
@@ -772,26 +893,26 @@ const HomeContentEditor = () => {
                         maxLength={160}
                       />
                       <p className="text-sm text-gray-500 mt-1">
-                        {seoSettings.description.length}/160 символов
+                        {seoSettings.description.length}/160 characters
                       </p>
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Ключевые слова
+                        Keywords
                       </label>
                       <input
                         type="text"
                         value={seoSettings.keywords}
                         onChange={(e) => setSeoSettings(prev => ({ ...prev, keywords: e.target.value }))}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="ключевое слово, другое ключевое слово"
+                        placeholder="keyword, another keyword"
                       />
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Open Graph изображение
+                        Open Graph Image
                       </label>
                       <input
                         type="text"
@@ -817,7 +938,7 @@ const HomeContentEditor = () => {
 
                     {/* SEO Preview */}
                     <div className="bg-gray-50 p-4 rounded-lg">
-                      <h3 className="text-sm font-medium text-gray-700 mb-3">Превью в поисковой выдаче</h3>
+                      <h3 className="text-sm font-medium text-gray-700 mb-3">Search Results Preview</h3>
                       <div className="bg-white p-4 rounded border">
                         <h4 className="text-blue-600 text-lg hover:underline cursor-pointer">
                           {seoSettings.title}
@@ -838,15 +959,15 @@ const HomeContentEditor = () => {
               {activeTab === 'preview' && (
                 <div className="p-6">
                   <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl font-bold text-gray-900">Превью страницы</h2>
+                    <h2 className="text-xl font-bold text-gray-900">Page Preview</h2>
                     <div className="flex items-center space-x-4">
-                      <span className="text-sm text-gray-600">Режим: {previewMode}</span>
+                      <span className="text-sm text-gray-600">Mode: {previewMode}</span>
                       <button
                         onClick={() => window.open('/', '_blank')}
                         className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
                       >
                         <Eye className="h-4 w-4" />
-                        <span>Открыть в новой вкладке</span>
+                        <span>Open in New Tab</span>
                       </button>
                     </div>
                   </div>

@@ -6,10 +6,30 @@ import { supabase, Testimonial } from '../lib/supabase';
 const HomePage = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Hero gallery images that rotate every 7 seconds
+  const heroImages = [
+    '/IMG_0967.webp',
+    'https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    'https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1920'
+  ];
 
   useEffect(() => {
     fetchTestimonials();
   }, []);
+
+  // Auto-rotate hero images every 7 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        (prevIndex + 1) % heroImages.length
+      );
+    }, 7000);
+
+    return () => clearInterval(interval);
+  }, [heroImages.length]);
 
   const fetchTestimonials = async () => {
     try {
@@ -118,15 +138,40 @@ const HomePage = () => {
 
   return (
     <div className="overflow-hidden">
-      {/* Hero Section */}
+      {/* Hero Section with Auto-rotating Gallery */}
       <section className="relative min-h-screen flex items-center justify-center">
+        {/* Background Image Gallery */}
         <div className="absolute inset-0">
-          <img
-            src="/IMG_0967.webp"
-            alt="Lake Garda sailing"
-            className="w-full h-full object-cover"
-          />
+          {heroImages.map((image, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <img
+                src={image}
+                alt={`Lake Garda sailing ${index + 1}`}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ))}
           <div className="absolute inset-0 bg-gradient-to-r from-blue-900/70 via-blue-800/50 to-transparent"></div>
+        </div>
+
+        {/* Gallery Indicators */}
+        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+          {heroImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentImageIndex(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                index === currentImageIndex 
+                  ? 'bg-white scale-110' 
+                  : 'bg-white/50 hover:bg-white/75'
+              }`}
+            />
+          ))}
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

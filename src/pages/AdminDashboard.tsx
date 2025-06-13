@@ -58,6 +58,7 @@ import InquiriesManagement from '../components/admin/InquiriesManagement';
 import ClientsManagement from '../components/admin/ClientsManagement';
 import BookingsCalendar from '../components/admin/BookingsCalendar';
 import MediaLibrary from '../components/admin/MediaLibrary';
+import DatabaseManagement from '../components/admin/DatabaseManagement';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -211,8 +212,8 @@ const AdminDashboard = () => {
     { id: 'payments', label: 'Payments', icon: CreditCard, category: 'business' },
     { id: 'fleet', label: 'Fleet Management', icon: Ship, category: 'business' },
     { id: 'reports', label: 'Reports', icon: FileText, category: 'business' },
-    { id: 'design', label: 'Design System', icon: Palette, category: 'system' },
     { id: 'database', label: 'Database', icon: Database, category: 'system' },
+    { id: 'design', label: 'Design System', icon: Palette, category: 'system' },
     { id: 'security', label: 'Security', icon: Shield, category: 'system' },
     { id: 'notifications', label: 'Notifications', icon: Bell, category: 'system' },
     { id: 'settings', label: 'Settings', icon: Settings, category: 'system' }
@@ -405,7 +406,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Content Area */}
-        <div className={activeTab === 'home-editor' || activeTab === 'events-editor' || activeTab === 'services-editor' || activeTab === 'contact-editor' || activeTab === 'booking-editor' || activeTab === 'media-library' ? '' : 'p-4 sm:p-6 lg:p-8'}>
+        <div className={activeTab === 'home-editor' || activeTab === 'events-editor' || activeTab === 'services-editor' || activeTab === 'contact-editor' || activeTab === 'booking-editor' || activeTab === 'media-library' || activeTab === 'database' ? '' : 'p-4 sm:p-6 lg:p-8'}>
           {/* Content Editors */}
           {activeTab === 'home-editor' && <HomeContentEditor />}
           {activeTab === 'events-editor' && <EventsContentEditor />}
@@ -413,6 +414,7 @@ const AdminDashboard = () => {
           {activeTab === 'contact-editor' && <ContactContentEditor />}
           {activeTab === 'booking-editor' && <BookingContentEditor />}
           {activeTab === 'media-library' && <MediaLibrary />}
+          {activeTab === 'database' && <DatabaseManagement />}
 
           {/* Management Components */}
           {activeTab === 'inquiries' && <InquiriesManagement />}
@@ -630,11 +632,11 @@ const AdminDashboard = () => {
                     <span className="text-sm font-medium text-purple-900">View Calendar</span>
                   </button>
                   <button
-                    onClick={() => setActiveTab('analytics')}
+                    onClick={() => setActiveTab('database')}
                     className="flex flex-col items-center p-4 bg-orange-50 rounded-xl hover:bg-orange-100 transition-colors duration-300"
                   >
-                    <BarChart3 className="h-8 w-8 text-orange-600 mb-2" />
-                    <span className="text-sm font-medium text-orange-900">View Analytics</span>
+                    <Database className="h-8 w-8 text-orange-600 mb-2" />
+                    <span className="text-sm font-medium text-orange-900">Database</span>
                   </button>
                 </div>
               </div>
@@ -706,7 +708,7 @@ const AdminDashboard = () => {
           )}
 
           {/* Other tabs placeholder */}
-          {!['dashboard', 'home-editor', 'events-editor', 'services-editor', 'contact-editor', 'booking-editor', 'media-library', 'inquiries', 'bookings', 'clients', 'analytics'].includes(activeTab) && (
+          {!['dashboard', 'home-editor', 'events-editor', 'services-editor', 'contact-editor', 'booking-editor', 'media-library', 'database', 'inquiries', 'bookings', 'clients', 'analytics'].includes(activeTab) && (
             <div className="bg-white p-12 rounded-2xl shadow-sm border border-gray-100 text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 {React.createElement(menuItems.find(item => item.id === activeTab)?.icon || Settings, {

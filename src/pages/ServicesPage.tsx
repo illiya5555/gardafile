@@ -387,15 +387,7 @@ const ServicesPage = () => {
             <div className="p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Corporate Package Inquiry</h2>
               
-              <form 
-                onSubmit={handleSubmitInquiry} 
-                className="space-y-6"
-                data-netlify="true"
-                name="corporate-inquiry"
-                method="POST"
-              >
-                <input type="hidden" name="form-name" value="corporate-inquiry" />
-                
+              <form onSubmit={handleSubmitInquiry} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">

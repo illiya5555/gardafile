@@ -37,13 +37,18 @@ import {
   Home,
   CalendarDays,
   Briefcase,
-  Contact
+  Contact,
+  ClipboardList,
+  UserCheck
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import HomeContentEditor from '../components/admin/HomeContentEditor';
 import EventsContentEditor from '../components/admin/EventsContentEditor';
 import ServicesContentEditor from '../components/admin/ServicesContentEditor';
 import ContactContentEditor from '../components/admin/ContactContentEditor';
+import InquiriesManagement from '../components/admin/InquiriesManagement';
+import ClientsManagement from '../components/admin/ClientsManagement';
+import BookingsCalendar from '../components/admin/BookingsCalendar';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -65,9 +70,9 @@ const AdminDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [clients, setClients] = useState([]);
   const [notifications, setNotifications] = useState([
-    { id: 1, type: 'booking', message: 'Новое бронирование от Marco Rossi', time: '2 часа назад', read: false },
-    { id: 2, type: 'corporate', message: 'Корпоративный запрос от TechCorp', time: '5 часов назад', read: false },
-    { id: 3, type: 'review', message: 'Новый отзыв (5 звезд)', time: '1 день назад', read: true }
+    { id: 1, type: 'booking', message: 'New booking from Marco Rossi', time: '2 hours ago', read: false },
+    { id: 2, type: 'corporate', message: 'Corporate inquiry from TechCorp', time: '5 hours ago', read: false },
+    { id: 3, type: 'review', message: 'New review (5 stars)', time: '1 day ago', read: true }
   ]);
 
   useEffect(() => {
@@ -114,7 +119,7 @@ const AdminDashboard = () => {
           ? sum + parseFloat(booking.total_price) 
           : sum, 0) || 0;
 
-      // Подсчет бронирований за текущий месяц
+      // Count bookings for current month
       const currentMonth = new Date().getMonth();
       const currentYear = new Date().getFullYear();
       const monthlyBookings = bookings?.filter(booking => {
@@ -174,20 +179,21 @@ const AdminDashboard = () => {
   };
 
   const menuItems = [
-    { id: 'dashboard', label: 'Дашборд', icon: BarChart3 },
-    { id: 'home-editor', label: 'Редактор главной', icon: Home },
-    { id: 'events-editor', label: 'Редактор Events', icon: CalendarDays },
-    { id: 'services-editor', label: 'Редактор Services', icon: Briefcase },
-    { id: 'contact-editor', label: 'Редактор Contact', icon: Contact },
-    { id: 'bookings', label: 'Бронирования', icon: Calendar },
-    { id: 'clients', label: 'Клиенты', icon: Users },
-    { id: 'analytics', label: 'Аналитика', icon: TrendingUp },
-    { id: 'payments', label: 'Платежи', icon: CreditCard },
-    { id: 'fleet', label: 'Флот', icon: Ship },
-    { id: 'media', label: 'Медиа', icon: Camera },
-    { id: 'reports', label: 'Отчеты', icon: FileText },
-    { id: 'notifications', label: 'Уведомления', icon: Bell },
-    { id: 'settings', label: 'Настройки', icon: Settings }
+    { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
+    { id: 'home-editor', label: 'Home Editor', icon: Home },
+    { id: 'events-editor', label: 'Events Editor', icon: CalendarDays },
+    { id: 'services-editor', label: 'Services Editor', icon: Briefcase },
+    { id: 'contact-editor', label: 'Contact Editor', icon: Contact },
+    { id: 'inquiries', label: 'Inquiries', icon: ClipboardList },
+    { id: 'bookings', label: 'Bookings Calendar', icon: Calendar },
+    { id: 'clients', label: 'Client Management', icon: UserCheck },
+    { id: 'analytics', label: 'Analytics', icon: TrendingUp },
+    { id: 'payments', label: 'Payments', icon: CreditCard },
+    { id: 'fleet', label: 'Fleet', icon: Ship },
+    { id: 'media', label: 'Media', icon: Camera },
+    { id: 'reports', label: 'Reports', icon: FileText },
+    { id: 'notifications', label: 'Notifications', icon: Bell },
+    { id: 'settings', label: 'Settings', icon: Settings }
   ];
 
   const getStatusColor = (status: string) => {
@@ -215,7 +221,7 @@ const AdminDashboard = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-blue-600 font-medium">Загрузка панели управления...</p>
+          <p className="text-blue-600 font-medium">Loading admin dashboard...</p>
         </div>
       </div>
     );
@@ -255,7 +261,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="p-4 space-y-2">
+        <nav className="p-4 space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto">
           {menuItems.map((item) => (
             <button
               key={item.id}
@@ -289,7 +295,7 @@ const AdminDashboard = () => {
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">Администратор</p>
+              <p className="text-sm font-medium text-gray-900 truncate">Administrator</p>
               <p className="text-xs text-gray-600 truncate">{user?.email}</p>
             </div>
           </div>
@@ -298,7 +304,7 @@ const AdminDashboard = () => {
             className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-300"
           >
             <LogOut className="h-4 w-4" />
-            <span>Выйти</span>
+            <span>Logout</span>
           </button>
         </div>
       </div>
@@ -318,10 +324,10 @@ const AdminDashboard = () => {
                 </button>
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">
-                    {menuItems.find(item => item.id === activeTab)?.label || 'Дашборд'}
+                    {menuItems.find(item => item.id === activeTab)?.label || 'Dashboard'}
                   </h1>
                   <p className="text-gray-600">
-                    {new Date().toLocaleDateString('ru-RU', { 
+                    {new Date().toLocaleDateString('en-US', { 
                       weekday: 'long', 
                       year: 'numeric', 
                       month: 'long', 
@@ -349,17 +355,16 @@ const AdminDashboard = () => {
 
         {/* Content Area */}
         <div className={activeTab === 'home-editor' || activeTab === 'events-editor' || activeTab === 'services-editor' || activeTab === 'contact-editor' ? '' : 'p-4 sm:p-6 lg:p-8'}>
-          {/* Home Content Editor */}
+          {/* Content Editors */}
           {activeTab === 'home-editor' && <HomeContentEditor />}
-
-          {/* Events Content Editor */}
           {activeTab === 'events-editor' && <EventsContentEditor />}
-
-          {/* Services Content Editor */}
           {activeTab === 'services-editor' && <ServicesContentEditor />}
-
-          {/* Contact Content Editor */}
           {activeTab === 'contact-editor' && <ContactContentEditor />}
+
+          {/* Management Components */}
+          {activeTab === 'inquiries' && <InquiriesManagement />}
+          {activeTab === 'clients' && <ClientsManagement />}
+          {activeTab === 'bookings' && <BookingsCalendar />}
 
           {/* Dashboard Tab */}
           {activeTab === 'dashboard' && (
@@ -369,9 +374,9 @@ const AdminDashboard = () => {
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 mb-1">Бронирования</p>
+                      <p className="text-sm text-gray-600 mb-1">Bookings</p>
                       <p className="text-3xl font-bold text-gray-900">{stats.totalBookings}</p>
-                      <p className="text-xs text-green-600 mt-1">+12% за месяц</p>
+                      <p className="text-xs text-green-600 mt-1">+12% this month</p>
                     </div>
                     <div className="bg-blue-100 p-3 rounded-xl">
                       <Calendar className="h-8 w-8 text-blue-600" />
@@ -382,9 +387,9 @@ const AdminDashboard = () => {
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 mb-1">Доход</p>
+                      <p className="text-sm text-gray-600 mb-1">Revenue</p>
                       <p className="text-3xl font-bold text-gray-900">€{stats.totalRevenue.toLocaleString()}</p>
-                      <p className="text-xs text-green-600 mt-1">+8% за месяц</p>
+                      <p className="text-xs text-green-600 mt-1">+8% this month</p>
                     </div>
                     <div className="bg-green-100 p-3 rounded-xl">
                       <DollarSign className="h-8 w-8 text-green-600" />
@@ -395,9 +400,9 @@ const AdminDashboard = () => {
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 mb-1">Клиенты</p>
+                      <p className="text-sm text-gray-600 mb-1">Clients</p>
                       <p className="text-3xl font-bold text-gray-900">{stats.activeUsers}</p>
-                      <p className="text-xs text-blue-600 mt-1">+15% за месяц</p>
+                      <p className="text-xs text-blue-600 mt-1">+15% this month</p>
                     </div>
                     <div className="bg-purple-100 p-3 rounded-xl">
                       <Users className="h-8 w-8 text-purple-600" />
@@ -408,9 +413,9 @@ const AdminDashboard = () => {
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 mb-1">Конверсия</p>
+                      <p className="text-sm text-gray-600 mb-1">Conversion</p>
                       <p className="text-3xl font-bold text-gray-900">{stats.conversionRate}%</p>
-                      <p className="text-xs text-green-600 mt-1">+3% за месяц</p>
+                      <p className="text-xs text-green-600 mt-1">+3% this month</p>
                     </div>
                     <div className="bg-orange-100 p-3 rounded-xl">
                       <TrendingUp className="h-8 w-8 text-orange-600" />
@@ -421,15 +426,15 @@ const AdminDashboard = () => {
 
               {/* Plan vs Fact */}
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <h3 className="text-xl font-bold text-gray-900 mb-6">План-факт (текущий месяц)</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-6">Plan vs Actual (Current Month)</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="text-center">
                     <div className="text-3xl font-bold text-blue-600 mb-2">{stats.monthlyTarget}</div>
-                    <div className="text-sm text-gray-600">План</div>
+                    <div className="text-sm text-gray-600">Target</div>
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-green-600 mb-2">{stats.currentMonth}</div>
-                    <div className="text-sm text-gray-600">Факт</div>
+                    <div className="text-sm text-gray-600">Actual</div>
                   </div>
                   <div className="text-center">
                     <div className={`text-3xl font-bold mb-2 ${
@@ -437,7 +442,7 @@ const AdminDashboard = () => {
                     }`}>
                       {stats.currentMonth - stats.monthlyTarget > 0 ? '+' : ''}{stats.currentMonth - stats.monthlyTarget}
                     </div>
-                    <div className="text-sm text-gray-600">Отклонение</div>
+                    <div className="text-sm text-gray-600">Variance</div>
                   </div>
                 </div>
                 <div className="mt-6">
@@ -459,12 +464,12 @@ const AdminDashboard = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-xl font-bold text-gray-900">Последние бронирования</h3>
+                    <h3 className="text-xl font-bold text-gray-900">Recent Bookings</h3>
                     <button 
                       onClick={() => setActiveTab('bookings')}
                       className="text-blue-600 hover:text-blue-700 text-sm font-medium"
                     >
-                      Все →
+                      View All →
                     </button>
                   </div>
                   <div className="space-y-4">
@@ -483,7 +488,7 @@ const AdminDashboard = () => {
                         </div>
                         <div className="text-right">
                           <p className="font-semibold text-gray-900">€{booking.total_price}</p>
-                          <p className="text-xs text-gray-600">{booking.participants} чел.</p>
+                          <p className="text-xs text-gray-600">{booking.participants} people</p>
                         </div>
                       </div>
                     ))}
@@ -492,12 +497,12 @@ const AdminDashboard = () => {
 
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-xl font-bold text-gray-900">Уведомления</h3>
+                    <h3 className="text-xl font-bold text-gray-900">Notifications</h3>
                     <button 
                       onClick={() => setActiveTab('notifications')}
                       className="text-blue-600 hover:text-blue-700 text-sm font-medium"
                     >
-                      Все →
+                      View All →
                     </button>
                   </div>
                   <div className="space-y-4">
@@ -515,256 +520,50 @@ const AdminDashboard = () => {
             </div>
           )}
 
-          {/* Bookings Tab */}
-          {activeTab === 'bookings' && (
-            <div className="space-y-6">
-              {/* Filters and Actions */}
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
-                  <div className="flex items-center space-x-4">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                      <input
-                        type="text"
-                        placeholder="Поиск бронирований..."
-                        className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                    <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                      <Filter className="h-4 w-4" />
-                      <span>Фильтры</span>
-                    </button>
-                  </div>
-                  <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                    <Plus className="h-4 w-4" />
-                    <span>Новое бронирование</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Bookings Table */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Клиент</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Дата</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Время</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Участники</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Сумма</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Статус</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Действия</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {bookings.map((booking: any) => (
-                        <tr key={booking.id} className="hover:bg-gray-50">
-                          <td className="px-6 py-4">
-                            <div>
-                              <p className="font-medium text-gray-900">
-                                {booking.profiles?.first_name} {booking.profiles?.last_name}
-                              </p>
-                              <p className="text-sm text-gray-600">{booking.profiles?.email}</p>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 text-gray-900">{booking.booking_date}</td>
-                          <td className="px-6 py-4 text-gray-900">{booking.time_slot}</td>
-                          <td className="px-6 py-4 text-gray-900">{booking.participants}</td>
-                          <td className="px-6 py-4 font-semibold text-gray-900">€{booking.total_price}</td>
-                          <td className="px-6 py-4">
-                            <span className={`inline-flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(booking.status)}`}>
-                              {getStatusIcon(booking.status)}
-                              <span className="capitalize">{booking.status}</span>
-                            </span>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="flex items-center space-x-2">
-                              <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
-                                <Eye className="h-4 w-4" />
-                              </button>
-                              <button className="p-2 text-green-600 hover:bg-green-50 rounded-lg">
-                                <Edit className="h-4 w-4" />
-                              </button>
-                              <button className="p-2 text-red-600 hover:bg-red-50 rounded-lg">
-                                <Trash2 className="h-4 w-4" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Clients Tab */}
-          {activeTab === 'clients' && (
-            <div className="space-y-6">
-              {/* Client Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600 mb-2">{stats.activeUsers}</div>
-                    <div className="text-sm text-gray-600">Всего клиентов</div>
-                  </div>
-                </div>
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600 mb-2">85%</div>
-                    <div className="text-sm text-gray-600">Повторные клиенты</div>
-                  </div>
-                </div>
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-purple-600 mb-2">4.8</div>
-                    <div className="text-sm text-gray-600">Средний рейтинг</div>
-                  </div>
-                </div>
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-orange-600 mb-2">€{Math.round(stats.avgBookingValue)}</div>
-                    <div className="text-sm text-gray-600">Средний чек</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Clients Table */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="p-6 border-b border-gray-200">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-gray-900">База клиентов</h3>
-                    <div className="flex items-center space-x-4">
-                      <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                        <Download className="h-4 w-4" />
-                        <span>Экспорт</span>
-                      </button>
-                      <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                        <Plus className="h-4 w-4" />
-                        <span>Добавить клиента</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Клиент</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Контакты</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Регистрация</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Бронирования</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Действия</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {clients.map((client: any) => (
-                        <tr key={client.id} className="hover:bg-gray-50">
-                          <td className="px-6 py-4">
-                            <div className="flex items-center space-x-3">
-                              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                                <span className="text-white font-semibold text-sm">
-                                  {client.first_name?.charAt(0) || client.email?.charAt(0).toUpperCase()}
-                                </span>
-                              </div>
-                              <div>
-                                <p className="font-medium text-gray-900">
-                                  {client.first_name} {client.last_name}
-                                </p>
-                                <p className="text-sm text-gray-600">{client.email}</p>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="space-y-1">
-                              <div className="flex items-center space-x-2 text-sm text-gray-600">
-                                <Mail className="h-4 w-4" />
-                                <span>{client.email}</span>
-                              </div>
-                              {client.phone && (
-                                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                                  <Phone className="h-4 w-4" />
-                                  <span>{client.phone}</span>
-                                </div>
-                              )}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 text-gray-900">
-                            {new Date(client.created_at).toLocaleDateString('ru-RU')}
-                          </td>
-                          <td className="px-6 py-4">
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                              0 бронирований
-                            </span>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="flex items-center space-x-2">
-                              <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
-                                <Eye className="h-4 w-4" />
-                              </button>
-                              <button className="p-2 text-green-600 hover:bg-green-50 rounded-lg">
-                                <Mail className="h-4 w-4" />
-                              </button>
-                              <button className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg">
-                                <MessageSquare className="h-4 w-4" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Analytics Tab */}
           {activeTab === 'analytics' && (
             <div className="space-y-6">
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <h3 className="text-xl font-bold text-gray-900 mb-6">Аналитика и отчеты</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-6">Analytics and Reports</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   <div className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
-                    <h4 className="font-semibold text-blue-900 mb-2">Источники трафика</h4>
+                    <h4 className="font-semibold text-blue-900 mb-2">Traffic Sources</h4>
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <span className="text-blue-700">Instagram</span>
                         <span className="font-semibold text-blue-900">45%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-blue-700">Сайт</span>
+                        <span className="text-blue-700">Website</span>
                         <span className="font-semibold text-blue-900">30%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-blue-700">Рекомендации</span>
+                        <span className="text-blue-700">Referrals</span>
                         <span className="font-semibold text-blue-900">25%</span>
                       </div>
                     </div>
                   </div>
                   
                   <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl">
-                    <h4 className="font-semibold text-green-900 mb-2">Конверсия</h4>
+                    <h4 className="font-semibold text-green-900 mb-2">Conversion</h4>
                     <div className="space-y-2">
                       <div className="flex justify-between">
-                        <span className="text-green-700">Просмотр → Заявка</span>
+                        <span className="text-green-700">View → Inquiry</span>
                         <span className="font-semibold text-green-900">12%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-green-700">Заявка → Оплата</span>
+                        <span className="text-green-700">Inquiry → Payment</span>
                         <span className="font-semibold text-green-900">68%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-green-700">Общая</span>
+                        <span className="text-green-700">Overall</span>
                         <span className="font-semibold text-green-900">8.2%</span>
                       </div>
                     </div>
                   </div>
                   
                   <div className="p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl">
-                    <h4 className="font-semibold text-purple-900 mb-2">Популярные слоты</h4>
+                    <h4 className="font-semibold text-purple-900 mb-2">Popular Time Slots</h4>
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <span className="text-purple-700">09:00</span>
@@ -786,7 +585,7 @@ const AdminDashboard = () => {
           )}
 
           {/* Other tabs placeholder */}
-          {!['dashboard', 'home-editor', 'events-editor', 'services-editor', 'contact-editor', 'bookings', 'clients', 'analytics'].includes(activeTab) && (
+          {!['dashboard', 'home-editor', 'events-editor', 'services-editor', 'contact-editor', 'inquiries', 'bookings', 'clients', 'analytics'].includes(activeTab) && (
             <div className="bg-white p-12 rounded-2xl shadow-sm border border-gray-100 text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 {React.createElement(menuItems.find(item => item.id === activeTab)?.icon || Settings, {
@@ -797,10 +596,10 @@ const AdminDashboard = () => {
                 {menuItems.find(item => item.id === activeTab)?.label}
               </h3>
               <p className="text-gray-600 mb-6">
-                Этот раздел находится в разработке. Скоро здесь появится полный функционал.
+                This section is under development. Full functionality will be available soon.
               </p>
               <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
-                Уведомить о готовности
+                Notify When Ready
               </button>
             </div>
           )}

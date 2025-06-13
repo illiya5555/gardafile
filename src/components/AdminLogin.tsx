@@ -31,7 +31,8 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
         // В реальном приложении это должно проверяться через роли в базе данных
         if (email === 'admin@gardaracing.com') {
           alert('Добро пожаловать в административную панель!');
-          // Здесь можно перенаправить на админ-панель
+          // Перенаправляем на админ-панель
+          window.location.href = '/admin';
           onClose();
         } else {
           setError('У вас нет прав администратора');
@@ -85,7 +86,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 text-gray-900 bg-white placeholder-gray-500"
                 placeholder="admin@gardaracing.com"
                 required
               />
@@ -100,7 +101,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 text-gray-900 bg-white placeholder-gray-500"
                   placeholder="••••••••"
                   required
                 />

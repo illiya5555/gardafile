@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Mail, Lock, User, Phone } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -21,6 +21,22 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 's
   });
 
   const { signIn, signUp } = useAuth();
+
+  // Reset form data and error when modal is closed
+  useEffect(() => {
+    if (!isOpen) {
+      setFormData({
+        email: '',
+        password: '',
+        firstName: '',
+        lastName: '',
+        phone: ''
+      });
+      setError(null);
+      setLoading(false);
+      setMode(initialMode);
+    }
+  }, [isOpen, initialMode]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({

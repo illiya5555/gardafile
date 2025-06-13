@@ -204,23 +204,27 @@ const EventsPage = () => {
               <div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-6">Racing Format</h2>
                 <div className="bg-gray-50 p-6 rounded-xl">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Three-Race Championship</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Pro-Level One-Day Regatta</h3>
                   <ul className="space-y-3">
                     <li className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-green-500" />
-                      <span className="text-gray-700">Practice race for skill building</span>
+                      <span className="text-gray-700">Races held on J/70 class professional sailing yachts</span>
                     </li>
                     <li className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-green-500" />
-                      <span className="text-gray-700">Championship race with full scoring</span>
+                      <span className="text-gray-700">Each boat includes a licensed skipper and full crew</span>
                     </li>
                     <li className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-green-500" />
-                      <span className="text-gray-700">Final race to determine overall winner</span>
+                      <span className="text-gray-700">3–5 official races per day, scored under sailing sport rules</span>
                     </li>
                     <li className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-green-500" />
-                      <span className="text-gray-700">Medal ceremony with certificates</span>
+                      <span className="text-gray-700">Supervised by a qualified judging team and technical support boats</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-gray-700">Medal ceremony and certificates for top crews</span>
                     </li>
                   </ul>
                 </div>

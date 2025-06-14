@@ -97,14 +97,15 @@ const AdminDashboard = () => {
 
   const checkAuth = async () => {
     try {
+      setLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
-        navigate('/');
+        navigate('/login');
         return;
       }
 
-      // Check if user has admin role - use maybeSingle() to handle cases where no profile exists
+      // Check if user has admin role
       const { data: profile, error } = await supabase
         .from('profiles')
         .select(`
@@ -112,30 +113,17 @@ const AdminDashboard = () => {
           user_roles(role_name)
         `)
         .eq('id', user.id)
-        .maybeSingle();
+        .single();
 
       if (error) {
         console.error('Error fetching profile:', error);
-        navigate('/');
+        navigate('/login');
         return;
       }
 
-      // Check if profile exists and has the required admin role
-      if (!profile) {
-        console.error('Access denied: User profile not found');
-        navigate('/');
-        return;
-      }
-
-      if (!profile.user_roles) {
-        console.error('Access denied: User role not found');
-        navigate('/');
-        return;
-      }
-
-      if (profile.user_roles.role_name !== 'admin') {
+      if (!profile || !profile.user_roles || profile.user_roles.role_name !== 'admin') {
         console.error('Access denied: User is not an admin');
-        navigate('/');
+        navigate('/login');
         return;
       }
       
@@ -146,7 +134,7 @@ const AdminDashboard = () => {
       fetchClients();
     } catch (error) {
       console.error('Auth error:', error);
-      navigate('/');
+      navigate('/login');
     } finally {
       setLoading(false);
     }
@@ -201,10 +189,7 @@ const AdminDashboard = () => {
     try {
       const { data } = await supabase
         .from('bookings')
-        .select(`
-          *,
-          profiles(first_name, last_name, email, phone)
-        `)
+        .select('*')
         .order('created_at', { ascending: false })
         .limit(10);
 
@@ -608,7 +593,7 @@ const AdminDashboard = () => {
                           </div>
                           <div>
                             <p className="font-medium text-gray-900">
-                              {booking.profiles?.first_name} {booking.profiles?.last_name}
+                              {booking.customer_name}
                             </p>
                             <p className="text-sm text-gray-600">{booking.booking_date}</p>
                           </div>

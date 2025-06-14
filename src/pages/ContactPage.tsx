@@ -288,11 +288,13 @@ const ContactPage = () => {
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Need quick help?</h3>
               <div className="flex flex-col sm:flex-row gap-4">
                 <a
-                  href="tel:+393447770077"
+                  href="https://t.me/VETER_ITA"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex items-center justify-center space-x-2 bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300"
                 >
-                  <Phone className="h-4 w-4" />
-                  <span>Call now</span>
+                  <span>💬</span>
+                  <span>Telegram</span>
                 </a>
                 <a
                   href="https://wa.me/393447770077"

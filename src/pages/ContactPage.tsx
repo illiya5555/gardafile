@@ -108,7 +108,7 @@ const ContactPage = () => {
                     href="tel:+393447770077" 
                     className="text-primary-600 hover:text-primary-700 transition-colors duration-300"
                   >
-                    +39 344 777 00 77
+                    Tel, WhatsApp
                   </a>
                 </div>
               </div>

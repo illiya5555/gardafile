@@ -196,19 +196,6 @@ const ServicesPage = () => {
 
   return (
     <div className="pt-20">
-      {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 font-serif animate-fade-in">
-            Corporate Services
-          </h1>
-          <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed animate-slide-up">
-            Create unforgettable corporate events on Lake Garda. 
-            Professionally organized regattas to strengthen team spirit.
-          </p>
-        </div>
-      </section>
-
       {/* Services Overview */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -306,63 +293,6 @@ const ServicesPage = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">Corporate Client Reviews</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-white p-8 rounded-2xl shadow-sm transition-all duration-300 hover:shadow-md">
-              <div className="flex items-center mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 text-gold-400 fill-current" />
-                ))}
-              </div>
-              <p className="text-gray-700 mb-6 leading-relaxed">
-                "Excellent organization of corporate event! Our team got unforgettable impressions. 
-                Professional instructors, quality equipment and stunning views of Lake Garda."
-              </p>
-              <div className="flex items-center space-x-4">
-                <img
-                  src="https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop"
-                  alt="Corporate client"
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-                <div>
-                  <p className="font-semibold text-gray-900">Michael Peterson</p>
-                  <p className="text-sm text-gray-600">HR Director, TechCorp</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white p-8 rounded-2xl shadow-sm transition-all duration-300 hover:shadow-md">
-              <div className="flex items-center mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 text-gold-400 fill-current" />
-                ))}
-              </div>
-              <p className="text-gray-700 mb-6 leading-relaxed">
-                "Perfect place for team building! Employees still discuss this day. 
-                We recommend to all companies that want to strengthen team spirit."
-              </p>
-              <div className="flex items-center space-x-4">
-                <img
-                  src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop"
-                  alt="Corporate client"
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-                <div>
-                  <p className="font-semibold text-gray-900">Anna Smith</p>
-                  <p className="text-sm text-gray-600">CEO, Digital Solutions</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Contact CTA */}
       <section className="py-20 bg-primary-600 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -375,7 +305,7 @@ const ServicesPage = () => {
               href="tel:+393447770077"
               className="bg-white text-primary-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105"
             >
-              Call +39 344 777 00 77
+              Tel, WhatsApp
             </a>
             <a
               href="mailto:corporate@gardaracing.com"

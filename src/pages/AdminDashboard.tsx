@@ -59,6 +59,7 @@ import ClientsManagement from '../components/admin/ClientsManagement';
 import BookingsCalendar from '../components/admin/BookingsCalendar';
 import MediaLibrary from '../components/admin/MediaLibrary';
 import DatabaseManagement from '../components/admin/DatabaseManagement';
+import CalendarManagement from '../components/admin/CalendarManagement';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -198,6 +199,7 @@ const AdminDashboard = () => {
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3, category: 'main' },
+    { id: 'calendar-management', label: 'Calendar Management', icon: Calendar, category: 'main' },
     { id: 'home-editor', label: 'Home Editor', icon: Home, category: 'content' },
     { id: 'events-editor', label: 'Events Editor', icon: CalendarDays, category: 'content' },
     { id: 'services-editor', label: 'Services Editor', icon: Briefcase, category: 'content' },
@@ -406,7 +408,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Content Area */}
-        <div className={activeTab === 'home-editor' || activeTab === 'events-editor' || activeTab === 'services-editor' || activeTab === 'contact-editor' || activeTab === 'booking-editor' || activeTab === 'media-library' || activeTab === 'database' ? '' : 'p-4 sm:p-6 lg:p-8'}>
+        <div className={activeTab === 'home-editor' || activeTab === 'events-editor' || activeTab === 'services-editor' || activeTab === 'contact-editor' || activeTab === 'booking-editor' || activeTab === 'media-library' || activeTab === 'database' || activeTab === 'calendar-management' ? '' : 'p-4 sm:p-6 lg:p-8'}>
           {/* Content Editors */}
           {activeTab === 'home-editor' && <HomeContentEditor />}
           {activeTab === 'events-editor' && <EventsContentEditor />}
@@ -415,6 +417,7 @@ const AdminDashboard = () => {
           {activeTab === 'booking-editor' && <BookingContentEditor />}
           {activeTab === 'media-library' && <MediaLibrary />}
           {activeTab === 'database' && <DatabaseManagement />}
+          {activeTab === 'calendar-management' && <CalendarManagement />}
 
           {/* Management Components */}
           {activeTab === 'inquiries' && <InquiriesManagement />}
@@ -611,25 +614,25 @@ const AdminDashboard = () => {
                 <h3 className="text-xl font-bold text-gray-900 mb-6">Quick Actions</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <button
-                    onClick={() => setActiveTab('home-editor')}
+                    onClick={() => setActiveTab('calendar-management')}
                     className="flex flex-col items-center p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors duration-300"
                   >
-                    <Edit3 className="h-8 w-8 text-blue-600 mb-2" />
-                    <span className="text-sm font-medium text-blue-900">Edit Homepage</span>
+                    <Calendar className="h-8 w-8 text-blue-600 mb-2" />
+                    <span className="text-sm font-medium text-blue-900">Manage Calendar</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('home-editor')}
+                    className="flex flex-col items-center p-4 bg-green-50 rounded-xl hover:bg-green-100 transition-colors duration-300"
+                  >
+                    <Edit3 className="h-8 w-8 text-green-600 mb-2" />
+                    <span className="text-sm font-medium text-green-900">Edit Homepage</span>
                   </button>
                   <button
                     onClick={() => setActiveTab('media-library')}
-                    className="flex flex-col items-center p-4 bg-green-50 rounded-xl hover:bg-green-100 transition-colors duration-300"
-                  >
-                    <Image className="h-8 w-8 text-green-600 mb-2" />
-                    <span className="text-sm font-medium text-green-900">Media Library</span>
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('bookings')}
                     className="flex flex-col items-center p-4 bg-purple-50 rounded-xl hover:bg-purple-100 transition-colors duration-300"
                   >
-                    <Calendar className="h-8 w-8 text-purple-600 mb-2" />
-                    <span className="text-sm font-medium text-purple-900">View Calendar</span>
+                    <Image className="h-8 w-8 text-purple-600 mb-2" />
+                    <span className="text-sm font-medium text-purple-900">Media Library</span>
                   </button>
                   <button
                     onClick={() => setActiveTab('database')}
@@ -708,7 +711,7 @@ const AdminDashboard = () => {
           )}
 
           {/* Other tabs placeholder */}
-          {!['dashboard', 'home-editor', 'events-editor', 'services-editor', 'contact-editor', 'booking-editor', 'media-library', 'database', 'inquiries', 'bookings', 'clients', 'analytics'].includes(activeTab) && (
+          {!['dashboard', 'calendar-management', 'home-editor', 'events-editor', 'services-editor', 'contact-editor', 'booking-editor', 'media-library', 'database', 'inquiries', 'bookings', 'clients', 'analytics'].includes(activeTab) && (
             <div className="bg-white p-12 rounded-2xl shadow-sm border border-gray-100 text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 {React.createElement(menuItems.find(item => item.id === activeTab)?.icon || Settings, {

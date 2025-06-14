@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { supabase } from './lib/supabase';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import SEOHead from './components/SEOHead';
@@ -14,6 +15,19 @@ import AdminDashboard from './pages/AdminDashboard';
 import ChatWidget from './components/ChatWidget';
 
 function App() {
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === 'SIGNED_OUT' || (event === 'TOKEN_REFRESHED' && !session)) {
+          // Clear any stale session data
+          await supabase.auth.signOut();
+        }
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   return (
     <Router>
       <div className="min-h-screen bg-white">

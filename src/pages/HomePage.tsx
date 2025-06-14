@@ -15,15 +15,7 @@ const HomePage = () => {
     'https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif'
   ];
 
-  // Location section gallery images - Lake Garda specific
-  const locationImages = [
-    'https://i.postimg.cc/mrC0JcY3/temp-Image-M1-LFin.avif',
-    'https://i.postimg.cc/FszwmCbH/temp-Image-Akge-BH.avif',
-    'https://i.postimg.cc/C5LXRmWJ/temp-Imageb-Td-UOY.avif'
-  ];
-
   const [experienceImageIndex, setExperienceImageIndex] = useState(0);
-  const [locationImageIndex, setLocationImageIndex] = useState(0);
 
   // Fallback testimonials
   const fallbackTestimonials: Testimonial[] = [
@@ -73,17 +65,6 @@ const HomePage = () => {
 
     return () => clearInterval(interval);
   }, [experienceImages.length]);
-
-  // Auto-rotate location images every 6 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLocationImageIndex((prevIndex) => 
-        (prevIndex + 1) % locationImages.length
-      );
-    }, 6000);
-
-    return () => clearInterval(interval);
-  }, [locationImages.length]);
 
   const fetchTestimonials = async () => {
     try {
@@ -438,7 +419,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Location Section with Auto-rotating Gallery */}
+      {/* Location Section with YouTube Video */}
       <section className="py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -471,33 +452,19 @@ const HomePage = () => {
               </div>
             </div>
             <div className="relative">
-              {/* Auto-rotating location images */}
+              {/* YouTube Video */}
               <div className="relative rounded-2xl shadow-2xl overflow-hidden">
-                {locationImages.map((image, index) => (
-                  <img
-                    key={index}
-                    src={image}
-                    alt={`Lake Garda location ${index + 1}`}
-                    className={`w-full h-96 object-cover transition-opacity duration-1000 ${
-                      index === locationImageIndex ? 'opacity-100' : 'opacity-0 absolute inset-0'
-                    }`}
-                  />
-                ))}
-              </div>
-              
-              {/* Image indicators */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                {locationImages.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setLocationImageIndex(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      index === locationImageIndex 
-                        ? 'bg-white scale-110' 
-                        : 'bg-white/50 hover:bg-white/75'
-                    }`}
-                  />
-                ))}
+                <iframe
+                  src="https://www.youtube.com/embed/stuuOv0GUG8?autoplay=1&mute=1&loop=1&playlist=stuuOv0GUG8&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&disablekb=1&fs=0&cc_load_policy=0&playsinline=1&autohide=1"
+                  title="Lake Garda Location Video"
+                  className="w-full h-96 object-cover"
+                  style={{
+                    pointerEvents: 'none'
+                  }}
+                  frameBorder="0"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen={false}
+                />
               </div>
               
               <div className="absolute -top-6 -right-6 bg-gold-500 text-white p-4 rounded-xl shadow-lg">

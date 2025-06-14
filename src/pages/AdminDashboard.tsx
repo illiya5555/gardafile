@@ -104,17 +104,36 @@ const AdminDashboard = () => {
         return;
       }
 
-      // Check if user has admin role
-      const { data: profile } = await supabase
+      // Check if user has admin role - use maybeSingle() to handle cases where no profile exists
+      const { data: profile, error } = await supabase
         .from('profiles')
         .select(`
           *,
           user_roles(role_name)
         `)
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
-      if (!profile || !profile.user_roles || profile.user_roles.role_name !== 'admin') {
+      if (error) {
+        console.error('Error fetching profile:', error);
+        navigate('/');
+        return;
+      }
+
+      // Check if profile exists and has the required admin role
+      if (!profile) {
+        console.error('Access denied: User profile not found');
+        navigate('/');
+        return;
+      }
+
+      if (!profile.user_roles) {
+        console.error('Access denied: User role not found');
+        navigate('/');
+        return;
+      }
+
+      if (profile.user_roles.role_name !== 'admin') {
         console.error('Access denied: User is not an admin');
         navigate('/');
         return;

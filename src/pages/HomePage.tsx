@@ -170,7 +170,7 @@ const HomePage = () => {
     <div className="overflow-hidden">
       {/* Hero Section with Background Video */}
       <section className="relative min-h-screen flex items-center justify-center">
-        {/* Background Video */}
+        {/* Background Video - No overlay for maximum quality */}
         <div className="absolute inset-0">
           <iframe
             src="https://www.youtube.com/embed/Y7sRZOTsXbQ?autoplay=1&mute=1&loop=1&playlist=Y7sRZOTsXbQ&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&disablekb=1&fs=0&cc_load_policy=0&playsinline=1&autohide=1"
@@ -191,7 +191,8 @@ const HomePage = () => {
             allow="autoplay; encrypted-media"
             allowFullScreen={false}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/70 via-blue-800/50 to-transparent"></div>
+          {/* Minimal overlay only for text readability */}
+          <div className="absolute inset-0 bg-black/30"></div>
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

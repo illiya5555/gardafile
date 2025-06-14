@@ -9,11 +9,16 @@ const AuthButton = () => {
   const { user, profile, loading } = useAuth();
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+      window.location.href = '/'; // Redirect to home page after logout
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
   const getDashboardUrl = () => {
-    if (!profile?.role_name) return '/';
+    if (!profile?.role_name) return '/client-dashboard';
     
     switch (profile.role_name) {
       case 'admin':
@@ -23,7 +28,7 @@ const AuthButton = () => {
       case 'client':
         return '/client-dashboard';
       default:
-        return '/';
+        return '/client-dashboard';
     }
   };
 

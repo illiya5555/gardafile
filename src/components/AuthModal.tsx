@@ -43,6 +43,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
         if (error) throw error;
 
         if (data.user) {
+          console.log('Login successful:', data.user);
+          
           // Get user profile to determine role
           const { data: profile } = await supabase
             .from('profiles')
@@ -52,6 +54,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
             `)
             .eq('id', data.user.id)
             .single();
+
+          console.log('User profile:', profile);
 
           // Redirect based on role
           const roleName = profile?.user_roles?.role_name || 'client';
@@ -72,15 +76,23 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
         }
       } else {
         // Sign up
+        console.log('Signing up with:', formData);
         const { data, error } = await supabase.auth.signUp({
           email: formData.email,
           password: formData.password,
           options: {
             emailRedirectTo: undefined, // Disable email confirmation
+            data: {
+              first_name: formData.firstName,
+              last_name: formData.lastName,
+              phone: formData.phone
+            }
           }
         });
 
         if (error) throw error;
+
+        console.log('Signup response:', data);
 
         if (data.user) {
           // Get client role ID
@@ -89,6 +101,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
             .select('id')
             .eq('role_name', 'client')
             .single();
+
+          console.log('Role data:', roleData);
 
           // Create profile
           const { error: profileError } = await supabase

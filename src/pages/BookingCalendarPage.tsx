@@ -367,6 +367,21 @@ const BookingCalendarPage = () => {
                       const isBooked = isDateBooked(date);
                       const isSelected = dateStr === selectedDate;
                       const isPast = date < new Date();
+                      const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
+                      const month = date.getMonth() + 1;
+
+                      // DEBUG LOGGING - Add console logs here
+                      if (dayOfWeek === 6) { // Only log Saturdays
+                        console.log(`🔍 DEBUG Saturday ${dateStr}:`, {
+                          date: dateStr,
+                          dayOfWeek: dayOfWeek,
+                          month: month,
+                          isAvailable: isAvailable,
+                          isBooked: isBooked,
+                          isPast: isPast,
+                          isSelected: isSelected
+                        });
+                      }
 
                       return (
                         <button

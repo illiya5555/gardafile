@@ -1,0 +1,19 @@
+# Netlify redirects file
+# This file handles client-side routing for React applications
+
+# Redirect all 404 errors to the homepage
+/*    /index.html   200
+
+# Optional: Specific redirects for common pages
+/admin    /admin    200
+/booking  /booking  200
+/events   /events   200
+/services /services 200
+/contact  /contact  200
+
+# Redirect old URLs or common misspellings to correct pages
+/book     /booking  301
+/book-now /booking  301
+/calendar /booking  301
+/about    /         301
+/home     /         301

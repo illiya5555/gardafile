@@ -46,8 +46,7 @@ import {
   Palette,
   Database,
   Shield,
-  Activity,
-  RefreshCw
+  Activity
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import HomeContentEditor from '../components/admin/HomeContentEditor';
@@ -58,13 +57,12 @@ import BookingContentEditor from '../components/admin/BookingContentEditor';
 import InquiriesManagement from '../components/admin/InquiriesManagement';
 import ClientsManagement from '../components/admin/ClientsManagement';
 import BookingsCalendar from '../components/admin/BookingsCalendar';
-import ContentManager from '../components/admin/ContentManager';
+import MediaLibrary from '../components/admin/MediaLibrary';
 import DatabaseManagement from '../components/admin/DatabaseManagement';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
-  const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -78,7 +76,7 @@ const AdminDashboard = () => {
     conversionRate: 68,
     avgBookingValue: 195,
     mediaFiles: 0,
-    websiteViews: 12450,
+    websiteViews: 0,
     systemHealth: 98
   });
 
@@ -94,58 +92,21 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     checkAuth();
+    fetchStats();
+    fetchBookings();
+    fetchClients();
   }, []);
 
   const checkAuth = async () => {
     try {
-      setLoading(true);
-      
-      // Get current user
       const { data: { user } } = await supabase.auth.getUser();
       
-      if (!user) {
-        console.log('No user found, redirecting to home');
+      if (!user || user.email !== 'admin@gardaracing.com') {
         navigate('/');
         return;
       }
       
-      console.log('User authenticated:', user.id);
       setUser(user);
-      
-      // Get user profile with role information
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select(`
-          *,
-          user_roles(role_name)
-        `)
-        .eq('id', user.id)
-        .single();
-
-      if (profileError) {
-        console.error('Error fetching profile:', profileError);
-        navigate('/');
-        return;
-      }
-
-      console.log('User profile:', profileData);
-      setProfile(profileData);
-      
-      // Check if user is an admin
-      const roleName = profileData?.user_roles?.role_name;
-      console.log('User role:', roleName);
-      
-      if (roleName !== 'admin') {
-        console.log('Non-admin user, redirecting to home');
-        navigate('/');
-        return;
-      }
-      
-      // User is authenticated and is an admin
-      console.log('Admin access granted');
-      fetchStats();
-      fetchBookings();
-      fetchClients();
     } catch (error) {
       console.error('Auth error:', error);
       navigate('/');
@@ -166,11 +127,6 @@ const AdminDashboard = () => {
 
       const { count: corporateCount } = await supabase
         .from('corporate_inquiries')
-        .select('*', { count: 'exact', head: true });
-
-      // Get media file count
-      const { count: mediaCount } = await supabase
-        .from('storage_items')
         .select('*', { count: 'exact', head: true });
 
       const totalRevenue = bookings?.reduce((sum, booking) => 
@@ -195,7 +151,7 @@ const AdminDashboard = () => {
         currentMonth: monthlyBookings,
         conversionRate: 68,
         avgBookingValue: totalRevenue / (bookings?.length || 1),
-        mediaFiles: mediaCount || 0,
+        mediaFiles: 156, // Mock data
         websiteViews: 12450, // Mock data
         systemHealth: 98 // Mock data
       });
@@ -236,12 +192,8 @@ const AdminDashboard = () => {
   };
 
   const handleLogout = async () => {
-    try {
-      await supabase.auth.signOut();
-      navigate('/');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
+    await supabase.auth.signOut();
+    navigate('/');
   };
 
   const menuItems = [
@@ -335,7 +287,6 @@ const AdminDashboard = () => {
           <button
             onClick={() => setSidebarOpen(false)}
             className="lg:hidden text-gray-400 hover:text-gray-600"
-            aria-label="Close sidebar"
           >
             <X className="h-6 w-6" />
           </button>
@@ -363,7 +314,6 @@ const AdminDashboard = () => {
                           ? 'bg-blue-600 text-white shadow-lg scale-105'
                           : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
                       }`}
-                      aria-current={activeTab === item.id ? 'page' : undefined}
                     >
                       <item.icon className="h-4 w-4" />
                       <span className="font-medium">{item.label}</span>
@@ -412,7 +362,6 @@ const AdminDashboard = () => {
                 <button
                   onClick={() => setSidebarOpen(true)}
                   className="lg:hidden text-gray-600 hover:text-gray-900"
-                  aria-label="Open sidebar"
                 >
                   <Menu className="h-6 w-6" />
                 </button>
@@ -442,10 +391,7 @@ const AdminDashboard = () => {
                 </div>
 
                 <div className="relative">
-                  <button 
-                    className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-300"
-                    aria-label={`${notifications.filter(n => !n.read).length} unread notifications`}
-                  >
+                  <button className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-300">
                     <Bell className="h-6 w-6" />
                     {notifications.filter(n => !n.read).length > 0 && (
                       <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -467,7 +413,7 @@ const AdminDashboard = () => {
           {activeTab === 'services-editor' && <ServicesContentEditor />}
           {activeTab === 'contact-editor' && <ContactContentEditor />}
           {activeTab === 'booking-editor' && <BookingContentEditor />}
-          {activeTab === 'media-library' && <ContentManager />}
+          {activeTab === 'media-library' && <MediaLibrary />}
           {activeTab === 'database' && <DatabaseManagement />}
 
           {/* Management Components */}
@@ -480,7 +426,7 @@ const AdminDashboard = () => {
             <div className="space-y-8">
               {/* Enhanced Stats Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-white p-6 rounded-2xl shadow-card border border-gray-100 hover:shadow-card-hover transition-all duration-300">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm text-gray-600 mb-1">Total Bookings</p>
@@ -493,7 +439,7 @@ const AdminDashboard = () => {
                   </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-2xl shadow-card border border-gray-100 hover:shadow-card-hover transition-all duration-300">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm text-gray-600 mb-1">Total Revenue</p>
@@ -506,7 +452,7 @@ const AdminDashboard = () => {
                   </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-2xl shadow-card border border-gray-100 hover:shadow-card-hover transition-all duration-300">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm text-gray-600 mb-1">Active Clients</p>
@@ -519,22 +465,55 @@ const AdminDashboard = () => {
                   </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-2xl shadow-card border border-gray-100 hover:shadow-card-hover transition-all duration-300">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 mb-1">Media Files</p>
-                      <p className="text-3xl font-bold text-gray-900">{stats.mediaFiles}</p>
-                      <p className="text-xs text-green-600 mt-1">+5% this month</p>
+                      <p className="text-sm text-gray-600 mb-1">Conversion Rate</p>
+                      <p className="text-3xl font-bold text-gray-900">{stats.conversionRate}%</p>
+                      <p className="text-xs text-green-600 mt-1">+3% this month</p>
                     </div>
                     <div className="bg-orange-100 p-3 rounded-xl">
-                      <Image className="h-8 w-8 text-orange-600" />
+                      <TrendingUp className="h-8 w-8 text-orange-600" />
                     </div>
                   </div>
                 </div>
               </div>
 
+              {/* Additional Stats Row */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">Media Files</p>
+                      <p className="text-2xl font-bold text-gray-900">{stats.mediaFiles}</p>
+                    </div>
+                    <Image className="h-8 w-8 text-blue-600" />
+                  </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">Website Views</p>
+                      <p className="text-2xl font-bold text-gray-900">{stats.websiteViews.toLocaleString()}</p>
+                    </div>
+                    <Globe className="h-8 w-8 text-green-600" />
+                  </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">System Health</p>
+                      <p className="text-2xl font-bold text-gray-900">{stats.systemHealth}%</p>
+                    </div>
+                    <Activity className="h-8 w-8 text-purple-600" />
+                  </div>
+                </div>
+              </div>
+
               {/* Plan vs Fact */}
-              <div className="bg-white p-6 rounded-2xl shadow-card border border-gray-100">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <h3 className="text-xl font-bold text-gray-900 mb-6">Plan vs Actual (Current Month)</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="text-center">
@@ -571,7 +550,7 @@ const AdminDashboard = () => {
 
               {/* Recent Activity */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white p-6 rounded-2xl shadow-card border border-gray-100">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-xl font-bold text-gray-900">Recent Bookings</h3>
                     <button 
@@ -604,7 +583,7 @@ const AdminDashboard = () => {
                   </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-2xl shadow-card border border-gray-100">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-xl font-bold text-gray-900">Recent Activity</h3>
                     <button 
@@ -628,7 +607,7 @@ const AdminDashboard = () => {
               </div>
 
               {/* Quick Actions */}
-              <div className="bg-white p-6 rounded-2xl shadow-card border border-gray-100">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <h3 className="text-xl font-bold text-gray-900 mb-6">Quick Actions</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <button
@@ -667,7 +646,7 @@ const AdminDashboard = () => {
           {/* Analytics Tab */}
           {activeTab === 'analytics' && (
             <div className="space-y-6">
-              <div className="bg-white p-6 rounded-2xl shadow-card border border-gray-100">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <h3 className="text-xl font-bold text-gray-900 mb-6">Analytics and Reports</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   <div className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
@@ -730,7 +709,7 @@ const AdminDashboard = () => {
 
           {/* Other tabs placeholder */}
           {!['dashboard', 'home-editor', 'events-editor', 'services-editor', 'contact-editor', 'booking-editor', 'media-library', 'database', 'inquiries', 'bookings', 'clients', 'analytics'].includes(activeTab) && (
-            <div className="bg-white p-12 rounded-2xl shadow-card border border-gray-100 text-center">
+            <div className="bg-white p-12 rounded-2xl shadow-sm border border-gray-100 text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 {React.createElement(menuItems.find(item => item.id === activeTab)?.icon || Settings, {
                   className: "h-8 w-8 text-blue-600"

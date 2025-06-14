@@ -3,69 +3,13 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Enhanced validation for environment variables
 if (!supabaseUrl || !supabaseAnonKey) {
   console.error('Missing Supabase environment variables:', {
     url: !!supabaseUrl,
-    key: !!supabaseAnonKey,
-    urlValue: supabaseUrl,
-    keyValue: supabaseAnonKey ? `${supabaseAnonKey.substring(0, 10)}...` : 'undefined'
+    key: !!supabaseAnonKey
   });
-  throw new Error('Missing Supabase environment variables. Please check your .env file and ensure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set with real values from your Supabase dashboard.');
+  throw new Error('Missing Supabase environment variables. Please check your .env file.');
 }
-
-// Check for placeholder values
-if (supabaseUrl.includes('your-project-ref') || supabaseAnonKey.includes('your-anon-key')) {
-  console.error('Placeholder values detected in environment variables');
-  throw new Error('Please replace the placeholder values in your .env file with actual Supabase credentials from your dashboard (Settings → API).');
-}
-
-// Validate URL format
-try {
-  new URL(supabaseUrl);
-} catch (error) {
-  console.error('Invalid Supabase URL format:', supabaseUrl);
-  throw new Error('Invalid VITE_SUPABASE_URL format. Please ensure it follows the pattern: https://your-project-ref.supabase.co');
-}
-
-// Create a custom fetch implementation with better error handling
-const customFetch = async (url: RequestInfo | URL, options?: RequestInit) => {
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
-    
-    const response = await fetch(url, {
-      ...options,
-      signal: controller.signal,
-      headers: {
-        ...options?.headers,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'X-Client-Info': 'supabase-js/2.39.0',
-      }
-    });
-    
-    clearTimeout(timeoutId);
-    return response;
-  } catch (error) {
-    console.error('Network fetch error:', {
-      error: error instanceof Error ? error.message : 'Unknown error',
-      url: url.toString(),
-      timestamp: new Date().toISOString()
-    });
-    
-    // Provide more specific error messages
-    if (error instanceof Error) {
-      if (error.name === 'AbortError') {
-        throw new Error('Request timeout - please check your internet connection and Supabase project status');
-      } else if (error.message.includes('Failed to fetch')) {
-        throw new Error('Network connection failed - please verify your internet connection and that your Supabase project URL is correct');
-      }
-    }
-    
-    throw error;
-  }
-};
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
@@ -75,8 +19,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   global: {
     headers: {
       'X-Client-Info': 'garda-racing-app'
-    },
-    fetch: customFetch
+    }
   },
   db: {
     schema: 'public'
@@ -88,33 +31,19 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   }
 });
 
-// Enhanced connection test function
+// Test connection function with better error handling
 export const testConnection = async () => {
   try {
     console.log('Testing Supabase connection to:', supabaseUrl);
     
-    // First test basic connectivity
-    const healthCheck = await fetch(`${supabaseUrl}/rest/v1/`, {
-      method: 'HEAD',
-      headers: {
-        'apikey': supabaseAnonKey,
-        'Authorization': `Bearer ${supabaseAnonKey}`
-      }
-    });
-    
-    if (!healthCheck.ok) {
-      console.error('Supabase health check failed:', healthCheck.status, healthCheck.statusText);
-      return false;
-    }
-    
-    // Test database query
+    // Use a simple query that should work with any Supabase instance
     const { data, error } = await supabase
-      .from('user_roles')
+      .from('testimonials')
       .select('id')
       .limit(1);
     
     if (error) {
-      console.error('Supabase database test failed:', {
+      console.error('Supabase connection test failed:', {
         message: error.message,
         details: error.details,
         hint: error.hint,
@@ -129,18 +58,15 @@ export const testConnection = async () => {
     console.error('Supabase connection test error:', {
       error: error instanceof Error ? error.message : 'Unknown error',
       url: supabaseUrl,
-      hasKey: !!supabaseAnonKey,
-      timestamp: new Date().toISOString()
+      hasKey: !!supabaseAnonKey
     });
     
-    // Provide helpful debugging information
+    // Check if it's a network error
     if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-      console.error('Connection troubleshooting steps:');
-      console.error('1. Check your internet connection');
-      console.error('2. Verify VITE_SUPABASE_URL in .env file matches your project URL from Supabase dashboard');
-      console.error('3. Verify VITE_SUPABASE_ANON_KEY in .env file matches your anon key from Supabase dashboard');
-      console.error('4. Ensure your Supabase project is active and not paused');
-      console.error('5. Restart your development server after updating .env file');
+      console.error('Network error: Unable to reach Supabase. Please check:');
+      console.error('1. Your internet connection');
+      console.error('2. The VITE_SUPABASE_URL in your .env file');
+      console.error('3. That your Supabase project is active and accessible');
     }
     
     return false;

@@ -119,12 +119,11 @@ const Footer = () => {
               <a href="#" className="hover:text-primary-500 transition-colors duration-300">Terms & Conditions</a>
               <a href="#" className="hover:text-primary-500 transition-colors duration-300">Cancellation Policy</a>
               <a href="#" className="hover:text-primary-500 transition-colors duration-300">GDPR</a>
-              {/* Admin button */}
+              {/* Малозаметная кнопка администратора */}
               <button
                 onClick={() => setShowAdminLogin(true)}
                 className="text-gray-600 hover:text-gray-400 transition-colors duration-300 opacity-30 hover:opacity-60"
                 title="Admin Access"
-                aria-label="Admin Access"
               >
                 <Lock className="h-3 w-3" />
               </button>

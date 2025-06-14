@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Lock, Eye, EyeOff, AlertCircle, ExternalLink } from 'lucide-react';
+import { X, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface AdminLoginProps {
@@ -19,100 +19,43 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
     setError('');
 
     try {
-      console.log('Attempting admin login with:', email);
-      
-      // Sign in with email and password
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
-        console.error('Login error:', error);
-        
-        // Enhanced error handling for different types of failures
-        if (error.message === 'Failed to fetch' || error.message.includes('fetch')) {
-          setError('Ошибка подключения к серверу. Проверьте настройки Supabase в файле .env и убедитесь, что указаны правильные значения VITE_SUPABASE_URL и VITE_SUPABASE_ANON_KEY из вашего проекта Supabase.');
-        } else if (error.message === 'Invalid login credentials') {
-          setError('Неверный email или пароль. Убедитесь, что пользователь зарегистрирован в системе с ролью администратора.');
-        } else if (error.message.includes('timeout') || error.message.includes('network')) {
-          setError('Превышено время ожидания соединения. Проверьте подключение к интернету и статус вашего проекта Supabase.');
+        if (error.message === 'Invalid login credentials') {
+          setError('Неверный email или пароль. Убедитесь, что пользователь зарегистрирован в системе.');
         } else {
-          setError(`Ошибка входа: ${error.message}`);
+          setError(error.message);
         }
         return;
       }
 
       if (data.user) {
-        console.log('User authenticated:', data.user.id);
-        
-        // Get user profile with role information
-        const { data: profileData, error: profileError } = await supabase
-          .from('profiles')
-          .select(`
-            *,
-            user_roles(role_name)
-          `)
-          .eq('id', data.user.id)
-          .single();
-
-        if (profileError) {
-          console.error('Profile fetch error:', profileError);
-          
-          if (profileError.message === 'Failed to fetch' || profileError.message.includes('fetch')) {
-            setError('Ошибка подключения при получении профиля. Проверьте настройки Supabase и подключение к интернету.');
-          } else if (profileError.code === 'PGRST116') {
-            setError('Профиль пользователя не найден. Убедитесь, что пользователь создан в таблице profiles с соответствующей ролью.');
-          } else {
-            setError(`Ошибка при получении профиля пользователя: ${profileError.message}`);
-          }
-          return;
-        }
-
-        console.log('User profile:', profileData);
-        
-        // Check if user is an admin
-        const roleName = profileData?.user_roles?.role_name;
-        console.log('User role:', roleName);
-        
-        if (roleName === 'admin') {
-          console.log('Admin access granted');
+        // Проверяем, является ли пользователь администратором
+        // В реальном приложении это должно проверяться через роли в базе данных
+        if (email === 'admin@gardaracing.com') {
           alert('Добро пожаловать в административную панель!');
-          // Redirect to admin panel
+          // Перенаправляем на админ-панель
           window.location.href = '/admin';
           onClose();
         } else {
-          console.error('Non-admin attempted to access admin panel');
-          setError('У вас нет прав администратора. Обратитесь к системному администратору для получения доступа.');
+          setError('У вас нет прав администратора');
           await supabase.auth.signOut();
         }
       }
     } catch (error: any) {
-      console.error('Unexpected error during login:', error);
-      
-      // Enhanced error handling for network and configuration issues
-      if (error.message === 'Failed to fetch' || error.message.includes('fetch') || error.name === 'TypeError') {
-        setError('Ошибка подключения к Supabase. Убедитесь, что в файле .env указаны правильные значения VITE_SUPABASE_URL и VITE_SUPABASE_ANON_KEY из вашего проекта Supabase (Settings → API).');
-      } else if (error.message.includes('timeout')) {
-        setError('Превышено время ожидания. Проверьте подключение к интернету и статус проекта Supabase.');
-      } else if (error.message.includes('placeholder')) {
-        setError('Обнаружены placeholder-значения в конфигурации. Замените значения в .env файле на реальные данные из Supabase Dashboard.');
-      } else {
-        setError(error.message || 'Неожиданная ошибка входа');
-      }
+      setError(error.message || 'Ошибка входа');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="admin-login-title"
-    >
-      <div className="bg-white rounded-2xl shadow-modal w-full max-w-md mx-4 animate-slide-up">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 animate-slide-up">
         <div className="p-8">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
@@ -121,14 +64,13 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
                 <Lock className="h-6 w-6 text-primary-600" />
               </div>
               <div>
-                <h2 id="admin-login-title" className="text-xl font-bold text-gray-900">Admin Access</h2>
+                <h2 className="text-xl font-bold text-gray-900">Admin Access</h2>
                 <p className="text-sm text-gray-600">Вход в административную панель</p>
               </div>
             </div>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600 transition-colors duration-300"
-              aria-label="Close"
             >
               <X className="h-6 w-6" />
             </button>
@@ -140,47 +82,27 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
               <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
               <div>
                 <h3 className="text-sm font-semibold text-blue-900 mb-1">
-                  Настройка Supabase
+                  Настройка администратора
                 </h3>
                 <p className="text-xs text-blue-700 mb-2">
-                  Для устранения ошибки "Failed to fetch":
+                  Для входа необходимо создать пользователя в Supabase:
                 </p>
                 <ol className="text-xs text-blue-700 space-y-1 list-decimal list-inside">
-                  <li>Откройте <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-blue-800 underline inline-flex items-center">Supabase Dashboard <ExternalLink className="h-3 w-3 ml-1" /></a></li>
-                  <li>Выберите ваш проект → Settings → API</li>
-                  <li>Скопируйте "Project URL" в VITE_SUPABASE_URL</li>
-                  <li>Скопируйте "anon public" ключ в VITE_SUPABASE_ANON_KEY</li>
-                  <li>Перезапустите сервер разработки</li>
+                  <li>Откройте Supabase Dashboard</li>
+                  <li>Перейдите в Authentication → Users</li>
+                  <li>Создайте пользователя с email: admin@gardaracing.com</li>
+                  <li>Используйте созданные credentials для входа</li>
                 </ol>
-                <div className="mt-2 pt-2 border-t border-blue-200">
-                  <p className="text-xs text-blue-700 font-medium">
-                    Создайте администратора:
-                  </p>
-                  <ul className="text-xs text-blue-700 mt-1 space-y-0.5">
-                    <li>• Authentication → Users → Create user</li>
-                    <li>• Email: admin@gardaracing.com</li>
-                    <li>• Назначьте роль 'admin' в таблице profiles</li>
-                  </ul>
-                </div>
               </div>
             </div>
           </div>
 
           {/* Error Message */}
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg" role="alert">
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
               <div className="flex items-start space-x-2">
                 <AlertCircle className="h-4 w-4 text-red-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-sm text-red-600">{error}</p>
-                  {error.includes('Failed to fetch') && (
-                    <div className="mt-2 text-xs text-red-500">
-                      <p className="font-medium">Проверьте файл .env:</p>
-                      <p>VITE_SUPABASE_URL=https://your-project.supabase.co</p>
-                      <p>VITE_SUPABASE_ANON_KEY=eyJ...</p>
-                    </div>
-                  )}
-                </div>
+                <p className="text-sm text-red-600">{error}</p>
               </div>
             </div>
           )}
@@ -188,41 +110,36 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
           {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-2" htmlFor="admin-email">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Email
               </label>
               <input
-                id="admin-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 text-gray-900 bg-white placeholder-gray-500"
                 placeholder="admin@gardaracing.com"
                 required
-                aria-required="true"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-2" htmlFor="admin-password">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Пароль
               </label>
               <div className="relative">
                 <input
-                  id="admin-password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 text-gray-900 bg-white placeholder-gray-500"
                   placeholder="••••••••"
                   required
-                  aria-required="true"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-300"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -233,7 +150,6 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
               type="submit"
               disabled={loading}
               className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-              aria-busy={loading}
             >
               {loading ? (
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>

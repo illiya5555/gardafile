@@ -275,7 +275,6 @@ const ServicesPage = () => {
               backgroundPosition: 'center'
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-blue-800/70 to-primary-900/80"></div>
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <h2 className="text-3xl font-bold text-white mb-8 text-center">Benefits of Corporate Regattas</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

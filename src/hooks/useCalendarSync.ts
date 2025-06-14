@@ -5,8 +5,8 @@ export interface TimeSlot {
   id: string;
   date: string;
   time: string;
-  max_participants: number;
-  price_per_person: number;
+  max_participants: number | null;
+  price_per_person: number | null;
   is_active: boolean;
   created_at: string;
 }

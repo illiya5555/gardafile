@@ -265,7 +265,47 @@ const ServicesPage = () => {
               </div>
             </Link>
           </div>
-          
+
+          {/* Corporate Benefits */}
+          <section 
+            className="relative py-20 rounded-2xl overflow-hidden"
+            style={{ 
+              backgroundImage: 'url(https://i.postimg.cc/9QRyyPbX/Boas-1814.jpg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-blue-800/70 to-primary-900/80"></div>
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 className="text-3xl font-bold text-white mb-8 text-center">Benefits of Corporate Regattas</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="text-center group">
+                  <div className="bg-white/20 backdrop-blur-sm w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <Users className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-3">Teamwork</h3>
+                  <p className="text-white/90">Sailing requires coordinated teamwork. Perfect metaphor for business and excellent way to strengthen colleague bonds.</p>
+                </div>
+                <div className="text-center group">
+                  <div className="bg-white/20 backdrop-blur-sm w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <Award className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-3">Healthy Competition</h3>
+                  <p className="text-white/90">Competitive element motivates employees and creates positive atmosphere. Winners receive awards and recognition.</p>
+                </div>
+                <div className="text-center group">
+                  <div className="bg-white/20 backdrop-blur-sm w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <Star className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-3">Energy & Motivation</h3>
+                  <p className="text-white/90">Active outdoor recreation energizes and increases motivation. Employees return to office inspired.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
       {/* Testimonials */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

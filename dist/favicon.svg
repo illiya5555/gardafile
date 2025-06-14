@@ -1,1 +1,5 @@
-<iframe width="449" height="798" src="https://www.youtube.com/embed/RC2xoJokKrQ" title="видео на страницу евентов" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="6" fill="#DC2626"/>
+  <path d="M8 16L24 8V24L8 16Z" fill="white"/>
+  <circle cx="16" cy="16" r="2" fill="#FCD34D"/>
+</svg>

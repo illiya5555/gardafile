@@ -100,6 +100,7 @@ const Header = () => {
                 href="#" 
                 className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
                 title="Facebook"
+                aria-label="Visit our Facebook page"
               >
                 <Facebook className="h-4 w-4" />
               </a>
@@ -109,6 +110,7 @@ const Header = () => {
                 rel="noopener noreferrer"
                 className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
                 title="Instagram"
+                aria-label="Visit our Instagram page"
               >
                 <Instagram className="h-4 w-4" />
               </a>
@@ -116,6 +118,7 @@ const Header = () => {
                 href="#" 
                 className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
                 title="YouTube"
+                aria-label="Visit our YouTube channel"
               >
                 <Youtube className="h-4 w-4" />
               </a>
@@ -126,6 +129,8 @@ const Header = () => {
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-300"
+            aria-expanded={isMenuOpen}
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -149,7 +154,7 @@ const Header = () => {
                   onClick={() => setIsMenuOpen(false)}
                   className={`block py-2 font-medium transition-colors duration-300 ${
                     location.pathname === item.href
-                      ? 'text-primary-600 border-l-4 border-primary-600 pl-4'
+                      ? 'text-primary-600 border-l-4 border-primary-600 pl-4 bg-primary-50 rounded-r-lg'
                       : 'text-gray-700 hover:text-primary-600 hover:pl-2'
                   }`}
                 >
@@ -176,7 +181,7 @@ const Header = () => {
                 {/* Mobile Social Icons and Language */}
                 <div className="flex items-center justify-between">
                   <div className="flex space-x-4">
-                    <a href="#" className="text-gray-600 hover:text-primary-600 transition-colors duration-300">
+                    <a href="#" className="text-gray-600 hover:text-primary-600 transition-colors duration-300" aria-label="Facebook">
                       <Facebook className="h-5 w-5" />
                     </a>
                     <a 
@@ -184,10 +189,11 @@ const Header = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-600 hover:text-primary-600 transition-colors duration-300"
+                      aria-label="Instagram"
                     >
                       <Instagram className="h-5 w-5" />
                     </a>
-                    <a href="#" className="text-gray-600 hover:text-primary-600 transition-colors duration-300">
+                    <a href="#" className="text-gray-600 hover:text-primary-600 transition-colors duration-300" aria-label="YouTube">
                       <Youtube className="h-5 w-5" />
                     </a>
                   </div>
@@ -202,6 +208,7 @@ const Header = () => {
                             ? 'bg-primary-600 text-white'
                             : 'text-gray-600 hover:bg-gray-100'
                         }`}
+                        aria-label={`Switch language to ${lang}`}
                       >
                         {lang}
                       </button>

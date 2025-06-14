@@ -161,7 +161,7 @@ const ContactPage = () => {
 
           {/* Contact Form */}
           <div>
-            <div className="bg-white rounded-2xl shadow-lg p-8">
+            <div className="bg-white rounded-2xl shadow-card p-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-8">Send a message</h2>
               
               {submitted ? (
@@ -199,6 +199,7 @@ const ContactPage = () => {
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         required
+                        aria-required="true"
                       />
                     </div>
                     <div>
@@ -212,6 +213,7 @@ const ContactPage = () => {
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         required
+                        aria-required="true"
                       />
                     </div>
                   </div>
@@ -227,6 +229,7 @@ const ContactPage = () => {
                         value={formData.phone}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        aria-required="false"
                       />
                     </div>
                     <div>
@@ -239,6 +242,7 @@ const ContactPage = () => {
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         required
+                        aria-required="true"
                       >
                         <option value="">Select subject</option>
                         <option value="booking">Booking</option>
@@ -262,13 +266,15 @@ const ContactPage = () => {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       placeholder="Tell us about your questions or wishes..."
                       required
+                      aria-required="true"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-primary-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                    className="w-full bg-primary-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-card disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                    aria-label="Send message"
                   >
                     {loading ? (
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -291,17 +297,16 @@ const ContactPage = () => {
                   href="https://t.me/VETER_ITA"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-colors duration-300"
-                  style={{ backgroundColor: '#0088cc', color: 'white' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#006699'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0088cc'}
+                  className="flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-colors duration-300 bg-telegram-500 text-white hover:bg-telegram-600"
+                  aria-label="Contact us on Telegram"
                 >
                   <span>💬</span>
                   <span>Telegram</span>
                 </a>
                 <a
                   href="https://wa.me/393447770077"
-                  className="flex items-center justify-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300"
+                  className="flex items-center justify-center space-x-2 bg-whatsapp-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-whatsapp-600 transition-colors duration-300"
+                  aria-label="Contact us on WhatsApp"
                 >
                   <span>WhatsApp</span>
                 </a>
@@ -314,28 +319,28 @@ const ContactPage = () => {
         <div className="mt-20">
           <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Frequently asked questions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="bg-white p-6 rounded-xl shadow-card border border-gray-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">How to book?</h3>
               <p className="text-gray-600">
                 You can book through our website, call us, or email us. 
                 We will confirm your booking within 24 hours.
               </p>
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="bg-white p-6 rounded-xl shadow-card border border-gray-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">What weather is suitable for sailing?</h3>
               <p className="text-gray-600">
                 We go to sea with winds from 5 to 25 knots. In adverse conditions, 
                 we will offer a reschedule or a full refund.
               </p>
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="bg-white p-6 rounded-xl shadow-card border border-gray-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Is sailing experience required?</h3>
               <p className="text-gray-600">
                 No, experience is not required. Our professional instructors will teach you everything you need 
                 and ensure safety on the water.
               </p>
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="bg-white p-6 rounded-xl shadow-card border border-gray-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">What is included in the price?</h3>
               <p className="text-gray-600">
                 The price includes: professional skipper, all equipment, instruction, 

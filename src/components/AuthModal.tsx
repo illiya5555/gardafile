@@ -24,6 +24,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
       ...prev,
       [e.target.name]: e.target.value
     }));
+    // Clear error when user starts typing
     if (error) setError('');
   };
 
@@ -121,13 +122,18 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 animate-slide-up">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="auth-modal-title"
+    >
+      <div className="bg-white rounded-2xl shadow-modal w-full max-w-md mx-4 animate-slide-up">
         <div className="p-8">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">
+              <h2 id="auth-modal-title" className="text-2xl font-bold text-gray-900">
                 {isLogin ? 'Welcome Back' : 'Create Account'}
               </h2>
               <p className="text-gray-600">
@@ -137,6 +143,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600 transition-colors duration-300"
+              aria-label="Close"
             >
               <X className="h-6 w-6" />
             </button>
@@ -144,7 +151,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
 
           {/* Error Message */}
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg" role="alert">
               <div className="flex items-start space-x-2">
                 <AlertCircle className="h-4 w-4 text-red-600 mt-0.5 flex-shrink-0" />
                 <p className="text-sm text-red-600">{error}</p>
@@ -157,90 +164,101 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
             {!isLogin && (
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label className="block text-sm font-semibold text-gray-900 mb-2" htmlFor="firstName">
                     First Name *
                   </label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <input
                       type="text"
+                      id="firstName"
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleInputChange}
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                       required={!isLogin}
+                      aria-required={!isLogin}
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label className="block text-sm font-semibold text-gray-900 mb-2" htmlFor="lastName">
                     Last Name *
                   </label>
                   <input
                     type="text"
+                    id="lastName"
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                     required={!isLogin}
+                    aria-required={!isLogin}
                   />
                 </div>
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2" htmlFor="email">
                 Email *
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   type="email"
+                  id="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                   required
+                  aria-required="true"
                 />
               </div>
             </div>
 
             {!isLogin && (
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                <label className="block text-sm font-semibold text-gray-900 mb-2" htmlFor="phone">
                   Phone
                 </label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <input
                     type="tel"
+                    id="phone"
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    aria-required="false"
                   />
                 </div>
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2" htmlFor="password">
                 Password *
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   type={showPassword ? 'text' : 'password'}
+                  id="password"
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
                   className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                   required
+                  aria-required="true"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -251,6 +269,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
               type="submit"
               disabled={loading}
               className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-busy={loading}
             >
               {loading ? (
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mx-auto"></div>
@@ -267,6 +286,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
               <button
                 onClick={() => setIsLogin(!isLogin)}
                 className="ml-2 text-primary-600 hover:text-primary-700 font-semibold"
+                type="button"
               >
                 {isLogin ? 'Sign Up' : 'Sign In'}
               </button>

@@ -113,21 +113,25 @@ const CorporateSailingPage = () => {
                   src="https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=400"
                   alt="Corporate sailing team"
                   className="rounded-xl shadow-lg w-full h-48 object-cover"
+                  loading="lazy"
                 />
                 <img
                   src="https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=400"
                   alt="Team building on yacht"
                   className="rounded-xl shadow-lg w-full h-48 object-cover"
+                  loading="lazy"
                 />
                 <img
                   src="https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=400"
                   alt="Lake Garda sailing"
                   className="rounded-xl shadow-lg w-full h-48 object-cover"
+                  loading="lazy"
                 />
                 <img
                   src="https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=400"
                   alt="Award ceremony"
                   className="rounded-xl shadow-lg w-full h-48 object-cover"
+                  loading="lazy"
                 />
               </div>
 
@@ -194,7 +198,7 @@ const CorporateSailingPage = () => {
               }
             ].map((feature, index) => (
               <div key={index} className="text-center group">
-                <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-card group-hover:shadow-card-hover group-hover:scale-110 transition-transform duration-300">
                   <feature.icon className="h-8 w-8 text-primary-600" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>

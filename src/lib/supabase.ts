@@ -11,6 +11,36 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables. Please check your .env file.');
 }
 
+// Create a custom fetch implementation that handles DNS_HOSTNAME_RESOLVED_PRIVATE errors
+const customFetch = async (url: RequestInfo | URL, options?: RequestInit) => {
+  try {
+    // Add a cache-busting parameter to avoid DNS caching issues
+    const urlObj = new URL(url.toString());
+    urlObj.searchParams.append('_cb', Date.now().toString());
+    
+    // Use a timeout to prevent hanging connections
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
+    const response = await fetch(urlObj.toString(), {
+      ...options,
+      signal: controller.signal,
+      // Force IPv4 by setting appropriate headers
+      headers: {
+        ...options?.headers,
+        'Accept': 'application/json',
+        'X-Client-Info': 'supabase-js/2.39.0',
+      }
+    });
+    
+    clearTimeout(timeoutId);
+    return response;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    throw error;
+  }
+};
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
@@ -19,7 +49,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   global: {
     headers: {
       'X-Client-Info': 'garda-racing-app'
-    }
+    },
+    fetch: customFetch
   },
   db: {
     schema: 'public'

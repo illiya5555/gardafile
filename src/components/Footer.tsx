@@ -89,10 +89,6 @@ const Footer = () => {
             <h4 className="text-lg font-semibold mb-6">Certifications</h4>
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
-                <Award className="h-5 w-5 text-gold-400" />
-                <span className="text-gray-300 text-sm">RYA Certified</span>
-              </div>
-              <div className="flex items-center space-x-3">
                 <Shield className="h-5 w-5 text-green-400" />
                 <span className="text-gray-300 text-sm">Fully Insured</span>
               </div>

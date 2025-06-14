@@ -28,8 +28,27 @@ const ContactPage = () => {
     setError('');
 
     try {
-      // Отправляем данные в Supabase Edge Function
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-contact-inquiry`, {
+      // Validate required fields
+      if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+        throw new Error('Please fill in all required fields');
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        throw new Error('Please enter a valid email address');
+      }
+
+      // Check if Supabase URL is available
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      if (!supabaseUrl) {
+        throw new Error('Configuration error: Supabase URL not found');
+      }
+
+      console.log('Sending contact inquiry to:', `${supabaseUrl}/functions/v1/send-contact-inquiry`);
+
+      // Send data to Supabase Edge Function
+      const response = await fetch(`${supabaseUrl}/functions/v1/send-contact-inquiry`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,13 +56,29 @@ const ContactPage = () => {
         body: JSON.stringify(formData)
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Произошла ошибка при отправке сообщения');
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        console.error('Failed to parse response as JSON:', parseError);
+        throw new Error('Server returned invalid response format');
       }
 
-      // Успешная отправка - показываем подтверждение и сбрасываем форму
+      console.log('Response status:', response.status);
+      console.log('Response data:', data);
+
+      if (!response.ok) {
+        // Handle specific error cases
+        if (response.status === 404) {
+          throw new Error('Contact service is temporarily unavailable. Please try calling us directly at +39 344 777 00 77');
+        } else if (response.status === 500) {
+          throw new Error('Server error occurred. Your message was not sent. Please try again or contact us directly.');
+        } else {
+          throw new Error(data.error || `Server error (${response.status}). Please try again or contact us directly.`);
+        }
+      }
+
+      // Success - show confirmation and reset form
       setSubmitted(true);
       setFormData({
         name: '',
@@ -52,9 +87,17 @@ const ContactPage = () => {
         subject: '',
         message: ''
       });
+
+      console.log('Contact inquiry sent successfully');
     } catch (error: any) {
-      console.error('Ошибка отправки формы:', error);
-      setError(error.message || 'Произошла ошибка при отправке сообщения. Пожалуйста, попробуйте еще раз.');
+      console.error('Contact form submission error:', error);
+      
+      // Set user-friendly error message
+      if (error.message) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred. Please try again or contact us directly at +39 344 777 00 77');
+      }
     } finally {
       setLoading(false);
     }
@@ -183,7 +226,10 @@ const ContactPage = () => {
                     <div className="p-4 bg-red-50 border border-red-200 rounded-lg" role="alert">
                       <div className="flex items-start space-x-2">
                         <AlertCircle className="h-4 w-4 text-red-600 mt-0.5 flex-shrink-0" />
-                        <p className="text-red-600 text-sm">{error}</p>
+                        <div className="text-red-600 text-sm">
+                          <p className="font-medium mb-1">Unable to send message</p>
+                          <p>{error}</p>
+                        </div>
                       </div>
                     </div>
                   )}

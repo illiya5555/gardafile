@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, Users, CreditCard, CheckCircle, AlertCircle, ArrowLeft, ArrowRight, Ship, Euro, User, Mail, Phone, Lock } from 'lucide-react';
+import { Calendar, Clock, Users, CreditCard, CheckCircle, AlertCircle, ArrowLeft, ArrowRight, Ship, Euro, User, Mail, Phone, Lock, Gift } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface YachtSlot {
@@ -30,6 +30,63 @@ interface BookingData {
   card_cvv: string;
 }
 
+interface SuccessModalProps {
+  email: string;
+  phone: string;
+  onClose: () => void;
+}
+
+const SuccessModal: React.FC<SuccessModalProps> = ({ email, phone, onClose }) => {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 animate-slide-up">
+        <div className="p-8">
+          <div className="text-center mb-6">
+            <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="h-10 w-10 text-green-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Booking Confirmed!</h2>
+            <p className="text-gray-600">Thank you for trusting Garda Racing Yacht Club!</p>
+          </div>
+          
+          <div className="bg-blue-50 p-4 rounded-lg mb-6">
+            <h3 className="text-lg font-semibold text-blue-900 mb-2">Your Account Details</h3>
+            <p className="text-blue-800 mb-4">We've created a personal account for you to manage your bookings and access photos after your experience.</p>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="font-medium">Login:</span>
+                <span>{email}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium">Password:</span>
+                <span>{phone}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="space-y-4">
+            <p className="text-gray-600 text-sm">
+              You'll receive a confirmation email shortly with all the details of your booking.
+            </p>
+            <p className="text-gray-600 text-sm">
+              You can access your personal dashboard anytime to view your bookings, chat with our team, and see photos from your experience.
+            </p>
+          </div>
+          
+          <div className="mt-8 flex justify-center">
+            <button
+              onClick={onClose}
+              className="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const BookingCalendarPage = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedStartDate, setSelectedStartDate] = useState<string>('');
@@ -42,6 +99,7 @@ const BookingCalendarPage = () => {
   const [selectedYacht, setSelectedYacht] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [bookingData, setBookingData] = useState<Partial<BookingData>>({});
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   // Fixed regatta time slots - only 8:30 and 13:00
   const regattaTimeSlots = [
@@ -166,15 +224,92 @@ const BookingCalendarPage = () => {
     setSelectedYacht(yachtId);
   };
 
+  // Create user account and profile
+  const createUserAccount = async (email: string, password: string, firstName: string, lastName: string, phone: string) => {
+    try {
+      // Check if user already exists
+      const { data: existingUsers } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', email)
+        .limit(1);
+      
+      if (existingUsers && existingUsers.length > 0) {
+        // User already exists, no need to create a new account
+        return existingUsers[0].id;
+      }
+      
+      // Create new user
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+            phone: phone
+          }
+        }
+      });
+
+      if (authError) throw authError;
+      
+      if (!authData.user) {
+        throw new Error('Failed to create user account');
+      }
+      
+      // Get client role ID
+      const { data: roleData } = await supabase
+        .from('user_roles')
+        .select('id')
+        .eq('role_name', 'client')
+        .single();
+      
+      // Create profile
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert({
+          id: authData.user.id,
+          email: email,
+          first_name: firstName,
+          last_name: lastName,
+          phone: phone,
+          role_id: roleData?.id
+        });
+      
+      if (profileError) throw profileError;
+      
+      return authData.user.id;
+    } catch (error) {
+      console.error('Error creating user account:', error);
+      throw error;
+    }
+  };
+
   const handleBookingSubmit = async () => {
     setLoading(true);
     
     try {
+      // Extract name parts
+      const nameParts = bookingData.customer_name?.split(' ') || ['', ''];
+      const firstName = nameParts[0];
+      const lastName = nameParts.slice(1).join(' ') || '';
+      
+      // Create user account using email as login and phone as password
+      const userId = await createUserAccount(
+        bookingData.customer_email || '',
+        bookingData.customer_phone || '',
+        firstName,
+        lastName,
+        bookingData.customer_phone || ''
+      );
+      
       // Here would be payment system integration
       // For now simulate successful payment
       
       const booking = {
         yacht_id: selectedYacht,
+        user_id: userId,
         start_date: selectedStartDate,
         end_date: selectedEndDate,
         start_time: selectedStartTime,
@@ -194,17 +329,9 @@ const BookingCalendarPage = () => {
         .insert(booking);
 
       if (error) throw error;
-
-      alert('Booking successfully created! You will receive confirmation by email.');
       
-      // Reset form
-      setStep(1);
-      setSelectedStartDate('');
-      setSelectedEndDate('');
-      setSelectedStartTime('');
-      setSelectedEndTime('');
-      setParticipants(1);
-      setBookingData({});
+      // Show success modal with account details
+      setShowSuccessModal(true);
       
     } catch (error: any) {
       console.error('Booking error:', error);
@@ -212,6 +339,19 @@ const BookingCalendarPage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSuccessModalClose = () => {
+    setShowSuccessModal(false);
+    
+    // Reset form
+    setStep(1);
+    setSelectedStartDate('');
+    setSelectedEndDate('');
+    setSelectedStartTime('');
+    setSelectedEndTime('');
+    setParticipants(1);
+    setBookingData({});
   };
 
   const nextMonth = () => {
@@ -554,7 +694,7 @@ const BookingCalendarPage = () => {
 
                     <div className="md:col-span-2">
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Phone *
+                        Phone * (This will be your password)
                       </label>
                       <div className="relative">
                         <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -567,6 +707,9 @@ const BookingCalendarPage = () => {
                           required
                         />
                       </div>
+                      <p className="text-sm text-gray-500 mt-1">
+                        Your email will be your login and phone number will be your password for your account
+                      </p>
                     </div>
                   </div>
 
@@ -656,6 +799,18 @@ const BookingCalendarPage = () => {
                             required
                           />
                         </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <div className="flex items-start space-x-3">
+                      <Gift className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
+                      <div>
+                        <h3 className="font-semibold text-blue-900 mb-2">Account Creation</h3>
+                        <p className="text-blue-800 text-sm">
+                          After successful payment, we'll automatically create a personal account for you to manage your bookings and access photos after your experience.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -782,6 +937,15 @@ const BookingCalendarPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <SuccessModal 
+          email={bookingData.customer_email || ''} 
+          phone={bookingData.customer_phone || ''} 
+          onClose={handleSuccessModalClose} 
+        />
+      )}
     </div>
   );
 };

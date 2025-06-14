@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Globe, Calendar, Facebook, Instagram, Youtube } from 'lucide-react';
-import AuthButton from './AuthButton';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -79,9 +78,6 @@ const Header = () => {
               </div>
             </div>
 
-            {/* Auth Button */}
-            <AuthButton />
-
             {/* Book Now Button */}
             <Link
               to="/booking"
@@ -148,11 +144,6 @@ const Header = () => {
               ))}
               
               <div className="pt-4 border-t border-gray-200">
-                {/* Mobile Auth Button */}
-                <div className="mb-4">
-                  <AuthButton />
-                </div>
-
                 {/* Mobile Book Now Button */}
                 <Link
                   to="/booking"

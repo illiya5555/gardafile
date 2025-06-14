@@ -26,11 +26,11 @@ const HomePage = () => {
 
   // Location section gallery images - Lake Garda specific
   const locationImages = [
-    'https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=800',
-    'https://images.pexels.com/photos/2422915/pexels-photo-2422915.jpeg?auto=compress&cs=tinysrgb&w=800',
-    'https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=800',
-    'https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=800',
-    'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=800'
+    'https://i.postimg.cc/mrC0JcY3/temp-Image-M1-LFin.avif',
+    'https://i.postimg.cc/FszwmCbH/temp-Image-Akge-BH.avif',
+    'https://i.postimg.cc/0QvLs8nT/temp-Imaget-FG9-YM.avif',
+    'https://i.postimg.cc/C5LXRmWJ/temp-Imageb-Td-UOY.avif',
+    'https://i.postimg.cc/W39SHjH6/temp-Image-Bi9so-X.avif'
   ];
 
   const [experienceImageIndex, setExperienceImageIndex] = useState(0);

@@ -89,19 +89,6 @@ const Footer = () => {
             <h4 className="text-lg font-semibold mb-6">Certifications</h4>
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
-                <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-                <a 
-                  href="https://t.me/VETER_ITA" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-gray-300 text-sm hover:text-blue-400 transition-colors duration-300"
-                >
-                  Telegram
-                </a>
-              </div>
-              <div className="flex items-center space-x-3">
                 <Shield className="h-5 w-5 text-green-400" />
                 <span className="text-gray-300 text-sm">Fully Insured</span>
               </div>

@@ -246,7 +246,7 @@ const HomeContentEditor = () => {
       content: 'Located in the heart of Lake Garda, offering perfect sailing conditions and stunning Alpine scenery.',
       backgroundColor: 'linear-gradient(to bottom right, #1e3a8a, #7f1d1d)',
       textColor: '#ffffff',
-      image: 'https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=800',
+      image: 'https://postimg.cc/1gRCN3Y4',
       locationInfo: {
         address: 'Via del Porto 15, 38066 Riva del Garda, TN, Italy',
         coordinates: { lat: 45.8847, lng: 10.8405 },

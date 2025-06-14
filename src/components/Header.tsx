@@ -32,8 +32,8 @@ const Header = () => {
   return (
     <header className={`fixed w-full z-50 transition-all duration-300 ${
       isScrolled 
-        ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200/20' 
-        : 'bg-white/10 backdrop-blur-sm'
+        ? 'bg-white shadow-lg' 
+        : 'bg-black/90'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
@@ -48,14 +48,10 @@ const Header = () => {
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-gold-400 rounded-full animate-pulse"></div>
             </div>
             <div className="hidden sm:block">
-              <h1 className={`text-xl font-bold transition-colors duration-300 ${
-                isScrolled ? 'text-gray-900' : 'text-white drop-shadow-lg'
-              }`}>
+              <h1 className="text-xl font-bold text-white">
                 Garda Racing
               </h1>
-              <p className={`text-sm transition-colors duration-300 ${
-                isScrolled ? 'text-gray-600' : 'text-white/90 drop-shadow-md'
-              }`}>
+              <p className="text-sm text-white/90">
                 Yacht Club
               </p>
             </div>
@@ -67,14 +63,10 @@ const Header = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`font-medium transition-all duration-300 hover:scale-105 pb-1 ${
+                className={`font-medium transition-all duration-300 hover:scale-105 pb-1 text-white ${
                   location.pathname === item.href
-                    ? isScrolled 
-                      ? 'text-primary-600 border-b-2 border-primary-600'
-                      : 'text-white border-b-2 border-white drop-shadow-lg'
-                    : isScrolled
-                      ? 'text-gray-700 hover:text-primary-600'
-                      : 'text-white/90 hover:text-white drop-shadow-md'
+                    ? 'border-b-2 border-white'
+                    : 'hover:border-b-2 hover:border-white/50'
                 }`}
               >
                 {item.name}
@@ -86,11 +78,7 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-4">
             {/* Language Selector */}
             <div className="relative group">
-              <button className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-all duration-300 ${
-                isScrolled 
-                  ? 'text-gray-700 hover:bg-gray-100' 
-                  : 'text-white/90 hover:bg-white/20 drop-shadow-md'
-              }`}>
+              <button className="flex items-center space-x-1 px-3 py-2 rounded-lg text-white hover:bg-white/20 transition-all duration-300">
                 <Globe className="h-4 w-4" />
                 <span className="text-sm font-medium">{currentLang}</span>
               </button>
@@ -108,18 +96,14 @@ const Header = () => {
             </div>
 
             {/* Auth Button */}
-            <div className={isScrolled ? '' : 'drop-shadow-lg'}>
+            <div>
               <AuthButton />
             </div>
 
             {/* Book Now Button */}
             <Link
               to="/booking"
-              className={`flex items-center space-x-2 px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105 shadow-lg ${
-                isScrolled
-                  ? 'bg-primary-600 text-white hover:bg-primary-700'
-                  : 'bg-white text-primary-600 hover:bg-gray-100 drop-shadow-lg'
-              }`}
+              className="flex items-center space-x-2 px-6 py-2 rounded-lg font-medium bg-primary-600 text-white hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg"
             >
               <Calendar className="h-4 w-4" />
               <span>Book Now</span>
@@ -129,11 +113,7 @@ const Header = () => {
             <div className="flex items-center space-x-2 ml-4">
               <a 
                 href="#" 
-                className={`p-2 transition-all duration-300 hover:scale-110 ${
-                  isScrolled 
-                    ? 'text-gray-600 hover:text-primary-600' 
-                    : 'text-white/80 hover:text-white drop-shadow-md'
-                }`}
+                className="p-2 text-white/80 hover:text-white transition-colors duration-300 hover:scale-110"
                 title="Facebook"
               >
                 <Facebook className="h-4 w-4" />
@@ -142,22 +122,14 @@ const Header = () => {
                 href="https://www.instagram.com/garda_racing_yacht_club"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`p-2 transition-all duration-300 hover:scale-110 ${
-                  isScrolled 
-                    ? 'text-gray-600 hover:text-primary-600' 
-                    : 'text-white/80 hover:text-white drop-shadow-md'
-                }`}
+                className="p-2 text-white/80 hover:text-white transition-colors duration-300 hover:scale-110"
                 title="Instagram"
               >
                 <Instagram className="h-4 w-4" />
               </a>
               <a 
                 href="#" 
-                className={`p-2 transition-all duration-300 hover:scale-110 ${
-                  isScrolled 
-                    ? 'text-gray-600 hover:text-primary-600' 
-                    : 'text-white/80 hover:text-white drop-shadow-md'
-                }`}
+                className="p-2 text-white/80 hover:text-white transition-colors duration-300 hover:scale-110"
                 title="YouTube"
               >
                 <Youtube className="h-4 w-4" />
@@ -168,11 +140,8 @@ const Header = () => {
           {/* Mobile menu button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={`md:hidden p-2 rounded-lg transition-all duration-300 ${
-              isScrolled 
-                ? 'text-gray-700 hover:bg-gray-100' 
-                : 'text-white hover:bg-white/20 drop-shadow-md'
-            }`}
+            className="md:hidden p-2 rounded-lg text-white hover:bg-white/20 transition-colors duration-300"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -180,7 +149,7 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden bg-white/95 backdrop-blur-md rounded-lg shadow-lg mb-4 animate-slide-up border border-gray-200/20">
+          <div className="md:hidden bg-white rounded-lg shadow-lg mb-4 animate-slide-up">
             <div className="px-4 py-6 space-y-4">
               {navigation.map((item) => (
                 <Link

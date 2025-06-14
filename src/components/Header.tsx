@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Globe, Calendar, Facebook, Instagram, Youtube } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, X, Globe, Calendar, Facebook, Instagram, Youtube, User, LogOut } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState('EN');
   const [scrolled, setScrolled] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [user, setUser] = useState<any>(null);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const languages = ['EN', 'DE', 'IT', 'RU'];
 
@@ -17,6 +21,21 @@ const Header = () => {
     { name: 'Services', href: '/services' },
     { name: 'Contact', href: '/contact' },
   ];
+
+  // Check auth status
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   // Handle scroll effect with dynamic transparency
   useEffect(() => {
@@ -46,6 +65,11 @@ const Header = () => {
 
   const backgroundOpacity = getBackgroundOpacity();
   const blurIntensity = getBlurIntensity();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
 
   return (
     <header 
@@ -165,19 +189,103 @@ const Header = () => {
               </div>
             </div>
 
-            {/* Book Now Button */}
-            <Link
-              to="/booking"
-              className={`flex items-center space-x-1 rounded-lg font-medium bg-primary-600 text-white hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg ${
-                scrolled ? 'px-4 py-1 text-sm' : 'px-5 py-2 text-sm'
-              }`}
-              style={{
-                boxShadow: `0 4px 16px rgba(220, 38, 38, ${Math.min(0.3, 0.1 + scrollY / 500)})`
-              }}
-            >
-              <Calendar className="h-3 w-3" />
-              <span>Book Now</span>
-            </Link>
+            {/* User Menu or Book Now Button */}
+            {user ? (
+              <div className="relative">
+                <button
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  className={`flex items-center space-x-2 rounded-lg font-medium transition-all duration-300 ${
+                    scrolled ? 'px-3 py-1 text-sm' : 'px-4 py-2 text-sm'
+                  }`}
+                  style={{
+                    backgroundColor: `rgba(255, 255, 255, ${Math.min(0.5, scrollY / 200)})`,
+                    color: `rgba(55, 65, 81, ${Math.max(0.8, 1 - scrollY / 600)})`
+                  }}
+                >
+                  <User className="h-4 w-4" />
+                  <span>My Account</span>
+                </button>
+                
+                {userMenuOpen && (
+                  <div 
+                    className="absolute right-0 mt-2 w-48 rounded-lg shadow-lg z-50"
+                    style={{
+                      backgroundColor: `rgba(255, 255, 255, ${Math.max(0.95, 0.9 + scrollY / 1000)})`,
+                      backdropFilter: `blur(${Math.max(16, blurIntensity + 4)}px)`,
+                      WebkitBackdropFilter: `blur(${Math.max(16, blurIntensity + 4)}px)`
+                    }}
+                  >
+                    <div className="py-2">
+                      <Link
+                        to="/dashboard"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        Dashboard
+                      </Link>
+                      <Link
+                        to="/dashboard"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        My Bookings
+                      </Link>
+                      <Link
+                        to="/dashboard"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        Profile Settings
+                      </Link>
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setUserMenuOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className={`flex items-center space-x-1 rounded-lg font-medium transition-all duration-300 ${
+                    scrolled ? 'px-3 py-1 text-sm' : 'px-4 py-2 text-sm'
+                  }`}
+                  style={{
+                    backgroundColor: `rgba(255, 255, 255, ${Math.min(0.5, scrollY / 200)})`,
+                    color: `rgba(55, 65, 81, ${Math.max(0.8, 1 - scrollY / 600)})`
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = `rgba(255, 255, 255, ${Math.min(0.7, 0.3 + scrollY / 200)})`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = `rgba(255, 255, 255, ${Math.min(0.5, scrollY / 200)})`;
+                  }}
+                >
+                  <User className="h-3 w-3" />
+                  <span>Sign In</span>
+                </Link>
+
+                <Link
+                  to="/booking"
+                  className={`flex items-center space-x-1 rounded-lg font-medium bg-primary-600 text-white hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg ${
+                    scrolled ? 'px-4 py-1 text-sm' : 'px-5 py-2 text-sm'
+                  }`}
+                  style={{
+                    boxShadow: `0 4px 16px rgba(220, 38, 38, ${Math.min(0.3, 0.1 + scrollY / 500)})`
+                  }}
+                >
+                  <Calendar className="h-3 w-3" />
+                  <span>Book Now</span>
+                </Link>
+              </>
+            )}
 
             {/* Social Media Icons */}
             <div className="flex items-center space-x-1 ml-2">
@@ -284,16 +392,73 @@ const Header = () => {
                 </Link>
               ))}
               
-              <div className="pt-4 border-t" style={{ borderColor: `rgba(229, 231, 235, ${Math.max(0.3, 0.2 + scrollY / 1000)})` }}>
-                {/* Mobile Book Now Button */}
-                <Link
-                  to="/booking"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center justify-center space-x-2 w-full bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300 mb-4"
-                >
-                  <Calendar className="h-4 w-4" />
-                  <span>Book Now</span>
-                </Link>
+              {/* User Account Links (Mobile) */}
+              {user && (
+                <>
+                  <div className="border-t border-gray-200 pt-4 mt-4"></div>
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block py-2 font-medium transition-all duration-300 hover:text-primary-600 hover:pl-2"
+                    style={{
+                      color: `rgba(55, 65, 81, ${Math.max(0.8, 1 - scrollY / 600)})`
+                    }}
+                  >
+                    My Dashboard
+                  </Link>
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block py-2 font-medium transition-all duration-300 hover:text-primary-600 hover:pl-2"
+                    style={{
+                      color: `rgba(55, 65, 81, ${Math.max(0.8, 1 - scrollY / 600)})`
+                    }}
+                  >
+                    My Bookings
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsMenuOpen(false);
+                    }}
+                    className="block py-2 font-medium transition-all duration-300 text-red-600 hover:text-red-700 hover:pl-2 w-full text-left"
+                  >
+                    Sign Out
+                  </button>
+                </>
+              )}
+              
+              <div className="pt-4 border-t border-gray-200">
+                {/* Mobile Book Now Button or Login */}
+                {user ? (
+                  <Link
+                    to="/booking"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center justify-center space-x-2 w-full bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300 mb-4"
+                  >
+                    <Calendar className="h-4 w-4" />
+                    <span>Book Now</span>
+                  </Link>
+                ) : (
+                  <div className="flex flex-col space-y-3 mb-4">
+                    <Link
+                      to="/login"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center justify-center space-x-2 w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
+                    >
+                      <User className="h-4 w-4" />
+                      <span>Sign In</span>
+                    </Link>
+                    <Link
+                      to="/booking"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center justify-center space-x-2 w-full bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300"
+                    >
+                      <Calendar className="h-4 w-4" />
+                      <span>Book Now</span>
+                    </Link>
+                  </div>
+                )}
 
                 {/* Mobile Social Icons and Language */}
                 <div className="flex items-center justify-between">

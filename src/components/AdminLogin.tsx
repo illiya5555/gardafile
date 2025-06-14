@@ -29,10 +29,14 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
 
       if (error) {
         console.error('Login error:', error);
-        if (error.message === 'Invalid login credentials') {
+        
+        // Handle network-related errors
+        if (error.message === 'Failed to fetch' || error.message.includes('fetch')) {
+          setError('Ошибка подключения к серверу. Проверьте подключение к интернету и конфигурацию Supabase. Убедитесь, что переменные окружения VITE_SUPABASE_URL и VITE_SUPABASE_ANON_KEY настроены правильно.');
+        } else if (error.message === 'Invalid login credentials') {
           setError('Неверный email или пароль. Убедитесь, что пользователь зарегистрирован в системе.');
         } else {
-          setError(error.message);
+          setError(`Ошибка входа: ${error.message}`);
         }
         return;
       }
@@ -52,7 +56,13 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
 
         if (profileError) {
           console.error('Profile fetch error:', profileError);
-          setError('Ошибка при получении профиля пользователя');
+          
+          // Handle network-related errors for profile fetch
+          if (profileError.message === 'Failed to fetch' || profileError.message.includes('fetch')) {
+            setError('Ошибка подключения при получении профиля. Проверьте подключение к интернету и конфигурацию Supabase.');
+          } else {
+            setError(`Ошибка при получении профиля пользователя: ${profileError.message}`);
+          }
           return;
         }
 
@@ -76,7 +86,13 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
       }
     } catch (error: any) {
       console.error('Unexpected error during login:', error);
-      setError(error.message || 'Ошибка входа');
+      
+      // Handle network-related errors in catch block
+      if (error.message === 'Failed to fetch' || error.message.includes('fetch') || error.name === 'TypeError') {
+        setError('Ошибка подключения к серверу. Проверьте подключение к интернету и убедитесь, что Supabase настроен правильно. Проверьте переменные окружения VITE_SUPABASE_URL и VITE_SUPABASE_ANON_KEY.');
+      } else {
+        setError(error.message || 'Неожиданная ошибка входа');
+      }
     } finally {
       setLoading(false);
     }
@@ -128,6 +144,15 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
                   <li>Создайте пользователя с email: admin@gardaracing.com</li>
                   <li>Используйте созданные credentials для входа</li>
                 </ol>
+                <div className="mt-2 pt-2 border-t border-blue-200">
+                  <p className="text-xs text-blue-700 font-medium">
+                    Убедитесь, что настроены переменные окружения:
+                  </p>
+                  <ul className="text-xs text-blue-700 mt-1 space-y-0.5">
+                    <li>• VITE_SUPABASE_URL</li>
+                    <li>• VITE_SUPABASE_ANON_KEY</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>

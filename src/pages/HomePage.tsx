@@ -607,20 +607,12 @@ const HomePage = () => {
             Join us for an unforgettable day of yacht racing on Lake Garda. 
             No experience necessary - just bring your sense of adventure!
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/booking"
-              className="bg-white text-primary-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-lg"
-            >
-              Book Now - €195
-            </Link>
-            <a
-              href="tel:+393447770077"
-              className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-primary-600 transition-all duration-300"
-            >
-              Call +39 344 777 00 77
-            </a>
-          </div>
+          <Link
+            to="/booking"
+            className="bg-white text-primary-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-lg"
+          >
+            Book Now - €195
+          </Link>
         </div>
       </section>
     </div>

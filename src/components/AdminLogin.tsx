@@ -19,12 +19,16 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
     setError('');
 
     try {
+      console.log('Attempting admin login with:', email);
+      
+      // Sign in with email and password
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
+        console.error('Login error:', error);
         if (error.message === 'Invalid login credentials') {
           setError('Неверный email или пароль. Убедитесь, что пользователь зарегистрирован в системе.');
         } else {
@@ -34,19 +38,44 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
       }
 
       if (data.user) {
-        // Проверяем, является ли пользователь администратором
-        // В реальном приложении это должно проверяться через роли в базе данных
-        if (email === 'admin@gardaracing.com') {
+        console.log('User authenticated:', data.user.id);
+        
+        // Get user profile with role information
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select(`
+            *,
+            user_roles(role_name)
+          `)
+          .eq('id', data.user.id)
+          .single();
+
+        if (profileError) {
+          console.error('Profile fetch error:', profileError);
+          setError('Ошибка при получении профиля пользователя');
+          return;
+        }
+
+        console.log('User profile:', profileData);
+        
+        // Check if user is an admin
+        const roleName = profileData?.user_roles?.role_name;
+        console.log('User role:', roleName);
+        
+        if (roleName === 'admin') {
+          console.log('Admin access granted');
           alert('Добро пожаловать в административную панель!');
-          // Перенаправляем на админ-панель
+          // Redirect to admin panel
           window.location.href = '/admin';
           onClose();
         } else {
+          console.error('Non-admin attempted to access admin panel');
           setError('У вас нет прав администратора');
           await supabase.auth.signOut();
         }
       }
     } catch (error: any) {
+      console.error('Unexpected error during login:', error);
       setError(error.message || 'Ошибка входа');
     } finally {
       setLoading(false);
@@ -54,8 +83,13 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 animate-slide-up">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="admin-login-title"
+    >
+      <div className="bg-white rounded-2xl shadow-modal w-full max-w-md mx-4 animate-slide-up">
         <div className="p-8">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
@@ -64,13 +98,14 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
                 <Lock className="h-6 w-6 text-primary-600" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-gray-900">Admin Access</h2>
+                <h2 id="admin-login-title" className="text-xl font-bold text-gray-900">Admin Access</h2>
                 <p className="text-sm text-gray-600">Вход в административную панель</p>
               </div>
             </div>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600 transition-colors duration-300"
+              aria-label="Close"
             >
               <X className="h-6 w-6" />
             </button>
@@ -99,7 +134,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
 
           {/* Error Message */}
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg" role="alert">
               <div className="flex items-start space-x-2">
                 <AlertCircle className="h-4 w-4 text-red-600 mt-0.5 flex-shrink-0" />
                 <p className="text-sm text-red-600">{error}</p>
@@ -110,36 +145,41 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
           {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2" htmlFor="admin-email">
                 Email
               </label>
               <input
+                id="admin-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 text-gray-900 bg-white placeholder-gray-500"
                 placeholder="admin@gardaracing.com"
                 required
+                aria-required="true"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2" htmlFor="admin-password">
                 Пароль
               </label>
               <div className="relative">
                 <input
+                  id="admin-password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 text-gray-900 bg-white placeholder-gray-500"
                   placeholder="••••••••"
                   required
+                  aria-required="true"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-300"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -150,6 +190,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
               type="submit"
               disabled={loading}
               className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              aria-busy={loading}
             >
               {loading ? (
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>

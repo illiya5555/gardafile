@@ -63,13 +63,18 @@ const Header = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`font-medium transition-all duration-300 hover:scale-105 pb-1 text-gray-800 ${
+                className={`font-medium relative overflow-hidden group ${
                   location.pathname === item.href
-                    ? 'border-b-2 border-primary-600 text-primary-600'
-                    : 'hover:text-primary-600'
+                    ? 'text-primary-600'
+                    : 'text-gray-800 hover:text-primary-600'
                 }`}
               >
-                {item.name}
+                <span className="relative z-10 transition-colors duration-300">{item.name}</span>
+                {location.pathname === item.href ? (
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary-600"></span>
+                ) : (
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                )}
               </Link>
             ))}
           </nav>
@@ -103,17 +108,18 @@ const Header = () => {
             {/* Book Now Button */}
             <Link
               to="/booking"
-              className="flex items-center space-x-2 px-6 py-2 rounded-lg font-medium bg-primary-600 text-white hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg"
+              className="flex items-center space-x-2 px-6 py-2 rounded-lg font-medium bg-primary-600 text-white hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg relative overflow-hidden group"
             >
-              <Calendar className="h-4 w-4" />
-              <span>Book Now</span>
+              <span className="absolute inset-0 w-full h-full bg-white/30 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"></span>
+              <Calendar className="h-4 w-4 relative z-10" />
+              <span className="relative z-10">Book Now</span>
             </Link>
 
             {/* Social Media Icons */}
             <div className="flex items-center space-x-2 ml-4">
               <a 
                 href="#" 
-                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
+                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110 transform"
                 title="Facebook"
               >
                 <Facebook className="h-4 w-4" />
@@ -122,14 +128,14 @@ const Header = () => {
                 href="https://www.instagram.com/garda_racing_yacht_club"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
+                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110 transform"
                 title="Instagram"
               >
                 <Instagram className="h-4 w-4" />
               </a>
               <a 
                 href="#" 
-                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
+                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110 transform"
                 title="YouTube"
               >
                 <Youtube className="h-4 w-4" />
@@ -176,27 +182,28 @@ const Header = () => {
                 <Link
                   to="/booking"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center justify-center space-x-2 w-full bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300 mb-4"
+                  className="flex items-center justify-center space-x-2 w-full bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300 mb-4 relative overflow-hidden group"
                 >
-                  <Calendar className="h-4 w-4" />
-                  <span>Book Now</span>
+                  <span className="absolute inset-0 w-full h-full bg-white/30 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"></span>
+                  <Calendar className="h-4 w-4 relative z-10" />
+                  <span className="relative z-10">Book Now</span>
                 </Link>
 
                 {/* Mobile Social Icons and Language */}
                 <div className="flex items-center justify-between">
                   <div className="flex space-x-4">
-                    <a href="#" className="text-gray-600 hover:text-primary-600 transition-colors duration-300">
+                    <a href="#" className="text-gray-600 hover:text-primary-600 transition-colors duration-300 transform hover:scale-110">
                       <Facebook className="h-5 w-5" />
                     </a>
                     <a 
                       href="https://www.instagram.com/garda_racing_yacht_club"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-gray-600 hover:text-primary-600 transition-colors duration-300"
+                      className="text-gray-600 hover:text-primary-600 transition-colors duration-300 transform hover:scale-110"
                     >
                       <Instagram className="h-5 w-5" />
                     </a>
-                    <a href="#" className="text-gray-600 hover:text-primary-600 transition-colors duration-300">
+                    <a href="#" className="text-gray-600 hover:text-primary-600 transition-colors duration-300 transform hover:scale-110">
                       <Youtube className="h-5 w-5" />
                     </a>
                   </div>

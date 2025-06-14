@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // Telegram bot token и chat ID из переменных окружения
 const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN") || "7559788864:AAE_mi25gJJPONPxyE6zFfqSRJVf1mxNbL4";
@@ -81,15 +81,14 @@ async function saveToDatabase(formData: ContactFormData, supabaseClient: any) {
   }
 }
 
-// Основная функция обработки запроса
-serve(async (req) => {
-  // Настройка CORS
-  const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  };
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
 
+// Основная функция обработки запроса
+Deno.serve(async (req) => {
   // Обработка preflight запросов
   if (req.method === "OPTIONS") {
     return new Response(null, {
@@ -131,20 +130,32 @@ serve(async (req) => {
     }
 
     // Отправка сообщения в Telegram
-    const telegramResponse = await sendTelegramMessage(formData);
+    let telegramResponse = null;
+    try {
+      telegramResponse = await sendTelegramMessage(formData);
+    } catch (telegramError) {
+      console.error("Telegram error:", telegramError);
+      // Продолжаем выполнение даже если Telegram не работает
+    }
     
     // Создаем клиент Supabase с сервисной ролью для записи в базу данных
-    const supabaseClient = Deno.env.get("SUPABASE_URL") && Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") 
-      ? createClient(
-          Deno.env.get("SUPABASE_URL")!,
-          Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-        )
-      : null;
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     
-    // Сохраняем в базу данных, если клиент Supabase доступен
     let dbResponse = null;
-    if (supabaseClient) {
-      dbResponse = await saveToDatabase(formData, supabaseClient);
+    if (supabaseUrl && supabaseServiceKey) {
+      const supabaseClient = createClient(supabaseUrl, supabaseServiceKey);
+      try {
+        dbResponse = await saveToDatabase(formData, supabaseClient);
+      } catch (dbError) {
+        console.error("Database error:", dbError);
+        // Если база данных не работает, но Telegram работает, все равно возвращаем успех
+        if (!telegramResponse) {
+          throw dbError;
+        }
+      }
+    } else {
+      console.warn("Supabase environment variables not found");
     }
 
     // Возвращаем успешный ответ
@@ -180,26 +191,3 @@ serve(async (req) => {
     );
   }
 });
-
-// Функция для создания клиента Supabase
-function createClient(supabaseUrl: string, supabaseKey: string) {
-  return {
-    from: (table: string) => ({
-      insert: (data: any) => {
-        return fetch(`${supabaseUrl}/rest/v1/${table}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${supabaseKey}`,
-            'Prefer': 'return=minimal'
-          },
-          body: JSON.stringify(data)
-        }).then(res => {
-          if (!res.ok) return res.json().then(err => { throw err });
-          return { error: null };
-        });
-      }
-    })
-  };
-}

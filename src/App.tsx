@@ -13,11 +13,13 @@ import CorporateSailingPage from './pages/CorporateSailingPage';
 import GiftCertificatesPage from './pages/GiftCertificatesPage';
 import AdminDashboard from './pages/AdminDashboard';
 import ClientDashboard from './pages/ClientDashboard';
+import ManagerDashboard from './pages/ManagerDashboard';
 import LoginPage from './pages/LoginPage';
 import ChatWidget from './components/ChatWidget';
 
 function App() {
   const [user, setUser] = useState<any>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,6 +27,21 @@ function App() {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
+      
+      if (user) {
+        // Get user role
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select(`
+            *,
+            user_roles(role_name)
+          `)
+          .eq('id', user.id)
+          .single();
+        
+        setUserRole(profile?.user_roles?.role_name || null);
+      }
+      
       setLoading(false);
     };
     checkUser();
@@ -33,6 +50,22 @@ function App() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setUser(session?.user || null);
+        
+        if (session?.user) {
+          // Get user role
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select(`
+              *,
+              user_roles(role_name)
+            `)
+            .eq('id', session.user.id)
+            .single();
+          
+          setUserRole(profile?.user_roles?.role_name || null);
+        } else {
+          setUserRole(null);
+        }
         
         if (event === 'SIGNED_OUT' || (event === 'TOKEN_REFRESHED' && !session)) {
           // Clear any stale session data
@@ -45,9 +78,19 @@ function App() {
   }, []);
 
   // Protected route component
-  const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const ProtectedRoute = ({ children, allowedRoles = [] }: { children: React.ReactNode, allowedRoles?: string[] }) => {
     if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    
     if (!user) return <Navigate to="/login" />;
+    
+    if (allowedRoles.length > 0 && !allowedRoles.includes(userRole || '')) {
+      // Redirect based on role
+      if (userRole === 'admin') return <Navigate to="/admin" />;
+      if (userRole === 'manager') return <Navigate to="/manager" />;
+      if (userRole === 'client') return <Navigate to="/dashboard" />;
+      return <Navigate to="/" />;
+    }
+    
     return <>{children}</>;
   };
 
@@ -60,8 +103,18 @@ function App() {
           <Route 
             path="/admin" 
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['admin']}>
                 <AdminDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Manager route without header/footer */}
+          <Route 
+            path="/manager" 
+            element={
+              <ProtectedRoute allowedRoles={['manager']}>
+                <ManagerDashboard />
               </ProtectedRoute>
             } 
           />
@@ -70,7 +123,7 @@ function App() {
           <Route 
             path="/dashboard" 
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['client']}>
                 <>
                   <Header />
                   <ClientDashboard />

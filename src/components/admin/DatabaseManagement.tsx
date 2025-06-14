@@ -65,9 +65,6 @@ const DatabaseManagement = () => {
   const [editingRecord, setEditingRecord] = useState<TableData | null>(null);
   const [newRecord, setNewRecord] = useState<TableData>({});
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'disconnected' | 'checking'>('checking');
-  const [actionLoading, setActionLoading] = useState(false);
-  const [actionSuccess, setActionSuccess] = useState<string | null>(null);
-  const [actionError, setActionError] = useState<string | null>(null);
 
   // Table configurations with icons and descriptions
   const tableConfigs: { [key: string]: { icon: React.ComponentType<any>; color: string; description: string } } = {
@@ -111,112 +108,81 @@ const DatabaseManagement = () => {
     try {
       setLoading(true);
       
-      // Instead of using RPC, we'll query information_schema directly
-      const { data: tableData, error: tableError } = await supabase
-        .from('information_schema.tables')
-        .select('table_name')
-        .eq('table_schema', 'public')
-        .neq('table_type', 'VIEW');
-      
-      if (tableError) throw tableError;
-      
-      // Get row counts for each table
-      const tablesWithInfo = await Promise.all(
-        (tableData || []).map(async (table: any) => {
-          try {
-            const { count, error } = await supabase
-              .from(table.table_name)
-              .select('*', { count: 'exact', head: true });
-            
-            if (error) throw error;
-            
-            const config = tableConfigs[table.table_name] || { 
-              icon: Table, 
-              color: 'text-gray-600', 
-              description: 'Database table' 
-            };
-            
-            return {
-              table_name: table.table_name,
-              row_count: count || 0,
-              size_pretty: 'N/A',
-              description: config.description,
-              icon: config.icon,
-              color: config.color
-            };
-          } catch (error) {
-            console.error(`Error fetching count for ${table.table_name}:`, error);
-            const config = tableConfigs[table.table_name] || { 
-              icon: Table, 
-              color: 'text-gray-600', 
-              description: 'Database table' 
-            };
-            
-            return {
-              table_name: table.table_name,
-              row_count: 0,
-              size_pretty: 'N/A',
-              description: config.description,
-              icon: config.icon,
-              color: config.color
-            };
-          }
-        })
-      );
-      
-      setTables(tablesWithInfo);
+      // Get table information from information_schema
+      const { data: tableNames, error: tablesError } = await supabase
+        .rpc('get_table_info');
+
+      if (tablesError) {
+        // Fallback: use predefined table list
+        const fallbackTables = [
+          'profiles', 'bookings', 'yacht_bookings', 'yachts', 'time_slots',
+          'testimonials', 'chat_messages', 'corporate_packages', 
+          'corporate_inquiries', 'additional_services'
+        ];
+        
+        const tablesWithInfo = await Promise.all(
+          fallbackTables.map(async (tableName) => {
+            try {
+              const { count } = await supabase
+                .from(tableName)
+                .select('*', { count: 'exact', head: true });
+              
+              const config = tableConfigs[tableName] || { 
+                icon: Table, 
+                color: 'text-gray-600', 
+                description: 'Database table' 
+              };
+              
+              return {
+                table_name: tableName,
+                row_count: count || 0,
+                size_pretty: 'N/A',
+                description: config.description,
+                icon: config.icon,
+                color: config.color
+              };
+            } catch (error) {
+              console.error(`Error fetching count for ${tableName}:`, error);
+              const config = tableConfigs[tableName] || { 
+                icon: Table, 
+                color: 'text-gray-600', 
+                description: 'Database table' 
+              };
+              
+              return {
+                table_name: tableName,
+                row_count: 0,
+                size_pretty: 'N/A',
+                description: config.description,
+                icon: config.icon,
+                color: config.color
+              };
+            }
+          })
+        );
+        
+        setTables(tablesWithInfo);
+      } else {
+        // Process the returned table information
+        const tablesWithInfo = tableNames.map((table: any) => {
+          const config = tableConfigs[table.table_name] || { 
+            icon: Table, 
+            color: 'text-gray-600', 
+            description: 'Database table' 
+          };
+          
+          return {
+            ...table,
+            description: config.description,
+            icon: config.icon,
+            color: config.color
+          };
+        });
+        
+        setTables(tablesWithInfo);
+      }
     } catch (error) {
       console.error('Error fetching tables:', error);
-      
-      // Fallback to predefined table list
-      const fallbackTables = [
-        'profiles', 'bookings', 'yacht_bookings', 'yachts', 'time_slots',
-        'testimonials', 'chat_messages', 'corporate_packages', 
-        'corporate_inquiries', 'additional_services'
-      ];
-      
-      const tablesWithInfo = await Promise.all(
-        fallbackTables.map(async (tableName) => {
-          try {
-            const { count } = await supabase
-              .from(tableName)
-              .select('*', { count: 'exact', head: true });
-            
-            const config = tableConfigs[tableName] || { 
-              icon: Table, 
-              color: 'text-gray-600', 
-              description: 'Database table' 
-            };
-            
-            return {
-              table_name: tableName,
-              row_count: count || 0,
-              size_pretty: 'N/A',
-              description: config.description,
-              icon: config.icon,
-              color: config.color
-            };
-          } catch (error) {
-            console.error(`Error fetching count for ${tableName}:`, error);
-            const config = tableConfigs[tableName] || { 
-              icon: Table, 
-              color: 'text-gray-600', 
-              description: 'Database table' 
-            };
-            
-            return {
-              table_name: tableName,
-              row_count: 0,
-              size_pretty: 'N/A',
-              description: config.description,
-              icon: config.icon,
-              color: config.color
-            };
-          }
-        })
-      );
-      
-      setTables(tablesWithInfo);
       setConnectionStatus('disconnected');
     } finally {
       setLoading(false);
@@ -251,66 +217,15 @@ const DatabaseManagement = () => {
     if (!selectedTable) return;
     
     try {
-      // Query information_schema.columns for column information
-      const { data: columnData, error: columnError } = await supabase
-        .from('information_schema.columns')
-        .select('column_name, data_type, is_nullable, column_default')
-        .eq('table_schema', 'public')
-        .eq('table_name', selectedTable);
-      
-      if (columnError) throw columnError;
-      
-      // Get primary key information
-      const { data: pkData, error: pkError } = await supabase
-        .from('information_schema.table_constraints')
-        .select(`
-          constraint_name,
-          information_schema.key_column_usage!inner(column_name)
-        `)
-        .eq('table_schema', 'public')
-        .eq('table_name', selectedTable)
-        .eq('constraint_type', 'PRIMARY KEY');
-      
-      if (pkError) throw pkError;
-      
-      // Get foreign key information
-      const { data: fkData, error: fkError } = await supabase
-        .from('information_schema.table_constraints')
-        .select(`
-          constraint_name,
-          information_schema.key_column_usage!inner(column_name)
-        `)
-        .eq('table_schema', 'public')
-        .eq('table_name', selectedTable)
-        .eq('constraint_type', 'FOREIGN KEY');
-      
-      if (fkError) throw fkError;
-      
-      // Process column information
-      const primaryKeyColumns = pkData?.flatMap(pk => 
-        pk.information_schema.key_column_usage.map((kcu: any) => kcu.column_name)
-      ) || [];
-      
-      const foreignKeyColumns = fkData?.flatMap(fk => 
-        fk.information_schema.key_column_usage.map((kcu: any) => kcu.column_name)
-      ) || [];
-      
-      const columnInfo: ColumnInfo[] = (columnData || []).map(col => ({
-        column_name: col.column_name,
-        data_type: col.data_type,
-        is_nullable: col.is_nullable,
-        column_default: col.column_default,
-        is_primary_key: primaryKeyColumns.includes(col.column_name),
-        is_foreign_key: foreignKeyColumns.includes(col.column_name)
-      }));
-      
-      setColumns(columnInfo);
-    } catch (error) {
-      console.error('Error fetching table columns:', error);
-      
-      // Fallback to sample data approach
-      if (tableData.length > 0) {
-        const record = tableData[0];
+      // This would require a custom RPC function in Supabase
+      // For now, we'll use a simplified approach
+      const sampleData = await supabase
+        .from(selectedTable)
+        .select('*')
+        .limit(1);
+
+      if (sampleData.data && sampleData.data.length > 0) {
+        const record = sampleData.data[0];
         const columnInfo: ColumnInfo[] = Object.keys(record).map(key => ({
           column_name: key,
           data_type: typeof record[key] === 'string' ? 'text' : 
@@ -324,9 +239,10 @@ const DatabaseManagement = () => {
         }));
         
         setColumns(columnInfo);
-      } else {
-        setColumns([]);
       }
+    } catch (error) {
+      console.error('Error fetching table columns:', error);
+      setColumns([]);
     }
   };
 
@@ -334,32 +250,19 @@ const DatabaseManagement = () => {
     if (!selectedTable) return;
     
     try {
-      setActionLoading(true);
-      setActionError(null);
-      setActionSuccess(null);
-      
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from(selectedTable)
-        .insert(newRecord)
-        .select();
+        .insert(newRecord);
 
       if (error) throw error;
       
       setShowCreateModal(false);
       setNewRecord({});
       fetchTableData();
-      setActionSuccess('Record created successfully!');
+      alert('Record created successfully!');
     } catch (error: any) {
       console.error('Error creating record:', error);
-      setActionError(`Error creating record: ${error.message}`);
-    } finally {
-      setActionLoading(false);
-      
-      // Clear success/error messages after 3 seconds
-      setTimeout(() => {
-        setActionSuccess(null);
-        setActionError(null);
-      }, 3000);
+      alert('Error creating record: ' + error.message);
     }
   };
 
@@ -367,10 +270,6 @@ const DatabaseManagement = () => {
     if (!selectedTable || !editingRecord) return;
     
     try {
-      setActionLoading(true);
-      setActionError(null);
-      setActionSuccess(null);
-      
       const { error } = await supabase
         .from(selectedTable)
         .update(editingRecord)
@@ -381,18 +280,10 @@ const DatabaseManagement = () => {
       setShowEditModal(false);
       setEditingRecord(null);
       fetchTableData();
-      setActionSuccess('Record updated successfully!');
+      alert('Record updated successfully!');
     } catch (error: any) {
       console.error('Error updating record:', error);
-      setActionError(`Error updating record: ${error.message}`);
-    } finally {
-      setActionLoading(false);
-      
-      // Clear success/error messages after 3 seconds
-      setTimeout(() => {
-        setActionSuccess(null);
-        setActionError(null);
-      }, 3000);
+      alert('Error updating record: ' + error.message);
     }
   };
 
@@ -400,10 +291,6 @@ const DatabaseManagement = () => {
     if (!selectedTable || !confirm('Are you sure you want to delete this record?')) return;
     
     try {
-      setActionLoading(true);
-      setActionError(null);
-      setActionSuccess(null);
-      
       const { error } = await supabase
         .from(selectedTable)
         .delete()
@@ -412,18 +299,10 @@ const DatabaseManagement = () => {
       if (error) throw error;
       
       fetchTableData();
-      setActionSuccess('Record deleted successfully!');
+      alert('Record deleted successfully!');
     } catch (error: any) {
       console.error('Error deleting record:', error);
-      setActionError(`Error deleting record: ${error.message}`);
-    } finally {
-      setActionLoading(false);
-      
-      // Clear success/error messages after 3 seconds
-      setTimeout(() => {
-        setActionSuccess(null);
-        setActionError(null);
-      }, 3000);
+      alert('Error deleting record: ' + error.message);
     }
   };
 
@@ -494,7 +373,7 @@ const DatabaseManagement = () => {
                 connectionStatus === 'connected' ? 'bg-green-100 text-green-800' :
                 connectionStatus === 'disconnected' ? 'bg-red-100 text-red-800' :
                 'bg-yellow-100 text-yellow-800'
-              }`} role="status" aria-live="polite">
+              }`}>
                 {connectionStatus === 'connected' ? <CheckCircle className="h-4 w-4" /> :
                  connectionStatus === 'disconnected' ? <AlertCircle className="h-4 w-4" /> :
                  <RefreshCw className="h-4 w-4 animate-spin" />}
@@ -508,7 +387,6 @@ const DatabaseManagement = () => {
               <button
                 onClick={checkConnection}
                 className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
-                aria-label="Refresh connection status"
               >
                 <RefreshCw className="h-4 w-4" />
                 <span>Refresh</span>
@@ -517,26 +395,8 @@ const DatabaseManagement = () => {
           </div>
         </div>
 
-        {/* Action Feedback */}
-        {(actionSuccess || actionError) && (
-          <div className={`mb-6 p-4 rounded-lg ${
-            actionSuccess ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
-          }`} role="alert" aria-live="assertive">
-            <div className="flex items-center space-x-2">
-              {actionSuccess ? (
-                <CheckCircle className="h-5 w-5 text-green-600" />
-              ) : (
-                <AlertCircle className="h-5 w-5 text-red-600" />
-              )}
-              <span className={actionSuccess ? 'text-green-800' : 'text-red-800'}>
-                {actionSuccess || actionError}
-              </span>
-            </div>
-          </div>
-        )}
-
         {connectionStatus === 'disconnected' ? (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6" role="alert">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6">
             <div className="flex items-center space-x-3">
               <AlertCircle className="h-6 w-6 text-red-600" />
               <div>
@@ -565,8 +425,6 @@ const DatabaseManagement = () => {
                             ? 'bg-blue-50 border-2 border-blue-200'
                             : 'hover:bg-gray-50 border-2 border-transparent'
                         }`}
-                        aria-pressed={selectedTable === table.table_name}
-                        aria-label={`Select ${table.table_name} table`}
                       >
                         <div className="flex items-center space-x-3">
                           <IconComponent className={`h-5 w-5 ${table.color}`} />
@@ -599,8 +457,6 @@ const DatabaseManagement = () => {
                         <button
                           onClick={() => setShowCreateModal(true)}
                           className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300"
-                          aria-label="Add new record"
-                          disabled={actionLoading}
                         >
                           <Plus className="h-4 w-4" />
                           <span>Add Record</span>
@@ -608,8 +464,6 @@ const DatabaseManagement = () => {
                         <button
                           onClick={exportTableData}
                           className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
-                          aria-label="Export table data"
-                          disabled={!tableData.length || actionLoading}
                         >
                           <Download className="h-4 w-4" />
                           <span>Export</span>
@@ -626,23 +480,16 @@ const DatabaseManagement = () => {
                         <div key={column.column_name} className="border border-gray-200 rounded-lg p-3">
                           <div className="flex items-center justify-between mb-2">
                             <span className="font-medium text-gray-900">{column.column_name}</span>
-                            <div className="flex space-x-1">
-                              {column.is_primary_key && (
-                                <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded" title="Primary Key">PK</span>
-                              )}
-                              {column.is_foreign_key && (
-                                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded" title="Foreign Key">FK</span>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <span className={`inline-block text-xs px-2 py-1 rounded ${getColumnType(column)}`}>
-                              {column.data_type}
-                            </span>
-                            {column.is_nullable === 'NO' && (
-                              <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">Required</span>
+                            {column.is_primary_key && (
+                              <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">PK</span>
+                            )}
+                            {column.is_foreign_key && (
+                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">FK</span>
                             )}
                           </div>
+                          <span className={`inline-block text-xs px-2 py-1 rounded ${getColumnType(column)}`}>
+                            {column.data_type}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -662,7 +509,6 @@ const DatabaseManagement = () => {
                               value={searchTerm}
                               onChange={(e) => setSearchTerm(e.target.value)}
                               className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              aria-label="Search records"
                             />
                           </div>
                         </div>
@@ -676,60 +522,48 @@ const DatabaseManagement = () => {
                       </div>
                     ) : (
                       <div className="overflow-x-auto">
-                        <table className="w-full" aria-label={`${selectedTable} table data`}>
+                        <table className="w-full">
                           <thead className="bg-gray-50">
                             <tr>
                               {columns.map((column) => (
-                                <th key={column.column_name} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+                                <th key={column.column_name} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                   {column.column_name}
                                 </th>
                               ))}
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Actions
                               </th>
                             </tr>
                           </thead>
                           <tbody className="bg-white divide-y divide-gray-200">
-                            {tableData.length === 0 ? (
-                              <tr>
-                                <td colSpan={columns.length + 1} className="px-6 py-4 text-center text-gray-500">
-                                  No records found
+                            {tableData.map((row, index) => (
+                              <tr key={index} className="hover:bg-gray-50">
+                                {columns.map((column) => (
+                                  <td key={column.column_name} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {formatValue(row[column.column_name])}
+                                  </td>
+                                ))}
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                  <div className="flex items-center space-x-2">
+                                    <button
+                                      onClick={() => {
+                                        setEditingRecord(row);
+                                        setShowEditModal(true);
+                                      }}
+                                      className="text-blue-600 hover:text-blue-900"
+                                    >
+                                      <Edit className="h-4 w-4" />
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteRecord(row.id)}
+                                      className="text-red-600 hover:text-red-900"
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </button>
+                                  </div>
                                 </td>
                               </tr>
-                            ) : (
-                              tableData.map((row, index) => (
-                                <tr key={index} className="hover:bg-gray-50">
-                                  {columns.map((column) => (
-                                    <td key={column.column_name} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                      {formatValue(row[column.column_name])}
-                                    </td>
-                                  ))}
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div className="flex items-center space-x-2">
-                                      <button
-                                        onClick={() => {
-                                          setEditingRecord(row);
-                                          setShowEditModal(true);
-                                        }}
-                                        className="text-blue-600 hover:text-blue-900"
-                                        aria-label={`Edit record ${row.id || index}`}
-                                        disabled={actionLoading}
-                                      >
-                                        <Edit className="h-4 w-4" />
-                                      </button>
-                                      <button
-                                        onClick={() => handleDeleteRecord(row.id)}
-                                        className="text-red-600 hover:text-red-900"
-                                        aria-label={`Delete record ${row.id || index}`}
-                                        disabled={actionLoading}
-                                      >
-                                        <Trash2 className="h-4 w-4" />
-                                      </button>
-                                    </div>
-                                  </td>
-                                </tr>
-                              ))
-                            )}
+                            ))}
                           </tbody>
                         </table>
                       </div>
@@ -746,7 +580,6 @@ const DatabaseManagement = () => {
                             onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                             disabled={currentPage === 1}
                             className="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-                            aria-label="Previous page"
                           >
                             Previous
                           </button>
@@ -754,7 +587,6 @@ const DatabaseManagement = () => {
                             onClick={() => setCurrentPage(currentPage + 1)}
                             disabled={tableData.length < itemsPerPage}
                             className="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-                            aria-label="Next page"
                           >
                             Next
                           </button>
@@ -776,52 +608,27 @@ const DatabaseManagement = () => {
 
         {/* Create Record Modal */}
         {showCreateModal && (
-          <div 
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="create-record-title"
-          >
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
               <div className="p-6 border-b border-gray-200">
-                <h3 id="create-record-title" className="text-xl font-bold text-gray-900">Create New Record</h3>
+                <h3 className="text-xl font-bold text-gray-900">Create New Record</h3>
               </div>
               <div className="p-6 space-y-4">
                 {columns.filter(col => col.column_name !== 'id' && col.column_name !== 'created_at' && col.column_name !== 'updated_at').map((column) => (
                   <div key={column.column_name}>
-                    <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor={`new-${column.column_name}`}>
-                      {column.column_name} {column.is_nullable === 'NO' && <span className="text-red-500">*</span>}
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {column.column_name}
                     </label>
-                    {column.data_type === 'boolean' ? (
-                      <input
-                        type="checkbox"
-                        id={`new-${column.column_name}`}
-                        checked={!!newRecord[column.column_name]}
-                        onChange={(e) => setNewRecord(prev => ({
-                          ...prev,
-                          [column.column_name]: e.target.checked
-                        }))}
-                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                        aria-required={column.is_nullable === 'NO'}
-                      />
-                    ) : (
-                      <input
-                        type={column.data_type === 'numeric' ? 'number' : 
-                              column.data_type.includes('date') || column.data_type.includes('time') ? 'datetime-local' : 'text'}
-                        id={`new-${column.column_name}`}
-                        value={newRecord[column.column_name] || ''}
-                        onChange={(e) => setNewRecord(prev => ({
-                          ...prev,
-                          [column.column_name]: e.target.value
-                        }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required={column.is_nullable === 'NO'}
-                        aria-required={column.is_nullable === 'NO'}
-                      />
-                    )}
-                    {column.column_default && (
-                      <p className="text-xs text-gray-500 mt-1">Default: {column.column_default}</p>
-                    )}
+                    <input
+                      type={column.data_type === 'numeric' ? 'number' : 
+                            column.data_type === 'boolean' ? 'checkbox' : 'text'}
+                      value={newRecord[column.column_name] || ''}
+                      onChange={(e) => setNewRecord(prev => ({
+                        ...prev,
+                        [column.column_name]: column.data_type === 'boolean' ? e.target.checked : e.target.value
+                      }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
                   </div>
                 ))}
               </div>
@@ -834,15 +641,9 @@ const DatabaseManagement = () => {
                 </button>
                 <button
                   onClick={handleCreateRecord}
-                  className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300 flex items-center space-x-2"
-                  disabled={actionLoading}
+                  className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
                 >
-                  {actionLoading ? (
-                    <RefreshCw className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Plus className="h-4 w-4" />
-                  )}
-                  <span>Create Record</span>
+                  Create Record
                 </button>
               </div>
             </div>
@@ -851,51 +652,28 @@ const DatabaseManagement = () => {
 
         {/* Edit Record Modal */}
         {showEditModal && editingRecord && (
-          <div 
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="edit-record-title"
-          >
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
               <div className="p-6 border-b border-gray-200">
-                <h3 id="edit-record-title" className="text-xl font-bold text-gray-900">Edit Record</h3>
+                <h3 className="text-xl font-bold text-gray-900">Edit Record</h3>
               </div>
               <div className="p-6 space-y-4">
                 {columns.filter(col => col.column_name !== 'created_at' && col.column_name !== 'updated_at').map((column) => (
                   <div key={column.column_name}>
-                    <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor={`edit-${column.column_name}`}>
-                      {column.column_name} {column.is_nullable === 'NO' && <span className="text-red-500">*</span>}
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {column.column_name}
                     </label>
-                    {column.data_type === 'boolean' ? (
-                      <input
-                        type="checkbox"
-                        id={`edit-${column.column_name}`}
-                        checked={!!editingRecord[column.column_name]}
-                        onChange={(e) => setEditingRecord(prev => prev ? ({
-                          ...prev,
-                          [column.column_name]: e.target.checked
-                        }) : null)}
-                        disabled={column.column_name === 'id'}
-                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:bg-gray-100"
-                        aria-required={column.is_nullable === 'NO'}
-                      />
-                    ) : (
-                      <input
-                        type={column.data_type === 'numeric' ? 'number' : 
-                              column.data_type.includes('date') || column.data_type.includes('time') ? 'datetime-local' : 'text'}
-                        id={`edit-${column.column_name}`}
-                        value={editingRecord[column.column_name] || ''}
-                        onChange={(e) => setEditingRecord(prev => prev ? ({
-                          ...prev,
-                          [column.column_name]: e.target.value
-                        }) : null)}
-                        disabled={column.column_name === 'id'}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
-                        required={column.is_nullable === 'NO'}
-                        aria-required={column.is_nullable === 'NO'}
-                      />
-                    )}
+                    <input
+                      type={column.data_type === 'numeric' ? 'number' : 
+                            column.data_type === 'boolean' ? 'checkbox' : 'text'}
+                      value={editingRecord[column.column_name] || ''}
+                      onChange={(e) => setEditingRecord(prev => prev ? ({
+                        ...prev,
+                        [column.column_name]: column.data_type === 'boolean' ? e.target.checked : e.target.value
+                      }) : null)}
+                      disabled={column.column_name === 'id'}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+                    />
                   </div>
                 ))}
               </div>
@@ -908,15 +686,9 @@ const DatabaseManagement = () => {
                 </button>
                 <button
                   onClick={handleUpdateRecord}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 flex items-center space-x-2"
-                  disabled={actionLoading}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                 >
-                  {actionLoading ? (
-                    <RefreshCw className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Edit className="h-4 w-4" />
-                  )}
-                  <span>Update Record</span>
+                  Update Record
                 </button>
               </div>
             </div>

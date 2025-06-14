@@ -43,15 +43,6 @@ export default {
           700: '#b45309',
           800: '#92400e',
           900: '#78350f',
-        },
-        // Добавляем цвета для социальных сетей
-        telegram: {
-          500: '#0088cc',
-          600: '#006699',
-        },
-        whatsapp: {
-          500: '#25d366',
-          600: '#1da851',
         }
       },
       animation: {
@@ -82,12 +73,6 @@ export default {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'hero-pattern': 'linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%)',
-      },
-      // Добавляем стандартизированные тени
-      boxShadow: {
-        'card': '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
-        'card-hover': '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-        'modal': '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
       }
     },
   },

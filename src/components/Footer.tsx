@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Anchor, MapPin, Phone, Mail, Award, Shield, Clock, Lock } from 'lucide-react';
 import AdminLogin from './AdminLogin';
-import AuthButton from './AuthButton';
 
 const Footer = () => {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
@@ -46,14 +45,14 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/corporate-sailing" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                <a href="#" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
                   Corporate Events
-                </Link>
+                </a>
               </li>
               <li>
-                <Link to="/gift-certificates" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                <a href="#" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
                   Gift Vouchers
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
@@ -85,14 +84,9 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Account & Certifications */}
+          {/* Certifications */}
           <div>
-            <h4 className="text-lg font-semibold mb-6">Account</h4>
-            <div className="space-y-4 mb-6">
-              <AuthButton />
-            </div>
-            
-            <h4 className="text-lg font-semibold mb-4">Certifications</h4>
+            <h4 className="text-lg font-semibold mb-6">Certifications</h4>
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
                 <Shield className="h-5 w-5 text-green-400" />

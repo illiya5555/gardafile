@@ -11,9 +11,6 @@ import BookingCalendarPage from './pages/BookingCalendarPage';
 import CorporateSailingPage from './pages/CorporateSailingPage';
 import GiftCertificatesPage from './pages/GiftCertificatesPage';
 import AdminDashboard from './pages/AdminDashboard';
-import ManagerDashboard from './pages/ManagerDashboard';
-import ClientDashboard from './pages/ClientDashboard';
-import SuccessPage from './pages/SuccessPage';
 import ChatWidget from './components/ChatWidget';
 
 function App() {
@@ -24,15 +21,6 @@ function App() {
         <Routes>
           {/* Admin route without header/footer */}
           <Route path="/admin" element={<AdminDashboard />} />
-          
-          {/* Manager Dashboard route without header/footer */}
-          <Route path="/manager-dashboard" element={<ManagerDashboard />} />
-          
-          {/* Client Dashboard route without header/footer */}
-          <Route path="/client-dashboard" element={<ClientDashboard />} />
-          
-          {/* Success page without header/footer */}
-          <Route path="/success" element={<SuccessPage />} />
           
           {/* Regular routes with header/footer */}
           <Route path="/*" element={

@@ -15,10 +15,7 @@ import {
   Tag,
   MessageSquare,
   RefreshCw,
-  Users,
-  AlertCircle,
-  CheckCircle,
-  X
+  Users
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
@@ -36,14 +33,6 @@ interface Client {
   last_booking?: string;
 }
 
-interface NewClientData {
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone?: string;
-  client_category: string;
-}
-
 const ClientsManagement = () => {
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,17 +43,6 @@ const ClientsManagement = () => {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [showAddClientModal, setShowAddClientModal] = useState(false);
-  const [newClientData, setNewClientData] = useState<NewClientData>({
-    first_name: '',
-    last_name: '',
-    email: '',
-    phone: '',
-    client_category: 'new'
-  });
-  const [actionLoading, setActionLoading] = useState(false);
-  const [actionSuccess, setActionSuccess] = useState<string | null>(null);
-  const [actionError, setActionError] = useState<string | null>(null);
 
   const categories = [
     { id: 'vip', name: 'VIP', color: 'bg-purple-100 text-purple-800' },
@@ -169,10 +147,6 @@ const ClientsManagement = () => {
 
   const updateClientCategory = async (clientId: string, category: string) => {
     try {
-      setActionLoading(true);
-      setActionError(null);
-      setActionSuccess(null);
-      
       const { error } = await supabase
         .from('profiles')
         .update({ client_category: category })
@@ -187,116 +161,9 @@ const ClientsManagement = () => {
             : client
         )
       );
-      
-      setActionSuccess(`Client category updated to ${category}`);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error updating client category:', error);
-      setActionError(`Error updating category: ${error.message}`);
-    } finally {
-      setActionLoading(false);
-      
-      // Clear success/error messages after 3 seconds
-      setTimeout(() => {
-        setActionSuccess(null);
-        setActionError(null);
-      }, 3000);
-    }
-  };
-
-  const handleAddClient = async () => {
-    try {
-      setActionLoading(true);
-      setActionError(null);
-      setActionSuccess(null);
-      
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(newClientData.email)) {
-        throw new Error('Please enter a valid email address');
-      }
-      
-      // Create user in Auth
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: newClientData.email,
-        password: Math.random().toString(36).slice(-8), // Generate random password
-        options: {
-          emailRedirectTo: undefined, // Disable email confirmation
-        }
-      });
-
-      if (authError) throw authError;
-      
-      if (!authData.user) {
-        throw new Error('Failed to create user account');
-      }
-      
-      // Get client role ID
-      const { data: roleData } = await supabase
-        .from('user_roles')
-        .select('id')
-        .eq('role_name', 'client')
-        .single();
-      
-      // Create profile
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          id: authData.user.id,
-          email: newClientData.email,
-          first_name: newClientData.first_name,
-          last_name: newClientData.last_name,
-          phone: newClientData.phone,
-          client_category: newClientData.client_category,
-          role_id: roleData?.id
-        });
-      
-      if (profileError) throw profileError;
-      
-      setActionSuccess('Client added successfully!');
-      setShowAddClientModal(false);
-      
-      // Reset form
-      setNewClientData({
-        first_name: '',
-        last_name: '',
-        email: '',
-        phone: '',
-        client_category: 'new'
-      });
-      
-      // Refresh client list
-      fetchClients();
-      
-    } catch (error: any) {
-      console.error('Error adding client:', error);
-      setActionError(`Error adding client: ${error.message}`);
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const sendEmailToClient = async (clientEmail: string) => {
-    try {
-      setActionLoading(true);
-      setActionError(null);
-      setActionSuccess(null);
-      
-      // This would be implemented with a Supabase Edge Function
-      // For now, we'll just simulate success
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setActionSuccess(`Email sent to ${clientEmail}`);
-    } catch (error: any) {
-      console.error('Error sending email:', error);
-      setActionError(`Error sending email: ${error.message}`);
-    } finally {
-      setActionLoading(false);
-      
-      // Clear success/error messages after 3 seconds
-      setTimeout(() => {
-        setActionSuccess(null);
-        setActionError(null);
-      }, 3000);
+      alert('Error updating category');
     }
   };
 
@@ -359,14 +226,6 @@ const ClientsManagement = () => {
     return 'Low Value';
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setNewClientData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -375,33 +234,11 @@ const ClientsManagement = () => {
           <h2 className="text-2xl font-bold text-gray-900">Client Management</h2>
           <p className="text-gray-600">Manage customer relationships and track client history</p>
         </div>
-        <button 
-          onClick={() => setShowAddClientModal(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
-          aria-label="Add new client"
-        >
+        <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
           <Plus className="h-4 w-4" />
           <span>Add Client</span>
         </button>
       </div>
-
-      {/* Action Feedback */}
-      {(actionSuccess || actionError) && (
-        <div className={`p-4 rounded-lg ${
-          actionSuccess ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
-        }`} role="alert">
-          <div className="flex items-center space-x-2">
-            {actionSuccess ? (
-              <CheckCircle className="h-5 w-5 text-green-600" />
-            ) : (
-              <AlertCircle className="h-5 w-5 text-red-600" />
-            )}
-            <span className={actionSuccess ? 'text-green-800' : 'text-red-800'}>
-              {actionSuccess || actionError}
-            </span>
-          </div>
-        </div>
-      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -463,7 +300,6 @@ const ClientsManagement = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              aria-label="Search clients"
             />
           </div>
 
@@ -472,7 +308,6 @@ const ClientsManagement = () => {
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            aria-label="Filter by category"
           >
             <option value="all">All Categories</option>
             {categories.map(category => (
@@ -489,7 +324,6 @@ const ClientsManagement = () => {
               setSortOrder(order as 'asc' | 'desc');
             }}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            aria-label="Sort clients"
           >
             <option value="created_at-desc">Newest First</option>
             <option value="created_at-asc">Oldest First</option>
@@ -502,7 +336,6 @@ const ClientsManagement = () => {
           <button
             onClick={exportData}
             className="flex items-center justify-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-300"
-            aria-label="Export client data"
           >
             <Download className="h-4 w-4" />
             <span>Export</span>
@@ -535,16 +368,16 @@ const ClientsManagement = () => {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full" aria-label="Clients table">
+            <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900" scope="col">Client</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900" scope="col">Contact</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900" scope="col">Category</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900" scope="col">Bookings</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900" scope="col">Total Spent</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900" scope="col">Last Booking</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900" scope="col">Actions</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Client</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Contact</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Category</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Bookings</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Total Spent</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Last Booking</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -586,8 +419,6 @@ const ClientsManagement = () => {
                           value={client.client_category || 'new'}
                           onChange={(e) => updateClientCategory(client.id, e.target.value)}
                           className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border-0 focus:ring-2 focus:ring-blue-500 ${categoryInfo.color}`}
-                          aria-label={`Change category for ${client.first_name} ${client.last_name}`}
-                          disabled={actionLoading}
                         >
                           {categories.map(category => (
                             <option key={category.id} value={category.id}>{category.name}</option>
@@ -616,19 +447,13 @@ const ClientsManagement = () => {
                               setShowDetails(true);
                             }}
                             className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-300"
-                            aria-label={`View details for ${client.first_name} ${client.last_name}`}
                           >
                             <Eye className="h-4 w-4" />
                           </button>
-                          <button 
-                            className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors duration-300"
-                            onClick={() => sendEmailToClient(client.email)}
-                            aria-label={`Send email to ${client.first_name} ${client.last_name}`}
-                            disabled={actionLoading}
-                          >
+                          <button className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors duration-300">
                             <Mail className="h-4 w-4" />
                           </button>
-                          <button className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors duration-300" aria-label={`Chat with ${client.first_name} ${client.last_name}`}>
+                          <button className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors duration-300">
                             <MessageSquare className="h-4 w-4" />
                           </button>
                         </div>
@@ -644,20 +469,14 @@ const ClientsManagement = () => {
 
       {/* Client Details Modal */}
       {showDetails && selectedClient && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="client-details-title"
-        >
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200">
               <div className="flex justify-between items-center">
-                <h3 id="client-details-title" className="text-xl font-bold text-gray-900">Client Details</h3>
+                <h3 className="text-xl font-bold text-gray-900">Client Details</h3>
                 <button
                   onClick={() => setShowDetails(false)}
                   className="text-gray-400 hover:text-gray-600"
-                  aria-label="Close details"
                 >
                   ×
                 </button>
@@ -717,24 +536,6 @@ const ClientsManagement = () => {
                 </div>
               </div>
 
-              {/* Action Feedback */}
-              {(actionSuccess || actionError) && (
-                <div className={`p-4 rounded-lg ${
-                  actionSuccess ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
-                }`} role="alert">
-                  <div className="flex items-center space-x-2">
-                    {actionSuccess ? (
-                      <CheckCircle className="h-5 w-5 text-green-600" />
-                    ) : (
-                      <AlertCircle className="h-5 w-5 text-red-600" />
-                    )}
-                    <span className={actionSuccess ? 'text-green-800' : 'text-red-800'}>
-                      {actionSuccess || actionError}
-                    </span>
-                  </div>
-                </div>
-              )}
-
               <div className="flex justify-end space-x-4">
                 <button
                   onClick={() => setShowDetails(false)}
@@ -742,159 +543,13 @@ const ClientsManagement = () => {
                 >
                   Close
                 </button>
-                <button 
-                  className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300 flex items-center space-x-2"
-                  onClick={() => sendEmailToClient(selectedClient.email)}
-                  disabled={actionLoading}
-                >
-                  {actionLoading ? (
-                    <RefreshCw className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Mail className="h-4 w-4" />
-                  )}
-                  <span>Send Email</span>
+                <button className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                  Send Email
                 </button>
-                <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 flex items-center space-x-2">
-                  <Calendar className="h-4 w-4" />
-                  <span>View Bookings</span>
+                <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                  View Bookings
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Add Client Modal */}
-      {showAddClientModal && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="add-client-title"
-        >
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 animate-slide-up">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex justify-between items-center">
-                <h3 id="add-client-title" className="text-xl font-bold text-gray-900">Add New Client</h3>
-                <button
-                  onClick={() => setShowAddClientModal(false)}
-                  className="text-gray-400 hover:text-gray-600"
-                  aria-label="Close"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-            </div>
-            
-            <div className="p-6">
-              {actionError && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg" role="alert">
-                  <div className="flex items-start space-x-2">
-                    <AlertCircle className="h-4 w-4 text-red-600 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-red-600">{actionError}</p>
-                  </div>
-                </div>
-              )}
-              
-              <form className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2" htmlFor="first_name">
-                      First Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="first_name"
-                      name="first_name"
-                      value={newClientData.first_name}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2" htmlFor="last_name">
-                      Last Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="last_name"
-                      name="last_name"
-                      value={newClientData.last_name}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2" htmlFor="email">
-                    Email *
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={newClientData.email}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2" htmlFor="phone">
-                    Phone
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={newClientData.phone}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2" htmlFor="client_category">
-                    Category
-                  </label>
-                  <select
-                    id="client_category"
-                    name="client_category"
-                    value={newClientData.client_category}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    {categories.map(category => (
-                      <option key={category.id} value={category.id}>{category.name}</option>
-                    ))}
-                  </select>
-                </div>
-              </form>
-            </div>
-            
-            <div className="p-6 border-t border-gray-200 flex justify-end space-x-4">
-              <button
-                onClick={() => setShowAddClientModal(false)}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleAddClient}
-                disabled={actionLoading || !newClientData.first_name || !newClientData.last_name || !newClientData.email}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
-              >
-                {actionLoading ? (
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Plus className="h-4 w-4" />
-                )}
-                <span>Add Client</span>
-              </button>
             </div>
           </div>
         </div>

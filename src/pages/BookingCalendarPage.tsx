@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, Users, CreditCard, CheckCircle, AlertCircle, ArrowLeft, ArrowRight, Ship, Euro, User, Mail, Phone, Lock, Gift } from 'lucide-react';
+import { Calendar, Clock, Users, CreditCard, CheckCircle, AlertCircle, ArrowLeft, ArrowRight, Ship, Euro, User, Mail, Phone, Lock } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import StripeCheckout from '../components/StripeCheckout';
-import { stripeProducts } from '../stripe-config';
 
 interface YachtSlot {
   id: string;
@@ -27,64 +25,10 @@ interface BookingData {
   customer_name: string;
   customer_email: string;
   customer_phone: string;
+  card_number: string;
+  card_expiry: string;
+  card_cvv: string;
 }
-
-interface SuccessModalProps {
-  email: string;
-  phone: string;
-  onClose: () => void;
-}
-
-const SuccessModal: React.FC<SuccessModalProps> = ({ email, phone, onClose }) => {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 animate-slide-up">
-        <div className="p-8">
-          <div className="text-center mb-6">
-            <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="h-10 w-10 text-green-600" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Booking Confirmed!</h2>
-            <p className="text-gray-600">Thank you for trusting Garda Racing Yacht Club!</p>
-          </div>
-          
-          <div className="bg-blue-50 p-4 rounded-lg mb-6">
-            <h3 className="text-lg font-semibold text-blue-900 mb-2">Your Account Details</h3>
-            <p className="text-blue-800 mb-4">We've created a personal account for you to manage your bookings and access photos after your experience.</p>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="font-medium">Login:</span>
-                <span>{email}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-medium">Password:</span>
-                <span>{phone}</span>
-              </div>
-            </div>
-          </div>
-          
-          <div className="space-y-4">
-            <p className="text-gray-600 text-sm">
-              You'll receive a confirmation email shortly with all the details of your booking.
-            </p>
-            <p className="text-gray-600 text-sm">
-              You can access your personal dashboard anytime to view your bookings, chat with our team, and see photos from your experience.
-            </p>
-          </div>
-          
-          <div className="mt-8 flex justify-center">
-            <button
-              onClick={onClose}
-              className="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300"
-            >
-              Continue
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const BookingCalendarPage = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -98,7 +42,6 @@ const BookingCalendarPage = () => {
   const [selectedYacht, setSelectedYacht] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [bookingData, setBookingData] = useState<Partial<BookingData>>({});
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   // Fixed regatta time slots - only 8:30 and 13:00
   const regattaTimeSlots = [
@@ -121,9 +64,6 @@ const BookingCalendarPage = () => {
     { id: 'k1l2m3n4-o5p6-7890-1234-567890klmnop', name: 'J-70 "Serenity"', capacity: 5 },
     { id: 'l2m3n4o5-p6q7-8901-2345-678901lmnopq', name: 'J-70 "Majestic"', capacity: 5 }
   ];
-
-  // Get the yacht racing product from stripe config
-  const yachtRacingProduct = stripeProducts.find(product => product.name === 'Yacht racing');
 
   useEffect(() => {
     generateAvailableSlots();
@@ -152,7 +92,7 @@ const BookingCalendarPage = () => {
             start_time: timeSlot.start,
             end_time: timeSlot.end,
             available: isAvailable,
-            price_per_person: 199, // Updated to match Stripe product price
+            price_per_person: 195, // Fixed price for 4-hour regatta
             max_participants: yacht.capacity
           });
         });
@@ -202,8 +142,8 @@ const BookingCalendarPage = () => {
 
   const calculateTotalPrice = () => {
     if (!selectedStartTime || !selectedEndTime) return 0;
-    // Fixed price of €199 per person for 4-hour regatta
-    return 199 * participants;
+    // Fixed price of €195 per person for 4-hour regatta
+    return 195 * participants;
   };
 
   const handleDateSelect = (date: Date) => {
@@ -226,89 +166,15 @@ const BookingCalendarPage = () => {
     setSelectedYacht(yachtId);
   };
 
-  // Create user account and profile
-  const createUserAccount = async (email: string, password: string, firstName: string, lastName: string, phone: string) => {
-    try {
-      // Check if user already exists
-      const { data: existingUsers } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('email', email)
-        .limit(1);
-      
-      if (existingUsers && existingUsers.length > 0) {
-        // User already exists, no need to create a new account
-        return existingUsers[0].id;
-      }
-      
-      // Create new user
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            first_name: firstName,
-            last_name: lastName,
-            phone: phone
-          }
-        }
-      });
-
-      if (authError) throw authError;
-      
-      if (!authData.user) {
-        throw new Error('Failed to create user account');
-      }
-      
-      // Get client role ID
-      const { data: roleData } = await supabase
-        .from('user_roles')
-        .select('id')
-        .eq('role_name', 'client')
-        .single();
-      
-      // Create profile
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          id: authData.user.id,
-          email: email,
-          first_name: firstName,
-          last_name: lastName,
-          phone: phone,
-          role_id: roleData?.id
-        });
-      
-      if (profileError) throw profileError;
-      
-      return authData.user.id;
-    } catch (error) {
-      console.error('Error creating user account:', error);
-      throw error;
-    }
-  };
-
   const handleBookingSubmit = async () => {
     setLoading(true);
     
     try {
-      // Extract name parts
-      const nameParts = bookingData.customer_name?.split(' ') || ['', ''];
-      const firstName = nameParts[0];
-      const lastName = nameParts.slice(1).join(' ') || '';
-      
-      // Create user account using email as login and phone as password
-      const userId = await createUserAccount(
-        bookingData.customer_email || '',
-        bookingData.customer_phone || '',
-        firstName,
-        lastName,
-        bookingData.customer_phone || ''
-      );
+      // Here would be payment system integration
+      // For now simulate successful payment
       
       const booking = {
         yacht_id: selectedYacht,
-        user_id: userId,
         start_date: selectedStartDate,
         end_date: selectedEndDate,
         start_time: selectedStartTime,
@@ -318,7 +184,7 @@ const BookingCalendarPage = () => {
         customer_name: bookingData.customer_name,
         customer_email: bookingData.customer_email,
         customer_phone: bookingData.customer_phone,
-        status: 'pending', // Will be updated to confirmed after payment
+        status: 'confirmed',
         created_at: new Date().toISOString()
       };
 
@@ -328,9 +194,17 @@ const BookingCalendarPage = () => {
         .insert(booking);
 
       if (error) throw error;
+
+      alert('Booking successfully created! You will receive confirmation by email.');
       
-      // Show success modal with account details
-      setShowSuccessModal(true);
+      // Reset form
+      setStep(1);
+      setSelectedStartDate('');
+      setSelectedEndDate('');
+      setSelectedStartTime('');
+      setSelectedEndTime('');
+      setParticipants(1);
+      setBookingData({});
       
     } catch (error: any) {
       console.error('Booking error:', error);
@@ -338,19 +212,6 @@ const BookingCalendarPage = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSuccessModalClose = () => {
-    setShowSuccessModal(false);
-    
-    // Reset form
-    setStep(1);
-    setSelectedStartDate('');
-    setSelectedEndDate('');
-    setSelectedStartTime('');
-    setSelectedEndTime('');
-    setParticipants(1);
-    setBookingData({});
   };
 
   const nextMonth = () => {
@@ -587,7 +448,7 @@ const BookingCalendarPage = () => {
                     <div className="space-y-4">
                       {getAvailableYachtsForDate(selectedStartDate).slice(0, 6).map((slot) => {
                         const duration = calculateDuration(slot.start_time, slot.end_time);
-                        const totalPrice = 199 * participants;
+                        const totalPrice = 195 * participants;
                         const isSelected = selectedYacht === slot.yacht_id && 
                           selectedStartTime === slot.start_time;
                         const regattaName = slot.start_time === '08:30' ? 'Morning Regatta' : 'Afternoon Regatta';
@@ -622,7 +483,7 @@ const BookingCalendarPage = () => {
                                   €{totalPrice}
                                 </p>
                                 <p className="text-sm text-gray-600">
-                                  €199 per person
+                                  €195 per person
                                 </p>
                               </div>
                             </div>
@@ -693,7 +554,7 @@ const BookingCalendarPage = () => {
 
                     <div className="md:col-span-2">
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Phone * (This will be your password)
+                        Phone *
                       </label>
                       <div className="relative">
                         <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -706,9 +567,6 @@ const BookingCalendarPage = () => {
                           required
                         />
                       </div>
-                      <p className="text-sm text-gray-500 mt-1">
-                        Your email will be your login and phone number will be your password for your account
-                      </p>
                     </div>
                   </div>
 
@@ -742,47 +600,81 @@ const BookingCalendarPage = () => {
                       <div>
                         <h3 className="font-semibold text-green-900 mb-2">Secure payment</h3>
                         <p className="text-green-800 text-sm">
-                          Your data is protected by SSL encryption. We use Stripe for secure payment processing.
+                          Your data is protected by SSL encryption. We do not store credit card data.
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                    <div className="flex items-start space-x-3">
-                      <Gift className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        Card Number *
+                      </label>
+                      <div className="relative">
+                        <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        <input
+                          type="text"
+                          value={bookingData.card_number || ''}
+                          onChange={(e) => setBookingData({...bookingData, card_number: e.target.value})}
+                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="1234 5678 9012 3456"
+                          maxLength={19}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <h3 className="font-semibold text-blue-900 mb-2">Account Creation</h3>
-                        <p className="text-blue-800 text-sm">
-                          After successful payment, we'll automatically create a personal account for you to manage your bookings and access photos after your experience.
-                        </p>
+                        <label className="block text-sm font-semibold text-gray-900 mb-2">
+                          Expiry Date *
+                        </label>
+                        <input
+                          type="text"
+                          value={bookingData.card_expiry || ''}
+                          onChange={(e) => setBookingData({...bookingData, card_expiry: e.target.value})}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="MM/YY"
+                          maxLength={5}
+                          required
+                        />
                       </div>
-                    </div>
-                  </div>
-
-                  {yachtRacingProduct && (
-                    <div className="space-y-4">
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <h3 className="font-semibold text-gray-900 mb-2">Order Summary</h3>
-                        <div className="space-y-2">
-                          <div className="flex justify-between">
-                            <span>Yacht Racing Experience</span>
-                            <span>€199 × {participants}</span>
-                          </div>
-                          <div className="flex justify-between font-bold text-lg">
-                            <span>Total</span>
-                            <span>€{calculateTotalPrice()}</span>
-                          </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-900 mb-2">
+                          CVV *
+                        </label>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                          <input
+                            type="text"
+                            value={bookingData.card_cvv || ''}
+                            onChange={(e) => setBookingData({...bookingData, card_cvv: e.target.value})}
+                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="123"
+                            maxLength={4}
+                            required
+                          />
                         </div>
                       </div>
-
-                      <StripeCheckout 
-                        product={yachtRacingProduct}
-                        className="w-full"
-                      >
-                        Pay €{calculateTotalPrice()} - Complete Booking
-                      </StripeCheckout>
                     </div>
+                  </div>
+
+                  {bookingData.card_number && bookingData.card_expiry && bookingData.card_cvv && (
+                    <button
+                      onClick={handleBookingSubmit}
+                      disabled={loading}
+                      className="w-full bg-green-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-green-700 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                    >
+                      {loading ? (
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                      ) : (
+                        <>
+                          <Lock className="h-5 w-5" />
+                          <span>Pay €{calculateTotalPrice()}</span>
+                        </>
+                      )}
+                    </button>
                   )}
                 </div>
               )}
@@ -848,7 +740,7 @@ const BookingCalendarPage = () => {
                     </span>
                   </div>
                   <p className="text-sm text-gray-600 mt-2">
-                    €199 per person for 4-hour regatta
+                    €195 per person for 4-hour regatta
                   </p>
                 </div>
               )}
@@ -890,15 +782,6 @@ const BookingCalendarPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Success Modal */}
-      {showSuccessModal && (
-        <SuccessModal 
-          email={bookingData.customer_email || ''} 
-          phone={bookingData.customer_phone || ''} 
-          onClose={handleSuccessModalClose} 
-        />
-      )}
     </div>
   );
 };

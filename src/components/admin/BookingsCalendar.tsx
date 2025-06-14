@@ -46,9 +46,6 @@ const BookingsCalendar = () => {
   const [conflicts, setConflicts] = useState<string[]>([]);
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [actionLoading, setActionLoading] = useState(false);
-  const [actionSuccess, setActionSuccess] = useState<string | null>(null);
-  const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchBookings();
@@ -242,10 +239,6 @@ const BookingsCalendar = () => {
     const newEnd = new Date(newStart.getTime() + timeDiff);
 
     try {
-      setActionLoading(true);
-      setActionError(null);
-      setActionSuccess(null);
-      
       const table = draggedBooking.type === 'yacht' ? 'yacht_bookings' : 'bookings';
       const updateData = draggedBooking.type === 'yacht' 
         ? {
@@ -266,25 +259,6 @@ const BookingsCalendar = () => {
 
       if (error) throw error;
 
-      // Log the update
-      await supabase
-        .from('booking_updates')
-        .insert({
-          booking_id: draggedBooking.id,
-          booking_type: draggedBooking.type,
-          updated_by: (await supabase.auth.getUser()).data.user?.id,
-          update_type: 'date_change',
-          old_values: {
-            start_date: draggedBooking.start.toISOString(),
-            end_date: draggedBooking.end.toISOString()
-          },
-          new_values: {
-            start_date: newStart.toISOString(),
-            end_date: newEnd.toISOString()
-          },
-          notes: 'Booking moved via calendar drag and drop'
-        });
-
       // Update local state
       setBookings(prev => prev.map(booking => 
         booking.id === draggedBooking.id 
@@ -292,28 +266,17 @@ const BookingsCalendar = () => {
           : booking
       ));
 
-      setActionSuccess('Booking moved successfully!');
-    } catch (error: any) {
+      alert('Booking moved successfully!');
+    } catch (error) {
       console.error('Error moving booking:', error);
-      setActionError(`Error moving booking: ${error.message}`);
-    } finally {
-      setDraggedBooking(null);
-      setActionLoading(false);
-      
-      // Clear success/error messages after 3 seconds
-      setTimeout(() => {
-        setActionSuccess(null);
-        setActionError(null);
-      }, 3000);
+      alert('Error moving booking');
     }
+
+    setDraggedBooking(null);
   };
 
   const updateBookingStatus = async (bookingId: string, newStatus: string, type: 'yacht' | 'regular') => {
     try {
-      setActionLoading(true);
-      setActionError(null);
-      setActionSuccess(null);
-      
       const table = type === 'yacht' ? 'yacht_bookings' : 'bookings';
       const { error } = await supabase
         .from(table)
@@ -322,21 +285,6 @@ const BookingsCalendar = () => {
 
       if (error) throw error;
 
-      // Log the update
-      await supabase
-        .from('booking_updates')
-        .insert({
-          booking_id: bookingId,
-          booking_type: type,
-          updated_by: (await supabase.auth.getUser()).data.user?.id,
-          update_type: 'status_change',
-          old_values: { 
-            status: bookings.find(b => b.id === bookingId)?.status 
-          },
-          new_values: { status: newStatus },
-          notes: `Status changed to ${newStatus}`
-        });
-
       setBookings(prev => 
         prev.map(booking => 
           booking.id === bookingId 
@@ -344,54 +292,9 @@ const BookingsCalendar = () => {
             : booking
         )
       );
-      
-      setActionSuccess(`Booking status updated to ${newStatus}`);
-      
-      // If we're updating the currently selected booking, update that too
-      if (selectedBooking && selectedBooking.id === bookingId) {
-        setSelectedBooking({
-          ...selectedBooking,
-          status: newStatus as any
-        });
-      }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error updating booking status:', error);
-      setActionError(`Error updating status: ${error.message}`);
-    } finally {
-      setActionLoading(false);
-      
-      // Clear success/error messages after 3 seconds
-      setTimeout(() => {
-        setActionSuccess(null);
-        setActionError(null);
-      }, 3000);
-    }
-  };
-
-  const sendConfirmationEmail = async () => {
-    if (!selectedBooking) return;
-    
-    try {
-      setActionLoading(true);
-      setActionError(null);
-      setActionSuccess(null);
-      
-      // This would be implemented with a Supabase Edge Function
-      // For now, we'll just simulate success
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setActionSuccess('Confirmation email sent successfully!');
-    } catch (error: any) {
-      console.error('Error sending confirmation email:', error);
-      setActionError(`Error sending email: ${error.message}`);
-    } finally {
-      setActionLoading(false);
-      
-      // Clear success/error messages after 3 seconds
-      setTimeout(() => {
-        setActionSuccess(null);
-        setActionError(null);
-      }, 3000);
+      alert('Error updating status');
     }
   };
 
@@ -420,17 +323,11 @@ const BookingsCalendar = () => {
           <p className="text-gray-600">Manage yacht and racing bookings with drag-and-drop</p>
         </div>
         <div className="flex items-center space-x-4">
-          <button 
-            className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-            aria-label="Export bookings"
-          >
+          <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
             <Download className="h-4 w-4" />
             <span>Export</span>
           </button>
-          <button 
-            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-            aria-label="Create new booking"
-          >
+          <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
             <Plus className="h-4 w-4" />
             <span>New Booking</span>
           </button>
@@ -446,7 +343,6 @@ const BookingsCalendar = () => {
               <button
                 onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1))}
                 className="p-2 hover:bg-gray-100 rounded-lg"
-                aria-label="Previous month"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
@@ -456,14 +352,13 @@ const BookingsCalendar = () => {
               <button
                 onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1))}
                 className="p-2 hover:bg-gray-100 rounded-lg"
-                aria-label="Next month"
               >
                 <ChevronRight className="h-5 w-5" />
               </button>
             </div>
 
             {/* View Toggle */}
-            <div className="flex items-center space-x-2 bg-gray-100 rounded-lg p-1" role="radiogroup" aria-label="Calendar view">
+            <div className="flex items-center space-x-2 bg-gray-100 rounded-lg p-1">
               {['month', 'week', 'day'].map((viewType) => (
                 <button
                   key={viewType}
@@ -473,8 +368,6 @@ const BookingsCalendar = () => {
                       ? 'bg-white text-blue-600 shadow-sm'
                       : 'text-gray-600 hover:text-gray-900'
                   }`}
-                  role="radio"
-                  aria-checked={view === viewType}
                 >
                   {viewType.charAt(0).toUpperCase() + viewType.slice(1)}
                 </button>
@@ -492,7 +385,6 @@ const BookingsCalendar = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                aria-label="Search bookings"
               />
             </div>
 
@@ -501,7 +393,6 @@ const BookingsCalendar = () => {
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              aria-label="Filter by status"
             >
               <option value="all">All Statuses</option>
               <option value="pending">Pending</option>
@@ -512,27 +403,9 @@ const BookingsCalendar = () => {
           </div>
         </div>
 
-        {/* Action Feedback Messages */}
-        {(actionSuccess || actionError) && (
-          <div className={`mt-4 p-4 rounded-lg ${
-            actionSuccess ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
-          }`}>
-            <div className="flex items-center space-x-2">
-              {actionSuccess ? (
-                <CheckCircle className="h-5 w-5 text-green-600" />
-              ) : (
-                <AlertTriangle className="h-5 w-5 text-red-600" />
-              )}
-              <span className={actionSuccess ? 'text-green-800' : 'text-red-800'}>
-                {actionSuccess || actionError}
-              </span>
-            </div>
-          </div>
-        )}
-
         {/* Conflict Alerts */}
         {conflicts.length > 0 && (
-          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg" role="alert">
+          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <div className="flex items-center space-x-2">
               <AlertTriangle className="h-5 w-5 text-red-600" />
               <span className="text-red-800 font-medium">
@@ -565,7 +438,7 @@ const BookingsCalendar = () => {
             <div className="grid grid-cols-7">
               {getDaysInMonth(currentDate).map((date, index) => {
                 if (!date) {
-                  return <div key={index} className="min-h-[8rem] border-r border-b border-gray-200" aria-hidden="true"></div>;
+                  return <div key={index} className="h-32 border-r border-b border-gray-200"></div>;
                 }
 
                 const dayBookings = getBookingsForDay(date);
@@ -574,10 +447,9 @@ const BookingsCalendar = () => {
                 return (
                   <div
                     key={index}
-                    className="min-h-[8rem] border-r border-b border-gray-200 p-2 relative overflow-hidden"
+                    className="h-32 border-r border-b border-gray-200 p-2 relative overflow-hidden"
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={() => handleDrop(date)}
-                    aria-label={`${date.toLocaleDateString()}, ${dayBookings.length} bookings`}
                   >
                     <div className={`text-sm font-medium mb-2 ${
                       isToday ? 'text-blue-600' : 'text-gray-900'
@@ -600,8 +472,6 @@ const BookingsCalendar = () => {
                               ? 'bg-red-100 text-red-800 border border-red-300' 
                               : 'text-white'
                           } ${getStatusColor(booking.status)}`}
-                          role="button"
-                          aria-label={`Booking: ${booking.customer_name}, ${booking.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
                         >
                           <div className="truncate font-medium">
                             {booking.customer_name}
@@ -627,20 +497,14 @@ const BookingsCalendar = () => {
 
       {/* Booking Details Modal */}
       {showDetails && selectedBooking && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="booking-details-title"
-        >
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200">
               <div className="flex justify-between items-center">
-                <h3 id="booking-details-title" className="text-xl font-bold text-gray-900">Booking Details</h3>
+                <h3 className="text-xl font-bold text-gray-900">Booking Details</h3>
                 <button
                   onClick={() => setShowDetails(false)}
                   className="text-gray-400 hover:text-gray-600"
-                  aria-label="Close details"
                 >
                   ×
                 </button>
@@ -684,8 +548,6 @@ const BookingsCalendar = () => {
                     value={selectedBooking.status}
                     onChange={(e) => updateBookingStatus(selectedBooking.id, e.target.value, selectedBooking.type)}
                     className="px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    aria-label="Change booking status"
-                    disabled={actionLoading}
                   >
                     <option value="pending">Pending</option>
                     <option value="confirmed">Confirmed</option>
@@ -696,29 +558,11 @@ const BookingsCalendar = () => {
               </div>
 
               {conflicts.includes(selectedBooking.id) && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-lg" role="alert">
+                <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
                   <div className="flex items-center space-x-2">
                     <AlertTriangle className="h-5 w-5 text-red-600" />
                     <span className="text-red-800 font-medium">
                       This booking conflicts with another booking for the same yacht
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {/* Action Feedback */}
-              {(actionSuccess || actionError) && (
-                <div className={`p-4 rounded-lg ${
-                  actionSuccess ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
-                }`} role="alert">
-                  <div className="flex items-center space-x-2">
-                    {actionSuccess ? (
-                      <CheckCircle className="h-5 w-5 text-green-600" />
-                    ) : (
-                      <AlertTriangle className="h-5 w-5 text-red-600" />
-                    )}
-                    <span className={actionSuccess ? 'text-green-800' : 'text-red-800'}>
-                      {actionSuccess || actionError}
                     </span>
                   </div>
                 </div>
@@ -731,21 +575,11 @@ const BookingsCalendar = () => {
                 >
                   Close
                 </button>
-                <button 
-                  onClick={sendConfirmationEmail}
-                  className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300 flex items-center space-x-2"
-                  disabled={actionLoading}
-                >
-                  {actionLoading ? (
-                    <RefreshCw className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Mail className="h-4 w-4" />
-                  )}
-                  <span>Send Confirmation</span>
+                <button className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                  Send Confirmation
                 </button>
-                <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 flex items-center space-x-2">
-                  <Edit className="h-4 w-4" />
-                  <span>Edit Booking</span>
+                <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                  Edit Booking
                 </button>
               </div>
             </div>

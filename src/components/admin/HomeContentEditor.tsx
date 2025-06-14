@@ -140,10 +140,10 @@ const HomeContentEditor = () => {
         'All equipment provided'
       ],
       heroImages: [
-        '/IMG_0967.webp',
-        'https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=1920',
-        'https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=1920',
-        'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1920'
+        'https://i.postimg.cc/d1MvNFGZ/temp-Image66m3b-Q.avif',
+        'https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif',
+        'https://i.postimg.cc/m2Z4581j/temp-Image3ioz3-A.avif',
+        'https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif'
       ],
       isVisible: true,
       order: 1

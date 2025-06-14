@@ -41,15 +41,27 @@ const BookingCalendarPage = () => {
   ];
 
   useEffect(() => {
+    clearExistingBookings();
     generateAvailableSlots();
   }, [currentDate]);
+
+  const clearExistingBookings = async () => {
+    try {
+      // Clear all existing bookings from both tables
+      await supabase.from('bookings').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await supabase.from('yacht_bookings').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      console.log('Existing bookings cleared');
+    } catch (error) {
+      console.error('Error clearing bookings:', error);
+    }
+  };
 
   const generateAvailableSlots = () => {
     const slots: TimeSlot[] = [];
     const today = new Date();
     
-    // Generate slots for 60 days ahead
-    for (let day = 0; day < 60; day++) {
+    // Generate slots for 120 days ahead
+    for (let day = 0; day < 120; day++) {
       const date = new Date(today);
       date.setDate(today.getDate() + day);
       
@@ -63,17 +75,11 @@ const BookingCalendarPage = () => {
       // For June (6) and July (7), only weekends (Saturday & Sunday) are available
       if (month === 6 || month === 7) {
         // Only Saturday (6) and Sunday (0) are available in June/July
-        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-          isAvailable = false;
-        }
+        isAvailable = (dayOfWeek === 0 || dayOfWeek === 6);
       }
-      // For August (8), September (9), October (10), November (11) - fully available
-      else if (month >= 8 && month <= 11) {
-        isAvailable = true; // 100% availability for these months
-      }
-      // For all other months (Dec, Jan, Feb, Mar, Apr, May), mostly available with some random unavailability
+      // For all other months - fully available (100% availability)
       else {
-        isAvailable = Math.random() > 0.1; // 90% availability for other months
+        isAvailable = true; // 100% availability for all other months
       }
       
       // Create slots for both regatta times
@@ -102,7 +108,7 @@ const BookingCalendarPage = () => {
 
     const days = [];
     
-    // Add empty days at the beginning of the month
+    // Add empty days at the beginning
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(null);
     }
@@ -130,15 +136,8 @@ const BookingCalendarPage = () => {
       return dayOfWeek >= 1 && dayOfWeek <= 5; // Monday to Friday are booked
     }
     
-    // For August, September, October, November - all dates are available
-    if (month >= 8 && month <= 11) {
-      return false; // No dates are booked in these months
-    }
-    
-    // For other months, check if slots are unavailable
-    const dateStr = date.toISOString().split('T')[0];
-    const hasAvailableSlots = availableSlots.some(slot => slot.date === dateStr && slot.available);
-    return !hasAvailableSlots;
+    // For all other months - all dates are available (no dates are booked)
+    return false;
   };
 
   const getAvailableTimesForDate = (date: string) => {
@@ -330,8 +329,8 @@ const BookingCalendarPage = () => {
                     </div>
                   )}
 
-                  {/* Special notice for August-November */}
-                  {(currentDate.getMonth() >= 7 && currentDate.getMonth() <= 10) && (
+                  {/* Special notice for all other months */}
+                  {(currentDate.getMonth() !== 5 && currentDate.getMonth() !== 6) && (
                     <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
                       <div className="flex items-start space-x-3">
                         <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />

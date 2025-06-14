@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle, AlertCircle } from 'lucide-react';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -29,23 +28,22 @@ const ContactPage = () => {
     setError('');
 
     try {
-      // Insert contact inquiry into Supabase
-      const { error: insertError } = await supabase
-        .from('contact_inquiries')
-        .insert({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone || null,
-          subject: formData.subject,
-          message: formData.message,
-          status: 'new'
-        });
+      // Отправляем данные в Supabase Edge Function
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-contact-inquiry`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
 
-      if (insertError) {
-        throw insertError;
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Произошла ошибка при отправке сообщения');
       }
 
-      // Success - show confirmation and reset form
+      // Успешная отправка - показываем подтверждение и сбрасываем форму
       setSubmitted(true);
       setFormData({
         name: '',
@@ -55,8 +53,8 @@ const ContactPage = () => {
         message: ''
       });
     } catch (error: any) {
-      console.error('Error submitting contact form:', error);
-      setError(error.message || 'An error occurred while sending your message. Please try again.');
+      console.error('Ошибка отправки формы:', error);
+      setError(error.message || 'Произошла ошибка при отправке сообщения. Пожалуйста, попробуйте еще раз.');
     } finally {
       setLoading(false);
     }
@@ -182,8 +180,11 @@ const ContactPage = () => {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Error Message */}
                   {error && (
-                    <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                      <p className="text-red-600 text-sm">{error}</p>
+                    <div className="p-4 bg-red-50 border border-red-200 rounded-lg" role="alert">
+                      <div className="flex items-start space-x-2">
+                        <AlertCircle className="h-4 w-4 text-red-600 mt-0.5 flex-shrink-0" />
+                        <p className="text-red-600 text-sm">{error}</p>
+                      </div>
                     </div>
                   )}
 

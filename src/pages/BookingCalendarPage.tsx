@@ -1,26 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, Users, CreditCard, CheckCircle, AlertCircle, ArrowLeft, ArrowRight, Ship, Euro, User, Mail, Phone, Lock } from 'lucide-react';
+import { Calendar, Clock, Users, CreditCard, CheckCircle, AlertCircle, ArrowLeft, ArrowRight, Euro, User, Mail, Phone, Lock } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
-interface YachtSlot {
+interface TimeSlot {
   id: string;
-  yacht_id: string;
-  yacht_name: string;
   date: string;
-  start_time: string;
-  end_time: string;
+  time: string;
   available: boolean;
   price_per_person: number;
   max_participants: number;
 }
 
 interface BookingData {
-  start_date: string;
-  end_date: string;
-  start_time: string;
-  end_time: string;
+  date: string;
+  time: string;
   participants: number;
-  yacht_id: string;
   total_price: number;
   customer_name: string;
   customer_email: string;
@@ -32,37 +26,18 @@ interface BookingData {
 
 const BookingCalendarPage = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedStartDate, setSelectedStartDate] = useState<string>('');
-  const [selectedEndDate, setSelectedEndDate] = useState<string>('');
-  const [selectedStartTime, setSelectedStartTime] = useState<string>('');
-  const [selectedEndTime, setSelectedEndTime] = useState<string>('');
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [selectedTime, setSelectedTime] = useState<string>('');
   const [participants, setParticipants] = useState(1);
   const [step, setStep] = useState(1); // 1: Calendar, 2: Time, 3: Details, 4: Payment
-  const [availableSlots, setAvailableSlots] = useState<YachtSlot[]>([]);
-  const [selectedYacht, setSelectedYacht] = useState<string>('');
+  const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(false);
   const [bookingData, setBookingData] = useState<Partial<BookingData>>({});
 
-  // Fixed regatta time slots - only 8:30 and 13:00
+  // Fixed regatta time slots - only 8:30 and 13:30
   const regattaTimeSlots = [
-    { start: '08:30', end: '12:30', name: 'Morning Regatta' },
-    { start: '13:00', end: '17:00', name: 'Afternoon Regatta' }
-  ];
-
-  // J-70 yacht fleet with 5-person capacity
-  const yachts = [
-    { id: 'a1b2c3d4-e5f6-7890-1234-567890abcdef', name: 'J-70 "Adriatic Wind"', capacity: 5 },
-    { id: 'b2c3d4e5-f6g7-8901-2345-678901bcdefg', name: 'J-70 "Lake Spirit"', capacity: 5 },
-    { id: 'c3d4e5f6-g7h8-9012-3456-789012cdefgh', name: 'J-70 "Garda Dream"', capacity: 5 },
-    { id: 'd4e5f6g7-h8i9-0123-4567-890123defghi', name: 'J-70 "Mountain View"', capacity: 5 },
-    { id: 'e5f6g7h8-i9j0-1234-5678-901234efghij', name: 'J-70 "Blue Horizon"', capacity: 5 },
-    { id: 'f6g7h8i9-j0k1-2345-6789-012345fghijk', name: 'J-70 "Wind Dancer"', capacity: 5 },
-    { id: 'g7h8i9j0-k1l2-3456-7890-123456ghijkl', name: 'J-70 "Sunset Sail"', capacity: 5 },
-    { id: 'h8i9j0k1-l2m3-4567-8901-234567hijklm', name: 'J-70 "Alpine Breeze"', capacity: 5 },
-    { id: 'i9j0k1l2-m3n4-5678-9012-345678ijklmn', name: 'J-70 "Crystal Waters"', capacity: 5 },
-    { id: 'j0k1l2m3-n4o5-6789-0123-456789jklmno', name: 'J-70 "Freedom"', capacity: 5 },
-    { id: 'k1l2m3n4-o5p6-7890-1234-567890klmnop', name: 'J-70 "Serenity"', capacity: 5 },
-    { id: 'l2m3n4o5-p6q7-8901-2345-678901lmnopq', name: 'J-70 "Majestic"', capacity: 5 }
+    { time: '08:30-12:30', name: 'Morning Regatta', start: '08:30', end: '12:30' },
+    { time: '13:30-17:30', name: 'Afternoon Regatta', start: '13:30', end: '17:30' }
   ];
 
   useEffect(() => {
@@ -70,31 +45,36 @@ const BookingCalendarPage = () => {
   }, [currentDate]);
 
   const generateAvailableSlots = () => {
-    const slots: YachtSlot[] = [];
+    const slots: TimeSlot[] = [];
     const today = new Date();
     
-    // Generate slots for 30 days ahead
-    for (let day = 0; day < 30; day++) {
+    // Generate slots for 60 days ahead
+    for (let day = 0; day < 60; day++) {
       const date = new Date(today);
       date.setDate(today.getDate() + day);
       
-      yachts.forEach(yacht => {
-        // Randomly make some slots unavailable for realism
-        const isAvailable = Math.random() > 0.3;
-        
-        // Only create slots for the two fixed regatta times
-        regattaTimeSlots.forEach((timeSlot) => {
-          slots.push({
-            id: `${yacht.id}-${date.toISOString().split('T')[0]}-${timeSlot.start}`,
-            yacht_id: yacht.id,
-            yacht_name: yacht.name,
-            date: date.toISOString().split('T')[0],
-            start_time: timeSlot.start,
-            end_time: timeSlot.end,
-            available: isAvailable,
-            price_per_person: 195, // Fixed price for 4-hour regatta
-            max_participants: yacht.capacity
-          });
+      const dateStr = date.toISOString().split('T')[0];
+      const month = date.getMonth() + 1; // JavaScript months are 0-indexed
+      const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
+      
+      // For June (6) and July (7), only weekends are available
+      let isAvailable = true;
+      if (month === 6 || month === 7) {
+        isAvailable = dayOfWeek === 0 || dayOfWeek === 6; // Only Sunday or Saturday
+      } else {
+        // For other months, randomly make some slots unavailable for realism
+        isAvailable = Math.random() > 0.2;
+      }
+      
+      // Create slots for both regatta times
+      regattaTimeSlots.forEach((timeSlot) => {
+        slots.push({
+          id: `${dateStr}-${timeSlot.start}`,
+          date: dateStr,
+          time: timeSlot.time,
+          available: isAvailable,
+          price_per_person: 195, // Fixed price for 4-hour regatta
+          max_participants: 5 // Max 5 people per regatta
         });
       });
     }
@@ -130,40 +110,34 @@ const BookingCalendarPage = () => {
     return availableSlots.some(slot => slot.date === dateStr && slot.available);
   };
 
-  const getAvailableYachtsForDate = (date: string) => {
+  const isDateBooked = (date: Date) => {
+    const month = date.getMonth() + 1;
+    const dayOfWeek = date.getDay();
+    
+    // For June and July, weekdays are "booked"
+    if (month === 6 || month === 7) {
+      return dayOfWeek !== 0 && dayOfWeek !== 6; // Not Sunday or Saturday
+    }
+    
+    return false;
+  };
+
+  const getAvailableTimesForDate = (date: string) => {
     return availableSlots.filter(slot => slot.date === date && slot.available);
   };
 
-  const calculateDuration = (startTime: string, endTime: string) => {
-    const start = parseInt(startTime.split(':')[0]);
-    const end = parseInt(endTime.split(':')[0]);
-    return end - start;
-  };
-
   const calculateTotalPrice = () => {
-    if (!selectedStartTime || !selectedEndTime) return 0;
-    // Fixed price of €195 per person for 4-hour regatta
     return 195 * participants;
   };
 
   const handleDateSelect = (date: Date) => {
     const dateStr = date.toISOString().split('T')[0];
-    
-    if (!selectedStartDate) {
-      setSelectedStartDate(dateStr);
-      setSelectedEndDate(dateStr); // Default to one day
-    } else if (!selectedEndDate || dateStr < selectedStartDate) {
-      setSelectedStartDate(dateStr);
-      setSelectedEndDate(dateStr);
-    } else {
-      setSelectedEndDate(dateStr);
-    }
+    setSelectedDate(dateStr);
+    setSelectedTime(''); // Reset time selection when date changes
   };
 
-  const handleTimeSelect = (startTime: string, endTime: string, yachtId: string) => {
-    setSelectedStartTime(startTime);
-    setSelectedEndTime(endTime);
-    setSelectedYacht(yachtId);
+  const handleTimeSelect = (time: string) => {
+    setSelectedTime(time);
   };
 
   const handleBookingSubmit = async () => {
@@ -174,11 +148,8 @@ const BookingCalendarPage = () => {
       // For now simulate successful payment
       
       const booking = {
-        yacht_id: selectedYacht,
-        start_date: selectedStartDate,
-        end_date: selectedEndDate,
-        start_time: selectedStartTime,
-        end_time: selectedEndTime,
+        booking_date: selectedDate,
+        time_slot: selectedTime,
         participants,
         total_price: calculateTotalPrice(),
         customer_name: bookingData.customer_name,
@@ -190,7 +161,7 @@ const BookingCalendarPage = () => {
 
       // Save to database
       const { error } = await supabase
-        .from('yacht_bookings')
+        .from('bookings')
         .insert(booking);
 
       if (error) throw error;
@@ -199,10 +170,8 @@ const BookingCalendarPage = () => {
       
       // Reset form
       setStep(1);
-      setSelectedStartDate('');
-      setSelectedEndDate('');
-      setSelectedStartTime('');
-      setSelectedEndTime('');
+      setSelectedDate('');
+      setSelectedTime('');
       setParticipants(1);
       setBookingData({});
       
@@ -235,10 +204,10 @@ const BookingCalendarPage = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">
-            Book a J-70 Regatta
+            Book Your Regatta Experience
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Choose a date and time for an unforgettable J-70 yacht racing experience on Lake Garda
+            Choose a date and time for an unforgettable yacht racing experience on Lake Garda
           </p>
           <div className="mt-4 flex justify-center space-x-8 text-sm text-gray-600">
             <div className="flex items-center space-x-2">
@@ -247,11 +216,11 @@ const BookingCalendarPage = () => {
             </div>
             <div className="flex items-center space-x-2">
               <Clock className="h-4 w-4" />
-              <span>Afternoon: 13:00-17:00</span>
+              <span>Afternoon: 13:30-17:30</span>
             </div>
             <div className="flex items-center space-x-2">
               <Users className="h-4 w-4" />
-              <span>Max 5 people per yacht</span>
+              <span>Max 5 people per regatta</span>
             </div>
           </div>
         </div>
@@ -261,7 +230,7 @@ const BookingCalendarPage = () => {
           <div className="flex items-center justify-between">
             {[
               { step: 1, title: 'Select Date', icon: Calendar },
-              { step: 2, title: 'Time and Yacht', icon: Clock },
+              { step: 2, title: 'Time & Participants', icon: Clock },
               { step: 3, title: 'Details', icon: Users },
               { step: 4, title: 'Payment', icon: CreditCard }
             ].map((item, index) => (
@@ -341,9 +310,8 @@ const BookingCalendarPage = () => {
 
                       const dateStr = date.toISOString().split('T')[0];
                       const isAvailable = isDateAvailable(date);
-                      const isSelected = dateStr === selectedStartDate || dateStr === selectedEndDate;
-                      const isInRange = selectedStartDate && selectedEndDate && 
-                        dateStr >= selectedStartDate && dateStr <= selectedEndDate;
+                      const isBooked = isDateBooked(date);
+                      const isSelected = dateStr === selectedDate;
                       const isPast = date < new Date();
 
                       return (
@@ -351,58 +319,65 @@ const BookingCalendarPage = () => {
                           key={index}
                           onClick={() => !isPast && isAvailable && handleDateSelect(date)}
                           disabled={isPast || !isAvailable}
-                          className={`h-12 rounded-lg text-sm font-medium transition-all duration-300 ${
+                          className={`h-12 rounded-lg text-sm font-medium transition-all duration-300 relative ${
                             isPast
                               ? 'text-gray-300 cursor-not-allowed'
                               : isSelected
                               ? 'bg-blue-600 text-white scale-110 shadow-lg'
-                              : isInRange
-                              ? 'bg-blue-100 text-blue-600'
+                              : isBooked
+                              ? 'bg-red-100 text-red-600 cursor-not-allowed'
                               : isAvailable
                               ? 'hover:bg-blue-50 text-gray-900 border border-gray-200'
                               : 'text-gray-400 cursor-not-allowed'
                           }`}
                         >
                           {date.getDate()}
+                          {isBooked && (
+                            <div className="absolute bottom-0 left-0 right-0 text-xs text-red-600 font-bold">
+                              Booked
+                            </div>
+                          )}
                         </button>
                       );
                     })}
                   </div>
 
-                  {/* Single Day Toggle */}
-                  <div className="flex items-center space-x-3 mt-6">
-                    <input
-                      type="checkbox"
-                      id="singleDay"
-                      checked={selectedStartDate === selectedEndDate}
-                      onChange={(e) => {
-                        if (e.target.checked && selectedStartDate) {
-                          setSelectedEndDate(selectedStartDate);
-                        }
-                      }}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <label htmlFor="singleDay" className="text-gray-700">
-                      One-day regatta
-                    </label>
+                  {/* Legend */}
+                  <div className="mt-6 flex flex-wrap gap-4 text-sm">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 bg-blue-600 rounded"></div>
+                      <span>Selected</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border border-gray-200 rounded"></div>
+                      <span>Available</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 bg-red-100 rounded"></div>
+                      <span>Booked</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded"></div>
+                      <span>Past/Unavailable</span>
+                    </div>
                   </div>
 
-                  {selectedStartDate && (
+                  {selectedDate && (
                     <button
                       onClick={() => setStep(2)}
                       className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105"
                     >
-                      Select time and yacht
+                      Select time and participants
                     </button>
                   )}
                 </div>
               )}
 
-              {/* Step 2: Time and Yacht Selection */}
+              {/* Step 2: Time and Participants Selection */}
               {step === 2 && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-bold text-gray-900">Select time and yacht</h2>
+                    <h2 className="text-2xl font-bold text-gray-900">Select time and participants</h2>
                     <button
                       onClick={() => setStep(1)}
                       className="text-blue-600 hover:text-blue-700 font-medium"
@@ -413,15 +388,14 @@ const BookingCalendarPage = () => {
 
                   <div className="bg-blue-50 p-4 rounded-lg">
                     <p className="text-blue-800">
-                      <strong>Selected date:</strong> {selectedStartDate}
-                      {selectedEndDate !== selectedStartDate && ` - ${selectedEndDate}`}
+                      <strong>Selected date:</strong> {new Date(selectedDate).toLocaleDateString()}
                     </p>
                   </div>
 
                   {/* Participants Selection */}
                   <div>
                     <label className="block text-lg font-semibold text-gray-900 mb-4">
-                      Number of participants (max 5 per yacht)
+                      Number of participants (max 5 per regatta)
                     </label>
                     <div className="flex items-center space-x-4">
                       <button
@@ -446,18 +420,16 @@ const BookingCalendarPage = () => {
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Available regatta times</h3>
                     <div className="space-y-4">
-                      {getAvailableYachtsForDate(selectedStartDate).slice(0, 6).map((slot) => {
-                        const duration = calculateDuration(slot.start_time, slot.end_time);
+                      {getAvailableTimesForDate(selectedDate).map((slot) => {
                         const totalPrice = 195 * participants;
-                        const isSelected = selectedYacht === slot.yacht_id && 
-                          selectedStartTime === slot.start_time;
-                        const regattaName = slot.start_time === '08:30' ? 'Morning Regatta' : 'Afternoon Regatta';
+                        const isSelected = selectedTime === slot.time;
+                        const regattaName = slot.time.startsWith('08:30') ? 'Morning Regatta' : 'Afternoon Regatta';
 
                         return (
                           <div
                             key={slot.id}
-                            onClick={() => handleTimeSelect(slot.start_time, slot.end_time, slot.yacht_id)}
-                            className={`p-4 border-2 rounded-lg cursor-pointer transition-all duration-300 ${
+                            onClick={() => handleTimeSelect(slot.time)}
+                            className={`p-6 border-2 rounded-lg cursor-pointer transition-all duration-300 ${
                               isSelected
                                 ? 'border-blue-600 bg-blue-50 scale-105'
                                 : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
@@ -466,12 +438,12 @@ const BookingCalendarPage = () => {
                             <div className="flex items-center justify-between">
                               <div className="flex items-center space-x-4">
                                 <div className="bg-blue-100 p-3 rounded-lg">
-                                  <Ship className="h-6 w-6 text-blue-600" />
+                                  <Clock className="h-6 w-6 text-blue-600" />
                                 </div>
                                 <div>
-                                  <h4 className="font-semibold text-gray-900">{slot.yacht_name}</h4>
+                                  <h4 className="font-semibold text-gray-900 text-lg">{regattaName}</h4>
                                   <p className="text-gray-600">
-                                    {regattaName}: {slot.start_time} - {slot.end_time} ({duration} hours)
+                                    {slot.time} (4 hours)
                                   </p>
                                   <p className="text-sm text-gray-500">
                                     Up to {slot.max_participants} participants
@@ -493,7 +465,7 @@ const BookingCalendarPage = () => {
                     </div>
                   </div>
 
-                  {selectedYacht && (
+                  {selectedTime && (
                     <button
                       onClick={() => setStep(3)}
                       className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105"
@@ -687,32 +659,22 @@ const BookingCalendarPage = () => {
               <h3 className="text-xl font-bold text-gray-900 mb-6">Regatta Summary</h3>
               
               <div className="space-y-4 mb-6">
-                {selectedStartDate && (
+                {selectedDate && (
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Date:</span>
                     <span className="font-semibold">
-                      {selectedStartDate}
-                      {selectedEndDate !== selectedStartDate && ` - ${selectedEndDate}`}
+                      {new Date(selectedDate).toLocaleDateString()}
                     </span>
                   </div>
                 )}
                 
-                {selectedStartTime && selectedEndTime && (
+                {selectedTime && (
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Time:</span>
                     <span className="font-semibold">
-                      {selectedStartTime === '08:30' ? 'Morning' : 'Afternoon'} Regatta
+                      {selectedTime.startsWith('08:30') ? 'Morning' : 'Afternoon'} Regatta
                       <br />
-                      <span className="text-sm text-gray-500">{selectedStartTime} - {selectedEndTime}</span>
-                    </span>
-                  </div>
-                )}
-                
-                {selectedYacht && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Yacht:</span>
-                    <span className="font-semibold text-sm">
-                      {yachts.find(y => y.id === selectedYacht)?.name}
+                      <span className="text-sm text-gray-500">{selectedTime}</span>
                     </span>
                   </div>
                 )}
@@ -722,7 +684,7 @@ const BookingCalendarPage = () => {
                   <span className="font-semibold">{participants}</span>
                 </div>
                 
-                {selectedStartTime && selectedEndTime && (
+                {selectedTime && (
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Duration:</span>
                     <span className="font-semibold">4 hours</span>
@@ -730,7 +692,7 @@ const BookingCalendarPage = () => {
                 )}
               </div>
 
-              {selectedStartTime && selectedEndTime && (
+              {selectedTime && (
                 <div className="border-t border-gray-200 pt-4 mb-6">
                   <div className="flex justify-between items-center text-lg font-bold">
                     <span>Total:</span>

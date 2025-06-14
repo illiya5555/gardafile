@@ -291,7 +291,10 @@ const ContactPage = () => {
                   href="https://t.me/VETER_ITA"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center space-x-2 bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300"
+                  className="flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-colors duration-300"
+                  style={{ backgroundColor: '#0088cc', color: 'white' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#006699'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0088cc'}
                 >
                   <span>💬</span>
                   <span>Telegram</span>

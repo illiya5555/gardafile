@@ -97,7 +97,7 @@ const Header = () => {
                 <Facebook className="h-4 w-4" />
               </a>
               <a 
-                href="https://www.instagram.com/garda_racing_yacht_club?igsh=Zm1zMW85Nzl0aXN2&utm_source=qr"
+                href="https://www.instagram.com/garda_racing_yacht_club"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
@@ -161,7 +161,7 @@ const Header = () => {
                       <Facebook className="h-5 w-5" />
                     </a>
                     <a 
-                      href="https://www.instagram.com/garda_racing_yacht_club?igsh=Zm1zMW85Nzl0aXN2&utm_source=qr"
+                      href="https://www.instagram.com/garda_racing_yacht_club"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-600 hover:text-primary-600 transition-colors duration-300"

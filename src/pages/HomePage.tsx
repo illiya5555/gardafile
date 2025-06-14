@@ -5,16 +5,7 @@ import { supabase, Testimonial, testConnection } from '../lib/supabase';
 
 const HomePage = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [connectionError, setConnectionError] = useState(false);
-
-  // Hero gallery images that rotate every 7 seconds
-  const heroImages = [
-    'https://i.postimg.cc/d1MvNFGZ/temp-Image66m3b-Q.avif',
-        'https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif',
-        'https://i.postimg.cc/m2Z4581j/temp-Image3ioz3-A.avif',
-        'https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif'
-  ];
 
   // Experience section gallery images
   const experienceImages = [
@@ -71,17 +62,6 @@ const HomePage = () => {
   useEffect(() => {
     fetchTestimonials();
   }, []);
-
-  // Auto-rotate hero images every 7 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => 
-        (prevIndex + 1) % heroImages.length
-      );
-    }, 7000);
-
-    return () => clearInterval(interval);
-  }, [heroImages.length]);
 
   // Auto-rotate experience images every 5 seconds
   useEffect(() => {
@@ -207,40 +187,30 @@ const HomePage = () => {
 
   return (
     <div className="overflow-hidden">
-      {/* Hero Section with Auto-rotating Gallery */}
+      {/* Hero Section with Background Video */}
       <section className="relative min-h-screen flex items-center justify-center">
-        {/* Background Image Gallery */}
+        {/* Background Video */}
         <div className="absolute inset-0">
-          {heroImages.map((image, index) => (
-            <div
-              key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
-                index === currentImageIndex ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
-              <img
-                src={image}
-                alt={`Lake Garda sailing ${index + 1}`}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ))}
+          <iframe
+            src="https://www.youtube.com/embed/Y7sRZOTsXbQ?autoplay=1&mute=1&loop=1&playlist=Y7sRZOTsXbQ&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&disablekb=1&fs=0&cc_load_policy=0&playsinline=1&autohide=1"
+            title="Sailing Video Background"
+            className="w-full h-full object-cover"
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              width: '100vw',
+              height: '56.25vw', // 16:9 aspect ratio
+              minHeight: '100vh',
+              minWidth: '177.78vh', // 16:9 aspect ratio
+              transform: 'translate(-50%, -50%)',
+              pointerEvents: 'none'
+            }}
+            frameBorder="0"
+            allow="autoplay; encrypted-media"
+            allowFullScreen={false}
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-blue-900/70 via-blue-800/50 to-transparent"></div>
-        </div>
-
-        {/* Gallery Indicators */}
-        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
-          {heroImages.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentImageIndex(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentImageIndex 
-                  ? 'bg-white scale-110' 
-                  : 'bg-white/50 hover:bg-white/75'
-              }`}
-            />
-          ))}
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

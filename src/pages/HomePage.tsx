@@ -18,10 +18,10 @@ const HomePage = () => {
 
   // Experience section gallery images
   const experienceImages = [
-    'https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=800',
-    'https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=800',
-    'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=800',
-    'https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=800'
+    'https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif',
+    'https://i.postimg.cc/m2Z4581j/temp-Image3ioz3-A.avif',
+    'https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif',
+    'https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif'
   ];
 
   // Location section gallery images - Lake Garda specific

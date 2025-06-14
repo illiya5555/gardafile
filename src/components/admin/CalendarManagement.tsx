@@ -21,7 +21,7 @@ import { supabase } from '../../lib/supabase';
 interface AvailableSlot {
   id: string;
   date: string;
-  time_slot: string;
+  time: string;
   max_participants: number;
   price_per_person: number;
   is_active: boolean;
@@ -48,6 +48,13 @@ const CalendarManagement = () => {
     show: false,
     date: null,
     existingSlots: []
+  });
+  const [showAddSlotModal, setShowAddSlotModal] = useState(false);
+  const [editingSlot, setEditingSlot] = useState<AvailableSlot | null>(null);
+  const [newSlot, setNewSlot] = useState({
+    time: '09:00-13:00',
+    max_participants: 5,
+    price_per_person: 195
   });
 
   const timeSlots = [
@@ -230,6 +237,148 @@ const CalendarManagement = () => {
     } catch (error: any) {
       console.error('Error removing slots:', error);
       alert('Error removing slots: ' + error.message);
+    }
+  };
+
+  const addTimeSlot = async () => {
+    if (!slotActionModal.date) return;
+
+    try {
+      const dateStr = slotActionModal.date.toISOString().split('T')[0];
+      
+      const { data, error } = await supabase
+        .from('time_slots')
+        .insert({
+          date: dateStr,
+          time: newSlot.time,
+          max_participants: newSlot.max_participants,
+          price_per_person: newSlot.price_per_person,
+          is_active: true
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setAvailableSlots(prev => [...prev, data]);
+      setShowAddSlotModal(false);
+      setNewSlot({
+        time: '09:00-13:00',
+        max_participants: 5,
+        price_per_person: 195
+      });
+      
+      // Refresh the slot action modal with the new slot
+      const updatedSlots = [...slotActionModal.existingSlots, data];
+      setSlotActionModal({
+        ...slotActionModal,
+        existingSlots: updatedSlots
+      });
+      
+      alert('Time slot added successfully!');
+    } catch (error: any) {
+      console.error('Error adding time slot:', error);
+      alert('Error adding time slot: ' + error.message);
+    }
+  };
+
+  const updateTimeSlot = async () => {
+    if (!editingSlot) return;
+
+    try {
+      const { error } = await supabase
+        .from('time_slots')
+        .update({
+          time: editingSlot.time,
+          max_participants: editingSlot.max_participants,
+          price_per_person: editingSlot.price_per_person,
+          is_active: editingSlot.is_active
+        })
+        .eq('id', editingSlot.id);
+
+      if (error) throw error;
+
+      setAvailableSlots(prev => 
+        prev.map(slot => 
+          slot.id === editingSlot.id ? editingSlot : slot
+        )
+      );
+
+      // Update the slot in the modal as well
+      if (slotActionModal.show && slotActionModal.existingSlots.some(slot => slot.id === editingSlot.id)) {
+        setSlotActionModal({
+          ...slotActionModal,
+          existingSlots: slotActionModal.existingSlots.map(slot => 
+            slot.id === editingSlot.id ? editingSlot : slot
+          )
+        });
+      }
+
+      setEditingSlot(null);
+      alert('Time slot updated successfully!');
+    } catch (error: any) {
+      console.error('Error updating time slot:', error);
+      alert('Error updating time slot: ' + error.message);
+    }
+  };
+
+  const deleteTimeSlot = async (slotId: string) => {
+    if (!confirm('Are you sure you want to delete this time slot?')) return;
+
+    try {
+      const { error } = await supabase
+        .from('time_slots')
+        .delete()
+        .eq('id', slotId);
+
+      if (error) throw error;
+
+      setAvailableSlots(prev => prev.filter(slot => slot.id !== slotId));
+      
+      // Update the modal as well
+      if (slotActionModal.show) {
+        setSlotActionModal({
+          ...slotActionModal,
+          existingSlots: slotActionModal.existingSlots.filter(slot => slot.id !== slotId)
+        });
+      }
+      
+      alert('Time slot deleted successfully!');
+    } catch (error: any) {
+      console.error('Error deleting time slot:', error);
+      alert('Error deleting time slot: ' + error.message);
+    }
+  };
+
+  const toggleSlotStatus = async (slot: AvailableSlot) => {
+    try {
+      const { error } = await supabase
+        .from('time_slots')
+        .update({ is_active: !slot.is_active })
+        .eq('id', slot.id);
+
+      if (error) throw error;
+
+      // Update both the main state and the modal state
+      const updatedSlot = { ...slot, is_active: !slot.is_active };
+      
+      setAvailableSlots(prev => 
+        prev.map(s => s.id === slot.id ? updatedSlot : s)
+      );
+      
+      if (slotActionModal.show) {
+        setSlotActionModal({
+          ...slotActionModal,
+          existingSlots: slotActionModal.existingSlots.map(s => 
+            s.id === slot.id ? updatedSlot : s
+          )
+        });
+      }
+      
+      alert(`Time slot ${updatedSlot.is_active ? 'activated' : 'deactivated'} successfully!`);
+    } catch (error: any) {
+      console.error('Error toggling slot status:', error);
+      alert('Error updating slot status: ' + error.message);
     }
   };
 
@@ -442,8 +591,74 @@ const CalendarManagement = () => {
                 )}
               </div>
 
+              {/* Existing Time Slots */}
+              {slotActionModal.existingSlots.length > 0 && (
+                <div className="mb-6">
+                  <h4 className="font-semibold text-gray-900 mb-3">Time Slots:</h4>
+                  <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                    {slotActionModal.existingSlots.map(slot => (
+                      <div 
+                        key={slot.id}
+                        className={`p-3 rounded-lg border ${
+                          slot.is_active 
+                            ? 'border-green-200 bg-green-50' 
+                            : 'border-gray-200 bg-gray-50'
+                        }`}
+                      >
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <p className="font-medium">{slot.time}</p>
+                            <p className="text-sm text-gray-600">
+                              €{slot.price_per_person} per person • Max {slot.max_participants} people
+                            </p>
+                          </div>
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => toggleSlotStatus(slot)}
+                              className={`p-1 rounded ${
+                                slot.is_active 
+                                  ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                              }`}
+                              title={slot.is_active ? 'Deactivate' : 'Activate'}
+                            >
+                              {slot.is_active ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
+                            </button>
+                            <button
+                              onClick={() => setEditingSlot(slot)}
+                              className="p-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                              title="Edit"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => deleteTimeSlot(slot.id)}
+                              className="p-1 bg-red-100 text-red-700 rounded hover:bg-red-200"
+                              title="Delete"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Action Buttons */}
               <div className="space-y-3">
+                <button
+                  onClick={() => setShowAddSlotModal(true)}
+                  className="w-full flex items-center justify-center space-x-3 p-4 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors duration-300"
+                >
+                  <Plus className="h-5 w-5 text-blue-600" />
+                  <div className="text-left">
+                    <div className="font-semibold text-blue-900">Add Time Slot</div>
+                    <div className="text-sm text-blue-700">Create a new time slot for this date</div>
+                  </div>
+                </button>
+
                 <button
                   onClick={() => makeAvailableForBooking(slotActionModal.date!)}
                   className="w-full flex items-center justify-center space-x-3 p-4 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors duration-300"
@@ -451,7 +666,7 @@ const CalendarManagement = () => {
                   <CheckCircle className="h-5 w-5 text-green-600" />
                   <div className="text-left">
                     <div className="font-semibold text-green-900">Available for Booking</div>
-                    <div className="text-sm text-green-700">Clients can book this date</div>
+                    <div className="text-sm text-green-700">Add default time slots and make available</div>
                   </div>
                 </button>
 
@@ -461,8 +676,8 @@ const CalendarManagement = () => {
                 >
                   <X className="h-5 w-5 text-gray-600" />
                   <div className="text-left">
-                    <div className="font-semibold text-gray-900">Booked</div>
-                    <div className="text-sm text-gray-600">Block this date from client booking</div>
+                    <div className="font-semibold text-gray-900">Block All Slots</div>
+                    <div className="text-sm text-gray-600">Make all slots unavailable for booking</div>
                   </div>
                 </button>
 
@@ -485,8 +700,169 @@ const CalendarManagement = () => {
                 onClick={() => setSlotActionModal({ show: false, date: null, existingSlots: [] })}
                 className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-300"
               >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Slot Modal */}
+      {showAddSlotModal && slotActionModal.date && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4">
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900">
+                Add Time Slot - {slotActionModal.date.toLocaleDateString()}
+              </h3>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Time Slot
+                </label>
+                <select
+                  value={newSlot.time}
+                  onChange={(e) => setNewSlot(prev => ({ ...prev, time: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {timeSlots.map(slot => (
+                    <option key={slot} value={slot}>{slot}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Max Participants
+                </label>
+                <input
+                  type="number"
+                  value={newSlot.max_participants}
+                  onChange={(e) => setNewSlot(prev => ({ ...prev, max_participants: parseInt(e.target.value) }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  min="1"
+                  max="10"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Price per Person (€)
+                </label>
+                <input
+                  type="number"
+                  value={newSlot.price_per_person}
+                  onChange={(e) => setNewSlot(prev => ({ ...prev, price_per_person: parseInt(e.target.value) }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  min="50"
+                  step="5"
+                />
+              </div>
+            </div>
+            <div className="p-6 border-t border-gray-200 flex justify-end space-x-4">
+              <button
+                onClick={() => setShowAddSlotModal(false)}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+              >
                 Cancel
               </button>
+              <button
+                onClick={addTimeSlot}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Add Slot
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Slot Modal */}
+      {editingSlot && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4">
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900">Edit Time Slot</h3>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Time Slot
+                </label>
+                <select
+                  value={editingSlot.time}
+                  onChange={(e) => setEditingSlot(prev => prev ? ({ ...prev, time: e.target.value }) : null)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {timeSlots.map(slot => (
+                    <option key={slot} value={slot}>{slot}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Max Participants
+                </label>
+                <input
+                  type="number"
+                  value={editingSlot.max_participants}
+                  onChange={(e) => setEditingSlot(prev => prev ? ({ ...prev, max_participants: parseInt(e.target.value) }) : null)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  min="1"
+                  max="10"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Price per Person (€)
+                </label>
+                <input
+                  type="number"
+                  value={editingSlot.price_per_person}
+                  onChange={(e) => setEditingSlot(prev => prev ? ({ ...prev, price_per_person: parseInt(e.target.value) }) : null)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  min="50"
+                  step="5"
+                />
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  id="is_active"
+                  checked={editingSlot.is_active}
+                  onChange={(e) => setEditingSlot(prev => prev ? ({ ...prev, is_active: e.target.checked }) : null)}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label htmlFor="is_active" className="text-sm font-medium text-gray-700">
+                  Active (available for booking)
+                </label>
+              </div>
+            </div>
+            <div className="p-6 border-t border-gray-200 flex justify-between">
+              <button
+                onClick={() => deleteTimeSlot(editingSlot.id)}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+              >
+                Delete
+              </button>
+              <div className="flex space-x-4">
+                <button
+                  onClick={() => setEditingSlot(null)}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={updateTimeSlot}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                >
+                  Save Changes
+                </button>
+              </div>
             </div>
           </div>
         </div>

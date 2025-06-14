@@ -20,21 +20,55 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     headers: {
       'X-Client-Info': 'garda-racing-app'
     }
+  },
+  db: {
+    schema: 'public'
+  },
+  realtime: {
+    params: {
+      eventsPerSecond: 10
+    }
   }
 });
 
-// Test connection function
+// Test connection function with better error handling
 export const testConnection = async () => {
   try {
-    const { data, error } = await supabase.from('testimonials').select('count').limit(1);
+    console.log('Testing Supabase connection to:', supabaseUrl);
+    
+    // Use a simple query that should work with any Supabase instance
+    const { data, error } = await supabase
+      .from('testimonials')
+      .select('id')
+      .limit(1);
+    
     if (error) {
-      console.error('Supabase connection test failed:', error);
+      console.error('Supabase connection test failed:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code
+      });
       return false;
     }
+    
     console.log('Supabase connection successful');
     return true;
   } catch (error) {
-    console.error('Supabase connection test error:', error);
+    console.error('Supabase connection test error:', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      url: supabaseUrl,
+      hasKey: !!supabaseAnonKey
+    });
+    
+    // Check if it's a network error
+    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+      console.error('Network error: Unable to reach Supabase. Please check:');
+      console.error('1. Your internet connection');
+      console.error('2. The VITE_SUPABASE_URL in your .env file');
+      console.error('3. That your Supabase project is active and accessible');
+    }
+    
     return false;
   }
 };

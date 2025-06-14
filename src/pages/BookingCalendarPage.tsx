@@ -162,9 +162,16 @@ const BookingCalendarPage = () => {
     setLoading(true);
     
     try {
-      // Here would be payment system integration
-      // For now simulate successful payment
-      
+      // Validate required fields
+      if (!bookingData.customer_name || !bookingData.customer_email || !bookingData.customer_phone) {
+        throw new Error('Please fill in all required customer information');
+      }
+
+      if (!selectedDate || !selectedTime) {
+        throw new Error('Please select date and time');
+      }
+
+      // Create booking object with all required fields
       const booking = {
         booking_date: selectedDate,
         time_slot: selectedTime,
@@ -174,16 +181,26 @@ const BookingCalendarPage = () => {
         customer_email: bookingData.customer_email,
         customer_phone: bookingData.customer_phone,
         status: 'confirmed',
-        created_at: new Date().toISOString()
+        deposit_paid: 0,
+        special_requests: null,
+        user_id: null // Allow null for anonymous bookings
       };
 
+      console.log('Submitting booking:', booking);
+
       // Save to database
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('bookings')
-        .insert(booking);
+        .insert(booking)
+        .select()
+        .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
 
+      console.log('Booking created successfully:', data);
       alert('Booking successfully created! You will receive confirmation by email.');
       
       // Reset form
@@ -367,21 +384,6 @@ const BookingCalendarPage = () => {
                       const isBooked = isDateBooked(date);
                       const isSelected = dateStr === selectedDate;
                       const isPast = date < new Date();
-                      const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
-                      const month = date.getMonth() + 1;
-
-                      // DEBUG LOGGING - Add console logs here
-                      if (dayOfWeek === 6) { // Only log Saturdays
-                        console.log(`🔍 DEBUG Saturday ${dateStr}:`, {
-                          date: dateStr,
-                          dayOfWeek: dayOfWeek,
-                          month: month,
-                          isAvailable: isAvailable,
-                          isBooked: isBooked,
-                          isPast: isPast,
-                          isSelected: isSelected
-                        });
-                      }
 
                       return (
                         <button

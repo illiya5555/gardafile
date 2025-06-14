@@ -418,16 +418,6 @@ const HomePage = () => {
                   />
                 ))}
               </div>
-              
-              <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-lg">
-                <div className="flex items-center space-x-3">
-                  <Wind className="h-8 w-8 text-blue-500" />
-                  <div>
-                    <p className="font-semibold text-gray-900">Perfect Conditions</p>
-                    <p className="text-sm text-gray-600">Consistent winds daily</p>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { X, Lock, Eye, EyeOff, AlertCircle, ExternalLink } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface AdminLoginProps {
@@ -30,11 +30,13 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
       if (error) {
         console.error('Login error:', error);
         
-        // Handle network-related errors
+        // Enhanced error handling for different types of failures
         if (error.message === 'Failed to fetch' || error.message.includes('fetch')) {
-          setError('Ошибка подключения к серверу. Проверьте подключение к интернету и конфигурацию Supabase. Убедитесь, что переменные окружения VITE_SUPABASE_URL и VITE_SUPABASE_ANON_KEY настроены правильно.');
+          setError('Ошибка подключения к серверу. Проверьте настройки Supabase в файле .env и убедитесь, что указаны правильные значения VITE_SUPABASE_URL и VITE_SUPABASE_ANON_KEY из вашего проекта Supabase.');
         } else if (error.message === 'Invalid login credentials') {
-          setError('Неверный email или пароль. Убедитесь, что пользователь зарегистрирован в системе.');
+          setError('Неверный email или пароль. Убедитесь, что пользователь зарегистрирован в системе с ролью администратора.');
+        } else if (error.message.includes('timeout') || error.message.includes('network')) {
+          setError('Превышено время ожидания соединения. Проверьте подключение к интернету и статус вашего проекта Supabase.');
         } else {
           setError(`Ошибка входа: ${error.message}`);
         }
@@ -57,9 +59,10 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
         if (profileError) {
           console.error('Profile fetch error:', profileError);
           
-          // Handle network-related errors for profile fetch
           if (profileError.message === 'Failed to fetch' || profileError.message.includes('fetch')) {
-            setError('Ошибка подключения при получении профиля. Проверьте подключение к интернету и конфигурацию Supabase.');
+            setError('Ошибка подключения при получении профиля. Проверьте настройки Supabase и подключение к интернету.');
+          } else if (profileError.code === 'PGRST116') {
+            setError('Профиль пользователя не найден. Убедитесь, что пользователь создан в таблице profiles с соответствующей ролью.');
           } else {
             setError(`Ошибка при получении профиля пользователя: ${profileError.message}`);
           }
@@ -80,16 +83,20 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
           onClose();
         } else {
           console.error('Non-admin attempted to access admin panel');
-          setError('У вас нет прав администратора');
+          setError('У вас нет прав администратора. Обратитесь к системному администратору для получения доступа.');
           await supabase.auth.signOut();
         }
       }
     } catch (error: any) {
       console.error('Unexpected error during login:', error);
       
-      // Handle network-related errors in catch block
+      // Enhanced error handling for network and configuration issues
       if (error.message === 'Failed to fetch' || error.message.includes('fetch') || error.name === 'TypeError') {
-        setError('Ошибка подключения к серверу. Проверьте подключение к интернету и убедитесь, что Supabase настроен правильно. Проверьте переменные окружения VITE_SUPABASE_URL и VITE_SUPABASE_ANON_KEY.');
+        setError('Ошибка подключения к Supabase. Убедитесь, что в файле .env указаны правильные значения VITE_SUPABASE_URL и VITE_SUPABASE_ANON_KEY из вашего проекта Supabase (Settings → API).');
+      } else if (error.message.includes('timeout')) {
+        setError('Превышено время ожидания. Проверьте подключение к интернету и статус проекта Supabase.');
+      } else if (error.message.includes('placeholder')) {
+        setError('Обнаружены placeholder-значения в конфигурации. Замените значения в .env файле на реальные данные из Supabase Dashboard.');
       } else {
         setError(error.message || 'Неожиданная ошибка входа');
       }
@@ -133,24 +140,26 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
               <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
               <div>
                 <h3 className="text-sm font-semibold text-blue-900 mb-1">
-                  Настройка администратора
+                  Настройка Supabase
                 </h3>
                 <p className="text-xs text-blue-700 mb-2">
-                  Для входа необходимо создать пользователя в Supabase:
+                  Для устранения ошибки "Failed to fetch":
                 </p>
                 <ol className="text-xs text-blue-700 space-y-1 list-decimal list-inside">
-                  <li>Откройте Supabase Dashboard</li>
-                  <li>Перейдите в Authentication → Users</li>
-                  <li>Создайте пользователя с email: admin@gardaracing.com</li>
-                  <li>Используйте созданные credentials для входа</li>
+                  <li>Откройте <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-blue-800 underline inline-flex items-center">Supabase Dashboard <ExternalLink className="h-3 w-3 ml-1" /></a></li>
+                  <li>Выберите ваш проект → Settings → API</li>
+                  <li>Скопируйте "Project URL" в VITE_SUPABASE_URL</li>
+                  <li>Скопируйте "anon public" ключ в VITE_SUPABASE_ANON_KEY</li>
+                  <li>Перезапустите сервер разработки</li>
                 </ol>
                 <div className="mt-2 pt-2 border-t border-blue-200">
                   <p className="text-xs text-blue-700 font-medium">
-                    Убедитесь, что настроены переменные окружения:
+                    Создайте администратора:
                   </p>
                   <ul className="text-xs text-blue-700 mt-1 space-y-0.5">
-                    <li>• VITE_SUPABASE_URL</li>
-                    <li>• VITE_SUPABASE_ANON_KEY</li>
+                    <li>• Authentication → Users → Create user</li>
+                    <li>• Email: admin@gardaracing.com</li>
+                    <li>• Назначьте роль 'admin' в таблице profiles</li>
                   </ul>
                 </div>
               </div>
@@ -162,7 +171,16 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg" role="alert">
               <div className="flex items-start space-x-2">
                 <AlertCircle className="h-4 w-4 text-red-600 mt-0.5 flex-shrink-0" />
-                <p className="text-sm text-red-600">{error}</p>
+                <div>
+                  <p className="text-sm text-red-600">{error}</p>
+                  {error.includes('Failed to fetch') && (
+                    <div className="mt-2 text-xs text-red-500">
+                      <p className="font-medium">Проверьте файл .env:</p>
+                      <p>VITE_SUPABASE_URL=https://your-project.supabase.co</p>
+                      <p>VITE_SUPABASE_ANON_KEY=eyJ...</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}

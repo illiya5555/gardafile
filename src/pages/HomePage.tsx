@@ -28,7 +28,6 @@ const HomePage = () => {
   const locationImages = [
     'https://i.postimg.cc/mrC0JcY3/temp-Image-M1-LFin.avif',
     'https://i.postimg.cc/FszwmCbH/temp-Image-Akge-BH.avif',
-    'https://i.postimg.cc/0QvLs8nT/temp-Imaget-FG9-YM.avif',
     'https://i.postimg.cc/C5LXRmWJ/temp-Imageb-Td-UOY.avif'
   ];
 

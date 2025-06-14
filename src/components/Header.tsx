@@ -19,22 +19,22 @@ const Header = () => {
   return (
     <header className="fixed w-full z-50 bg-white/95 backdrop-blur-md shadow-lg transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
-          {/* Logo - увеличен в 3-4 раза */}
+        <div className="flex justify-between items-center py-2">
+          {/* Logo - уменьшен размер */}
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="relative">
               <img
                 src="/gardalogo.png"
                 alt="Garda Racing Yacht Club"
-                className="h-24 w-24 object-contain group-hover:scale-110 transition-transform duration-300"
+                className="h-16 w-16 object-contain group-hover:scale-110 transition-transform duration-300"
               />
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-gold-400 rounded-full animate-pulse"></div>
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-gold-400 rounded-full animate-pulse"></div>
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-2xl font-bold text-gray-900 transition-colors duration-300">
+              <h1 className="text-xl font-bold text-gray-900 transition-colors duration-300">
                 Garda Racing
               </h1>
-              <p className="text-base text-gray-600 transition-colors duration-300">
+              <p className="text-sm text-gray-600 transition-colors duration-300">
                 Yacht Club
               </p>
             </div>

@@ -33,7 +33,7 @@ const Header = () => {
     <header className={`fixed w-full z-50 transition-all duration-300 ${
       isScrolled 
         ? 'bg-white shadow-lg' 
-        : 'bg-black/90'
+        : 'bg-white'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
@@ -48,10 +48,10 @@ const Header = () => {
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-gold-400 rounded-full animate-pulse"></div>
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-xl font-bold text-white">
+              <h1 className="text-xl font-bold text-gray-900">
                 Garda Racing
               </h1>
-              <p className="text-sm text-white/90">
+              <p className="text-sm text-gray-600">
                 Yacht Club
               </p>
             </div>
@@ -63,10 +63,10 @@ const Header = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`font-medium transition-all duration-300 hover:scale-105 pb-1 text-white ${
+                className={`font-medium transition-all duration-300 hover:scale-105 pb-1 text-gray-800 ${
                   location.pathname === item.href
-                    ? 'border-b-2 border-white'
-                    : 'hover:border-b-2 hover:border-white/50'
+                    ? 'border-b-2 border-primary-600 text-primary-600'
+                    : 'hover:text-primary-600'
                 }`}
               >
                 {item.name}
@@ -78,7 +78,7 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-4">
             {/* Language Selector */}
             <div className="relative group">
-              <button className="flex items-center space-x-1 px-3 py-2 rounded-lg text-white hover:bg-white/20 transition-all duration-300">
+              <button className="flex items-center space-x-1 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-all duration-300">
                 <Globe className="h-4 w-4" />
                 <span className="text-sm font-medium">{currentLang}</span>
               </button>
@@ -113,7 +113,7 @@ const Header = () => {
             <div className="flex items-center space-x-2 ml-4">
               <a 
                 href="#" 
-                className="p-2 text-white/80 hover:text-white transition-colors duration-300 hover:scale-110"
+                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
                 title="Facebook"
               >
                 <Facebook className="h-4 w-4" />
@@ -122,14 +122,14 @@ const Header = () => {
                 href="https://www.instagram.com/garda_racing_yacht_club"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 text-white/80 hover:text-white transition-colors duration-300 hover:scale-110"
+                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
                 title="Instagram"
               >
                 <Instagram className="h-4 w-4" />
               </a>
               <a 
                 href="#" 
-                className="p-2 text-white/80 hover:text-white transition-colors duration-300 hover:scale-110"
+                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
                 title="YouTube"
               >
                 <Youtube className="h-4 w-4" />
@@ -140,7 +140,7 @@ const Header = () => {
           {/* Mobile menu button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-white hover:bg-white/20 transition-colors duration-300"
+            className="md:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-300"
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}

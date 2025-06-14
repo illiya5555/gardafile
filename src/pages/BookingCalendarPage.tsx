@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, Users, CreditCard, CheckCircle, AlertCircle, ArrowLeft, ArrowRight, Euro, User, Mail, Phone, Lock } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-
-interface TimeSlot {
-  id: string;
-  date: string;
-  time: string;
-  available: boolean;
-  price_per_person: number;
-  max_participants: number;
-}
+import { useCalendarSync } from '../hooks/useCalendarSync';
+import UnifiedCalendar from '../components/calendar/UnifiedCalendar';
 
 interface BookingData {
   date: string;
@@ -25,102 +18,24 @@ interface BookingData {
 }
 
 const BookingCalendarPage = () => {
-  const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [participants, setParticipants] = useState(1);
   const [step, setStep] = useState(1); // 1: Calendar, 2: Time, 3: Details, 4: Payment
-  const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(false);
   const [bookingData, setBookingData] = useState<Partial<BookingData>>({});
 
-  useEffect(() => {
-    fetchAvailableSlots();
-  }, [currentDate]);
-
-  const fetchAvailableSlots = async () => {
-    try {
-      setLoading(true);
-      
-      const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-      const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-      
-      // Fetch time slots from admin calendar management
-      const { data, error } = await supabase
-        .from('time_slots')
-        .select('*')
-        .gte('date', startOfMonth.toISOString().split('T')[0])
-        .lte('date', endOfMonth.toISOString().split('T')[0])
-        .eq('is_active', true) // Only fetch active slots
-        .order('date', { ascending: true });
-
-      if (error) {
-        console.error('Error fetching time slots:', error);
-        setAvailableSlots([]);
-        return;
-      }
-
-      // Transform database data to TimeSlot format
-      const slots: TimeSlot[] = (data || []).map(slot => ({
-        id: slot.id,
-        date: slot.date,
-        time: slot.time,
-        available: slot.is_active,
-        price_per_person: slot.price_per_person,
-        max_participants: slot.max_participants
-      }));
-
-      setAvailableSlots(slots);
-    } catch (error) {
-      console.error('Error fetching available slots:', error);
-      setAvailableSlots([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getDaysInMonth = (date: Date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    const startingDayOfWeek = firstDay.getDay();
-
-    const days = [];
-    
-    // Add empty days at the beginning
-    for (let i = 0; i < startingDayOfWeek; i++) {
-      days.push(null);
-    }
-    
-    // Add days of the month
-    for (let day = 1; day <= daysInMonth; day++) {
-      days.push(new Date(year, month, day));
-    }
-    
-    return days;
-  };
-
-  const isDateAvailable = (date: Date) => {
-    const dateStr = date.toISOString().split('T')[0];
-    return availableSlots.some(slot => slot.date === dateStr && slot.available);
-  };
-
-  const getAvailableTimesForDate = (date: string) => {
-    return availableSlots.filter(slot => slot.date === date && slot.available);
-  };
+  const { getActiveTimeSlotsForDate, isDateAvailable } = useCalendarSync();
 
   const calculateTotalPrice = () => {
-    const selectedSlot = availableSlots.find(slot => 
-      slot.date === selectedDate && slot.time === selectedTime
+    const selectedSlot = getActiveTimeSlotsForDate(selectedDate).find(slot => 
+      slot.time === selectedTime
     );
     return selectedSlot ? selectedSlot.price_per_person * participants : 0;
   };
 
-  const handleDateSelect = (date: Date) => {
-    const dateStr = date.toISOString().split('T')[0];
-    setSelectedDate(dateStr);
+  const handleDateSelect = (date: string) => {
+    setSelectedDate(date);
     setSelectedTime(''); // Reset time selection when date changes
   };
 
@@ -187,21 +102,6 @@ const BookingCalendarPage = () => {
       setLoading(false);
     }
   };
-
-  const nextMonth = () => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
-  };
-
-  const prevMonth = () => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
-  };
-
-  const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
-
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8">
@@ -275,108 +175,12 @@ const BookingCalendarPage = () => {
                 <div className="space-y-6">
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">Select Date</h2>
                   
-                  {/* Calendar Header */}
-                  <div className="flex items-center justify-between mb-6">
-                    <button
-                      onClick={prevMonth}
-                      className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-300"
-                    >
-                      <ArrowLeft className="h-5 w-5" />
-                    </button>
-                    <h3 className="text-xl font-semibold text-gray-900">
-                      {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-                    </h3>
-                    <button
-                      onClick={nextMonth}
-                      className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-300"
-                    >
-                      <ArrowRight className="h-5 w-5" />
-                    </button>
-                  </div>
-
-                  {/* Special notice for June/July */}
-                  {(currentDate.getMonth() === 5 || currentDate.getMonth() === 6) && (
-                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-                      <div className="flex items-start space-x-3">
-                        <AlertCircle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <h4 className="font-semibold text-amber-900">
-                            {currentDate.getMonth() === 5 ? 'June' : 'July'} Availability Notice
-                          </h4>
-                          <p className="text-amber-800 text-sm mt-1">
-                            During {currentDate.getMonth() === 5 ? 'June' : 'July'}, regattas are available only on weekends (Saturday & Sunday). 
-                            Weekdays are fully booked for private events.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Calendar Grid */}
-                  <div className="grid grid-cols-7 gap-2 mb-4">
-                    {dayNames.map(day => (
-                      <div key={day} className="text-center text-sm font-semibold text-gray-600 py-2">
-                        {day}
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="grid grid-cols-7 gap-2">
-                    {getDaysInMonth(currentDate).map((date, index) => {
-                      if (!date) {
-                        return <div key={index} className="h-12"></div>;
-                      }
-
-                      const dateStr = date.toISOString().split('T')[0];
-                      const isAvailable = isDateAvailable(date);
-                      const isSelected = dateStr === selectedDate;
-                      const isPast = date < new Date();
-
-                      return (
-                        <button
-                          key={index}
-                          onClick={() => !isPast && isAvailable && handleDateSelect(date)}
-                          disabled={isPast || !isAvailable}
-                          className={`h-12 rounded-lg text-sm font-medium transition-all duration-300 relative ${
-                            isPast
-                              ? 'text-gray-300 cursor-not-allowed bg-gray-100'
-                              : isSelected
-                              ? 'bg-blue-600 text-white scale-110 shadow-lg'
-                              : !isAvailable
-                              ? 'bg-red-100 text-red-600 cursor-not-allowed'
-                              : 'hover:bg-blue-50 text-gray-900 border border-gray-200 hover:border-blue-300'
-                          }`}
-                        >
-                          {date.getDate()}
-                          {!isAvailable && !isPast && (
-                            <div className="absolute bottom-0 left-0 right-0 text-xs text-red-600 font-bold">
-                              Booked
-                            </div>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Legend */}
-                  <div className="mt-6 flex flex-wrap gap-4 text-sm">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-blue-600 rounded"></div>
-                      <span>Selected</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 border border-gray-200 rounded bg-white"></div>
-                      <span>Available</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-red-100 rounded"></div>
-                      <span>Booked</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-gray-100 rounded"></div>
-                      <span>Past/Unavailable</span>
-                    </div>
-                  </div>
+                  <UnifiedCalendar
+                    mode="select"
+                    selectedDate={selectedDate}
+                    onDateSelect={handleDateSelect}
+                    className="border-0 shadow-none"
+                  />
 
                   {selectedDate && (
                     <button
@@ -426,7 +230,7 @@ const BookingCalendarPage = () => {
                       <button
                         onClick={() => {
                           // Get max participants from selected date's time slots
-                          const availableTimesForDate = getAvailableTimesForDate(selectedDate);
+                          const availableTimesForDate = getActiveTimeSlotsForDate(selectedDate);
                           const maxAllowed = availableTimesForDate.length > 0 
                             ? Math.min(...availableTimesForDate.map(slot => slot.max_participants))
                             : 5;
@@ -443,7 +247,7 @@ const BookingCalendarPage = () => {
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Available regatta times</h3>
                     <div className="space-y-4">
-                      {getAvailableTimesForDate(selectedDate).map((slot) => {
+                      {getActiveTimeSlotsForDate(selectedDate).map((slot) => {
                         const totalPrice = slot.price_per_person * participants;
                         const isSelected = selectedTime === slot.time;
                         const timeRange = slot.time;
@@ -489,7 +293,7 @@ const BookingCalendarPage = () => {
                         );
                       })}
 
-                      {getAvailableTimesForDate(selectedDate).length === 0 && (
+                      {getActiveTimeSlotsForDate(selectedDate).length === 0 && (
                         <div className="p-6 border-2 border-red-200 rounded-lg bg-red-50">
                           <div className="flex items-start space-x-3">
                             <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
@@ -742,7 +546,7 @@ const BookingCalendarPage = () => {
                     </span>
                   </div>
                   <p className="text-sm text-gray-600 mt-2">
-                    {getAvailableTimesForDate(selectedDate).find(slot => slot.time === selectedTime)?.price_per_person || 195} € per person
+                    {getActiveTimeSlotsForDate(selectedDate).find(slot => slot.time === selectedTime)?.price_per_person || 195} € per person
                   </p>
                 </div>
               )}

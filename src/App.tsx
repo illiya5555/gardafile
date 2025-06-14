@@ -16,6 +16,7 @@ import ClientDashboard from './pages/ClientDashboard';
 import ManagerDashboard from './pages/ManagerDashboard';
 import LoginPage from './pages/LoginPage';
 import ChatWidget from './components/ChatWidget';
+import { CalendarProvider } from './context/CalendarContext';
 
 function App() {
   const [user, setUser] = useState<any>(null);
@@ -95,79 +96,81 @@ function App() {
   };
 
   return (
-    <Router>
-      <div className="min-h-screen bg-white">
-        <SEOHead />
-        <Routes>
-          {/* Admin route without header/footer */}
-          <Route 
-            path="/admin" 
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AdminDashboard />
-              </ProtectedRoute>
-            } 
-          />
-          
-          {/* Manager route without header/footer */}
-          <Route 
-            path="/manager" 
-            element={
-              <ProtectedRoute allowedRoles={['manager']}>
-                <ManagerDashboard />
-              </ProtectedRoute>
-            } 
-          />
-          
-          {/* Client Dashboard route with header/footer */}
-          <Route 
-            path="/dashboard" 
-            element={
-              <ProtectedRoute allowedRoles={['client']}>
+    <CalendarProvider>
+      <Router>
+        <div className="min-h-screen bg-white">
+          <SEOHead />
+          <Routes>
+            {/* Admin route without header/footer */}
+            <Route 
+              path="/admin" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Manager route without header/footer */}
+            <Route 
+              path="/manager" 
+              element={
+                <ProtectedRoute allowedRoles={['manager']}>
+                  <ManagerDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Client Dashboard route with header/footer */}
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute allowedRoles={['client']}>
+                  <>
+                    <Header />
+                    <ClientDashboard />
+                    <Footer />
+                  </>
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Login/Register route with header/footer */}
+            <Route 
+              path="/login" 
+              element={
                 <>
                   <Header />
-                  <ClientDashboard />
+                  <LoginPage />
                   <Footer />
                 </>
-              </ProtectedRoute>
-            } 
-          />
-          
-          {/* Login/Register route with header/footer */}
-          <Route 
-            path="/login" 
-            element={
+              } 
+            />
+            
+            {/* Regular routes with header/footer */}
+            <Route path="/*" element={
               <>
                 <Header />
-                <LoginPage />
+                <main className="pt-20">
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/events" element={<EventsPage />} />
+                    <Route path="/services" element={<ServicesPage />} />
+                    <Route path="/corporate-sailing" element={<CorporateSailingPage />} />
+                    <Route path="/gift-certificates" element={<GiftCertificatesPage />} />
+                    <Route path="/contact" element={<ContactPage />} />
+                    <Route path="/booking" element={<BookingCalendarPage />} />
+                    <Route path="/book-now" element={<BookingCalendarPage />} />
+                  </Routes>
+                </main>
                 <Footer />
+                <ChatWidget />
               </>
-            } 
-          />
-          
-          {/* Regular routes with header/footer */}
-          <Route path="/*" element={
-            <>
-              <Header />
-              <main className="pt-20">
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/events" element={<EventsPage />} />
-                  <Route path="/services" element={<ServicesPage />} />
-                  <Route path="/corporate-sailing" element={<CorporateSailingPage />} />
-                  <Route path="/gift-certificates" element={<GiftCertificatesPage />} />
-                  <Route path="/contact" element={<ContactPage />} />
-                  <Route path="/booking" element={<BookingCalendarPage />} />
-                  <Route path="/book-now" element={<BookingCalendarPage />} />
-                </Routes>
-              </main>
-              <Footer />
-              <ChatWidget />
-            </>
-          } />
-        </Routes>
-      </div>
-    </Router>
+            } />
+          </Routes>
+        </div>
+      </Router>
+    </CalendarProvider>
   );
 }
 

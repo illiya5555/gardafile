@@ -143,7 +143,7 @@ const CorporateSailingPage = () => {
                     className="flex items-center space-x-3 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-lg hover:bg-white/30 transition-all duration-300"
                   >
                     <Phone className="h-5 w-5" />
-                    <span>Tel, WhatsApp</span>
+                    <span>+39 344 777 00 77</span>
                   </a>
                   <a
                     href="mailto:corporate@gardaracing.com"

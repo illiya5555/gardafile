@@ -441,7 +441,7 @@ const GiftCertificatesPage = () => {
               className="flex items-center justify-center space-x-2 bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300"
             >
               <Phone className="h-5 w-5" />
-              <span>Tel, WhatsApp</span>
+              <span>Call +39 344 777 00 77</span>
             </a>
             <a
               href="mailto:gifts@gardaracing.com"

@@ -384,7 +384,7 @@ const EventsPage = () => {
                   href="tel:+393447770077"
                   className="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300"
                 >
-                  Tel, WhatsApp
+                  Call +39 344 777 00 77
                 </a>
                 <a
                   href="mailto:info@gardaracing.com"

@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Globe, Calendar, Facebook, Instagram, Youtube } from 'lucide-react';
 import AuthButton from './AuthButton';
-import UserSubscriptionDisplay from './UserSubscriptionDisplay';
 import { useAuth } from '../hooks/useAuth';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState('EN');
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const { user } = useAuth();
 
@@ -20,8 +20,33 @@ const Header = () => {
     { name: 'Contact', href: '/contact' },
   ];
 
+  // Добавляем эффект отслеживания скролла
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      if (scrollPosition > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    
+    // Проверяем начальное положение скролла
+    handleScroll();
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <header className="fixed w-full z-50 bg-white/95 backdrop-blur-md shadow-lg transition-all duration-300">
+    <header className={`fixed w-full z-50 transition-all duration-300 ${
+      scrolled 
+        ? 'bg-white/95 backdrop-blur-sm shadow-lg' 
+        : 'bg-transparent backdrop-blur-sm'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
@@ -35,10 +60,14 @@ const Header = () => {
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-gold-400 rounded-full animate-pulse"></div>
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-xl font-bold text-gray-900 transition-colors duration-300">
+              <h1 className={`text-xl font-bold transition-colors duration-300 ${
+                scrolled ? 'text-gray-900' : 'text-white'
+              }`}>
                 Garda Racing
               </h1>
-              <p className="text-sm text-gray-600 transition-colors duration-300">
+              <p className={`text-sm transition-colors duration-300 ${
+                scrolled ? 'text-gray-600' : 'text-white/80'
+              }`}>
                 Yacht Club
               </p>
             </div>
@@ -52,8 +81,12 @@ const Header = () => {
                 to={item.href}
                 className={`font-medium transition-all duration-300 hover:scale-105 ${
                   location.pathname === item.href
-                    ? 'text-primary-600 border-b-2 border-primary-600'
-                    : 'text-gray-700 hover:text-primary-600'
+                    ? scrolled 
+                      ? 'text-primary-600 border-b-2 border-primary-600'
+                      : 'text-white border-b-2 border-white'
+                    : scrolled
+                      ? 'text-gray-700 hover:text-primary-600'
+                      : 'text-white/90 hover:text-white'
                 } pb-1`}
               >
                 {item.name}
@@ -65,7 +98,11 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-4">
             {/* Language Selector */}
             <div className="relative group">
-              <button className="flex items-center space-x-1 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-all duration-300">
+              <button className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-all duration-300 ${
+                scrolled 
+                  ? 'text-gray-700 hover:bg-gray-100' 
+                  : 'text-white hover:bg-white/10'
+              }`}>
                 <Globe className="h-4 w-4" />
                 <span className="text-sm font-medium">{currentLang}</span>
               </button>
@@ -98,7 +135,9 @@ const Header = () => {
             <div className="flex items-center space-x-2 ml-4">
               <a 
                 href="#" 
-                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
+                className={`p-2 transition-colors duration-300 hover:scale-110 ${
+                  scrolled ? 'text-gray-600 hover:text-primary-600' : 'text-white/80 hover:text-white'
+                }`}
                 title="Facebook"
                 aria-label="Visit our Facebook page"
               >
@@ -108,7 +147,9 @@ const Header = () => {
                 href="https://www.instagram.com/garda_racing_yacht_club"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
+                className={`p-2 transition-colors duration-300 hover:scale-110 ${
+                  scrolled ? 'text-gray-600 hover:text-primary-600' : 'text-white/80 hover:text-white'
+                }`}
                 title="Instagram"
                 aria-label="Visit our Instagram page"
               >
@@ -116,7 +157,9 @@ const Header = () => {
               </a>
               <a 
                 href="#" 
-                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
+                className={`p-2 transition-colors duration-300 hover:scale-110 ${
+                  scrolled ? 'text-gray-600 hover:text-primary-600' : 'text-white/80 hover:text-white'
+                }`}
                 title="YouTube"
                 aria-label="Visit our YouTube channel"
               >
@@ -128,20 +171,17 @@ const Header = () => {
           {/* Mobile menu button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-300"
+            className={`md:hidden p-2 rounded-lg transition-colors duration-300 ${
+              scrolled 
+                ? 'text-gray-700 hover:bg-gray-100' 
+                : 'text-white hover:bg-white/10'
+            }`}
             aria-expanded={isMenuOpen}
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
-
-        {/* User Subscription Display */}
-        {user && (
-          <div className="pb-4">
-            <UserSubscriptionDisplay />
-          </div>
-        )}
 
         {/* Mobile Navigation */}
         {isMenuOpen && (

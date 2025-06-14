@@ -16,6 +16,14 @@ const HomePage = () => {
         'https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif'
   ];
 
+  // Experience section gallery images
+  const experienceImages = [
+    'https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif',
+    'https://i.postimg.cc/m2Z4581j/temp-Image3ioz3-A.avif',
+    'https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif',
+    'https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif'
+  ];
+
   // Location section gallery images - Lake Garda specific
   const locationImages = [
     'https://i.postimg.cc/mrC0JcY3/temp-Image-M1-LFin.avif',
@@ -23,6 +31,7 @@ const HomePage = () => {
     'https://i.postimg.cc/C5LXRmWJ/temp-Imageb-Td-UOY.avif'
   ];
 
+  const [experienceImageIndex, setExperienceImageIndex] = useState(0);
   const [locationImageIndex, setLocationImageIndex] = useState(0);
 
   // Fallback testimonials
@@ -73,6 +82,17 @@ const HomePage = () => {
 
     return () => clearInterval(interval);
   }, [heroImages.length]);
+
+  // Auto-rotate experience images every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setExperienceImageIndex((prevIndex) => 
+        (prevIndex + 1) % experienceImages.length
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [experienceImages.length]);
 
   // Auto-rotate location images every 6 seconds
   useEffect(() => {
@@ -323,7 +343,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Experience Preview with YouTube Video */}
+      {/* Experience Preview with Auto-rotating Images */}
       <section className="py-20 bg-gradient-to-br from-blue-50 to-primary-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -370,18 +390,33 @@ const HomePage = () => {
               </div>
             </div>
             <div className="relative">
-              {/* YouTube Video */}
-              <div className="relative rounded-2xl shadow-2xl overflow-hidden bg-black">
-                <div className="aspect-video">
-                  <iframe
-                    src="https://www.youtube.com/embed/Y7sRZOTsXbQ"
-                    title="Garda Racing Yacht Club Experience"
-                    className="w-full h-full"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  ></iframe>
-                </div>
+              {/* Auto-rotating experience images */}
+              <div className="relative rounded-2xl shadow-2xl overflow-hidden">
+                {experienceImages.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`Yacht racing experience ${index + 1}`}
+                    className={`w-full h-96 object-cover transition-opacity duration-1000 ${
+                      index === experienceImageIndex ? 'opacity-100' : 'opacity-0 absolute inset-0'
+                    }`}
+                  />
+                ))}
+              </div>
+              
+              {/* Image indicators */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                {experienceImages.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setExperienceImageIndex(index)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      index === experienceImageIndex 
+                        ? 'bg-white scale-110' 
+                        : 'bg-white/50 hover:bg-white/75'
+                    }`}
+                  />
+                ))}
               </div>
             </div>
           </div>

@@ -8,6 +8,8 @@ import EventsPage from './pages/EventsPage';
 import ServicesPage from './pages/ServicesPage';
 import ContactPage from './pages/ContactPage';
 import BookingCalendarPage from './pages/BookingCalendarPage';
+import CorporateSailingPage from './pages/CorporateSailingPage';
+import GiftCertificatesPage from './pages/GiftCertificatesPage';
 import AdminDashboard from './pages/AdminDashboard';
 import ChatWidget from './components/ChatWidget';
 
@@ -29,6 +31,8 @@ function App() {
                   <Route path="/" element={<HomePage />} />
                   <Route path="/events" element={<EventsPage />} />
                   <Route path="/services" element={<ServicesPage />} />
+                  <Route path="/corporate-sailing" element={<CorporateSailingPage />} />
+                  <Route path="/gift-certificates" element={<GiftCertificatesPage />} />
                   <Route path="/contact" element={<ContactPage />} />
                   <Route path="/booking" element={<BookingCalendarPage />} />
                   <Route path="/book-now" element={<BookingCalendarPage />} />

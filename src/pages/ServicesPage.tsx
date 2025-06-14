@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Users, Award, Calendar, Phone, Mail, CheckCircle, Star, MapPin, Clock, Music, Utensils, Car, Video } from 'lucide-react';
 import { supabase, CorporatePackage, AdditionalService, CorporateInquiry } from '../lib/supabase';
 
@@ -212,20 +213,57 @@ const ServicesPage = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            <div className="text-center group hover:scale-105 transition-transform duration-300">
-              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-200 transition-colors duration-300">
-                <Users className="h-8 w-8 text-primary-600" />
+            {/* Corporate Regattas Block */}
+            <Link 
+              to="/corporate-sailing"
+              className="relative group cursor-pointer overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105"
+            >
+              <div 
+                className="h-80 bg-cover bg-center relative"
+                style={{ backgroundImage: 'url(https://i.postimg.cc/JhjJ21S9/Boas-1775.jpg)' }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
+                  <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary-200 transition-colors duration-300">
+                    <Users className="h-8 w-8 text-primary-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3">🧭 Corporate Sailing Regatta</h3>
+                  <p className="text-white/90 leading-relaxed">
+                    We offer a unique team-building program through participation in a real sailing regatta. 
+                    Strengthen team spirit and create unforgettable memories on Lake Garda.
+                  </p>
+                  <div className="mt-4 inline-flex items-center text-white/80 group-hover:text-white transition-colors duration-300">
+                    <span className="text-sm font-medium">Learn more →</span>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Corporate Regattas</h3>
-              <p className="text-gray-600">Strengthen team spirit and create unforgettable memories</p>
-            </div>
-            <div className="text-center group hover:scale-105 transition-transform duration-300">
-              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-200 transition-colors duration-300">
-                <Award className="h-8 w-8 text-primary-600" />
+            </Link>
+
+            {/* Gift Certificates Block */}
+            <Link 
+              to="/gift-certificates"
+              className="relative group cursor-pointer overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105"
+            >
+              <div 
+                className="h-80 bg-cover bg-center relative"
+                style={{ backgroundImage: 'url(https://i.postimg.cc/1XvDrJbX/image.png)' }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
+                  <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary-200 transition-colors duration-300">
+                    <Award className="h-8 w-8 text-primary-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3">🎁 Gift Certificates</h3>
+                  <p className="text-white/90 leading-relaxed">
+                    Perfect gift for sailing enthusiasts. Give the gift of an unforgettable 
+                    yacht racing experience on beautiful Lake Garda.
+                  </p>
+                  <div className="mt-4 inline-flex items-center text-white/80 group-hover:text-white transition-colors duration-300">
+                    <span className="text-sm font-medium">Learn more →</span>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Gift Certificates</h3>
-              <p className="text-gray-600">Perfect gift for sailing enthusiasts</p>
-            </div>
+            </Link>
           </div>
 
           {/* Corporate Benefits */}

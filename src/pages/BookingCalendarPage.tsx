@@ -57,13 +57,19 @@ const BookingCalendarPage = () => {
       const month = date.getMonth() + 1; // JavaScript months are 0-indexed
       const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
       
-      // For June (6) and July (7), only weekends are available
+      // Check if date should be available
       let isAvailable = true;
+      
+      // For June (6) and July (7), only weekends are available
       if (month === 6 || month === 7) {
-        isAvailable = dayOfWeek === 0 || dayOfWeek === 6; // Only Sunday or Saturday
-      } else {
-        // For other months, randomly make some slots unavailable for realism
-        isAvailable = Math.random() > 0.2;
+        // Weekdays (Monday-Friday) are NOT available in June/July
+        if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+          isAvailable = false;
+        }
+      }
+      // For all other months, all dates are available (with some random unavailability for realism)
+      else {
+        isAvailable = Math.random() > 0.1; // 90% availability for other months
       }
       
       // Create slots for both regatta times
@@ -114,12 +120,15 @@ const BookingCalendarPage = () => {
     const month = date.getMonth() + 1;
     const dayOfWeek = date.getDay();
     
-    // For June and July, weekdays are "booked"
+    // For June and July, weekdays (Monday-Friday) are "booked"
     if (month === 6 || month === 7) {
-      return dayOfWeek !== 0 && dayOfWeek !== 6; // Not Sunday or Saturday
+      return dayOfWeek >= 1 && dayOfWeek <= 5; // Monday to Friday
     }
     
-    return false;
+    // For other months, check if slots are unavailable
+    const dateStr = date.toISOString().split('T')[0];
+    const hasAvailableSlots = availableSlots.some(slot => slot.date === dateStr && slot.available);
+    return !hasAvailableSlots;
   };
 
   const getAvailableTimesForDate = (date: string) => {
@@ -293,6 +302,24 @@ const BookingCalendarPage = () => {
                     </button>
                   </div>
 
+                  {/* Special notice for June/July */}
+                  {(currentDate.getMonth() === 5 || currentDate.getMonth() === 6) && (
+                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+                      <div className="flex items-start space-x-3">
+                        <AlertCircle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <h4 className="font-semibold text-amber-900">
+                            {currentDate.getMonth() === 5 ? 'June' : 'July'} Availability Notice
+                          </h4>
+                          <p className="text-amber-800 text-sm mt-1">
+                            During {currentDate.getMonth() === 5 ? 'June' : 'July'}, regattas are available only on weekends (Saturday & Sunday). 
+                            Weekdays are fully booked for private events.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Calendar Grid */}
                   <div className="grid grid-cols-7 gap-2 mb-4">
                     {dayNames.map(day => (
@@ -317,22 +344,22 @@ const BookingCalendarPage = () => {
                       return (
                         <button
                           key={index}
-                          onClick={() => !isPast && isAvailable && handleDateSelect(date)}
-                          disabled={isPast || !isAvailable}
+                          onClick={() => !isPast && isAvailable && !isBooked && handleDateSelect(date)}
+                          disabled={isPast || !isAvailable || isBooked}
                           className={`h-12 rounded-lg text-sm font-medium transition-all duration-300 relative ${
                             isPast
-                              ? 'text-gray-300 cursor-not-allowed'
+                              ? 'text-gray-300 cursor-not-allowed bg-gray-100'
                               : isSelected
                               ? 'bg-blue-600 text-white scale-110 shadow-lg'
                               : isBooked
                               ? 'bg-red-100 text-red-600 cursor-not-allowed'
                               : isAvailable
-                              ? 'hover:bg-blue-50 text-gray-900 border border-gray-200'
-                              : 'text-gray-400 cursor-not-allowed'
+                              ? 'hover:bg-blue-50 text-gray-900 border border-gray-200 hover:border-blue-300'
+                              : 'text-gray-400 cursor-not-allowed bg-gray-50'
                           }`}
                         >
                           {date.getDate()}
-                          {isBooked && (
+                          {isBooked && !isPast && (
                             <div className="absolute bottom-0 left-0 right-0 text-xs text-red-600 font-bold">
                               Booked
                             </div>
@@ -349,7 +376,7 @@ const BookingCalendarPage = () => {
                       <span>Selected</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 border border-gray-200 rounded"></div>
+                      <div className="w-4 h-4 border border-gray-200 rounded bg-white"></div>
                       <span>Available</span>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -357,7 +384,7 @@ const BookingCalendarPage = () => {
                       <span>Booked</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-gray-200 rounded"></div>
+                      <div className="w-4 h-4 bg-gray-100 rounded"></div>
                       <span>Past/Unavailable</span>
                     </div>
                   </div>

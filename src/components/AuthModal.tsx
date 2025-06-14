@@ -74,11 +74,21 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
         const { data, error } = await supabase.auth.signUp({
           email: formData.email,
           password: formData.password,
+          options: {
+            emailRedirectTo: undefined, // Disable email confirmation
+          }
         });
 
         if (error) throw error;
 
         if (data.user) {
+          // Get client role ID
+          const { data: roleData } = await supabase
+            .from('user_roles')
+            .select('id')
+            .eq('role_name', 'client')
+            .single();
+
           // Create profile
           const { error: profileError } = await supabase
             .from('profiles')
@@ -88,17 +98,18 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
               first_name: formData.firstName,
               last_name: formData.lastName,
               phone: formData.phone,
-              role_id: (await supabase
-                .from('user_roles')
-                .select('id')
-                .eq('role_name', 'client')
-                .single()).data?.id
+              role_id: roleData?.id
             });
 
           if (profileError) throw profileError;
 
-          alert('Account created successfully! Please check your email for verification.');
-          setIsLogin(true);
+          // Show success message
+          setError('');
+          alert('Account created successfully! You are now logged in.');
+          
+          // Redirect to client dashboard
+          window.location.href = '/client-dashboard';
+          onClose();
         }
       }
     } catch (error: any) {

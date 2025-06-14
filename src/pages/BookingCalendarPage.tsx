@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, Users, CreditCard, CheckCircle, AlertCircle, ArrowLeft, ArrowRight, Ship, Euro, User, Mail, Phone, Lock, Gift } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import StripeCheckout from '../components/StripeCheckout';
+import { stripeProducts } from '../stripe-config';
 
 interface YachtSlot {
   id: string;
@@ -25,18 +27,15 @@ interface BookingData {
   customer_name: string;
   customer_email: string;
   customer_phone: string;
-  card_number: string;
-  card_expiry: string;
-  card_cvv: string;
 }
 
 interface SuccessModalProps {
   email: string;
-  tempPassword: string;
+  phone: string;
   onClose: () => void;
 }
 
-const SuccessModal: React.FC<SuccessModalProps> = ({ email, tempPassword, onClose }) => {
+const SuccessModal: React.FC<SuccessModalProps> = ({ email, phone, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 animate-slide-up">
@@ -58,20 +57,15 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ email, tempPassword, onClos
                 <span>{email}</span>
               </div>
               <div className="flex justify-between">
-                <span className="font-medium">Temporary Password:</span>
-                <span className="font-mono bg-gray-100 px-2 py-1 rounded">{tempPassword}</span>
+                <span className="font-medium">Password:</span>
+                <span>{phone}</span>
               </div>
-            </div>
-            <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded">
-              <p className="text-yellow-800 text-sm">
-                <strong>Important:</strong> Please change your password after first login for security.
-              </p>
             </div>
           </div>
           
           <div className="space-y-4">
             <p className="text-gray-600 text-sm">
-              You'll receive a confirmation email shortly with all the details of your booking and login instructions.
+              You'll receive a confirmation email shortly with all the details of your booking.
             </p>
             <p className="text-gray-600 text-sm">
               You can access your personal dashboard anytime to view your bookings, chat with our team, and see photos from your experience.
@@ -105,8 +99,6 @@ const BookingCalendarPage = () => {
   const [loading, setLoading] = useState(false);
   const [bookingData, setBookingData] = useState<Partial<BookingData>>({});
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [tempPassword, setTempPassword] = useState('');
-  const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});
 
   // Fixed regatta time slots - only 8:30 and 13:00
   const regattaTimeSlots = [
@@ -130,176 +122,14 @@ const BookingCalendarPage = () => {
     { id: 'l2m3n4o5-p6q7-8901-2345-678901lmnopq', name: 'J-70 "Majestic"', capacity: 5 }
   ];
 
+  // Get the yacht racing product from stripe config
+  const yachtRacingProduct = stripeProducts.find(product => product.name === 'Yacht racing');
+
   useEffect(() => {
     generateAvailableSlots();
   }, [currentDate]);
 
-  // Generate a secure temporary password
-  const generateTempPassword = () => {
-    const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
-    let password = '';
-    for (let i = 0; i < 12; i++) {
-      password += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return password;
-  };
-
-  // Validation functions
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validatePhone = (phone: string): boolean => {
-    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-    return phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''));
-  };
-
-  const validateCardNumber = (cardNumber: string): boolean => {
-    const cleaned = cardNumber.replace(/\s/g, '');
-    return /^\d{13,19}$/.test(cleaned);
-  };
-
-  const validateCardExpiry = (expiry: string): boolean => {
-    const expiryRegex = /^(0[1-9]|1[0-2])\/\d{2}$/;
-    if (!expiryRegex.test(expiry)) return false;
-    
-    const [month, year] = expiry.split('/');
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear() % 100;
-    const currentMonth = currentDate.getMonth() + 1;
-    
-    const expYear = parseInt(year);
-    const expMonth = parseInt(month);
-    
-    if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
-      return false;
-    }
-    
-    return true;
-  };
-
-  const validateCVV = (cvv: string): boolean => {
-    return /^\d{3,4}$/.test(cvv);
-  };
-
-  const validateForm = (step: number): boolean => {
-    const errors: {[key: string]: string} = {};
-
-    if (step === 3) {
-      if (!bookingData.customer_name?.trim()) {
-        errors.customer_name = 'Name is required';
-      }
-      
-      if (!bookingData.customer_email?.trim()) {
-        errors.customer_email = 'Email is required';
-      } else if (!validateEmail(bookingData.customer_email)) {
-        errors.customer_email = 'Please enter a valid email address';
-      }
-      
-      if (!bookingData.customer_phone?.trim()) {
-        errors.customer_phone = 'Phone number is required';
-      } else if (!validatePhone(bookingData.customer_phone)) {
-        errors.customer_phone = 'Please enter a valid phone number';
-      }
-    }
-
-    if (step === 4) {
-      if (!bookingData.card_number?.trim()) {
-        errors.card_number = 'Card number is required';
-      } else if (!validateCardNumber(bookingData.card_number)) {
-        errors.card_number = 'Please enter a valid card number';
-      }
-      
-      if (!bookingData.card_expiry?.trim()) {
-        errors.card_expiry = 'Expiry date is required';
-      } else if (!validateCardExpiry(bookingData.card_expiry)) {
-        errors.card_expiry = 'Please enter a valid expiry date (MM/YY)';
-      }
-      
-      if (!bookingData.card_cvv?.trim()) {
-        errors.card_cvv = 'CVV is required';
-      } else if (!validateCVV(bookingData.card_cvv)) {
-        errors.card_cvv = 'Please enter a valid CVV';
-      }
-    }
-
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const generateAvailableSlots = async () => {
-    try {
-      // Fetch actual yachts from database
-      const { data: yachtsData, error: yachtsError } = await supabase
-        .from('yachts')
-        .select('*')
-        .eq('is_active', true);
-
-      if (yachtsError) {
-        console.error('Error fetching yachts:', yachtsError);
-        // Fall back to mock data if database fails
-        generateMockSlots();
-        return;
-      }
-
-      // Fetch existing bookings to check availability
-      const startDate = new Date();
-      const endDate = new Date();
-      endDate.setDate(startDate.getDate() + 30);
-
-      const { data: existingBookings, error: bookingsError } = await supabase
-        .from('yacht_bookings')
-        .select('yacht_id, start_date, end_date, start_time, end_time')
-        .gte('start_date', startDate.toISOString().split('T')[0])
-        .lte('end_date', endDate.toISOString().split('T')[0])
-        .in('status', ['confirmed', 'pending']);
-
-      if (bookingsError) {
-        console.error('Error fetching bookings:', bookingsError);
-      }
-
-      const slots: YachtSlot[] = [];
-      const today = new Date();
-      
-      // Generate slots for 30 days ahead
-      for (let day = 0; day < 30; day++) {
-        const date = new Date(today);
-        date.setDate(today.getDate() + day);
-        const dateStr = date.toISOString().split('T')[0];
-        
-        (yachtsData || yachts).forEach(yacht => {
-          regattaTimeSlots.forEach((timeSlot) => {
-            // Check if this slot is already booked
-            const isBooked = existingBookings?.some(booking => 
-              booking.yacht_id === yacht.id &&
-              booking.start_date === dateStr &&
-              booking.start_time === timeSlot.start
-            );
-
-            slots.push({
-              id: `${yacht.id}-${dateStr}-${timeSlot.start}`,
-              yacht_id: yacht.id,
-              yacht_name: yacht.name || `J-70 "${yacht.model || 'Racing Yacht'}"`,
-              date: dateStr,
-              start_time: timeSlot.start,
-              end_time: timeSlot.end,
-              available: !isBooked,
-              price_per_person: yacht.hourly_rate ? yacht.hourly_rate / 4 : 195, // 4-hour duration
-              max_participants: yacht.capacity || 5
-            });
-          });
-        });
-      }
-      
-      setAvailableSlots(slots);
-    } catch (error) {
-      console.error('Error generating available slots:', error);
-      generateMockSlots();
-    }
-  };
-
-  const generateMockSlots = () => {
+  const generateAvailableSlots = () => {
     const slots: YachtSlot[] = [];
     const today = new Date();
     
@@ -322,7 +152,7 @@ const BookingCalendarPage = () => {
             start_time: timeSlot.start,
             end_time: timeSlot.end,
             available: isAvailable,
-            price_per_person: 195, // Fixed price for 4-hour regatta
+            price_per_person: 199, // Updated to match Stripe product price
             max_participants: yacht.capacity
           });
         });
@@ -372,8 +202,8 @@ const BookingCalendarPage = () => {
 
   const calculateTotalPrice = () => {
     if (!selectedStartTime || !selectedEndTime) return 0;
-    // Fixed price of €195 per person for 4-hour regatta
-    return 195 * participants;
+    // Fixed price of €199 per person for 4-hour regatta
+    return 199 * participants;
   };
 
   const handleDateSelect = (date: Date) => {
@@ -396,8 +226,8 @@ const BookingCalendarPage = () => {
     setSelectedYacht(yachtId);
   };
 
-  // Create user account with secure temporary password
-  const createUserAccount = async (email: string, firstName: string, lastName: string, phone: string) => {
+  // Create user account and profile
+  const createUserAccount = async (email: string, password: string, firstName: string, lastName: string, phone: string) => {
     try {
       // Check if user already exists
       const { data: existingUsers } = await supabase
@@ -407,17 +237,14 @@ const BookingCalendarPage = () => {
         .limit(1);
       
       if (existingUsers && existingUsers.length > 0) {
-        // User already exists, return existing user ID
-        return { userId: existingUsers[0].id, isNewUser: false, tempPassword: null };
+        // User already exists, no need to create a new account
+        return existingUsers[0].id;
       }
       
-      // Generate secure temporary password
-      const tempPassword = generateTempPassword();
-      
-      // Create new user with temporary password
+      // Create new user
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
-        password: tempPassword,
+        password,
         options: {
           data: {
             first_name: firstName,
@@ -427,12 +254,7 @@ const BookingCalendarPage = () => {
         }
       });
 
-      if (authError) {
-        if (authError.message.includes('already registered')) {
-          throw new Error('An account with this email already exists. Please use a different email or contact support.');
-        }
-        throw authError;
-      }
+      if (authError) throw authError;
       
       if (!authData.user) {
         throw new Error('Failed to create user account');
@@ -457,12 +279,9 @@ const BookingCalendarPage = () => {
           role_id: roleData?.id
         });
       
-      if (profileError) {
-        console.error('Profile creation error:', profileError);
-        // Don't throw here as the user was created successfully
-      }
+      if (profileError) throw profileError;
       
-      return { userId: authData.user.id, isNewUser: true, tempPassword };
+      return authData.user.id;
     } catch (error) {
       console.error('Error creating user account:', error);
       throw error;
@@ -470,10 +289,6 @@ const BookingCalendarPage = () => {
   };
 
   const handleBookingSubmit = async () => {
-    if (!validateForm(4)) {
-      return;
-    }
-
     setLoading(true);
     
     try {
@@ -482,16 +297,14 @@ const BookingCalendarPage = () => {
       const firstName = nameParts[0];
       const lastName = nameParts.slice(1).join(' ') || '';
       
-      // Create user account with secure temporary password
-      const { userId, isNewUser, tempPassword } = await createUserAccount(
+      // Create user account using email as login and phone as password
+      const userId = await createUserAccount(
         bookingData.customer_email || '',
+        bookingData.customer_phone || '',
         firstName,
         lastName,
         bookingData.customer_phone || ''
       );
-      
-      // Here would be payment system integration
-      // For now simulate successful payment
       
       const booking = {
         yacht_id: selectedYacht,
@@ -505,7 +318,7 @@ const BookingCalendarPage = () => {
         customer_name: bookingData.customer_name,
         customer_email: bookingData.customer_email,
         customer_phone: bookingData.customer_phone,
-        status: 'confirmed',
+        status: 'pending', // Will be updated to confirmed after payment
         created_at: new Date().toISOString()
       };
 
@@ -514,34 +327,14 @@ const BookingCalendarPage = () => {
         .from('yacht_bookings')
         .insert(booking);
 
-      if (error) {
-        if (error.code === '23505') { // Unique constraint violation
-          throw new Error('This time slot is no longer available. Please select a different time.');
-        }
-        throw error;
-      }
+      if (error) throw error;
       
-      // Set temporary password for display in success modal
-      if (isNewUser && tempPassword) {
-        setTempPassword(tempPassword);
-      }
-      
-      // Show success modal
+      // Show success modal with account details
       setShowSuccessModal(true);
       
     } catch (error: any) {
       console.error('Booking error:', error);
-      let errorMessage = 'An error occurred while creating your booking. Please try again.';
-      
-      if (error.message.includes('already registered')) {
-        errorMessage = 'An account with this email already exists. Please use a different email or contact support.';
-      } else if (error.message.includes('time slot')) {
-        errorMessage = error.message;
-      } else if (error.message.includes('Invalid login credentials')) {
-        errorMessage = 'There was an issue with account creation. Please try again or contact support.';
-      }
-      
-      alert(errorMessage);
+      alert('Error creating booking: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -558,8 +351,6 @@ const BookingCalendarPage = () => {
     setSelectedEndTime('');
     setParticipants(1);
     setBookingData({});
-    setTempPassword('');
-    setFormErrors({});
   };
 
   const nextMonth = () => {
@@ -796,7 +587,7 @@ const BookingCalendarPage = () => {
                     <div className="space-y-4">
                       {getAvailableYachtsForDate(selectedStartDate).slice(0, 6).map((slot) => {
                         const duration = calculateDuration(slot.start_time, slot.end_time);
-                        const totalPrice = 195 * participants;
+                        const totalPrice = 199 * participants;
                         const isSelected = selectedYacht === slot.yacht_id && 
                           selectedStartTime === slot.start_time;
                         const regattaName = slot.start_time === '08:30' ? 'Morning Regatta' : 'Afternoon Regatta';
@@ -831,7 +622,7 @@ const BookingCalendarPage = () => {
                                   €{totalPrice}
                                 </p>
                                 <p className="text-sm text-gray-600">
-                                  €195 per person
+                                  €199 per person
                                 </p>
                               </div>
                             </div>
@@ -875,22 +666,12 @@ const BookingCalendarPage = () => {
                         <input
                           type="text"
                           value={bookingData.customer_name || ''}
-                          onChange={(e) => {
-                            setBookingData({...bookingData, customer_name: e.target.value});
-                            if (formErrors.customer_name) {
-                              setFormErrors({...formErrors, customer_name: ''});
-                            }
-                          }}
-                          className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                            formErrors.customer_name ? 'border-red-300' : 'border-gray-300'
-                          }`}
+                          onChange={(e) => setBookingData({...bookingData, customer_name: e.target.value})}
+                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="John Smith"
                           required
                         />
                       </div>
-                      {formErrors.customer_name && (
-                        <p className="text-red-600 text-sm mt-1">{formErrors.customer_name}</p>
-                      )}
                     </div>
 
                     <div>
@@ -902,66 +683,36 @@ const BookingCalendarPage = () => {
                         <input
                           type="email"
                           value={bookingData.customer_email || ''}
-                          onChange={(e) => {
-                            setBookingData({...bookingData, customer_email: e.target.value});
-                            if (formErrors.customer_email) {
-                              setFormErrors({...formErrors, customer_email: ''});
-                            }
-                          }}
-                          className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                            formErrors.customer_email ? 'border-red-300' : 'border-gray-300'
-                          }`}
+                          onChange={(e) => setBookingData({...bookingData, customer_email: e.target.value})}
+                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="john@example.com"
                           required
                         />
                       </div>
-                      {formErrors.customer_email && (
-                        <p className="text-red-600 text-sm mt-1">{formErrors.customer_email}</p>
-                      )}
                     </div>
 
                     <div className="md:col-span-2">
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Phone *
+                        Phone * (This will be your password)
                       </label>
                       <div className="relative">
                         <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                         <input
                           type="tel"
                           value={bookingData.customer_phone || ''}
-                          onChange={(e) => {
-                            setBookingData({...bookingData, customer_phone: e.target.value});
-                            if (formErrors.customer_phone) {
-                              setFormErrors({...formErrors, customer_phone: ''});
-                            }
-                          }}
-                          className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                            formErrors.customer_phone ? 'border-red-300' : 'border-gray-300'
-                          }`}
+                          onChange={(e) => setBookingData({...bookingData, customer_phone: e.target.value})}
+                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="+39 345 678 9012"
                           required
                         />
                       </div>
-                      {formErrors.customer_phone && (
-                        <p className="text-red-600 text-sm mt-1">{formErrors.customer_phone}</p>
-                      )}
+                      <p className="text-sm text-gray-500 mt-1">
+                        Your email will be your login and phone number will be your password for your account
+                      </p>
                     </div>
                   </div>
 
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                    <div className="flex items-start space-x-3">
-                      <Gift className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
-                      <div>
-                        <h3 className="font-semibold text-blue-900 mb-2">Secure Account Creation</h3>
-                        <p className="text-blue-800 text-sm">
-                          We'll create a secure personal account for you to manage your bookings and access photos after your experience. 
-                          You'll receive login credentials via email with a secure temporary password that you can change after first login.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {validateForm(3) && (
+                  {bookingData.customer_name && bookingData.customer_email && bookingData.customer_phone && (
                     <button
                       onClick={() => setStep(4)}
                       className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105"
@@ -991,92 +742,8 @@ const BookingCalendarPage = () => {
                       <div>
                         <h3 className="font-semibold text-green-900 mb-2">Secure payment</h3>
                         <p className="text-green-800 text-sm">
-                          Your data is protected by SSL encryption. We do not store credit card data.
+                          Your data is protected by SSL encryption. We use Stripe for secure payment processing.
                         </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Card Number *
-                      </label>
-                      <div className="relative">
-                        <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                        <input
-                          type="text"
-                          value={bookingData.card_number || ''}
-                          onChange={(e) => {
-                            setBookingData({...bookingData, card_number: e.target.value});
-                            if (formErrors.card_number) {
-                              setFormErrors({...formErrors, card_number: ''});
-                            }
-                          }}
-                          className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                            formErrors.card_number ? 'border-red-300' : 'border-gray-300'
-                          }`}
-                          placeholder="1234 5678 9012 3456"
-                          maxLength={19}
-                          required
-                        />
-                      </div>
-                      {formErrors.card_number && (
-                        <p className="text-red-600 text-sm mt-1">{formErrors.card_number}</p>
-                      )}
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-900 mb-2">
-                          Expiry Date *
-                        </label>
-                        <input
-                          type="text"
-                          value={bookingData.card_expiry || ''}
-                          onChange={(e) => {
-                            setBookingData({...bookingData, card_expiry: e.target.value});
-                            if (formErrors.card_expiry) {
-                              setFormErrors({...formErrors, card_expiry: ''});
-                            }
-                          }}
-                          className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                            formErrors.card_expiry ? 'border-red-300' : 'border-gray-300'
-                          }`}
-                          placeholder="MM/YY"
-                          maxLength={5}
-                          required
-                        />
-                        {formErrors.card_expiry && (
-                          <p className="text-red-600 text-sm mt-1">{formErrors.card_expiry}</p>
-                        )}
-                      </div>
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-900 mb-2">
-                          CVV *
-                        </label>
-                        <div className="relative">
-                          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                          <input
-                            type="text"
-                            value={bookingData.card_cvv || ''}
-                            onChange={(e) => {
-                              setBookingData({...bookingData, card_cvv: e.target.value});
-                              if (formErrors.card_cvv) {
-                                setFormErrors({...formErrors, card_cvv: ''});
-                              }
-                            }}
-                            className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                              formErrors.card_cvv ? 'border-red-300' : 'border-gray-300'
-                            }`}
-                            placeholder="123"
-                            maxLength={4}
-                            required
-                          />
-                        </div>
-                        {formErrors.card_cvv && (
-                          <p className="text-red-600 text-sm mt-1">{formErrors.card_cvv}</p>
-                        )}
                       </div>
                     </div>
                   </div>
@@ -1087,26 +754,36 @@ const BookingCalendarPage = () => {
                       <div>
                         <h3 className="font-semibold text-blue-900 mb-2">Account Creation</h3>
                         <p className="text-blue-800 text-sm">
-                          After successful payment, we'll automatically create a secure personal account for you to manage your bookings and access photos after your experience.
+                          After successful payment, we'll automatically create a personal account for you to manage your bookings and access photos after your experience.
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <button
-                    onClick={handleBookingSubmit}
-                    disabled={loading || !validateForm(4)}
-                    className="w-full bg-green-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-green-700 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-                  >
-                    {loading ? (
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    ) : (
-                      <>
-                        <Lock className="h-5 w-5" />
-                        <span>Pay €{calculateTotalPrice()}</span>
-                      </>
-                    )}
-                  </button>
+                  {yachtRacingProduct && (
+                    <div className="space-y-4">
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <h3 className="font-semibold text-gray-900 mb-2">Order Summary</h3>
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span>Yacht Racing Experience</span>
+                            <span>€199 × {participants}</span>
+                          </div>
+                          <div className="flex justify-between font-bold text-lg">
+                            <span>Total</span>
+                            <span>€{calculateTotalPrice()}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <StripeCheckout 
+                        product={yachtRacingProduct}
+                        className="w-full"
+                      >
+                        Pay €{calculateTotalPrice()} - Complete Booking
+                      </StripeCheckout>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -1171,7 +848,7 @@ const BookingCalendarPage = () => {
                     </span>
                   </div>
                   <p className="text-sm text-gray-600 mt-2">
-                    €195 per person for 4-hour regatta
+                    €199 per person for 4-hour regatta
                   </p>
                 </div>
               )}
@@ -1218,7 +895,7 @@ const BookingCalendarPage = () => {
       {showSuccessModal && (
         <SuccessModal 
           email={bookingData.customer_email || ''} 
-          tempPassword={tempPassword}
+          phone={bookingData.customer_phone || ''} 
           onClose={handleSuccessModalClose} 
         />
       )}

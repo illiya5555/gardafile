@@ -13,6 +13,7 @@ import GiftCertificatesPage from './pages/GiftCertificatesPage';
 import AdminDashboard from './pages/AdminDashboard';
 import ManagerDashboard from './pages/ManagerDashboard';
 import ClientDashboard from './pages/ClientDashboard';
+import SuccessPage from './pages/SuccessPage';
 import ChatWidget from './components/ChatWidget';
 
 function App() {
@@ -29,6 +30,9 @@ function App() {
           
           {/* Client Dashboard route without header/footer */}
           <Route path="/client-dashboard" element={<ClientDashboard />} />
+          
+          {/* Success page without header/footer */}
+          <Route path="/success" element={<SuccessPage />} />
           
           {/* Regular routes with header/footer */}
           <Route path="/*" element={

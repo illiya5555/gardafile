@@ -25,54 +25,13 @@ const BookingCalendarPage = () => {
   const [loading, setLoading] = useState(false);
   const [bookingData, setBookingData] = useState<Partial<BookingData>>({});
 
-  const { getActiveTimeSlotsForDate, isDateAvailable, loading: calendarLoading, error: calendarError } = useCalendarSync();
-
-  // Show loading state while calendar data is being fetched
-  if (calendarLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-lg text-gray-600">Loading calendar data...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Show error state if calendar data failed to load
-  if (calendarError) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
-              <AlertCircle className="h-12 w-12 text-red-600 mx-auto mb-4" />
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Unable to load calendar</h2>
-              <p className="text-gray-600 mb-4">There was an error loading the booking calendar. Please try refreshing the page.</p>
-              <button
-                onClick={() => window.location.reload()}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Refresh Page
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const { getActiveTimeSlotsForDate, isDateAvailable } = useCalendarSync();
 
   const calculateTotalPrice = () => {
     const selectedSlot = getActiveTimeSlotsForDate(selectedDate).find(slot => 
       slot.time === selectedTime
     );
-    // Safely handle null price_per_person by defaulting to 0
-    const pricePerPerson = selectedSlot?.price_per_person ?? 0;
-    return pricePerPerson * participants;
+    return selectedSlot ? selectedSlot.price_per_person * participants : 0;
   };
 
   const handleDateSelect = (date: string) => {
@@ -270,10 +229,10 @@ const BookingCalendarPage = () => {
                       </span>
                       <button
                         onClick={() => {
-                          // Get max participants from selected date's time slots, safely handle null values
+                          // Get max participants from selected date's time slots
                           const availableTimesForDate = getActiveTimeSlotsForDate(selectedDate);
                           const maxAllowed = availableTimesForDate.length > 0 
-                            ? Math.min(...availableTimesForDate.map(slot => slot.max_participants ?? 5))
+                            ? Math.min(...availableTimesForDate.map(slot => slot.max_participants))
                             : 5;
                           setParticipants(Math.min(maxAllowed, participants + 1));
                         }}
@@ -289,10 +248,7 @@ const BookingCalendarPage = () => {
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Available regatta times</h3>
                     <div className="space-y-4">
                       {getActiveTimeSlotsForDate(selectedDate).map((slot) => {
-                        // Safely handle null values
-                        const pricePerPerson = slot.price_per_person ?? 0;
-                        const maxParticipants = slot.max_participants ?? 5;
-                        const totalPrice = pricePerPerson * participants;
+                        const totalPrice = slot.price_per_person * participants;
                         const isSelected = selectedTime === slot.time;
                         const timeRange = slot.time;
                         const regattaName = timeRange.startsWith('08:30') || timeRange.startsWith('09:00') 
@@ -320,7 +276,7 @@ const BookingCalendarPage = () => {
                                     {timeRange} (4 hours)
                                   </p>
                                   <p className="text-sm text-gray-500">
-                                    Up to {maxParticipants} participants
+                                    Up to {slot.max_participants} participants
                                   </p>
                                 </div>
                               </div>
@@ -329,7 +285,7 @@ const BookingCalendarPage = () => {
                                   €{totalPrice}
                                 </p>
                                 <p className="text-sm text-gray-600">
-                                  €{pricePerPerson} per person
+                                  €{slot.price_per_person} per person
                                 </p>
                               </div>
                             </div>
@@ -590,7 +546,7 @@ const BookingCalendarPage = () => {
                     </span>
                   </div>
                   <p className="text-sm text-gray-600 mt-2">
-                    {getActiveTimeSlotsForDate(selectedDate).find(slot => slot.time === selectedTime)?.price_per_person ?? 195} € per person
+                    {getActiveTimeSlotsForDate(selectedDate).find(slot => slot.time === selectedTime)?.price_per_person || 195} € per person
                   </p>
                 </div>
               )}

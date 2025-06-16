@@ -513,7 +513,7 @@ const CalendarManagement = () => {
                       <div>
                         <p className="font-medium">{slot.time}</p>
                         <p className="text-sm text-gray-600">
-                          €{slot.price_per_person ?? 0} • Max {slot.max_participants ?? 0}
+                          €{slot.price_per_person} • Max {slot.max_participants}
                         </p>
                       </div>
                       <div className="flex space-x-1">
@@ -620,7 +620,7 @@ const CalendarManagement = () => {
                 </label>
                 <input
                   type="number"
-                  value={editingSlot ? (editingSlot.max_participants ?? 0) : newSlot.max_participants}
+                  value={editingSlot ? editingSlot.max_participants : newSlot.max_participants}
                   onChange={(e) => editingSlot
                     ? setEditingSlot({...editingSlot, max_participants: parseInt(e.target.value)})
                     : setNewSlot({...newSlot, max_participants: parseInt(e.target.value)})
@@ -637,7 +637,7 @@ const CalendarManagement = () => {
                 </label>
                 <input
                   type="number"
-                  value={editingSlot ? (editingSlot.price_per_person ?? 0) : newSlot.price_per_person}
+                  value={editingSlot ? editingSlot.price_per_person : newSlot.price_per_person}
                   onChange={(e) => editingSlot
                     ? setEditingSlot({...editingSlot, price_per_person: parseFloat(e.target.value)})
                     : setNewSlot({...newSlot, price_per_person: parseFloat(e.target.value)})

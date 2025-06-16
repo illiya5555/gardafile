@@ -48,23 +48,6 @@ export const isAdmin = async () => {
   return data?.user_roles?.role_name === 'admin';
 };
 
-// Helper function to check if user is manager
-export const isManager = async () => {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return false;
-  
-  const { data } = await supabase
-    .from('profiles')
-    .select(`
-      role_id,
-      user_roles(role_name)
-    `)
-    .eq('id', user.id)
-    .single();
-  
-  return data?.user_roles?.role_name === 'manager';
-};
-
 // Test connection function with better error handling
 export const testConnection = async () => {
   try {

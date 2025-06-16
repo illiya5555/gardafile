@@ -3,7 +3,6 @@ import { Calendar, Clock, Users, CreditCard, CheckCircle, AlertCircle, ArrowLeft
 import { supabase } from '../lib/supabase';
 import { useCalendar } from '../context/CalendarContext';
 import UnifiedCalendar from '../components/calendar/UnifiedCalendar';
-import { useBookingForm } from '../hooks/useBookingForm';
 
 interface BookingData {
   date: string;
@@ -13,10 +12,9 @@ interface BookingData {
   customer_name: string;
   customer_email: string;
   customer_phone: string;
-  special_requests?: string;
-  card_number?: string;
-  card_expiry?: string;
-  card_cvv?: string;
+  card_number: string;
+  card_expiry: string;
+  card_cvv: string;
 }
 
 const BookingCalendarPage = () => {
@@ -24,15 +22,11 @@ const BookingCalendarPage = () => {
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [participants, setParticipants] = useState(1);
   const [step, setStep] = useState(1); // 1: Calendar, 2: Time, 3: Details, 4: Payment
+  const [loading, setLoading] = useState(false);
   const [bookingData, setBookingData] = useState<Partial<BookingData>>({});
-  const [bookingComplete, setBookingComplete] = useState(false);
-  const [bookingId, setBookingId] = useState<string | null>(null);
 
   // Use the calendar context instead of the hook directly
   const { getActiveTimeSlotsForDate, isDateAvailable } = useCalendar();
-  
-  // Use the booking form hook
-  const { loading, error, success, submitBooking } = useBookingForm();
 
   const calculateTotalPrice = () => {
     const selectedSlot = getActiveTimeSlotsForDate(selectedDate).find(slot => 
@@ -51,44 +45,62 @@ const BookingCalendarPage = () => {
   };
 
   const handleBookingSubmit = async () => {
-    if (!selectedDate || !selectedTime) {
-      alert('Please select date and time');
-      return;
-    }
-
-    if (!bookingData.customer_name || !bookingData.customer_email || !bookingData.customer_phone) {
-      alert('Please fill in all required customer information');
-      return;
-    }
-
-    // Prepare booking data
-    const formData = {
-      date: selectedDate,
-      time: selectedTime,
-      participants,
-      totalPrice: calculateTotalPrice(),
-      customerName: bookingData.customer_name || '',
-      customerEmail: bookingData.customer_email || '',
-      customerPhone: bookingData.customer_phone || '',
-      specialRequests: bookingData.special_requests
-    };
-
-    // Submit booking using the hook
-    const newBookingId = await submitBooking(formData);
+    setLoading(true);
     
-    if (newBookingId) {
-      setBookingId(newBookingId);
-      setBookingComplete(true);
+    try {
+      // Validate required fields
+      if (!bookingData.customer_name || !bookingData.customer_email || !bookingData.customer_phone) {
+        throw new Error('Please fill in all required customer information');
+      }
+
+      if (!selectedDate || !selectedTime) {
+        throw new Error('Please select date and time');
+      }
+
+      // Create booking object with all required fields
+      const booking = {
+        booking_date: selectedDate,
+        time_slot: selectedTime,
+        participants,
+        total_price: calculateTotalPrice(),
+        customer_name: bookingData.customer_name,
+        customer_email: bookingData.customer_email,
+        customer_phone: bookingData.customer_phone,
+        status: 'confirmed',
+        deposit_paid: 0,
+        special_requests: null,
+        user_id: null // Allow null for anonymous bookings
+      };
+
+      console.log('Submitting booking:', booking);
+
+      // Save to database
+      const { data, error } = await supabase
+        .from('bookings')
+        .insert(booking)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
+
+      console.log('Booking created successfully:', data);
+      alert('Booking successfully created! You will receive confirmation by email.');
       
       // Reset form
-      setTimeout(() => {
-        setStep(1);
-        setSelectedDate('');
-        setSelectedTime('');
-        setParticipants(1);
-        setBookingData({});
-        setBookingComplete(false);
-      }, 5000); // Reset after 5 seconds of showing success message
+      setStep(1);
+      setSelectedDate('');
+      setSelectedTime('');
+      setParticipants(1);
+      setBookingData({});
+      
+    } catch (error: any) {
+      console.error('Booking error:', error);
+      alert('Error creating booking: ' + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -159,22 +171,8 @@ const BookingCalendarPage = () => {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl shadow-lg p-8">
               
-              {/* Success Message */}
-              {bookingComplete && (
-                <div className="text-center py-8 animate-fade-in">
-                  <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <CheckCircle className="h-10 w-10 text-green-600" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Booking Confirmed!</h2>
-                  <p className="text-gray-600 mb-6">
-                    Your booking has been successfully created. You will receive a confirmation email shortly.
-                  </p>
-                  <p className="text-sm text-gray-500">Booking ID: {bookingId}</p>
-                </div>
-              )}
-              
               {/* Step 1: Calendar */}
-              {!bookingComplete && step === 1 && (
+              {step === 1 && (
                 <div className="space-y-6">
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">Select Date</h2>
                   
@@ -197,7 +195,7 @@ const BookingCalendarPage = () => {
               )}
 
               {/* Step 2: Time and Participants Selection */}
-              {!bookingComplete && step === 2 && (
+              {step === 2 && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <h2 className="text-2xl font-bold text-gray-900">Select time and participants</h2>
@@ -324,7 +322,7 @@ const BookingCalendarPage = () => {
               )}
 
               {/* Step 3: Customer Details */}
-              {!bookingComplete && step === 3 && (
+              {step === 3 && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <h2 className="text-2xl font-bold text-gray-900">Your details</h2>
@@ -387,19 +385,6 @@ const BookingCalendarPage = () => {
                         />
                       </div>
                     </div>
-
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Special Requests (Optional)
-                      </label>
-                      <textarea
-                        value={bookingData.special_requests || ''}
-                        onChange={(e) => setBookingData({...bookingData, special_requests: e.target.value})}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Any special requirements or requests..."
-                        rows={3}
-                      />
-                    </div>
                   </div>
 
                   {bookingData.customer_name && bookingData.customer_email && bookingData.customer_phone && (
@@ -414,7 +399,7 @@ const BookingCalendarPage = () => {
               )}
 
               {/* Step 4: Payment */}
-              {!bookingComplete && step === 4 && (
+              {step === 4 && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <h2 className="text-2xl font-bold text-gray-900">Payment</h2>
@@ -437,19 +422,6 @@ const BookingCalendarPage = () => {
                       </div>
                     </div>
                   </div>
-
-                  {/* Display error message if there is one */}
-                  {error && (
-                    <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-                      <div className="flex items-start space-x-3">
-                        <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
-                        <div>
-                          <h3 className="font-semibold text-red-900 mb-2">Error</h3>
-                          <p className="text-red-700 text-sm">{error}</p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
 
                   <div className="space-y-4">
                     <div>

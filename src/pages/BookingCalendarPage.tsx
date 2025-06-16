@@ -1,10 +1,10 @@
-// src/components/BookingCalendarPage.tsx
+// src/pages/BookingCalendarPage.tsx  <- Убедитесь, что это правильный путь к файлу
 
 import React, { useState } from 'react';
 import { Calendar, Clock, Users, CreditCard, CheckCircle, AlertCircle, ArrowLeft, Euro, User, Mail, Phone, Lock, Check } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { CalendarProvider, useCalendar } from '../context/CalendarContext'; // Импортируем провайдер и хук
-import UnifiedCalendar from './UnifiedCalendar'; // Импортируем наш универсальный календарь
+import { CalendarProvider, useCalendar } from '../context/CalendarContext';
+import UnifiedCalendar from '../components/UnifiedCalendar'; // <--- ВОТ ИСПРАВЛЕНИЕ
 import { TimeSlot } from '../hooks/useCalendarSync';
 
 interface BookingData {

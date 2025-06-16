@@ -70,7 +70,9 @@ const BookingCalendarPage = () => {
     const selectedSlot = getActiveTimeSlotsForDate(selectedDate).find(slot => 
       slot.time === selectedTime
     );
-    return selectedSlot ? selectedSlot.price_per_person * participants : 0;
+    // Safely handle null price_per_person by defaulting to 0
+    const pricePerPerson = selectedSlot?.price_per_person ?? 0;
+    return pricePerPerson * participants;
   };
 
   const handleDateSelect = (date: string) => {
@@ -268,10 +270,10 @@ const BookingCalendarPage = () => {
                       </span>
                       <button
                         onClick={() => {
-                          // Get max participants from selected date's time slots
+                          // Get max participants from selected date's time slots, safely handle null values
                           const availableTimesForDate = getActiveTimeSlotsForDate(selectedDate);
                           const maxAllowed = availableTimesForDate.length > 0 
-                            ? Math.min(...availableTimesForDate.map(slot => slot.max_participants))
+                            ? Math.min(...availableTimesForDate.map(slot => slot.max_participants ?? 5))
                             : 5;
                           setParticipants(Math.min(maxAllowed, participants + 1));
                         }}
@@ -287,7 +289,10 @@ const BookingCalendarPage = () => {
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Available regatta times</h3>
                     <div className="space-y-4">
                       {getActiveTimeSlotsForDate(selectedDate).map((slot) => {
-                        const totalPrice = slot.price_per_person * participants;
+                        // Safely handle null values
+                        const pricePerPerson = slot.price_per_person ?? 0;
+                        const maxParticipants = slot.max_participants ?? 5;
+                        const totalPrice = pricePerPerson * participants;
                         const isSelected = selectedTime === slot.time;
                         const timeRange = slot.time;
                         const regattaName = timeRange.startsWith('08:30') || timeRange.startsWith('09:00') 
@@ -315,7 +320,7 @@ const BookingCalendarPage = () => {
                                     {timeRange} (4 hours)
                                   </p>
                                   <p className="text-sm text-gray-500">
-                                    Up to {slot.max_participants} participants
+                                    Up to {maxParticipants} participants
                                   </p>
                                 </div>
                               </div>
@@ -324,7 +329,7 @@ const BookingCalendarPage = () => {
                                   €{totalPrice}
                                 </p>
                                 <p className="text-sm text-gray-600">
-                                  €{slot.price_per_person} per person
+                                  €{pricePerPerson} per person
                                 </p>
                               </div>
                             </div>
@@ -585,7 +590,7 @@ const BookingCalendarPage = () => {
                     </span>
                   </div>
                   <p className="text-sm text-gray-600 mt-2">
-                    {getActiveTimeSlotsForDate(selectedDate).find(slot => slot.time === selectedTime)?.price_per_person || 195} € per person
+                    {getActiveTimeSlotsForDate(selectedDate).find(slot => slot.time === selectedTime)?.price_per_person ?? 195} € per person
                   </p>
                 </div>
               )}

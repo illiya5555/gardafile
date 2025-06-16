@@ -1,109 +1,85 @@
+// src/context/CalendarContext.tsx
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useCalendarSync, TimeSlot } from '../hooks/useCalendarSync';
 
-// Определяем тип для значения, которое будет в контексте
 interface CalendarContextType {
-  availableDates: string[];
-  timeSlots: TimeSlot[];
-  loading: boolean;
-  error: string | null;
-  lastUpdated: Date | null;
-  getTimeSlotsForDate: (date: string) => TimeSlot[];
-  getActiveTimeSlotsForDate: (date: string) => TimeSlot[];
-  isDateAvailable: (date: string) => boolean;
-  isDateBooked: (date: string) => boolean; // Функция для проверки "забронированных" дней
-  refreshCalendarData: () => void;
-  bulkUpdateTimeSlots: (startDate: string, endDate: string, action: 'activate' | 'deactivate' | 'delete') => Promise<any>;
-  createDefaultTimeSlots: (date: string) => Promise<any>;
-  getDateBookingStats: (date: string) => Promise<any>;
+    timeSlots: TimeSlot[];
+    loading: boolean;
+    error: string | null;
+    lastUpdated: Date | null;
+    getActiveTimeSlotsForDate: (date: string) => TimeSlot[];
+    isDateAvailable: (date: string) => boolean;
+    isDateBooked: (date: string) => boolean; // Функция для проверки "забронированных" дней по бизнес-правилу
+    refreshCalendarData: () => void;
 }
 
 const CalendarContext = createContext<CalendarContextType | undefined>(undefined);
 
 export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const calendarSync = useCalendarSync();
-  const [availableDates, setAvailableDates] = useState<string[]>([]);
+    const calendarSync = useCalendarSync();
 
-  useEffect(() => {
-    if (!calendarSync.loading && !calendarSync.error) {
-      setAvailableDates(calendarSync.getAvailableDates());
-    }
-  }, [calendarSync.timeSlots, calendarSync.loading, calendarSync.error]);
+    /**
+     * Проверяет, является ли день "забронированным" по бизнес-правилу.
+     * Правило: будние дни (Пн-Пт) в Июне и Июле считаются забронированными для частных мероприятий.
+     * @param dateStr - Дата в формате 'YYYY-MM-DD'
+     */
+    const isDateBooked = (dateStr: string): boolean => {
+        // Создаем объект Date, обязательно указывая время T00:00:00, чтобы избежать проблем с часовыми поясами
+        const date = new Date(dateStr + 'T00:00:00');
+        const month = date.getMonth(); // JavaScript месяцы: 0-11. Июнь = 5, Июль = 6.
+        const dayOfWeek = date.getDay(); // JavaScript дни недели: Воскресенье = 0, Понедельник = 1, ..., Суббота = 6.
 
+        // Применяем правило для Июня и Июля
+        if (month === 5 || month === 6) { 
+            // Возвращаем true (забронировано), если это день с Понедельника по Пятницу
+            return dayOfWeek >= 1 && dayOfWeek <= 5;
+        }
 
-  // --- БИЗНЕС-ЛОГИКА ДЛЯ ОТОБРАЖЕНИЯ ---
+        // Для всех остальных месяцев это правило не действует
+        return false;
+    };
 
-  /**
-   * Проверяет, является ли день "забронированным" по бизнес-правилу.
-   * Правило: будние дни (Пн-Пт) в Июне и Июле считаются забронированными.
-   */
-  const isDateBooked = (dateStr: string): boolean => {
-    // Создаем объект Date, учитывая таймзону, чтобы избежать ошибок с "соседними" днями
-    const date = new Date(dateStr + 'T00:00:00'); 
-    const month = date.getMonth(); // JavaScript месяцы: Июнь = 5, Июль = 6
-    const dayOfWeek = date.getDay(); // JavaScript дни недели: Воскресенье = 0, ... Суббота = 6
+    /**
+     * Определяет, доступна ли дата для выбора клиентом.
+     * Дата доступна, если на нее есть хотя бы один АКТИВНЫЙ слот в базе данных
+     * И она НЕ считается "забронированной" по бизнес-правилу.
+     * @param dateStr - Дата в формате 'YYYY-MM-DD'
+     */
+    const isDateAvailable = (dateStr: string): boolean => {
+        // 1. Проверяем наличие активных слотов в базе данных (из useCalendarSync)
+        const hasActiveSlotsFromDB = calendarSync.isDateAvailable(dateStr);
+        
+        // 2. Проверяем, не заблокирован ли день по бизнес-правилу
+        const isBookedByRule = isDateBooked(dateStr);
 
-    // Применяем правило для Июня и Июля
-    if (month === 5 || month === 6) {
-      // Возвращаем true (забронировано), если это день с Понедельника по Пятницу
-      return dayOfWeek >= 1 && dayOfWeek <= 5;
-    }
-    
-    // Для всех остальных месяцев это правило не действует
-    return false;
-  };
+        // 3. Дата доступна, только если оба условия выполняются
+        return hasActiveSlotsFromDB && !isBookedByRule;
+    };
 
-  /**
-   * Переопределенная функция для проверки доступности даты.
-   * Она учитывает как реальную доступность слотов, так и бизнес-правило "забронированности".
-   */
-  const isDateAvailable = (dateStr: string): boolean => {
-    // 1. Проверяем, есть ли в принципе активные слоты на эту дату (данные из useCalendarSync)
-    const hasActiveSlots = calendarSync.isDateAvailable(dateStr);
-    
-    // 2. Проверяем, не "забронирован" ли этот день по нашему бизнес-правилу
-    const isBookedByRule = isDateBooked(dateStr);
+    const value: CalendarContextType = {
+        timeSlots: calendarSync.timeSlots,
+        loading: calendarSync.loading,
+        error: calendarSync.error,
+        lastUpdated: calendarSync.lastUpdated,
+        getActiveTimeSlotsForDate: calendarSync.getActiveTimeSlotsForDate,
+        refreshCalendarData: calendarSync.refreshData,
+        // Наши функции, которые объединяют данные из БД и бизнес-логику
+        isDateAvailable: isDateAvailable,
+        isDateBooked: isDateBooked,
+    };
 
-    // 3. Дата доступна для выбора, только если на нее есть слоты И она не забронирована по правилу.
-    return hasActiveSlots && !isBookedByRule;
-  };
-
-
-  // --- ФОРМИРОВАНИЕ ЗНАЧЕНИЯ КОНТЕКСТА ---
-
-  // Собираем все функции и данные для передачи в дочерние компоненты.
-  // Мы "подменяем" оригинальную isDateAvailable на нашу новую, "умную" версию.
-  const value: CalendarContextType = {
-    // Оригинальные значения из хука useCalendarSync
-    availableDates,
-    timeSlots: calendarSync.timeSlots,
-    loading: calendarSync.loading,
-    error: calendarSync.error,
-    lastUpdated: calendarSync.lastUpdated,
-    getTimeSlotsForDate: calendarSync.getTimeSlotsForDate,
-    getActiveTimeSlotsForDate: calendarSync.getActiveTimeSlotsForDate,
-    refreshCalendarData: calendarSync.refreshData,
-    bulkUpdateTimeSlots: calendarSync.bulkUpdateTimeSlots,
-    createDefaultTimeSlots: calendarSync.createDefaultTimeSlots,
-    getDateBookingStats: calendarSync.getDateBookingStats,
-    
-    // Наши переопределенные и новые функции
-    isDateAvailable: isDateAvailable,
-    isDateBooked: isDateBooked,
-  };
-
-  return (
-    <CalendarContext.Provider value={value}>
-      {children}
-    </CalendarContext.Provider>
-  );
+    return (
+        <CalendarContext.Provider value={value}>
+            {children}
+        </CalendarContext.Provider>
+    );
 };
 
-// Кастомный хук для удобного использования контекста
 export const useCalendar = (): CalendarContextType => {
-  const context = useContext(CalendarContext);
-  if (context === undefined) {
-    throw new Error('useCalendar must be used within a CalendarProvider');
-  }
-  return context;
+    const context = useContext(CalendarContext);
+    if (context === undefined) {
+        throw new Error('useCalendar must be used within a CalendarProvider');
+    }
+    return context;
 };

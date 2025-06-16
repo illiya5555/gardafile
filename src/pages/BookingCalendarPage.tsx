@@ -25,7 +25,46 @@ const BookingCalendarPage = () => {
   const [loading, setLoading] = useState(false);
   const [bookingData, setBookingData] = useState<Partial<BookingData>>({});
 
-  const { getActiveTimeSlotsForDate, isDateAvailable } = useCalendarSync();
+  const { getActiveTimeSlotsForDate, isDateAvailable, loading: calendarLoading, error: calendarError } = useCalendarSync();
+
+  // Show loading state while calendar data is being fetched
+  if (calendarLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-lg text-gray-600">Loading calendar data...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if calendar data failed to load
+  if (calendarError) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <AlertCircle className="h-12 w-12 text-red-600 mx-auto mb-4" />
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">Unable to load calendar</h2>
+              <p className="text-gray-600 mb-4">There was an error loading the booking calendar. Please try refreshing the page.</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Refresh Page
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const calculateTotalPrice = () => {
     const selectedSlot = getActiveTimeSlotsForDate(selectedDate).find(slot => 

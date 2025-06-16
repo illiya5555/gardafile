@@ -1,334 +1,624 @@
-// src/pages/BookingCalendarPage.tsx  <- Убедитесь, что это правильный путь к файлу
-
-import React, { useState } from 'react';
-import { Calendar, Clock, Users, CreditCard, CheckCircle, AlertCircle, ArrowLeft, Euro, User, Mail, Phone, Lock, Check } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Calendar, Clock, Users, CreditCard, CheckCircle, AlertCircle, ArrowLeft, ArrowRight, Euro, User, Mail, Phone, Lock } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { CalendarProvider, useCalendar } from '../context/CalendarContext';
-import UnifiedCalendar from '../components/UnifiedCalendar'; // <--- ВОТ ИСПРАВЛЕНИЕ
-import { TimeSlot } from '../hooks/useCalendarSync';
+import { useCalendar } from '../context/CalendarContext';
+import UnifiedCalendar from '../components/calendar/UnifiedCalendar';
+import { useBookingForm } from '../hooks/useBookingForm';
 
 interface BookingData {
-    date: string;
-    timeSlot: TimeSlot | null;
-    participants: number;
-    total_price: number;
-    customer_name: string;
-    customer_email: string;
-    customer_phone: string;
-    card_number: string;
-    card_expiry: string;
-    card_cvv: string;
+  date: string;
+  time: string;
+  participants: number;
+  total_price: number;
+  customer_name: string;
+  customer_email: string;
+  customer_phone: string;
+  special_requests?: string;
+  card_number?: string;
+  card_expiry?: string;
+  card_cvv?: string;
 }
 
-const BookingForm = () => {
-    const { getActiveTimeSlotsForDate } = useCalendar(); // Получаем функции из контекста
-    
-    const [selectedDate, setSelectedDate] = useState<string>('');
-    const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot | null>(null);
-    const [participants, setParticipants] = useState(1);
-    const [step, setStep] = useState(1); // 1: Calendar, 2: Details, 3: Payment
-    const [loading, setLoading] = useState(false);
-    const [bookingData, setBookingData] = useState<Partial<BookingData>>({});
+const BookingCalendarPage = () => {
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [selectedTime, setSelectedTime] = useState<string>('');
+  const [participants, setParticipants] = useState(1);
+  const [step, setStep] = useState(1); // 1: Calendar, 2: Time, 3: Details, 4: Payment
+  const [bookingData, setBookingData] = useState<Partial<BookingData>>({});
+  const [bookingComplete, setBookingComplete] = useState(false);
+  const [bookingId, setBookingId] = useState<string | null>(null);
 
-    const handleDateSelect = (date: string) => {
-        setSelectedDate(date);
-        setSelectedTimeSlot(null); // Сбрасываем выбор времени при смене даты
-        setStep(1); // Остаемся на шаге выбора даты, пока не нажмем "далее"
-    };
+  // Use the calendar context instead of the hook directly
+  const { getActiveTimeSlotsForDate, isDateAvailable } = useCalendar();
+  
+  // Use the booking form hook
+  const { loading, error, success, submitBooking } = useBookingForm();
 
-    const handleTimeSelect = (slot: TimeSlot) => {
-        setSelectedTimeSlot(slot);
-    };
+  const calculateTotalPrice = () => {
+    const selectedSlot = getActiveTimeSlotsForDate(selectedDate).find(slot => 
+      slot.time === selectedTime
+    );
+    return selectedSlot ? selectedSlot.price_per_person * participants : 0;
+  };
 
-    const calculateTotalPrice = () => {
-        if (!selectedTimeSlot) return 0;
-        return selectedTimeSlot.price_per_person * participants;
-    };
+  const handleDateSelect = (date: string) => {
+    setSelectedDate(date);
+    setSelectedTime(''); // Reset time selection when date changes
+  };
 
-    const handleBookingSubmit = async () => {
-        setLoading(true);
-        try {
-            if (!bookingData.customer_name || !bookingData.customer_email || !bookingData.customer_phone) {
-                throw new Error('Please fill in all required customer information');
-            }
-            if (!selectedDate || !selectedTimeSlot) {
-                throw new Error('Please select date and time');
-            }
+  const handleTimeSelect = (time: string) => {
+    setSelectedTime(time);
+  };
 
-            const booking = {
-                booking_date: selectedDate,
-                time_slot: selectedTimeSlot.time,
-                participants,
-                total_price: calculateTotalPrice(),
-                customer_name: bookingData.customer_name,
-                customer_email: bookingData.customer_email,
-                customer_phone: bookingData.customer_phone,
-                status: 'confirmed',
-                deposit_paid: 0,
-                special_requests: null,
-                user_id: null,
-            };
-
-            const { data, error } = await supabase.from('bookings').insert(booking).select().single();
-            if (error) {
-                console.error('Supabase error:', error);
-                throw new Error(`Database error: ${error.message}`);
-            }
-
-            alert('Booking successfully created! You will receive confirmation by email.');
-            setStep(1);
-            setSelectedDate('');
-            setSelectedTimeSlot(null);
-            setParticipants(1);
-            setBookingData({});
-        } catch (error: any) {
-            console.error('Booking error:', error);
-            alert('Error creating booking: ' + error.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-    
-    const availableTimeSlots = selectedDate ? getActiveTimeSlotsForDate(selectedDate) : [];
-
-    const regattaTimeInfo = (time: string) => {
-      const [start] = time.split('-');
-      return parseInt(start) < 12 ? 'Morning Regatta' : 'Afternoon Regatta';
+  const handleBookingSubmit = async () => {
+    if (!selectedDate || !selectedTime) {
+      alert('Please select date and time');
+      return;
     }
 
-    return (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Content */}
-            <div className="lg:col-span-2">
-                <div className="bg-white rounded-2xl shadow-lg p-8">
-                    {/* Step 1: Calendar & Time */}
-                    {step === 1 && (
-                        <div className="space-y-6">
-                            <h2 className="text-2xl font-bold text-gray-900">1. Select Date & Time</h2>
-                            <UnifiedCalendar
-                                mode="select"
-                                selectedDate={selectedDate}
-                                onDateSelect={handleDateSelect}
-                            />
-                            {selectedDate && (
-                                <div className="mt-6 pt-6 border-t border-gray-200">
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Available Regatta Times for {new Date(selectedDate + 'T00:00:00').toLocaleDateString()}</h3>
-                                    {availableTimeSlots.length > 0 ? (
-                                        <div className="space-y-4">
-                                            {availableTimeSlots.map((slot) => {
-                                                const isSelected = selectedTimeSlot?.id === slot.id;
-                                                return (
-                                                    <div key={slot.id} onClick={() => handleTimeSelect(slot)} className={`p-6 border-2 rounded-lg cursor-pointer transition-all duration-300 ${ isSelected ? 'border-blue-600 bg-blue-50 scale-105' : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50' }`} >
-                                                        <div className="flex items-center justify-between">
-                                                            <div className="flex items-center space-x-4">
-                                                                <div className="bg-blue-100 p-3 rounded-lg"> <Clock className="h-6 w-6 text-blue-600" /> </div>
-                                                                <div>
-                                                                    <h4 className="font-semibold text-gray-900 text-lg">{regattaTimeInfo(slot.time)}</h4>
-                                                                    <p className="text-gray-600">{slot.time} (4 hours)</p>
-                                                                </div>
-                                                            </div>
-                                                            <div className="text-right">
-                                                                <p className="text-xl font-bold text-blue-600">€{slot.price_per_person}</p>
-                                                                <p className="text-sm text-gray-600">per person</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    ) : (
-                                        <p className="text-gray-500 text-center py-4">No available time slots for this date. Please select another date.</p>
-                                    )}
-                                </div>
-                            )}
-                            {selectedDate && selectedTimeSlot && (
-                                <button onClick={() => setStep(2)} className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105 mt-6" >
-                                    Continue
-                                </button>
-                            )}
-                        </div>
-                    )}
+    if (!bookingData.customer_name || !bookingData.customer_email || !bookingData.customer_phone) {
+      alert('Please fill in all required customer information');
+      return;
+    }
 
-                    {/* Step 2: Details */}
-                    {step === 2 && (
-                        <div className="space-y-6">
-                            <div className="flex items-center justify-between">
-                                <h2 className="text-2xl font-bold text-gray-900">2. Your Details & Participants</h2>
-                                <button onClick={() => setStep(1)} className="text-blue-600 hover:text-blue-700 font-medium">← Back to calendar</button>
-                            </div>
-                            
-                            <div>
-                                <label className="block text-lg font-semibold text-gray-900 mb-4">Number of participants (max {selectedTimeSlot?.max_participants})</label>
-                                <div className="flex items-center space-x-4">
-                                    <button onClick={() => setParticipants(Math.max(1, participants - 1))} className="w-12 h-12 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all duration-300 flex items-center justify-center text-xl font-semibold">-</button>
-                                    <span className="text-2xl font-bold text-gray-900 min-w-[3rem] text-center">{participants}</span>
-                                    <button onClick={() => setParticipants(Math.min(selectedTimeSlot?.max_participants || 5, participants + 1))} className="w-12 h-12 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all duration-300 flex items-center justify-center text-xl font-semibold">+</button>
-                                </div>
-                            </div>
+    // Prepare booking data
+    const formData = {
+      date: selectedDate,
+      time: selectedTime,
+      participants,
+      totalPrice: calculateTotalPrice(),
+      customerName: bookingData.customer_name || '',
+      customerEmail: bookingData.customer_email || '',
+      customerPhone: bookingData.customer_phone || '',
+      specialRequests: bookingData.special_requests
+    };
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-900 mb-2">Full Name *</label>
-                                    <div className="relative">
-                                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                        <input type="text" value={bookingData.customer_name || ''} onChange={(e) => setBookingData({ ...bookingData, customer_name: e.target.value })} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="John Smith" required />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-900 mb-2">Email *</label>
-                                    <div className="relative">
-                                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                        <input type="email" value={bookingData.customer_email || ''} onChange={(e) => setBookingData({ ...bookingData, customer_email: e.target.value })} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="john@example.com" required />
-                                    </div>
-                                </div>
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-semibold text-gray-900 mb-2">Phone *</label>
-                                    <div className="relative">
-                                        <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                        <input type="tel" value={bookingData.customer_phone || ''} onChange={(e) => setBookingData({ ...bookingData, customer_phone: e.target.value })} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="+39 345 678 9012" required />
-                                    </div>
-                                </div>
-                            </div>
-                            {bookingData.customer_name && bookingData.customer_email && bookingData.customer_phone && (
-                                <button onClick={() => setStep(3)} className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105">Proceed to payment</button>
-                            )}
-                        </div>
-                    )}
+    // Submit booking using the hook
+    const newBookingId = await submitBooking(formData);
+    
+    if (newBookingId) {
+      setBookingId(newBookingId);
+      setBookingComplete(true);
+      
+      // Reset form
+      setTimeout(() => {
+        setStep(1);
+        setSelectedDate('');
+        setSelectedTime('');
+        setParticipants(1);
+        setBookingData({});
+        setBookingComplete(false);
+      }, 5000); // Reset after 5 seconds of showing success message
+    }
+  };
 
-                    {/* Step 3: Payment */}
-                    {step === 3 && (
-                        <div className="space-y-6">
-                             <div className="flex items-center justify-between">
-                                <h2 className="text-2xl font-bold text-gray-900">3. Payment</h2>
-                                <button onClick={() => setStep(2)} className="text-blue-600 hover:text-blue-700 font-medium">← Back</button>
-                            </div>
-                             <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                                <div className="flex items-start space-x-3">
-                                    <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
-                                    <div>
-                                        <h3 className="font-semibold text-green-900 mb-2">Secure payment</h3>
-                                        <p className="text-green-800 text-sm">Your data is protected by SSL encryption. We do not store credit card data.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-900 mb-2">Card Number *</label>
-                                    <div className="relative">
-                                        <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                        <input type="text" value={bookingData.card_number || ''} onChange={(e) => setBookingData({ ...bookingData, card_number: e.target.value })} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="1234 5678 9012 3456" maxLength={19} required />
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-sm font-semibold text-gray-900 mb-2">Expiry Date *</label>
-                                        <input type="text" value={bookingData.card_expiry || ''} onChange={(e) => setBookingData({ ...bookingData, card_expiry: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="MM/YY" maxLength={5} required />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-semibold text-gray-900 mb-2">CVV *</label>
-                                        <div className="relative">
-                                            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                            <input type="text" value={bookingData.card_cvv || ''} onChange={(e) => setBookingData({ ...bookingData, card_cvv: e.target.value })} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="123" maxLength={4} required />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {bookingData.card_number && bookingData.card_expiry && bookingData.card_cvv && (
-                                <button onClick={handleBookingSubmit} disabled={loading} className="w-full bg-green-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-green-700 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2">
-                                    {loading ? (<div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>) : (<> <Lock className="h-5 w-5" /> <span>Pay €{calculateTotalPrice()}</span> </>)}
-                                </button>
-                            )}
-                        </div>
-                    )}
-                </div>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">
+            Book Your Regatta Experience
+          </h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Choose a date and time for an unforgettable yacht racing experience on Lake Garda
+          </p>
+          <div className="mt-4 flex justify-center space-x-8 text-sm text-gray-600">
+            <div className="flex items-center space-x-2">
+              <Clock className="h-4 w-4" />
+              <span>4-hour experience</span>
             </div>
-
-            {/* Booking Summary Sidebar */}
-            <div className="lg:col-span-1">
-                <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-8">
-                    <h3 className="text-xl font-bold text-gray-900 mb-6">Regatta Summary</h3>
-                    <div className="space-y-4 mb-6">
-                        {selectedDate ? (
-                            <div className="flex justify-between items-center">
-                                <span className="text-gray-600">Date:</span>
-                                <span className="font-semibold">{new Date(selectedDate + 'T00:00:00').toLocaleDateString()}</span>
-                            </div>
-                        ) : <p className="text-gray-500">Select a date...</p>}
-                        
-                        {selectedTimeSlot && (
-                            <div className="flex justify-between items-center">
-                                <span className="text-gray-600">Time:</span>
-                                <span className="font-semibold text-right">{regattaTimeInfo(selectedTimeSlot.time)}<br /><span className="text-sm text-gray-500">{selectedTimeSlot.time}</span></span>
-                            </div>
-                        )}
-                        <div className="flex justify-between items-center">
-                            <span className="text-gray-600">Participants:</span>
-                            <span className="font-semibold">{participants}</span>
-                        </div>
-                    </div>
-                    {selectedTimeSlot && (
-                        <div className="border-t border-gray-200 pt-4 mb-6">
-                            <div className="flex justify-between items-center text-lg font-bold">
-                                <span>Total:</span>
-                                <span className="text-blue-600 flex items-center"><Euro className="h-5 w-5 mr-1" />{calculateTotalPrice()}</span>
-                            </div>
-                            <p className="text-sm text-gray-600 mt-2">€{selectedTimeSlot.price_per_person} per person</p>
-                        </div>
-                    )}
-                    <div className="space-y-4 text-sm text-gray-600">
-                        <div className="flex items-start space-x-2"><CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" /><span>Professional skipper</span></div>
-                        <div className="flex items-start space-x-2"><CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" /><span>All safety equipment</span></div>
-                        <div className="flex items-start space-x-2"><CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" /><span>Racing instruction and training</span></div>
-                        <div className="flex items-start space-x-2"><CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" /><span>Medal ceremony</span></div>
-                        <div className="flex items-start space-x-2"><CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" /><span>Professional photography</span></div>
-                    </div>
-                    <div className="mt-6 pt-6 border-t border-gray-200">
-                        <div className="flex items-center space-x-2 text-sm text-gray-600 mb-2"><AlertCircle className="h-4 w-4" /><span>Free cancellation 48 hours prior</span></div>
-                        <div className="flex items-center space-x-2 text-sm text-gray-600"><CheckCircle className="h-4 w-4" /><span>Full insurance included</span></div>
-                    </div>
-                </div>
+            <div className="flex items-center space-x-2">
+              <Users className="h-4 w-4" />
+              <span>Max 5 people per regatta</span>
             </div>
+          </div>
         </div>
-    );
-};
 
-
-const BookingCalendarPage = () => {
-    return (
-        <CalendarProvider>
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-8">
-                        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">Book Your Regatta Experience</h1>
-                        <p className="text-xl text-gray-600 max-w-3xl mx-auto">Choose a date and time for an unforgettable yacht racing experience on Lake Garda</p>
-                    </div>
-                     <div className="max-w-4xl mx-auto mb-8">
-                        <div className="flex items-center justify-between">
-                            {[
-                                { step: 1, title: 'Select Date & Time', icon: Calendar },
-                                { step: 2, title: 'Details', icon: Users },
-                                { step: 3, title: 'Payment', icon: CreditCard }
-                            ].map((item, index) => (
-                                <React.Fragment key={item.step}>
-                                    <div className="flex flex-col items-center text-center">
-                                        <div className={`flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all duration-500 bg-white`}>
-                                            <item.icon className="h-6 w-6 text-blue-600" />
-                                        </div>
-                                        <p className="mt-2 font-semibold text-blue-800">Step {item.step}</p>
-                                        <p className="text-sm text-gray-600">{item.title}</p>
-                                    </div>
-                                    {index < 2 && (
-                                        <div className={`flex-1 h-1 mx-4 rounded transition-all duration-500 bg-blue-200`}></div>
-                                    )}
-                                </React.Fragment>
-                            ))}
-                        </div>
-                    </div>
-                    <BookingForm />
+        {/* Progress Steps */}
+        <div className="max-w-4xl mx-auto mb-8">
+          <div className="flex items-center justify-between">
+            {[
+              { step: 1, title: 'Select Date', icon: Calendar },
+              { step: 2, title: 'Time & Participants', icon: Clock },
+              { step: 3, title: 'Details', icon: Users },
+              { step: 4, title: 'Payment', icon: CreditCard }
+            ].map((item, index) => (
+              <div key={item.step} className="flex items-center">
+                <div className={`flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all duration-500 ${
+                  step >= item.step
+                    ? 'bg-blue-600 border-blue-600 text-white scale-110'
+                    : 'border-gray-300 text-gray-400'
+                }`}>
+                  {step > item.step ? (
+                    <CheckCircle className="h-6 w-6" />
+                  ) : (
+                    <item.icon className="h-6 w-6" />
+                  )}
                 </div>
+                <div className="ml-4 hidden sm:block">
+                  <p className={`font-semibold transition-colors duration-300 ${step >= item.step ? 'text-blue-600' : 'text-gray-400'}`}>
+                    Step {item.step}
+                  </p>
+                  <p className={`text-sm transition-colors duration-300 ${step >= item.step ? 'text-gray-900' : 'text-gray-500'}`}>
+                    {item.title}
+                  </p>
+                </div>
+                {index < 3 && (
+                  <div className={`hidden sm:block w-24 h-1 mx-4 rounded transition-all duration-500 ${
+                    step > item.step ? 'bg-blue-600' : 'bg-gray-300'
+                  }`}></div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              
+              {/* Success Message */}
+              {bookingComplete && (
+                <div className="text-center py-8 animate-fade-in">
+                  <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <CheckCircle className="h-10 w-10 text-green-600" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Booking Confirmed!</h2>
+                  <p className="text-gray-600 mb-6">
+                    Your booking has been successfully created. You will receive a confirmation email shortly.
+                  </p>
+                  <p className="text-sm text-gray-500">Booking ID: {bookingId}</p>
+                </div>
+              )}
+              
+              {/* Step 1: Calendar */}
+              {!bookingComplete && step === 1 && (
+                <div className="space-y-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Select Date</h2>
+                  
+                  <UnifiedCalendar
+                    mode="select"
+                    selectedDate={selectedDate}
+                    onDateSelect={handleDateSelect}
+                    className="border-0 shadow-none"
+                  />
+
+                  {selectedDate && (
+                    <button
+                      onClick={() => setStep(2)}
+                      className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105"
+                    >
+                      Select time and participants
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* Step 2: Time and Participants Selection */}
+              {!bookingComplete && step === 2 && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-2xl font-bold text-gray-900">Select time and participants</h2>
+                    <button
+                      onClick={() => setStep(1)}
+                      className="text-blue-600 hover:text-blue-700 font-medium"
+                    >
+                      ← Change date
+                    </button>
+                  </div>
+
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <p className="text-blue-800">
+                      <strong>Selected date:</strong> {new Date(selectedDate).toLocaleDateString()}
+                    </p>
+                  </div>
+
+                  {/* Participants Selection */}
+                  <div>
+                    <label className="block text-lg font-semibold text-gray-900 mb-4">
+                      Number of participants
+                    </label>
+                    <div className="flex items-center space-x-4">
+                      <button
+                        onClick={() => setParticipants(Math.max(1, participants - 1))}
+                        className="w-12 h-12 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all duration-300 flex items-center justify-center text-xl font-semibold"
+                      >
+                        -
+                      </button>
+                      <span className="text-2xl font-bold text-gray-900 min-w-[2rem] text-center">
+                        {participants}
+                      </span>
+                      <button
+                        onClick={() => {
+                          // Get max participants from selected date's time slots
+                          const availableTimesForDate = getActiveTimeSlotsForDate(selectedDate);
+                          const maxAllowed = availableTimesForDate.length > 0 
+                            ? Math.min(...availableTimesForDate.map(slot => slot.max_participants))
+                            : 5;
+                          setParticipants(Math.min(maxAllowed, participants + 1));
+                        }}
+                        className="w-12 h-12 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all duration-300 flex items-center justify-center text-xl font-semibold"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Available Time Slots */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Available regatta times</h3>
+                    <div className="space-y-4">
+                      {getActiveTimeSlotsForDate(selectedDate).map((slot) => {
+                        const totalPrice = slot.price_per_person * participants;
+                        const isSelected = selectedTime === slot.time;
+                        const timeRange = slot.time;
+                        const regattaName = timeRange.startsWith('08:30') || timeRange.startsWith('09:00') 
+                          ? 'Morning Regatta' 
+                          : 'Afternoon Regatta';
+
+                        return (
+                          <div
+                            key={slot.id}
+                            onClick={() => handleTimeSelect(slot.time)}
+                            className={`p-6 border-2 rounded-lg cursor-pointer transition-all duration-300 ${
+                              isSelected
+                                ? 'border-blue-600 bg-blue-50 scale-105'
+                                : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-4">
+                                <div className="bg-blue-100 p-3 rounded-lg">
+                                  <Clock className="h-6 w-6 text-blue-600" />
+                                </div>
+                                <div>
+                                  <h4 className="font-semibold text-gray-900 text-lg">{regattaName}</h4>
+                                  <p className="text-gray-600">
+                                    {timeRange} (4 hours)
+                                  </p>
+                                  <p className="text-sm text-gray-500">
+                                    Up to {slot.max_participants} participants
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-2xl font-bold text-blue-600">
+                                  €{totalPrice}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  €{slot.price_per_person} per person
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                      {getActiveTimeSlotsForDate(selectedDate).length === 0 && (
+                        <div className="p-6 border-2 border-red-200 rounded-lg bg-red-50">
+                          <div className="flex items-start space-x-3">
+                            <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
+                            <div>
+                              <h4 className="font-semibold text-red-900 mb-1">No available time slots</h4>
+                              <p className="text-red-700">
+                                There are no available time slots for this date. Please select another date.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {selectedTime && (
+                    <button
+                      onClick={() => setStep(3)}
+                      className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105"
+                    >
+                      Continue
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* Step 3: Customer Details */}
+              {!bookingComplete && step === 3 && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-2xl font-bold text-gray-900">Your details</h2>
+                    <button
+                      onClick={() => setStep(2)}
+                      className="text-blue-600 hover:text-blue-700 font-medium"
+                    >
+                      ← Back
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        Full Name *
+                      </label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        <input
+                          type="text"
+                          value={bookingData.customer_name || ''}
+                          onChange={(e) => setBookingData({...bookingData, customer_name: e.target.value})}
+                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="John Smith"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        Email *
+                      </label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        <input
+                          type="email"
+                          value={bookingData.customer_email || ''}
+                          onChange={(e) => setBookingData({...bookingData, customer_email: e.target.value})}
+                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="john@example.com"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        Phone *
+                      </label>
+                      <div className="relative">
+                        <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        <input
+                          type="tel"
+                          value={bookingData.customer_phone || ''}
+                          onChange={(e) => setBookingData({...bookingData, customer_phone: e.target.value})}
+                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="+39 345 678 9012"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        Special Requests (Optional)
+                      </label>
+                      <textarea
+                        value={bookingData.special_requests || ''}
+                        onChange={(e) => setBookingData({...bookingData, special_requests: e.target.value})}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Any special requirements or requests..."
+                        rows={3}
+                      />
+                    </div>
+                  </div>
+
+                  {bookingData.customer_name && bookingData.customer_email && bookingData.customer_phone && (
+                    <button
+                      onClick={() => setStep(4)}
+                      className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105"
+                    >
+                      Proceed to payment
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* Step 4: Payment */}
+              {!bookingComplete && step === 4 && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-2xl font-bold text-gray-900">Payment</h2>
+                    <button
+                      onClick={() => setStep(3)}
+                      className="text-blue-600 hover:text-blue-700 font-medium"
+                    >
+                      ← Back
+                    </button>
+                  </div>
+
+                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <div className="flex items-start space-x-3">
+                      <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
+                      <div>
+                        <h3 className="font-semibold text-green-900 mb-2">Secure payment</h3>
+                        <p className="text-green-800 text-sm">
+                          Your data is protected by SSL encryption. We do not store credit card data.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Display error message if there is one */}
+                  {error && (
+                    <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+                      <div className="flex items-start space-x-3">
+                        <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
+                        <div>
+                          <h3 className="font-semibold text-red-900 mb-2">Error</h3>
+                          <p className="text-red-700 text-sm">{error}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        Card Number *
+                      </label>
+                      <div className="relative">
+                        <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        <input
+                          type="text"
+                          value={bookingData.card_number || ''}
+                          onChange={(e) => setBookingData({...bookingData, card_number: e.target.value})}
+                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="1234 5678 9012 3456"
+                          maxLength={19}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-900 mb-2">
+                          Expiry Date *
+                        </label>
+                        <input
+                          type="text"
+                          value={bookingData.card_expiry || ''}
+                          onChange={(e) => setBookingData({...bookingData, card_expiry: e.target.value})}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="MM/YY"
+                          maxLength={5}
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-900 mb-2">
+                          CVV *
+                        </label>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                          <input
+                            type="text"
+                            value={bookingData.card_cvv || ''}
+                            onChange={(e) => setBookingData({...bookingData, card_cvv: e.target.value})}
+                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="123"
+                            maxLength={4}
+                            required
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {bookingData.card_number && bookingData.card_expiry && bookingData.card_cvv && (
+                    <button
+                      onClick={handleBookingSubmit}
+                      disabled={loading}
+                      className="w-full bg-green-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-green-700 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                    >
+                      {loading ? (
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                      ) : (
+                        <>
+                          <Lock className="h-5 w-5" />
+                          <span>Pay €{calculateTotalPrice()}</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
-        </CalendarProvider>
-    );
+          </div>
+
+          {/* Booking Summary Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-32">
+              <h3 className="text-xl font-bold text-gray-900 mb-6">Regatta Summary</h3>
+              
+              <div className="space-y-4 mb-6">
+                {selectedDate && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Date:</span>
+                    <span className="font-semibold">
+                      {new Date(selectedDate).toLocaleDateString()}
+                    </span>
+                  </div>
+                )}
+                
+                {selectedTime && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Time:</span>
+                    <span className="font-semibold">
+                      {selectedTime.startsWith('08:30') || selectedTime.startsWith('09:00') ? 'Morning' : 'Afternoon'} Regatta
+                      <br />
+                      <span className="text-sm text-gray-500">{selectedTime}</span>
+                    </span>
+                  </div>
+                )}
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Participants:</span>
+                  <span className="font-semibold">{participants}</span>
+                </div>
+                
+                {selectedTime && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Duration:</span>
+                    <span className="font-semibold">4 hours</span>
+                  </div>
+                )}
+              </div>
+
+              {selectedTime && (
+                <div className="border-t border-gray-200 pt-4 mb-6">
+                  <div className="flex justify-between items-center text-lg font-bold">
+                    <span>Total:</span>
+                    <span className="text-blue-600 flex items-center">
+                      <Euro className="h-5 w-5 mr-1" />
+                      {calculateTotalPrice()}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-2">
+                    {getActiveTimeSlotsForDate(selectedDate).find(slot => slot.time === selectedTime)?.price_per_person || 195} € per person
+                  </p>
+                </div>
+              )}
+
+              <div className="space-y-4 text-sm text-gray-600">
+                <div className="flex items-start space-x-2">
+                  <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span>Professional skipper</span>
+                </div>
+                <div className="flex items-start space-x-2">
+                  <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span>All safety equipment</span>
+                </div>
+                <div className="flex items-start space-x-2">
+                  <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span>Racing instruction and training</span>
+                </div>
+                <div className="flex items-start space-x-2">
+                  <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span>Medal ceremony</span>
+                </div>
+                <div className="flex items-start space-x-2">
+                  <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span>Professional photography</span>
+                </div>
+              </div>
+
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <div className="flex items-center space-x-2 text-sm text-gray-600 mb-2">
+                  <AlertCircle className="h-4 w-4" />
+                  <span>Free cancellation 48 hours prior</span>
+                </div>
+                <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <CheckCircle className="h-4 w-4" />
+                  <span>Full insurance included</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default BookingCalendarPage;

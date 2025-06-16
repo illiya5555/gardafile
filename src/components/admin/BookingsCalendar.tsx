@@ -19,6 +19,7 @@ import {
   Download
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { useCalendarSync } from '../../hooks/useCalendarSync';
 
 interface BookingEvent {
   id: string;
@@ -46,6 +47,9 @@ const BookingsCalendar = () => {
   const [conflicts, setConflicts] = useState<string[]>([]);
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // Use the calendar sync hook to get time slots
+  const { timeSlots, isDateAvailable } = useCalendarSync();
 
   useEffect(() => {
     fetchBookings();
@@ -102,13 +106,13 @@ const BookingsCalendar = () => {
         
         return {
           id: booking.id,
-          title: `${booking.profiles?.first_name} ${booking.profiles?.last_name} - Racing`,
+          title: `${booking.customer_name} - Racing`,
           start: new Date(`${booking.booking_date}T${startTime}`),
           end: new Date(`${booking.booking_date}T${endTime}`),
           yacht_name: 'Racing Yacht',
-          customer_name: `${booking.profiles?.first_name} ${booking.profiles?.last_name}`,
-          customer_email: booking.profiles?.email || '',
-          customer_phone: booking.profiles?.phone || '',
+          customer_name: booking.customer_name,
+          customer_email: booking.customer_email,
+          customer_phone: booking.customer_phone || '',
           participants: booking.participants,
           total_price: parseFloat(booking.total_price),
           status: booking.status,
@@ -443,18 +447,25 @@ const BookingsCalendar = () => {
 
                 const dayBookings = getBookingsForDay(date);
                 const isToday = date.toDateString() === new Date().toDateString();
+                const dateStr = date.toISOString().split('T')[0];
+                const isAvailable = isDateAvailable(dateStr);
 
                 return (
                   <div
                     key={index}
-                    className="h-32 border-r border-b border-gray-200 p-2 relative overflow-hidden"
+                    className={`h-32 border-r border-b border-gray-200 p-2 relative overflow-hidden ${
+                      isToday ? 'bg-blue-50' : ''
+                    }`}
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={() => handleDrop(date)}
                   >
-                    <div className={`text-sm font-medium mb-2 ${
+                    <div className={`text-sm font-medium mb-2 flex justify-between ${
                       isToday ? 'text-blue-600' : 'text-gray-900'
                     }`}>
-                      {date.getDate()}
+                      <span>{date.getDate()}</span>
+                      {isAvailable && (
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      )}
                     </div>
                     
                     <div className="space-y-1">

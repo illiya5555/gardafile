@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, Users, CreditCard, CheckCircle, AlertCircle, ArrowLeft, ArrowRight, Euro, User, Mail, Phone, Lock } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { useCalendarSync } from '../hooks/useCalendarSync';
+import { useCalendar } from '../context/CalendarContext';
 import UnifiedCalendar from '../components/calendar/UnifiedCalendar';
 
 interface BookingData {
@@ -25,7 +25,8 @@ const BookingCalendarPage = () => {
   const [loading, setLoading] = useState(false);
   const [bookingData, setBookingData] = useState<Partial<BookingData>>({});
 
-  const { getActiveTimeSlotsForDate, isDateAvailable } = useCalendarSync();
+  // Use the calendar context instead of the hook directly
+  const { getActiveTimeSlotsForDate, isDateAvailable } = useCalendar();
 
   const calculateTotalPrice = () => {
     const selectedSlot = getActiveTimeSlotsForDate(selectedDate).find(slot => 
@@ -224,7 +225,7 @@ const BookingCalendarPage = () => {
                       >
                         -
                       </button>
-                      <span className="text-2xl font-bold text-gray-900 min-w-[3rem] text-center">
+                      <span className="text-2xl font-bold text-gray-900 min-w-[2rem] text-center">
                         {participants}
                       </span>
                       <button

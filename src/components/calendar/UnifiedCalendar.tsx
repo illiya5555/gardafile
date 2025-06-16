@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, Users, Euro } from 'lucide-react';
-import { useCalendarSync } from '../../hooks/useCalendarSync';
+import { useCalendar } from '../../context/CalendarContext';
 
 interface UnifiedCalendarProps {
   mode?: 'view' | 'select';
@@ -18,7 +18,7 @@ const UnifiedCalendar: React.FC<UnifiedCalendarProps> = ({
   className = ''
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const { timeSlots, loading, isDateAvailable, getActiveTimeSlotsForDate } = useCalendarSync();
+  const { timeSlots, loading, isDateAvailable, getActiveTimeSlotsForDate } = useCalendar();
 
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -136,7 +136,7 @@ const UnifiedCalendar: React.FC<UnifiedCalendarProps> = ({
             return (
               <div
                 key={index}
-                onClick={() => isCurrentMonth && handleDateClick(date)}
+                onClick={() => isCurrentMonth && !isPast && available && handleDateClick(date)}
                 className={`h-12 rounded-lg text-sm font-medium transition-all duration-300 relative cursor-pointer ${
                   !isCurrentMonth
                     ? 'text-gray-300 cursor-not-allowed'

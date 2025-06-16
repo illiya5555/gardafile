@@ -38,7 +38,7 @@ function App() {
             user_roles(role_name)
           `)
           .eq('id', user.id)
-          .single();
+          .maybeSingle();
         
         setUserRole(profile?.user_roles?.role_name || null);
       }
@@ -61,7 +61,7 @@ function App() {
               user_roles(role_name)
             `)
             .eq('id', session.user.id)
-            .single();
+            .maybeSingle();
           
           setUserRole(profile?.user_roles?.role_name || null);
         } else {

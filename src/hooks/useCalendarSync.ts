@@ -37,13 +37,17 @@ export const useCalendarSync = () => {
         .order('date', { ascending: true })
         .order('time', { ascending: true });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
 
       setState(prev => ({
         ...prev,
         timeSlots: data || [],
         loading: false,
-        lastUpdated: new Date()
+        lastUpdated: new Date(),
+        error: null
       }));
     } catch (error: any) {
       console.error('Error fetching time slots:', error);

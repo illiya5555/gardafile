@@ -23,10 +23,10 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [availableDates, setAvailableDates] = useState<string[]>([]);
 
   useEffect(() => {
-    if (!calendarSync.loading) {
+    if (!calendarSync.loading && !calendarSync.error) {
       setAvailableDates(calendarSync.getAvailableDates());
     }
-  }, [calendarSync.timeSlots, calendarSync.loading]);
+  }, [calendarSync.timeSlots, calendarSync.loading, calendarSync.error]);
 
   const value = {
     availableDates,

@@ -25,10 +25,17 @@ const BookingCalendarPage = () => {
   const [loading, setLoading] = useState(false);
   const [bookingData, setBookingData] = useState<Partial<BookingData>>({});
 
-  // Use the calendar context instead of the hook directly
-  const { getActiveTimeSlotsForDate, isDateAvailable } = useCalendar();
+  // Use the calendar context
+  const { 
+    getActiveTimeSlotsForDate, 
+    isDateAvailable, 
+    loading: calendarLoading, 
+    error: calendarError 
+  } = useCalendar();
 
   const calculateTotalPrice = () => {
+    if (!selectedDate || !selectedTime) return 0;
+    
     const selectedSlot = getActiveTimeSlotsForDate(selectedDate).find(slot => 
       slot.time === selectedTime
     );
@@ -103,6 +110,47 @@ const BookingCalendarPage = () => {
       setLoading(false);
     }
   };
+
+  // Show loading state while calendar is loading
+  if (calendarLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 font-medium">Loading calendar...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if calendar failed to load
+  if (calendarError) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto">
+          <AlertCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Calendar Unavailable</h2>
+          <p className="text-gray-600 mb-6">
+            We're having trouble loading the booking calendar. Please try refreshing the page or contact us directly.
+          </p>
+          <div className="space-y-3">
+            <button 
+              onClick={() => window.location.reload()} 
+              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
+            >
+              Refresh Page
+            </button>
+            <a 
+              href="tel:+393447770077" 
+              className="block w-full bg-gray-100 text-gray-900 py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-colors duration-300"
+            >
+              Call +39 344 777 00 77
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8">

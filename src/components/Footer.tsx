@@ -1,28 +1,10 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Anchor, MapPin, Phone, Mail, Award, Shield, Clock, Lock, User } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { Link } from 'react-router-dom';
+import { Anchor, MapPin, Phone, Mail, Award, Shield, Clock, Lock } from 'lucide-react';
 import AdminLogin from './AdminLogin';
 
 const Footer = () => {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
-  const navigate = useNavigate();
-  const [user, setUser] = useState<any>(null);
-
-  // Check if user is logged in
-  React.useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    checkUser();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
-      setUser(session?.user || null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   return (
     <footer className="bg-gray-900 text-white">
@@ -63,28 +45,15 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/corporate-sailing" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                <a href="#" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
                   Corporate Events
-                </Link>
+                </a>
               </li>
               <li>
-                <Link to="/gift-certificates" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                <a href="#" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
                   Gift Vouchers
-                </Link>
+                </a>
               </li>
-              {user ? (
-                <li>
-                  <Link to="/dashboard" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                    My Dashboard
-                  </Link>
-                </li>
-              ) : (
-                <li>
-                  <Link to="/login" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                    Sign In / Register
-                  </Link>
-                </li>
-              )}
             </ul>
           </div>
 
@@ -144,25 +113,14 @@ const Footer = () => {
               <a href="#" className="hover:text-primary-500 transition-colors duration-300">Terms & Conditions</a>
               <a href="#" className="hover:text-primary-500 transition-colors duration-300">Cancellation Policy</a>
               <a href="#" className="hover:text-primary-500 transition-colors duration-300">GDPR</a>
-              
-              {/* User account link or admin button */}
-              {user ? (
-                <Link 
-                  to="/dashboard" 
-                  className="text-gray-400 hover:text-primary-500 transition-colors duration-300 flex items-center space-x-1"
-                >
-                  <User className="h-3 w-3" />
-                  <span>My Account</span>
-                </Link>
-              ) : (
-                <button
-                  onClick={() => setShowAdminLogin(true)}
-                  className="text-gray-600 hover:text-gray-400 transition-colors duration-300 opacity-30 hover:opacity-60"
-                  title="Admin Access"
-                >
-                  <Lock className="h-3 w-3" />
-                </button>
-              )}
+              {/* Малозаметная кнопка администратора */}
+              <button
+                onClick={() => setShowAdminLogin(true)}
+                className="text-gray-600 hover:text-gray-400 transition-colors duration-300 opacity-30 hover:opacity-60"
+                title="Admin Access"
+              >
+                <Lock className="h-3 w-3" />
+              </button>
             </div>
             <p className="text-sm text-gray-400">
               © 2024 Garda Racing Yacht Club. All rights reserved.

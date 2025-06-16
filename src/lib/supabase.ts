@@ -31,49 +31,16 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   }
 });
 
-// Helper function to check if user is admin
-export const isAdmin = async () => {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return false;
-  
-  const { data } = await supabase
-    .from('profiles')
-    .select(`
-      role_id,
-      user_roles(role_name)
-    `)
-    .eq('id', user.id)
-    .single();
-  
-  return data?.user_roles?.role_name === 'admin';
-};
-
-// Helper function to check if user is manager
-export const isManager = async () => {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return false;
-  
-  const { data } = await supabase
-    .from('profiles')
-    .select(`
-      role_id,
-      user_roles(role_name)
-    `)
-    .eq('id', user.id)
-    .single();
-  
-  return data?.user_roles?.role_name === 'manager';
-};
-
 // Test connection function with better error handling
 export const testConnection = async () => {
   try {
     console.log('Testing Supabase connection to:', supabaseUrl);
     
     // Use a simple query that should work with any Supabase instance
-    const { count, error } = await supabase
-      .from('time_slots')
-      .select('*', { count: 'exact', head: true });
+    const { data, error } = await supabase
+      .from('testimonials')
+      .select('id')
+      .limit(1);
     
     if (error) {
       console.error('Supabase connection test failed:', {
@@ -124,7 +91,6 @@ export interface Booking {
 
 export interface TimeSlot {
   id: string;
-  date: string;
   time: string;
   max_participants: number;
   price_per_person: number;

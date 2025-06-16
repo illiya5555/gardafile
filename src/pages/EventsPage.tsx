@@ -74,7 +74,7 @@ const EventsPage = () => {
   return (
     <div className="pt-20">
       {/* Hero Section */}
-      <section className="relative py-12 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
+      <section className="relative py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>

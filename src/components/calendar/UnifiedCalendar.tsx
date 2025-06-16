@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, Users, Euro } from 'lucide-react';
+import React, { useState } from 'react';
+import { ChevronLeft, ChevronRight, Clock, Users, Euro } from 'lucide-react';
 import { useCalendar } from '../../context/CalendarContext';
 
 interface UnifiedCalendarProps {
@@ -18,7 +18,9 @@ const UnifiedCalendar: React.FC<UnifiedCalendarProps> = ({
   className = ''
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const { timeSlots, loading, isDateAvailable, getActiveTimeSlotsForDate } = useCalendar();
+  
+  // Получаем обе функции из контекста
+  const { loading, isDateAvailable, isDateBooked, getActiveTimeSlotsForDate } = useCalendar();
 
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -53,12 +55,7 @@ const UnifiedCalendar: React.FC<UnifiedCalendarProps> = ({
   const handleDateClick = (date: Date) => {
     if (mode === 'select' && onDateSelect) {
       const dateStr = date.toISOString().split('T')[0];
-      const isPast = date < new Date();
-      const available = isDateAvailable(dateStr);
-      
-      if (!isPast && available) {
-        onDateSelect(dateStr);
-      }
+      onDateSelect(dateStr);
     }
   };
 
@@ -129,44 +126,41 @@ const UnifiedCalendar: React.FC<UnifiedCalendarProps> = ({
             const isCurrentMonth = date.getMonth() === currentDate.getMonth();
             const isToday = date.toDateString() === new Date().toDateString();
             const isPast = date < new Date() && !isToday;
+            
+            // Используем обе функции для определения статуса
             const available = isDateAvailable(dateStr);
+            const booked = isDateBooked(dateStr);
+            
             const isSelected = selectedDate === dateStr;
-            const timeSlotsForDate = getActiveTimeSlotsForDate(dateStr);
+            const isClickable = mode === 'select' && isCurrentMonth && !isPast && available && !booked;
 
             return (
               <div
                 key={index}
-                onClick={() => isCurrentMonth && !isPast && available && handleDateClick(date)}
-                className={`h-12 rounded-lg text-sm font-medium transition-all duration-300 relative cursor-pointer ${
+                onClick={() => isClickable && handleDateClick(date)}
+                className={`h-12 rounded-lg text-sm font-medium transition-all duration-300 relative flex flex-col items-center justify-center pt-1 ${
+                  isClickable ? 'cursor-pointer' : 'cursor-not-allowed'
+                } ${
                   !isCurrentMonth
-                    ? 'text-gray-300 cursor-not-allowed'
+                    ? 'text-gray-300'
                     : isPast
-                    ? 'text-gray-400 cursor-not-allowed bg-gray-50'
+                    ? 'text-gray-400 bg-gray-50'
                     : isSelected
                     ? 'bg-blue-600 text-white scale-110 shadow-lg'
+                    : booked // <-- Проверяем 'booked' ПЕРЕД 'available'
+                    ? 'bg-red-100 text-red-600' // Стиль для "забронированных" дней
                     : !available
-                    ? 'bg-red-100 text-red-600 cursor-not-allowed'
+                    ? 'text-gray-400 bg-gray-100' // Стиль для недоступных
                     : isToday
                     ? 'bg-blue-100 text-blue-800 hover:bg-blue-200'
                     : 'hover:bg-blue-50 text-gray-900 border border-gray-200 hover:border-blue-300'
-                } flex items-center justify-center`}
+                }`}
               >
-                {date.getDate()}
+                <span>{date.getDate()}</span>
                 
-                {/* Availability indicator */}
-                {isCurrentMonth && !isPast && available && (
-                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2">
-                    <div className="w-1 h-1 bg-green-500 rounded-full"></div>
-                  </div>
-                )}
-                
-                {/* Time slots count */}
-                {isCurrentMonth && !isPast && timeSlotsForDate.length > 0 && (
-                  <div className="absolute top-0 right-0 -mt-1 -mr-1">
-                    <div className="w-4 h-4 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center">
-                      {timeSlotsForDate.length}
-                    </div>
-                  </div>
+                {/* Надпись "Booked" */}
+                {isCurrentMonth && !isPast && booked && (
+                    <span className="text-[10px] font-bold leading-tight">Booked</span>
                 )}
               </div>
             );
@@ -222,11 +216,11 @@ const UnifiedCalendar: React.FC<UnifiedCalendarProps> = ({
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-red-100 rounded"></div>
-            <span>Unavailable</span>
+            <span>Booked</span> {/* Обновлена легенда */}
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-gray-100 rounded"></div>
-            <span>Past</span>
+            <span>Past/Unavailable</span> {/* Обновлена легенда */}
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-blue-100 rounded"></div>

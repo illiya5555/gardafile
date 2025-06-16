@@ -72,7 +72,7 @@ const GiftCertificatesPage = () => {
   return (
     <div className="pt-20">
       {/* Hero Section */}
-      <section className="relative py-12 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
+      <section className="relative py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-30"
           style={{ backgroundImage: 'url(https://i.postimg.cc/1XvDrJbX/image.png)' }}

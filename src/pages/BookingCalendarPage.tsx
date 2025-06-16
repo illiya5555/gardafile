@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, Users, CreditCard, CheckCircle, AlertCircle, ArrowLeft, ArrowRight, Euro, User, Mail, Phone, Lock } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { useCalendar } from '../context/CalendarContext';
-import UnifiedCalendar from '../components/calendar/UnifiedCalendar';
+
+interface TimeSlot {
+  id: string;
+  date: string;
+  time: string;
+  available: boolean;
+  price_per_person: number;
+  max_participants: number;
+}
 
 interface BookingData {
   date: string;
@@ -18,32 +25,132 @@ interface BookingData {
 }
 
 const BookingCalendarPage = () => {
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [participants, setParticipants] = useState(1);
   const [step, setStep] = useState(1); // 1: Calendar, 2: Time, 3: Details, 4: Payment
+  const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(false);
   const [bookingData, setBookingData] = useState<Partial<BookingData>>({});
 
-  // Use the calendar context
-  const { 
-    getActiveTimeSlotsForDate, 
-    isDateAvailable, 
-    loading: calendarLoading, 
-    error: calendarError 
-  } = useCalendar();
+  // Fixed regatta time slots - only 8:30 and 13:30
+  const regattaTimeSlots = [
+    { time: '08:30-12:30', name: 'Morning Regatta', start: '08:30', end: '12:30' },
+    { time: '13:30-17:30', name: 'Afternoon Regatta', start: '13:30', end: '17:30' }
+  ];
 
-  const calculateTotalPrice = () => {
-    if (!selectedDate || !selectedTime) return 0;
-    
-    const selectedSlot = getActiveTimeSlotsForDate(selectedDate).find(slot => 
-      slot.time === selectedTime
-    );
-    return selectedSlot ? selectedSlot.price_per_person * participants : 0;
+  useEffect(() => {
+    clearExistingBookings();
+    generateAvailableSlots();
+  }, [currentDate]);
+
+  const clearExistingBookings = async () => {
+    try {
+      // Clear all existing bookings from both tables
+      await supabase.from('bookings').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await supabase.from('yacht_bookings').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      console.log('Existing bookings cleared');
+    } catch (error) {
+      console.error('Error clearing bookings:', error);
+    }
   };
 
-  const handleDateSelect = (date: string) => {
-    setSelectedDate(date);
+  const generateAvailableSlots = () => {
+    const slots: TimeSlot[] = [];
+    const today = new Date();
+    
+    // Generate slots for 120 days ahead
+    for (let day = 0; day < 120; day++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + day);
+      
+      const dateStr = date.toISOString().split('T')[0];
+      const month = date.getMonth() + 1; // JavaScript months are 0-indexed
+      const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
+      
+      // Check if date should be available
+      let isAvailable = true;
+      
+      // For June (6) and July (7), only weekends (Saturday & Sunday) are available
+      if (month === 6 || month === 7) {
+        // Only Saturday (6) and Sunday (0) are available in June/July
+        isAvailable = (dayOfWeek === 0 || dayOfWeek === 6);
+      }
+      // For all other months - fully available (100% availability)
+      else {
+        isAvailable = true; // 100% availability for all other months
+      }
+      
+      // Create slots for both regatta times
+      regattaTimeSlots.forEach((timeSlot) => {
+        slots.push({
+          id: `${dateStr}-${timeSlot.start}`,
+          date: dateStr,
+          time: timeSlot.time,
+          available: isAvailable,
+          price_per_person: 195, // Fixed price for 4-hour regatta
+          max_participants: 5 // Max 5 people per regatta
+        });
+      });
+    }
+    
+    setAvailableSlots(slots);
+  };
+
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+
+    const days = [];
+    
+    // Add empty days at the beginning
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null);
+    }
+    
+    // Add days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(new Date(year, month, day));
+    }
+    
+    return days;
+  };
+
+  const isDateAvailable = (date: Date) => {
+    const dateStr = date.toISOString().split('T')[0];
+    return availableSlots.some(slot => slot.date === dateStr && slot.available);
+  };
+
+  const isDateBooked = (date: Date) => {
+    const month = date.getMonth() + 1;
+    const dayOfWeek = date.getDay();
+    
+    // For June and July, weekdays (Monday-Friday) are "booked"
+    // Saturday (6) and Sunday (0) are available
+    if (month === 6 || month === 7) {
+      return dayOfWeek >= 1 && dayOfWeek <= 5; // Monday to Friday are booked
+    }
+    
+    // For all other months - all dates are available (no dates are booked)
+    return false;
+  };
+
+  const getAvailableTimesForDate = (date: string) => {
+    return availableSlots.filter(slot => slot.date === date && slot.available);
+  };
+
+  const calculateTotalPrice = () => {
+    return 195 * participants;
+  };
+
+  const handleDateSelect = (date: Date) => {
+    const dateStr = date.toISOString().split('T')[0];
+    setSelectedDate(dateStr);
     setSelectedTime(''); // Reset time selection when date changes
   };
 
@@ -111,46 +218,20 @@ const BookingCalendarPage = () => {
     }
   };
 
-  // Show loading state while calendar is loading
-  if (calendarLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 font-medium">Loading calendar...</p>
-        </div>
-      </div>
-    );
-  }
+  const nextMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+  };
 
-  // Show error state if calendar failed to load
-  if (calendarError) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8 flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto">
-          <AlertCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Calendar Unavailable</h2>
-          <p className="text-gray-600 mb-6">
-            We're having trouble loading the booking calendar. Please try refreshing the page or contact us directly.
-          </p>
-          <div className="space-y-3">
-            <button 
-              onClick={() => window.location.reload()} 
-              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
-            >
-              Refresh Page
-            </button>
-            <a 
-              href="tel:+393447770077" 
-              className="block w-full bg-gray-100 text-gray-900 py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-colors duration-300"
-            >
-              Call +39 344 777 00 77
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const prevMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+  };
+
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8">
@@ -166,7 +247,11 @@ const BookingCalendarPage = () => {
           <div className="mt-4 flex justify-center space-x-8 text-sm text-gray-600">
             <div className="flex items-center space-x-2">
               <Clock className="h-4 w-4" />
-              <span>4-hour experience</span>
+              <span>Morning: 8:30-12:30</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Clock className="h-4 w-4" />
+              <span>Afternoon: 13:30-17:30</span>
             </div>
             <div className="flex items-center space-x-2">
               <Users className="h-4 w-4" />
@@ -224,12 +309,129 @@ const BookingCalendarPage = () => {
                 <div className="space-y-6">
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">Select Date</h2>
                   
-                  <UnifiedCalendar
-                    mode="select"
-                    selectedDate={selectedDate}
-                    onDateSelect={handleDateSelect}
-                    className="border-0 shadow-none"
-                  />
+                  {/* Calendar Header */}
+                  <div className="flex items-center justify-between mb-6">
+                    <button
+                      onClick={prevMonth}
+                      className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-300"
+                    >
+                      <ArrowLeft className="h-5 w-5" />
+                    </button>
+                    <h3 className="text-xl font-semibold text-gray-900">
+                      {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+                    </h3>
+                    <button
+                      onClick={nextMonth}
+                      className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-300"
+                    >
+                      <ArrowRight className="h-5 w-5" />
+                    </button>
+                  </div>
+
+                  {/* Special notice for June/July */}
+                  {(currentDate.getMonth() === 5 || currentDate.getMonth() === 6) && (
+                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+                      <div className="flex items-start space-x-3">
+                        <AlertCircle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <h4 className="font-semibold text-amber-900">
+                            {currentDate.getMonth() === 5 ? 'June' : 'July'} Availability Notice
+                          </h4>
+                          <p className="text-amber-800 text-sm mt-1">
+                            During {currentDate.getMonth() === 5 ? 'June' : 'July'}, regattas are available only on weekends (Saturday & Sunday). 
+                            Weekdays are fully booked for private events.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Special notice for all other months */}
+                  {(currentDate.getMonth() !== 5 && currentDate.getMonth() !== 6) && (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                      <div className="flex items-start space-x-3">
+                        <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <h4 className="font-semibold text-green-900">
+                            {monthNames[currentDate.getMonth()]} - Full Availability
+                          </h4>
+                          <p className="text-green-800 text-sm mt-1">
+                            All dates are available for booking during {monthNames[currentDate.getMonth()]}. 
+                            Choose any day that works for you!
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Calendar Grid */}
+                  <div className="grid grid-cols-7 gap-2 mb-4">
+                    {dayNames.map(day => (
+                      <div key={day} className="text-center text-sm font-semibold text-gray-600 py-2">
+                        {day}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="grid grid-cols-7 gap-2">
+                    {getDaysInMonth(currentDate).map((date, index) => {
+                      if (!date) {
+                        return <div key={index} className="h-12"></div>;
+                      }
+
+                      const dateStr = date.toISOString().split('T')[0];
+                      const isAvailable = isDateAvailable(date);
+                      const isBooked = isDateBooked(date);
+                      const isSelected = dateStr === selectedDate;
+                      const isPast = date < new Date();
+
+                      return (
+                        <button
+                          key={index}
+                          onClick={() => !isPast && isAvailable && !isBooked && handleDateSelect(date)}
+                          disabled={isPast || !isAvailable || isBooked}
+                          className={`h-12 rounded-lg text-sm font-medium transition-all duration-300 relative ${
+                            isPast
+                              ? 'text-gray-300 cursor-not-allowed bg-gray-100'
+                              : isSelected
+                              ? 'bg-blue-600 text-white scale-110 shadow-lg'
+                              : isBooked
+                              ? 'bg-red-100 text-red-600 cursor-not-allowed'
+                              : isAvailable
+                              ? 'hover:bg-blue-50 text-gray-900 border border-gray-200 hover:border-blue-300'
+                              : 'text-gray-400 cursor-not-allowed bg-gray-50'
+                          }`}
+                        >
+                          {date.getDate()}
+                          {isBooked && !isPast && (
+                            <div className="absolute bottom-0 left-0 right-0 text-xs text-red-600 font-bold">
+                              Booked
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Legend */}
+                  <div className="mt-6 flex flex-wrap gap-4 text-sm">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 bg-blue-600 rounded"></div>
+                      <span>Selected</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border border-gray-200 rounded bg-white"></div>
+                      <span>Available</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 bg-red-100 rounded"></div>
+                      <span>Booked</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 bg-gray-100 rounded"></div>
+                      <span>Past/Unavailable</span>
+                    </div>
+                  </div>
 
                   {selectedDate && (
                     <button
@@ -264,7 +466,7 @@ const BookingCalendarPage = () => {
                   {/* Participants Selection */}
                   <div>
                     <label className="block text-lg font-semibold text-gray-900 mb-4">
-                      Number of participants
+                      Number of participants (max 5 per regatta)
                     </label>
                     <div className="flex items-center space-x-4">
                       <button
@@ -273,18 +475,11 @@ const BookingCalendarPage = () => {
                       >
                         -
                       </button>
-                      <span className="text-2xl font-bold text-gray-900 min-w-[2rem] text-center">
+                      <span className="text-2xl font-bold text-gray-900 min-w-[3rem] text-center">
                         {participants}
                       </span>
                       <button
-                        onClick={() => {
-                          // Get max participants from selected date's time slots
-                          const availableTimesForDate = getActiveTimeSlotsForDate(selectedDate);
-                          const maxAllowed = availableTimesForDate.length > 0 
-                            ? Math.min(...availableTimesForDate.map(slot => slot.max_participants))
-                            : 5;
-                          setParticipants(Math.min(maxAllowed, participants + 1));
-                        }}
+                        onClick={() => setParticipants(Math.min(5, participants + 1))}
                         className="w-12 h-12 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all duration-300 flex items-center justify-center text-xl font-semibold"
                       >
                         +
@@ -296,13 +491,10 @@ const BookingCalendarPage = () => {
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Available regatta times</h3>
                     <div className="space-y-4">
-                      {getActiveTimeSlotsForDate(selectedDate).map((slot) => {
-                        const totalPrice = slot.price_per_person * participants;
+                      {getAvailableTimesForDate(selectedDate).map((slot) => {
+                        const totalPrice = 195 * participants;
                         const isSelected = selectedTime === slot.time;
-                        const timeRange = slot.time;
-                        const regattaName = timeRange.startsWith('08:30') || timeRange.startsWith('09:00') 
-                          ? 'Morning Regatta' 
-                          : 'Afternoon Regatta';
+                        const regattaName = slot.time.startsWith('08:30') ? 'Morning Regatta' : 'Afternoon Regatta';
 
                         return (
                           <div
@@ -322,7 +514,7 @@ const BookingCalendarPage = () => {
                                 <div>
                                   <h4 className="font-semibold text-gray-900 text-lg">{regattaName}</h4>
                                   <p className="text-gray-600">
-                                    {timeRange} (4 hours)
+                                    {slot.time} (4 hours)
                                   </p>
                                   <p className="text-sm text-gray-500">
                                     Up to {slot.max_participants} participants
@@ -334,27 +526,13 @@ const BookingCalendarPage = () => {
                                   €{totalPrice}
                                 </p>
                                 <p className="text-sm text-gray-600">
-                                  €{slot.price_per_person} per person
+                                  €195 per person
                                 </p>
                               </div>
                             </div>
                           </div>
                         );
                       })}
-
-                      {getActiveTimeSlotsForDate(selectedDate).length === 0 && (
-                        <div className="p-6 border-2 border-red-200 rounded-lg bg-red-50">
-                          <div className="flex items-start space-x-3">
-                            <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
-                            <div>
-                              <h4 className="font-semibold text-red-900 mb-1">No available time slots</h4>
-                              <p className="text-red-700">
-                                There are no available time slots for this date. Please select another date.
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
                     </div>
                   </div>
 
@@ -565,7 +743,7 @@ const BookingCalendarPage = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Time:</span>
                     <span className="font-semibold">
-                      {selectedTime.startsWith('08:30') || selectedTime.startsWith('09:00') ? 'Morning' : 'Afternoon'} Regatta
+                      {selectedTime.startsWith('08:30') ? 'Morning' : 'Afternoon'} Regatta
                       <br />
                       <span className="text-sm text-gray-500">{selectedTime}</span>
                     </span>
@@ -595,7 +773,7 @@ const BookingCalendarPage = () => {
                     </span>
                   </div>
                   <p className="text-sm text-gray-600 mt-2">
-                    {getActiveTimeSlotsForDate(selectedDate).find(slot => slot.time === selectedTime)?.price_per_person || 195} € per person
+                    €195 per person for 4-hour regatta
                   </p>
                 </div>
               )}

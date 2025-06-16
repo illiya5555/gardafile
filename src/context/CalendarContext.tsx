@@ -11,6 +11,9 @@ interface CalendarContextType {
   getActiveTimeSlotsForDate: (date: string) => TimeSlot[];
   isDateAvailable: (date: string) => boolean;
   refreshCalendarData: () => void;
+  bulkUpdateTimeSlots: (startDate: string, endDate: string, action: 'activate' | 'deactivate' | 'delete') => Promise<any>;
+  createDefaultTimeSlots: (date: string) => Promise<any>;
+  getDateBookingStats: (date: string) => Promise<any>;
 }
 
 const CalendarContext = createContext<CalendarContextType | undefined>(undefined);
@@ -34,7 +37,10 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
     getTimeSlotsForDate: calendarSync.getTimeSlotsForDate,
     getActiveTimeSlotsForDate: calendarSync.getActiveTimeSlotsForDate,
     isDateAvailable: calendarSync.isDateAvailable,
-    refreshCalendarData: calendarSync.refreshData
+    refreshCalendarData: calendarSync.refreshData,
+    bulkUpdateTimeSlots: calendarSync.bulkUpdateTimeSlots,
+    createDefaultTimeSlots: calendarSync.createDefaultTimeSlots,
+    getDateBookingStats: calendarSync.getDateBookingStats
   };
 
   return (

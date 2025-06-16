@@ -112,12 +112,75 @@ export const useCalendarSync = () => {
     fetchTimeSlots();
   }, [fetchTimeSlots]);
 
+  // Bulk update functions
+  const bulkUpdateTimeSlots = useCallback(async (
+    startDate: string,
+    endDate: string,
+    action: 'activate' | 'deactivate' | 'delete'
+  ) => {
+    try {
+      const { data, error } = await supabase
+        .rpc('bulk_update_time_slots', {
+          start_date: startDate,
+          end_date: endDate,
+          action: action
+        });
+
+      if (error) throw error;
+      
+      // Refresh data after bulk update
+      fetchTimeSlots();
+      return data;
+    } catch (error: any) {
+      console.error(`Error performing bulk ${action}:`, error);
+      throw error;
+    }
+  }, [fetchTimeSlots]);
+
+  // Create default time slots for a date
+  const createDefaultTimeSlots = useCallback(async (date: string) => {
+    try {
+      const { data, error } = await supabase
+        .rpc('create_default_time_slots', {
+          date_param: date
+        });
+
+      if (error) throw error;
+      
+      // Refresh data after creating default slots
+      fetchTimeSlots();
+      return data;
+    } catch (error: any) {
+      console.error('Error creating default time slots:', error);
+      throw error;
+    }
+  }, [fetchTimeSlots]);
+
+  // Get booking statistics for a date
+  const getDateBookingStats = useCallback(async (date: string) => {
+    try {
+      const { data, error } = await supabase
+        .rpc('get_date_booking_stats', {
+          date_param: date
+        });
+
+      if (error) throw error;
+      return data;
+    } catch (error: any) {
+      console.error('Error getting date booking stats:', error);
+      throw error;
+    }
+  }, []);
+
   return {
     ...state,
     getAvailableDates,
     getTimeSlotsForDate,
     getActiveTimeSlotsForDate,
     isDateAvailable,
-    refreshData
+    refreshData,
+    bulkUpdateTimeSlots,
+    createDefaultTimeSlots,
+    getDateBookingStats
   };
 };

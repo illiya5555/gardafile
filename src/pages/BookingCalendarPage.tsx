@@ -384,9 +384,7 @@ const BookingCalendarPage = () => {
                               ? 'bg-blue-600 text-white scale-110 shadow-lg'
                               : isBooked
                               ? 'bg-red-100 text-red-600 cursor-not-allowed'
-                              : isAvailable
-                              ? 'hover:bg-blue-50 text-gray-900 border border-gray-200 hover:border-blue-300'
-                              : 'text-gray-400 cursor-not-allowed bg-gray-50'
+                              : 'hover:bg-blue-50 text-gray-900 border border-gray-200 hover:border-blue-300'
                           }`}
                         >
                           {date.getDate()}

@@ -41,20 +41,8 @@ const BookingCalendarPage = () => {
   ];
 
   useEffect(() => {
-    clearExistingBookings();
     generateAvailableSlots();
   }, [currentDate]);
-
-  const clearExistingBookings = async () => {
-    try {
-      // Clear all existing bookings from both tables
-      await supabase.from('bookings').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-      await supabase.from('yacht_bookings').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-      console.log('Existing bookings cleared');
-    } catch (error) {
-      console.error('Error clearing bookings:', error);
-    }
-  };
 
   const generateAvailableSlots = () => {
     const slots: TimeSlot[] = [];
@@ -171,8 +159,9 @@ const BookingCalendarPage = () => {
         throw new Error('Please select date and time');
       }
 
-      // Create booking object with all required fields
+      // Create booking object with all required fields for reservations table
       const booking = {
+        type: 'regular',
         booking_date: selectedDate,
         time_slot: selectedTime,
         participants,
@@ -181,16 +170,14 @@ const BookingCalendarPage = () => {
         customer_email: bookingData.customer_email,
         customer_phone: bookingData.customer_phone,
         status: 'confirmed',
-        deposit_paid: 0,
-        special_requests: null,
-        user_id: null // Allow null for anonymous bookings
+        booking_source: 'website'
       };
 
       console.log('Submitting booking:', booking);
 
-      // Save to database
+      // Save to database using the correct reservations table
       const { data, error } = await supabase
-        .from('bookings')
+        .from('reservations')
         .insert(booking)
         .select()
         .single();

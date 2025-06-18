@@ -1,29 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, Users, CreditCard, CheckCircle, AlertCircle, ArrowLeft, ArrowRight, Euro, User, Mail, Phone, Lock } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useCalendar } from '../context/CalendarContext';
 import PaymentButton from '../components/PaymentButton';
 import { stripeProducts } from '../stripe-config';
 
-interface TimeSlot {
-  id: string;
-  date: string;
-  time: string;
-  available: boolean;
-  price_per_person: number;
-  max_participants: number;
-}
-
-interface BookingData {
+interface BookingFormData {
   date: string;
   time: string;
   participants: number;
-  total_price: number;
-  customer_name: string;
-  customer_email: string;
-  customer_phone: string;
-  card_number: string;
-  card_expiry: string;
-  card_cvv: string;
+  totalPrice: number;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  specialRequests?: string;
 }
 
 const BookingCalendarPage = () => {
@@ -32,21 +22,21 @@ const BookingCalendarPage = () => {
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [participants, setParticipants] = useState(1);
   const [step, setStep] = useState(1); // 1: Calendar, 2: Time, 3: Details, 4: Payment
-  const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(false);
-  const [bookingData, setBookingData] = useState<Partial<BookingData>>({});
+  const [bookingData, setBookingData] = useState<Partial<BookingFormData>>({});
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  // Fixed regatta time slots - only 8:30 and 13:30
-  const regattaTimeSlots = [
-    { time: '08:30-12:30', name: 'Morning Regatta', start: '08:30', end: '12:30' },
-    { time: '13:30-17:30', name: 'Afternoon Regatta', start: '13:30', end: '17:30' }
-  ];
+  
+  // Use the calendar context to get available dates and time slots
+  const { 
+    timeSlots, 
+    loading: calendarLoading, 
+    isDateAvailable, 
+    getActiveTimeSlotsForDate 
+  } = useCalendar();
 
   useEffect(() => {
-    generateAvailableSlots();
     checkAuthStatus();
-  }, [currentDate]);
+  }, []);
 
   const checkAuthStatus = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -62,58 +52,16 @@ const BookingCalendarPage = () => {
       
       if (data) {
         setBookingData({
-          customer_name: `${data.first_name || ''} ${data.last_name || ''}`.trim(),
-          customer_email: data.email || user.email,
-          customer_phone: data.phone || ''
+          customerName: `${data.first_name || ''} ${data.last_name || ''}`.trim(),
+          customerEmail: data.email || user.email,
+          customerPhone: data.phone || ''
         });
       } else {
         setBookingData({
-          customer_email: user.email
+          customerEmail: user.email
         });
       }
     }
-  };
-
-  const generateAvailableSlots = () => {
-    const slots: TimeSlot[] = [];
-    const today = new Date();
-    
-    // Generate slots for 120 days ahead
-    for (let day = 0; day < 120; day++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + day);
-      
-      const dateStr = date.toISOString().split('T')[0];
-      const month = date.getMonth() + 1; // JavaScript months are 0-indexed
-      const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
-      
-      // Check if date should be available
-      let isAvailable = true;
-      
-      // For June (6) and July (7), only weekends (Saturday & Sunday) are available
-      if (month === 6 || month === 7) {
-        // Only Saturday (6) and Sunday (0) are available in June/July
-        isAvailable = (dayOfWeek === 0 || dayOfWeek === 6);
-      }
-      // For all other months - fully available (100% availability)
-      else {
-        isAvailable = true; // 100% availability for all other months
-      }
-      
-      // Create slots for both regatta times
-      regattaTimeSlots.forEach((timeSlot) => {
-        slots.push({
-          id: `${dateStr}-${timeSlot.start}`,
-          date: dateStr,
-          time: timeSlot.time,
-          available: isAvailable,
-          price_per_person: 195, // Fixed price for 4-hour regatta
-          max_participants: 5 // Max 5 people per regatta
-        });
-      });
-    }
-    
-    setAvailableSlots(slots);
   };
 
   const getDaysInMonth = (date: Date) => {
@@ -139,33 +87,6 @@ const BookingCalendarPage = () => {
     return days;
   };
 
-  const isDateAvailable = (date: Date) => {
-    const dateStr = date.toISOString().split('T')[0];
-    return availableSlots.some(slot => slot.date === dateStr && slot.available);
-  };
-
-  const isDateBooked = (date: Date) => {
-    const month = date.getMonth() + 1;
-    const dayOfWeek = date.getDay();
-    
-    // For June and July, weekdays (Monday-Friday) are "booked"
-    // Saturday (6) and Sunday (0) are available
-    if (month === 6 || month === 7) {
-      return dayOfWeek >= 1 && dayOfWeek <= 5; // Monday to Friday are booked
-    }
-    
-    // For all other months - all dates are available (no dates are booked)
-    return false;
-  };
-
-  const getAvailableTimesForDate = (date: string) => {
-    return availableSlots.filter(slot => slot.date === date && slot.available);
-  };
-
-  const calculateTotalPrice = () => {
-    return 195 * participants;
-  };
-
   const handleDateSelect = (date: Date) => {
     const dateStr = date.toISOString().split('T')[0];
     setSelectedDate(dateStr);
@@ -177,12 +98,16 @@ const BookingCalendarPage = () => {
     setSelectedTime(time);
   };
 
+  const calculateTotalPrice = () => {
+    return 195 * participants;
+  };
+
   const handleBookingSubmit = async () => {
     setLoading(true);
     
     try {
       // Validate required fields
-      if (!bookingData.customer_name || !bookingData.customer_email || !bookingData.customer_phone) {
+      if (!bookingData.customerName || !bookingData.customerEmail || !bookingData.customerPhone) {
         throw new Error('Please fill in all required customer information');
       }
 
@@ -197,9 +122,9 @@ const BookingCalendarPage = () => {
         time_slot: selectedTime,
         participants: participants,
         total_price: calculateTotalPrice(),
-        customer_name: bookingData.customer_name,
-        customer_email: bookingData.customer_email,
-        customer_phone: bookingData.customer_phone,
+        customer_name: bookingData.customerName,
+        customer_email: bookingData.customerEmail,
+        customer_phone: bookingData.customerPhone,
         status: 'confirmed',
         booking_source: 'website'
       };
@@ -411,28 +336,40 @@ const BookingCalendarPage = () => {
                       }
 
                       const dateStr = date.toISOString().split('T')[0];
-                      const isAvailable = isDateAvailable(date);
-                      const isBooked = isDateBooked(date);
+                      const isAvailable = isDateAvailable(dateStr);
                       const isSelected = dateStr === selectedDate;
                       const isPast = date < new Date();
+                      const isCurrentMonth = date.getMonth() === currentDate.getMonth();
+
+                      // For June and July, only weekends are available
+                      const month = date.getMonth() + 1; // JavaScript months are 0-indexed
+                      const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
+                      let isBookable = isAvailable;
+                      
+                      // Apply special rule for June/July
+                      if ((month === 6 || month === 7) && !(dayOfWeek === 0 || dayOfWeek === 6)) {
+                        isBookable = false;
+                      }
 
                       return (
                         <button
                           key={index}
-                          onClick={() => !isPast && !isBooked && handleDateSelect(date)}
-                          disabled={isPast || isBooked}
+                          onClick={() => !isPast && isBookable && isCurrentMonth && handleDateSelect(date)}
+                          disabled={isPast || !isBookable || !isCurrentMonth}
                           className={`h-12 rounded-lg text-sm font-medium transition-all duration-300 relative ${
-                            isPast
+                            !isCurrentMonth
+                              ? 'text-gray-300 cursor-not-allowed'
+                              : isPast
                               ? 'text-gray-300 cursor-not-allowed bg-gray-100'
                               : isSelected
                               ? 'bg-blue-600 text-white scale-110 shadow-lg'
-                              : isBooked
+                              : !isBookable
                               ? 'bg-red-100 text-red-600 cursor-not-allowed'
                               : 'hover:bg-blue-50 text-gray-900 border border-gray-200 hover:border-blue-300'
                           }`}
                         >
                           {date.getDate()}
-                          {isBooked && !isPast && (
+                          {!isBookable && !isPast && isCurrentMonth && (
                             <div className="absolute bottom-0 left-0 right-0 text-xs text-red-600 font-bold">
                               Booked
                             </div>
@@ -512,48 +449,74 @@ const BookingCalendarPage = () => {
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Available regatta times</h3>
                     <div className="space-y-4">
-                      {getAvailableTimesForDate(selectedDate).map((slot) => {
-                        const totalPrice = 195 * participants;
-                        const isSelected = selectedTime === slot.time;
-                        const regattaName = slot.time.startsWith('08:30') ? 'Morning Regatta' : 'Afternoon Regatta';
+                      {calendarLoading ? (
+                        <div className="text-center py-4">
+                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                          <p className="mt-2 text-gray-600">Loading available times...</p>
+                        </div>
+                      ) : (
+                        getActiveTimeSlotsForDate(selectedDate).map((slot) => {
+                          const totalPrice = slot.price_per_person * participants;
+                          const isSelected = selectedTime === slot.time;
+                          const regattaName = slot.time.startsWith('08:30') ? 'Morning Regatta' : 'Afternoon Regatta';
+                          const timeRange = slot.time;
+                          const [startTime] = timeRange.split('-');
+                          const endTime = timeRange.split('-')[1];
 
-                        return (
-                          <div
-                            key={slot.id}
-                            onClick={() => handleTimeSelect(slot.time)}
-                            className={`p-6 border-2 rounded-lg cursor-pointer transition-all duration-300 ${
-                              isSelected
-                                ? 'border-blue-600 bg-blue-50 scale-105'
-                                : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center space-x-4">
-                                <div className="bg-blue-100 p-3 rounded-lg">
-                                  <Clock className="h-6 w-6 text-blue-600" />
+                          return (
+                            <div
+                              key={slot.id}
+                              onClick={() => handleTimeSelect(slot.time)}
+                              className={`p-6 border-2 rounded-lg cursor-pointer transition-all duration-300 ${
+                                isSelected
+                                  ? 'border-blue-600 bg-blue-50 scale-105'
+                                  : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center space-x-4">
+                                  <div className="bg-blue-100 p-3 rounded-lg">
+                                    <Clock className="h-6 w-6 text-blue-600" />
+                                  </div>
+                                  <div>
+                                    <h4 className="font-semibold text-gray-900 text-lg">{regattaName}</h4>
+                                    <p className="text-gray-600">
+                                      {timeRange} (4 hours)
+                                    </p>
+                                    <p className="text-sm text-gray-500">
+                                      Up to {slot.max_participants} participants
+                                    </p>
+                                  </div>
                                 </div>
-                                <div>
-                                  <h4 className="font-semibold text-gray-900 text-lg">{regattaName}</h4>
-                                  <p className="text-gray-600">
-                                    {slot.time} (4 hours)
+                                <div className="text-right">
+                                  <p className="text-2xl font-bold text-blue-600">
+                                    €{totalPrice}
                                   </p>
-                                  <p className="text-sm text-gray-500">
-                                    Up to {slot.max_participants} participants
+                                  <p className="text-sm text-gray-600">
+                                    €{slot.price_per_person} per person
                                   </p>
                                 </div>
-                              </div>
-                              <div className="text-right">
-                                <p className="text-2xl font-bold text-blue-600">
-                                  €{totalPrice}
-                                </p>
-                                <p className="text-sm text-gray-600">
-                                  €195 per person
-                                </p>
                               </div>
                             </div>
-                          </div>
-                        );
-                      })}
+                          );
+                        })
+                      )}
+
+                      {!calendarLoading && getActiveTimeSlotsForDate(selectedDate).length === 0 && (
+                        <div className="text-center py-8 bg-gray-50 rounded-lg">
+                          <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                          <h3 className="text-lg font-semibold text-gray-900 mb-2">No available time slots</h3>
+                          <p className="text-gray-600">
+                            There are no available time slots for this date. Please select another date.
+                          </p>
+                          <button
+                            onClick={() => setStep(1)}
+                            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
+                          >
+                            Choose Another Date
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -590,8 +553,8 @@ const BookingCalendarPage = () => {
                         <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                         <input
                           type="text"
-                          value={bookingData.customer_name || ''}
-                          onChange={(e) => setBookingData({...bookingData, customer_name: e.target.value})}
+                          value={bookingData.customerName || ''}
+                          onChange={(e) => setBookingData({...bookingData, customerName: e.target.value})}
                           className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="John Smith"
                           required
@@ -607,8 +570,8 @@ const BookingCalendarPage = () => {
                         <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                         <input
                           type="email"
-                          value={bookingData.customer_email || ''}
-                          onChange={(e) => setBookingData({...bookingData, customer_email: e.target.value})}
+                          value={bookingData.customerEmail || ''}
+                          onChange={(e) => setBookingData({...bookingData, customerEmail: e.target.value})}
                           className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="john@example.com"
                           required
@@ -624,8 +587,8 @@ const BookingCalendarPage = () => {
                         <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                         <input
                           type="tel"
-                          value={bookingData.customer_phone || ''}
-                          onChange={(e) => setBookingData({...bookingData, customer_phone: e.target.value})}
+                          value={bookingData.customerPhone || ''}
+                          onChange={(e) => setBookingData({...bookingData, customerPhone: e.target.value})}
                           className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="+39 345 678 9012"
                           required
@@ -636,7 +599,7 @@ const BookingCalendarPage = () => {
 
                   <button
                     onClick={() => setStep(4)}
-                    disabled={!bookingData.customer_name || !bookingData.customer_email || !bookingData.customer_phone}
+                    disabled={!bookingData.customerName || !bookingData.customerEmail || !bookingData.customerPhone}
                     className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Proceed to payment

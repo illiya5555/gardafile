@@ -25,13 +25,22 @@ const EventsPage = () => {
     }
   ];
 
-  const schedule = [
+  const morningSchedule = [
     { time: "08:30", activity: "Welcome & Registration", description: "Meet your skipper and fellow sailors" },
     { time: "09:00", activity: "Safety Briefing", description: "Essential safety procedures and equipment overview" },
     { time: "09:30", activity: "Sailing Basics", description: "Learn fundamental sailing techniques" },
     { time: "10:00", activity: "First Race", description: "Practice race to get comfortable" },
     { time: "13:30", activity: "Medal Ceremony", description: "Awards and certificate presentation" },
     { time: "13:30", activity: "Photo Session", description: "Professional photos with your medals" }
+  ];
+
+  const afternoonSchedule = [
+    { time: "13:00", activity: "Welcome & Registration", description: "Meet your skipper and fellow sailors" },
+    { time: "13:30", activity: "Safety Briefing", description: "Essential safety procedures and equipment overview" },
+    { time: "14:00", activity: "Sailing Basics", description: "Learn fundamental sailing techniques" },
+    { time: "14:30", activity: "First Race", description: "Practice race to get comfortable" },
+    { time: "18:00", activity: "Medal Ceremony", description: "Awards and certificate presentation" },
+    { time: "18:00", activity: "Photo Session", description: "Professional photos with your medals" }
   ];
 
   const equipment = [
@@ -229,18 +238,38 @@ const EventsPage = () => {
           <div className="animate-fade-in">
             <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Daily Schedule</h2>
             <div className="max-w-4xl mx-auto">
-              <div className="space-y-6">
-                {schedule.map((item, index) => (
-                  <div key={index} className="flex items-start space-x-6 p-6 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
-                    <div className="bg-primary-600 text-white px-4 py-2 rounded-lg font-semibold min-w-fit">
-                      {item.time}
+              <div className="mb-12">
+                <h3 className="text-2xl font-semibold text-gray-900 mb-6 text-center">Morning Session</h3>
+                <div className="space-y-6">
+                  {morningSchedule.map((item, index) => (
+                    <div key={index} className="flex items-start space-x-6 p-6 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
+                      <div className="bg-primary-600 text-white px-4 py-2 rounded-lg font-semibold min-w-fit">
+                        {item.time}
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.activity}</h3>
+                        <p className="text-gray-600">{item.description}</p>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.activity}</h3>
-                      <p className="text-gray-600">{item.description}</p>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-6 text-center">Afternoon Session</h3>
+                <div className="space-y-6">
+                  {afternoonSchedule.map((item, index) => (
+                    <div key={index} className="flex items-start space-x-6 p-6 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
+                      <div className="bg-primary-600 text-white px-4 py-2 rounded-lg font-semibold min-w-fit">
+                        {item.time}
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.activity}</h3>
+                        <p className="text-gray-600">{item.description}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>

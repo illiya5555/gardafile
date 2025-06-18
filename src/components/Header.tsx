@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Globe, Calendar, Facebook, Instagram, Youtube } from 'lucide-react';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState('EN');
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
   const languages = ['EN', 'DE', 'IT', 'RU'];
@@ -16,32 +17,46 @@ const Header = () => {
     { name: 'Contact', href: '/contact' },
   ];
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header className="fixed w-full z-50 bg-white/95 backdrop-blur-md shadow-lg transition-all duration-300">
+    <header
+      className={`fixed w-full z-50 bg-white/95 backdrop-blur-md transition-all duration-300 ${
+        scrolled ? 'py-1 shadow-md' : 'py-2 shadow-lg'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
-          {/* Logo - увеличен в 3-4 раза */}
+        <div className="flex justify-between items-center">
+          {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="relative">
               <img
                 src="/gardalogo.png"
                 alt="Garda Racing Yacht Club"
-                className="h-24 w-24 object-contain group-hover:scale-110 transition-transform duration-300"
+                className={`object-contain group-hover:scale-110 transition-transform duration-300 ${
+                  scrolled ? 'h-10 w-10' : 'h-12 w-12'
+                }`}
               />
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-gold-400 rounded-full animate-pulse"></div>
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-gold-400 rounded-full animate-pulse"></div>
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-2xl font-bold text-gray-900 transition-colors duration-300">
+              <h1 className="text-xl font-bold text-gray-900 transition-all duration-300">
                 Garda Racing
               </h1>
-              <p className="text-base text-gray-600 transition-colors duration-300">
+              <p className="text-sm text-gray-600 transition-all duration-300">
                 Yacht Club
               </p>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-6">
             {navigation.map((item) => (
               <Link
                 key={item.name}
@@ -57,7 +72,7 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Right Side Actions */}
+          {/* Right Side */}
           <div className="hidden md:flex items-center space-x-4">
             {/* Language Selector */}
             <div className="relative group">
@@ -78,56 +93,47 @@ const Header = () => {
               </div>
             </div>
 
-            {/* Book Now Button */}
+            {/* Book Now */}
             <Link
               to="/booking"
-              className="flex items-center space-x-2 px-6 py-2 rounded-lg font-medium bg-primary-600 text-white hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg"
+              className="flex items-center space-x-2 px-5 py-2 rounded-lg font-medium bg-primary-600 text-white hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow"
             >
               <Calendar className="h-4 w-4" />
               <span>Book Now</span>
             </Link>
 
-            {/* Social Media Icons - moved to the right */}
-            <div className="flex items-center space-x-2 ml-4">
-              <a 
-                href="#" 
-                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
-                title="Facebook"
-              >
+            {/* Social Icons */}
+            <div className="flex items-center space-x-2 ml-2">
+              <a href="#" className="p-2 text-gray-600 hover:text-primary-600 transition duration-300 hover:scale-110">
                 <Facebook className="h-4 w-4" />
               </a>
-              <a 
+              <a
                 href="https://www.instagram.com/garda_racing_yacht_club"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
-                title="Instagram"
+                className="p-2 text-gray-600 hover:text-primary-600 transition duration-300 hover:scale-110"
               >
                 <Instagram className="h-4 w-4" />
               </a>
-              <a 
-                href="#" 
-                className="p-2 text-gray-600 hover:text-primary-600 transition-colors duration-300 hover:scale-110"
-                title="YouTube"
-              >
+              <a href="#" className="p-2 text-gray-600 hover:text-primary-600 transition duration-300 hover:scale-110">
                 <Youtube className="h-4 w-4" />
               </a>
             </div>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-300"
+            className="md:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition duration-300"
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden bg-white/95 backdrop-blur-md rounded-lg shadow-lg mb-4 animate-slide-up">
-            <div className="px-4 py-6 space-y-4">
+            <div className="px-4 py-4 space-y-4">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
@@ -142,9 +148,8 @@ const Header = () => {
                   {item.name}
                 </Link>
               ))}
-              
+
               <div className="pt-4 border-t border-gray-200">
-                {/* Mobile Book Now Button */}
                 <Link
                   to="/booking"
                   onClick={() => setIsMenuOpen(false)}
@@ -154,25 +159,24 @@ const Header = () => {
                   <span>Book Now</span>
                 </Link>
 
-                {/* Mobile Social Icons and Language */}
                 <div className="flex items-center justify-between">
                   <div className="flex space-x-4">
-                    <a href="#" className="text-gray-600 hover:text-primary-600 transition-colors duration-300">
+                    <a href="#" className="text-gray-600 hover:text-primary-600 transition duration-300">
                       <Facebook className="h-5 w-5" />
                     </a>
-                    <a 
+                    <a
                       href="https://www.instagram.com/garda_racing_yacht_club"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-gray-600 hover:text-primary-600 transition-colors duration-300"
+                      className="text-gray-600 hover:text-primary-600 transition duration-300"
                     >
                       <Instagram className="h-5 w-5" />
                     </a>
-                    <a href="#" className="text-gray-600 hover:text-primary-600 transition-colors duration-300">
+                    <a href="#" className="text-gray-600 hover:text-primary-600 transition duration-300">
                       <Youtube className="h-5 w-5" />
                     </a>
                   </div>
-                  
+
                   <div className="flex space-x-2">
                     {languages.map((lang) => (
                       <button

@@ -29,16 +29,18 @@ const ContactPage = () => {
     setError('');
 
     try {
-      // Insert contact inquiry into Supabase
+      // Insert contact inquiry into the unified_inquiries table
       const { error: insertError } = await supabase
-        .from('contact_inquiries')
+        .from('unified_inquiries')
         .insert({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone || null,
+          type: 'contact',
+          customer_name: formData.name,
+          customer_email: formData.email,
+          customer_phone: formData.phone || null,
           subject: formData.subject,
           message: formData.message,
-          status: 'new'
+          status: 'new',
+          source: 'website'
         });
 
       if (insertError) {

@@ -237,8 +237,8 @@ const EventsPage = () => {
         {activeTab === 'schedule' && (
           <div className="animate-fade-in">
             <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Daily Schedule</h2>
-            <div className="max-w-4xl mx-auto">
-              <div className="mb-12">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-6 text-center">Morning Session</h3>
                 <div className="space-y-6">
                   {morningSchedule.map((item, index) => (

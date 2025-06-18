@@ -23,9 +23,12 @@ import {
   RefreshCw,
   ChevronRight,
   ChevronLeft,
-  Star
+  Star,
+  CreditCard
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useSubscription } from '../hooks/useSubscription';
+import { useOrders } from '../hooks/useOrders';
 
 interface Booking {
   id: string;
@@ -66,6 +69,12 @@ const ClientDashboard = () => {
     completed: 0,
     totalSpent: 0
   });
+
+  // Get subscription data
+  const { subscription, loading: subscriptionLoading, productName } = useSubscription();
+  
+  // Get orders data
+  const { orders, loading: ordersLoading } = useOrders();
 
   useEffect(() => {
     checkAuth();
@@ -287,6 +296,17 @@ const ClientDashboard = () => {
                 >
                   <Award className="h-5 w-5" />
                   <span>My Certificates</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('payments')}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-300 ${
+                    activeTab === 'payments'
+                      ? 'bg-blue-50 text-blue-700'
+                      : 'text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  <CreditCard className="h-5 w-5" />
+                  <span>Payment History</span>
                 </button>
               </nav>
 
@@ -668,6 +688,117 @@ const ClientDashboard = () => {
                       </a>
                     )}
                   </div>
+                </div>
+              </div>
+            )}
+
+            {/* Payments Tab */}
+            {activeTab === 'payments' && (
+              <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <h1 className="text-2xl font-bold text-gray-900">Payment History</h1>
+                </div>
+
+                {/* Subscription Info */}
+                {subscriptionLoading ? (
+                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
+                    <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
+                    <p className="text-gray-600">Loading subscription data...</p>
+                  </div>
+                ) : subscription && subscription.subscription_status === 'active' ? (
+                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-6">Active Subscription</h2>
+                    <div className="bg-blue-50 p-6 rounded-xl">
+                      <div className="flex items-center space-x-4 mb-4">
+                        <div className="bg-blue-100 p-3 rounded-lg">
+                          <CreditCard className="h-6 w-6 text-blue-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900 text-lg">{productName || 'Premium Plan'}</h3>
+                          <p className="text-blue-700">
+                            Status: <span className="font-medium capitalize">{subscription.subscription_status}</span>
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {subscription.current_period_end && (
+                          <div>
+                            <p className="text-sm text-gray-600">Next billing date</p>
+                            <p className="font-medium text-gray-900">
+                              {new Date(subscription.current_period_end * 1000).toLocaleDateString()}
+                            </p>
+                          </div>
+                        )}
+                        
+                        {subscription.payment_method_last4 && (
+                          <div>
+                            <p className="text-sm text-gray-600">Payment method</p>
+                            <p className="font-medium text-gray-900 capitalize">
+                              {subscription.payment_method_brand} •••• {subscription.payment_method_last4}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+
+                {/* Order History */}
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="p-6 border-b border-gray-200">
+                    <h2 className="text-xl font-semibold text-gray-900">Payment History</h2>
+                  </div>
+                  
+                  {ordersLoading ? (
+                    <div className="p-8 text-center">
+                      <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
+                      <p className="text-gray-600">Loading payment history...</p>
+                    </div>
+                  ) : orders.length > 0 ? (
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {orders.map((order) => (
+                            <tr key={order.order_id} className="hover:bg-gray-50">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {new Date(order.order_date).toLocaleDateString()}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                #{order.order_id}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {new Intl.NumberFormat('en-US', {
+                                  style: 'currency',
+                                  currency: order.currency.toUpperCase()
+                                }).format(order.amount_total / 100)}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <span className={`px-2 py-1 text-xs font-medium rounded-full capitalize
+                                  ${order.order_status === 'completed' ? 'bg-green-100 text-green-800' : 
+                                    order.order_status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                                    'bg-red-100 text-red-800'}`}>
+                                  {order.order_status}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <div className="p-8 text-center">
+                      <p className="text-gray-600">No payment history found</p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}

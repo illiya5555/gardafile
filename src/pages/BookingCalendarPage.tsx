@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, Users, CreditCard, CheckCircle, AlertCircle, ArrowLeft, ArrowRight, Euro, User, Mail, Phone, Lock } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import PaymentButton from '../components/PaymentButton';
+import { stripeProducts } from '../stripe-config';
 
 interface TimeSlot {
   id: string;
@@ -33,6 +35,7 @@ const BookingCalendarPage = () => {
   const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(false);
   const [bookingData, setBookingData] = useState<Partial<BookingData>>({});
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Fixed regatta time slots - only 8:30 and 13:30
   const regattaTimeSlots = [
@@ -42,7 +45,34 @@ const BookingCalendarPage = () => {
 
   useEffect(() => {
     generateAvailableSlots();
+    checkAuthStatus();
   }, [currentDate]);
+
+  const checkAuthStatus = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    setIsAuthenticated(!!user);
+    
+    if (user) {
+      // Fetch user profile to pre-fill form
+      const { data } = await supabase
+        .from('profiles')
+        .select('first_name, last_name, email, phone')
+        .eq('id', user.id)
+        .maybeSingle();
+      
+      if (data) {
+        setBookingData({
+          customer_name: `${data.first_name || ''} ${data.last_name || ''}`.trim(),
+          customer_email: data.email || user.email,
+          customer_phone: data.phone || ''
+        });
+      } else {
+        setBookingData({
+          customer_email: user.email
+        });
+      }
+    }
+  };
 
   const generateAvailableSlots = () => {
     const slots: TimeSlot[] = [];
@@ -220,6 +250,9 @@ const BookingCalendarPage = () => {
   ];
 
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  // Get the Garda product
+  const gardaProduct = stripeProducts.find(product => product.name === 'Garda');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8">
@@ -625,74 +658,67 @@ const BookingCalendarPage = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Card Number *
-                      </label>
-                      <div className="relative">
-                        <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                        <input
-                          type="text"
-                          value={bookingData.card_number || ''}
-                          onChange={(e) => setBookingData({...bookingData, card_number: e.target.value})}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="1234 5678 9012 3456"
-                          maxLength={19}
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-900 mb-2">
-                          Expiry Date *
-                        </label>
-                        <input
-                          type="text"
-                          value={bookingData.card_expiry || ''}
-                          onChange={(e) => setBookingData({...bookingData, card_expiry: e.target.value})}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="MM/YY"
-                          maxLength={5}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-900 mb-2">
-                          CVV *
-                        </label>
-                        <div className="relative">
-                          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                          <input
-                            type="text"
-                            value={bookingData.card_cvv || ''}
-                            onChange={(e) => setBookingData({...bookingData, card_cvv: e.target.value})}
-                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="123"
-                            maxLength={4}
-                            required
-                          />
+                  {isAuthenticated ? (
+                    <div className="space-y-6">
+                      <div className="bg-blue-50 p-6 rounded-lg">
+                        <h3 className="text-lg font-semibold text-blue-900 mb-4">Order Summary</h3>
+                        <div className="space-y-3">
+                          <div className="flex justify-between">
+                            <span className="text-blue-800">Date:</span>
+                            <span className="font-medium">{new Date(selectedDate).toLocaleDateString()}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-blue-800">Time:</span>
+                            <span className="font-medium">{selectedTime}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-blue-800">Participants:</span>
+                            <span className="font-medium">{participants}</span>
+                          </div>
+                          <div className="flex justify-between border-t border-blue-200 pt-2 mt-2">
+                            <span className="text-blue-800 font-semibold">Total:</span>
+                            <span className="font-bold text-blue-900">€{calculateTotalPrice()}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
 
-                  <button
-                    onClick={handleBookingSubmit}
-                    disabled={loading || !bookingData.card_number || !bookingData.card_expiry || !bookingData.card_cvv}
-                    className="w-full bg-green-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-green-700 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-                  >
-                    {loading ? (
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    ) : (
-                      <>
-                        <Lock className="h-5 w-5" />
-                        <span>Pay €{calculateTotalPrice()}</span>
-                      </>
-                    )}
-                  </button>
+                      {gardaProduct && (
+                        <PaymentButton
+                          priceId={gardaProduct.priceId}
+                          mode={gardaProduct.mode}
+                          className="w-full bg-green-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-green-700 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Pay €{calculateTotalPrice()} with Stripe
+                        </PaymentButton>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="bg-blue-50 p-6 rounded-lg">
+                        <div className="flex items-start space-x-3">
+                          <AlertCircle className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
+                          <div>
+                            <h3 className="font-semibold text-blue-900 mb-2">Please sign in to continue</h3>
+                            <p className="text-blue-800 text-sm">
+                              You need to be signed in to complete your booking. This helps us keep track of your bookings and provide better service.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-col space-y-4">
+                        <a
+                          href="/login"
+                          className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105 text-center"
+                        >
+                          Sign in to continue
+                        </a>
+                        <p className="text-sm text-gray-600 text-center">
+                          Don't have an account? <a href="/login" className="text-blue-600 hover:underline">Create one now</a>
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

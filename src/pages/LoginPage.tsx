@@ -13,6 +13,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     // Check if user is already logged in
@@ -29,6 +30,7 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess('');
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -39,18 +41,10 @@ const LoginPage = () => {
       if (error) throw error;
 
       if (data.user) {
-        // Check user role to determine where to redirect
-        const { data: profileData } = await supabase
-          .from('profiles')
-          .select('role_id, user_roles(role_name)')
-          .eq('id', data.user.id)
-          .single();
-
-        if (profileData?.user_roles?.role_name === 'admin') {
-          navigate('/admin');
-        } else {
+        setSuccess('Login successful! Redirecting...');
+        setTimeout(() => {
           navigate('/dashboard');
-        }
+        }, 1000);
       }
     } catch (error: any) {
       console.error('Login error:', error);
@@ -64,6 +58,7 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess('');
 
     if (!email || !password) {
       setError('Email and password are required');
@@ -76,6 +71,7 @@ const LoginPage = () => {
         email,
         password,
         options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
           data: {
             first_name: firstName,
             last_name: lastName,
@@ -86,8 +82,15 @@ const LoginPage = () => {
       if (error) throw error;
 
       if (data.user) {
-        alert('Registration successful! Please check your email to confirm your account.');
-        setIsLogin(true);
+        if (data.user.email_confirmed_at) {
+          setSuccess('Registration successful! Redirecting...');
+          setTimeout(() => {
+            navigate('/dashboard');
+          }, 1000);
+        } else {
+          setSuccess('Registration successful! Please check your email to confirm your account.');
+          setIsLogin(true);
+        }
       }
     } catch (error: any) {
       console.error('Signup error:', error);
@@ -116,6 +119,15 @@ const LoginPage = () => {
             <div className="flex items-start space-x-2">
               <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
               <p className="text-sm text-red-600">{error}</p>
+            </div>
+          </div>
+        )}
+
+        {success && (
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <div className="flex items-start space-x-2">
+              <AlertCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-green-600">{success}</p>
             </div>
           </div>
         )}
@@ -254,6 +266,7 @@ const LoginPage = () => {
               onClick={() => {
                 setIsLogin(!isLogin);
                 setError('');
+                setSuccess('');
               }}
               className="ml-1 font-medium text-blue-600 hover:text-blue-500"
             >

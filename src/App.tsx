@@ -12,6 +12,9 @@ import CorporateSailingPage from './pages/CorporateSailingPage';
 import GiftCertificatesPage from './pages/GiftCertificatesPage';
 import AdminDashboard from './pages/AdminDashboard';
 import ChatWidget from './components/ChatWidget';
+import LoginPage from './pages/LoginPage';
+import SuccessPage from './pages/SuccessPage';
+import ClientDashboard from './pages/ClientDashboard';
 
 function App() {
   return (
@@ -21,6 +24,29 @@ function App() {
         <Routes>
           {/* Admin route without header/footer */}
           <Route path="/admin" element={<AdminDashboard />} />
+          
+          {/* Auth routes without header/footer */}
+          <Route path="/login" element={<LoginPage />} />
+          
+          {/* Dashboard route with header/footer */}
+          <Route path="/dashboard" element={
+            <>
+              <Header />
+              <ClientDashboard />
+              <Footer />
+              <ChatWidget />
+            </>
+          } />
+          
+          {/* Success page */}
+          <Route path="/success" element={
+            <>
+              <Header />
+              <SuccessPage />
+              <Footer />
+              <ChatWidget />
+            </>
+          } />
           
           {/* Regular routes with header/footer */}
           <Route path="/*" element={

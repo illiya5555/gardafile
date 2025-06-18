@@ -164,7 +164,7 @@ const BookingCalendarPage = () => {
         type: 'regular',
         booking_date: selectedDate,
         time_slot: selectedTime,
-        participants,
+        participants: participants,
         total_price: calculateTotalPrice(),
         customer_name: bookingData.customer_name,
         customer_email: bookingData.customer_email,
@@ -371,12 +371,15 @@ const BookingCalendarPage = () => {
                       const isBooked = isDateBooked(date);
                       const isSelected = dateStr === selectedDate;
                       const isPast = date < new Date();
+                      
+                      // Debug log to check values
+                      console.log(`Date: ${date.getDate()}, isPast: ${isPast}, isAvailable: ${isAvailable}, isBooked: ${isBooked}`);
 
                       return (
                         <button
                           key={index}
-                          onClick={() => !isPast && isAvailable && !isBooked && handleDateSelect(date)}
-                          disabled={isPast || !isAvailable || isBooked}
+                          onClick={() => !isPast && !isBooked && handleDateSelect(date)}
+                          disabled={isPast || isBooked}
                           className={`h-12 rounded-lg text-sm font-medium transition-all duration-300 relative ${
                             isPast
                               ? 'text-gray-300 cursor-not-allowed bg-gray-100'

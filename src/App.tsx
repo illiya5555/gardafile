@@ -15,6 +15,7 @@ import ChatWidget from './components/ChatWidget';
 import LoginPage from './pages/LoginPage';
 import SuccessPage from './pages/SuccessPage';
 import ClientDashboard from './pages/ClientDashboard';
+import { CalendarProvider } from './context/CalendarContext';
 
 function App() {
   return (
@@ -60,8 +61,16 @@ function App() {
                   <Route path="/corporate-sailing" element={<CorporateSailingPage />} />
                   <Route path="/gift-certificates" element={<GiftCertificatesPage />} />
                   <Route path="/contact" element={<ContactPage />} />
-                  <Route path="/booking" element={<BookingCalendarPage />} />
-                  <Route path="/book-now" element={<BookingCalendarPage />} />
+                  <Route path="/booking" element={
+                    <CalendarProvider>
+                      <BookingCalendarPage />
+                    </CalendarProvider>
+                  } />
+                  <Route path="/book-now" element={
+                    <CalendarProvider>
+                      <BookingCalendarPage />
+                    </CalendarProvider>
+                  } />
                 </Routes>
               </main>
               <Footer />

@@ -254,6 +254,16 @@ const BookingCalendarPage = () => {
   // Get the Garda product
   const gardaProduct = stripeProducts.find(product => product.name === 'Garda');
 
+  // Format date for display
+  const formatDisplayDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-GB', { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric' 
+    }).replace(/\//g, '.');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -468,9 +478,10 @@ const BookingCalendarPage = () => {
                   </div>
 
                   <div className="bg-blue-50 p-4 rounded-lg">
-                    <p className="text-blue-800">
-                      <strong>Selected date:</strong> {new Date(selectedDate).toLocaleDateString()}
-                    </p>
+                    <div className="flex items-center">
+                      <span className="text-blue-800 font-semibold">Selected date:</span>
+                      <span className="ml-2 text-blue-900">{formatDisplayDate(selectedDate)}</span>
+                    </div>
                   </div>
 
                   {/* Participants Selection */}
@@ -734,7 +745,7 @@ const BookingCalendarPage = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Date:</span>
                     <span className="font-semibold">
-                      {new Date(selectedDate).toLocaleDateString()}
+                      {formatDisplayDate(selectedDate)}
                     </span>
                   </div>
                 )}

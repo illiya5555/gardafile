@@ -13,9 +13,6 @@ const GiftCertificatesPage = () => {
 
   const predefinedAmounts = [
     { value: '195', label: '€195', description: 'Single sailing experience' },
-    { value: '390', label: '€390', description: 'Couple sailing experience' },
-    { value: '585', label: '€585', description: 'Family experience (3 people)' },
-    { value: '780', label: '€780', description: 'Group experience (4 people)' },
     { value: 'custom', label: 'Custom', description: 'Choose your own amount' }
   ];
 

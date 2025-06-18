@@ -676,7 +676,7 @@ const BookingCalendarPage = () => {
                         <div className="space-y-3">
                           <div className="flex justify-between">
                             <span className="text-blue-800">Date:</span>
-                            <span className="font-medium">{new Date(selectedDate).toLocaleDateString()}</span>
+                            <span className="font-medium">{formatDisplayDate(selectedDate)}</span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-blue-800">Time:</span>

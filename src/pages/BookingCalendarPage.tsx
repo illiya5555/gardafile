@@ -140,6 +140,7 @@ const BookingCalendarPage = () => {
     const dateStr = date.toISOString().split('T')[0];
     setSelectedDate(dateStr);
     setSelectedTime(''); // Reset time selection when date changes
+    setStep(2); // Move to time selection step
   };
 
   const handleTimeSelect = (time: string) => {
@@ -371,9 +372,6 @@ const BookingCalendarPage = () => {
                       const isBooked = isDateBooked(date);
                       const isSelected = dateStr === selectedDate;
                       const isPast = date < new Date();
-                      
-                      // Debug log to check values
-                      console.log(`Date: ${date.getDate()}, isPast: ${isPast}, isAvailable: ${isAvailable}, isBooked: ${isBooked}`);
 
                       return (
                         <button
@@ -420,15 +418,6 @@ const BookingCalendarPage = () => {
                       <span>Past/Unavailable</span>
                     </div>
                   </div>
-
-                  {selectedDate && (
-                    <button
-                      onClick={() => setStep(2)}
-                      className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105"
-                    >
-                      Select time and participants
-                    </button>
-                  )}
                 </div>
               )}
 
@@ -529,7 +518,7 @@ const BookingCalendarPage = () => {
                       onClick={() => setStep(3)}
                       className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105"
                     >
-                      Continue
+                      Continue to details
                     </button>
                   )}
                 </div>
@@ -544,7 +533,7 @@ const BookingCalendarPage = () => {
                       onClick={() => setStep(2)}
                       className="text-blue-600 hover:text-blue-700 font-medium"
                     >
-                      ← Back
+                      ← Back to time selection
                     </button>
                   </div>
 
@@ -601,14 +590,13 @@ const BookingCalendarPage = () => {
                     </div>
                   </div>
 
-                  {bookingData.customer_name && bookingData.customer_email && bookingData.customer_phone && (
-                    <button
-                      onClick={() => setStep(4)}
-                      className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105"
-                    >
-                      Proceed to payment
-                    </button>
-                  )}
+                  <button
+                    onClick={() => setStep(4)}
+                    disabled={!bookingData.customer_name || !bookingData.customer_email || !bookingData.customer_phone}
+                    className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Proceed to payment
+                  </button>
                 </div>
               )}
 
@@ -621,7 +609,7 @@ const BookingCalendarPage = () => {
                       onClick={() => setStep(3)}
                       className="text-blue-600 hover:text-blue-700 font-medium"
                     >
-                      ← Back
+                      ← Back to details
                     </button>
                   </div>
 
@@ -691,22 +679,20 @@ const BookingCalendarPage = () => {
                     </div>
                   </div>
 
-                  {bookingData.card_number && bookingData.card_expiry && bookingData.card_cvv && (
-                    <button
-                      onClick={handleBookingSubmit}
-                      disabled={loading}
-                      className="w-full bg-green-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-green-700 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-                    >
-                      {loading ? (
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                      ) : (
-                        <>
-                          <Lock className="h-5 w-5" />
-                          <span>Pay €{calculateTotalPrice()}</span>
-                        </>
-                      )}
-                    </button>
-                  )}
+                  <button
+                    onClick={handleBookingSubmit}
+                    disabled={loading || !bookingData.card_number || !bookingData.card_expiry || !bookingData.card_cvv}
+                    className="w-full bg-green-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-green-700 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                  >
+                    {loading ? (
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    ) : (
+                      <>
+                        <Lock className="h-5 w-5" />
+                        <span>Pay €{calculateTotalPrice()}</span>
+                      </>
+                    )}
+                  </button>
                 </div>
               )}
             </div>

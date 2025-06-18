@@ -173,7 +173,7 @@ const HomePage = () => {
         {/* Background Video - No overlay for maximum quality */}
         <div className="absolute inset-0">
           <iframe
-            src="https://www.youtube.com/embed/Y7sRZOTsXbQ?autoplay=1&mute=1&loop=1&playlist=Y7sRZOTsXbQ&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&disablekb=1&fs=0&cc_load_policy=0&playsinline=1&autohide=1"
+            src="https://www.youtube.com/embed/JbDYf6z6pDw?autoplay=1&mute=1&loop=1&playlist=Y7sRZOTsXbQ&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&disablekb=1&fs=0&cc_load_policy=0&playsinline=1&autohide=1"
             title="Sailing Video Background"
             className="w-full h-full object-cover"
             style={{

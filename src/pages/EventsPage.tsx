@@ -417,11 +417,17 @@ const EventsPage = () => {
 >
   <span>WhatsApp</span>
 </a>
-                <a
-                  href="mailto:info@gardaracing.com"
-                  className="bg-gray-100 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors duration-300"
+                        <a
+                  href="https://t.me/VETER_ITA"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-colors duration-300"
+                  style={{ backgroundColor: '#0088cc', color: 'white' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#006699'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0088cc'}
                 >
-                  Email Us
+                  <span>💬</span>
+                  <span>Telegram</span>
                 </a>
               </div>
             </div>

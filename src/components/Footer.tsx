@@ -3,14 +3,8 @@ import { Link } from 'react-router-dom';
 import { Anchor, MapPin, Phone, Mail, Award, Shield, Clock, Lock } from 'lucide-react';
 import AdminLogin from './AdminLogin';
 import { useTranslation } from '../context/LanguageContext';
-import { useTranslation } from '../context/LanguageContext';
-import { useTranslation } from '../context/LanguageContext';
-import { useTranslation } from '../context/LanguageContext';
 
 const Footer = () => {
-  const { t } = useTranslation();
-  const { t } = useTranslation();
-  const { t } = useTranslation();
   const { t } = useTranslation();
   const [showAdminLogin, setShowAdminLogin] = useState(false);
 
@@ -63,7 +57,7 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                  {t('nav.events', 'Events')}
+                <a href="#" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
                   Gift Vouchers
                 </a>
               </li>

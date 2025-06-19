@@ -3,14 +3,8 @@ import { Link } from 'react-router-dom';
 import { Anchor, MapPin, Phone, Mail, Award, Shield, Clock, Lock } from 'lucide-react';
 import AdminLogin from './AdminLogin';
 import { useTranslation } from '../context/LanguageContext';
-import { useTranslation } from '../context/LanguageContext';
-import { useTranslation } from '../context/LanguageContext';
-import { useTranslation } from '../context/LanguageContext';
 
 const Footer = () => {
-  const { t } = useTranslation();
-  const { t } = useTranslation();
-  const { t } = useTranslation();
   const { t } = useTranslation();
   const [showAdminLogin, setShowAdminLogin] = useState(false);
 

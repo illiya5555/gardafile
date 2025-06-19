@@ -230,38 +230,38 @@ const ContactPage = () => {
                     </div>
                   </div>
                   
-                  {/* Phone and Subject Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Phone
-                      </label>
-                      <PhoneInput
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handlePhoneChange}
-                        className="transition-all duration-300"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Subject *
-                      </label>
-                      <select
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
-                        required
-                      >
-                        <option value="">Select subject</option>
-                        <option value="booking">Booking</option>
-                        <option value="corporate">Corporate Events</option>
-                        <option value="general">General Questions</option>
-                        <option value="partnership">Partnership</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
+                  {/* Phone Field - Full Width */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Phone
+                    </label>
+                    <PhoneInput
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handlePhoneChange}
+                      className="w-full"
+                    />
+                  </div>
+                  
+                  {/* Subject Field - Full Width */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Subject *
+                    </label>
+                    <select
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                      required
+                    >
+                      <option value="">Select subject</option>
+                      <option value="booking">Booking</option>
+                      <option value="corporate">Corporate Events</option>
+                      <option value="general">General Questions</option>
+                      <option value="partnership">Partnership</option>
+                      <option value="other">Other</option>
+                    </select>
                   </div>
                   
                   {/* Message */}

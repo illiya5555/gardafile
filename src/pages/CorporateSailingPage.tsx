@@ -115,17 +115,17 @@ const CorporateSailingPage = () => {
                   className="rounded-xl shadow-lg w-full h-48 object-cover"
                 />
                 <img
-                  src="https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=400"
+                  src="https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif?auto=compress&cs=tinysrgb&w=400"
                   alt="Team building on yacht"
                   className="rounded-xl shadow-lg w-full h-48 object-cover"
                 />
                 <img
-                  src="https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=400"
+                  src="https://i.postimg.cc/d1MvNFGZ/temp-Image66m3b-Q.avif?auto=compress&cs=tinysrgb&w=400"
                   alt="Lake Garda sailing"
                   className="rounded-xl shadow-lg w-full h-48 object-cover"
                 />
                 <img
-                  src="https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=400"
+                  src="https://i.postimg.cc/m2Z4581j/temp-Image3ioz3-A.avif?auto=compress&cs=tinysrgb&w=400"
                   alt="Award ceremony"
                   className="rounded-xl shadow-lg w-full h-48 object-cover"
                 />

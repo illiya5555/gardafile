@@ -6,8 +6,10 @@ import { useTranslation } from '../context/LanguageContext';
 import { useTranslation } from '../context/LanguageContext';
 import { useTranslation } from '../context/LanguageContext';
 import { useTranslation } from '../context/LanguageContext';
+import { useTranslation } from '../context/LanguageContext';
 
 const Footer = () => {
+  const { t } = useTranslation();
   const { t } = useTranslation();
   const { t } = useTranslation();
   const { t } = useTranslation();

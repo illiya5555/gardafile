@@ -110,7 +110,7 @@ const CorporateSailingPage = () => {
               {/* Gallery */}
               <div className="grid grid-cols-2 gap-4">
                 <img
-                  src="https://postimg.cc/w7sZDtff?auto=compress&cs=tinysrgb&w=400"
+                  src="https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif?auto=compress&cs=tinysrgb&w=400"
                   alt="Corporate sailing team"
                   className="rounded-xl shadow-lg w-full h-48 object-cover"
                 />

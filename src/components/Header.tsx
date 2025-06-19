@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Globe, Calendar, Facebook, Instagram, Youtube } from 'lucide-react';
+import { Menu, X, Calendar, Facebook, Instagram, Youtube } from 'lucide-react';
+import { useTranslation } from '../context/LanguageContext';
+import LanguageSelector from './LanguageSelector';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentLang, setCurrentLang] = useState('EN');
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const { t } = useTranslation();
 
-  const languages = ['EN', 'DE', 'IT', 'RU'];
   const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'Events', href: '/events' },
-    { name: 'Services', href: '/services' },
-    { name: 'Contact', href: '/contact' },
+    { name: t('nav.home', 'Home'), href: '/' },
+    { name: t('nav.events', 'Events'), href: '/events' },
+    { name: t('nav.services', 'Services'), href: '/services' },
+    { name: t('nav.contact', 'Contact'), href: '/contact' },
   ];
 
   useEffect(() => {
@@ -35,7 +36,7 @@ const Header = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          {/* Логотип */}
+          {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="relative">
               <img
@@ -51,7 +52,7 @@ const Header = () => {
             </div>
           </Link>
 
-          {/* Навигация — desktop */}
+          {/* Navigation — desktop */}
           <nav className="hidden md:flex items-center space-x-6">
             {navigation.map((item) => (
               <Link
@@ -68,37 +69,21 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Действия справа */}
+          {/* Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* Языки */}
-            <div className="relative group">
-              <button className="flex items-center space-x-1 px-3 py-1 rounded-lg text-gray-700 hover:bg-gray-100 transition-all duration-300">
-                <Globe className="h-4 w-4" />
-                <span className="text-sm">{currentLang}</span>
-              </button>
-              <div className="absolute right-0 mt-2 w-24 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
-                {languages.map((lang) => (
-                  <button
-                    key={lang}
-                    onClick={() => setCurrentLang(lang)}
-                    className="block w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    {lang}
-                  </button>
-                ))}
-              </div>
-            </div>
+            {/* Language Selector */}
+            <LanguageSelector />
 
-            {/* Кнопка "Book Now" */}
+            {/* Book Now Button */}
             <Link
               to="/booking"
               className="flex items-center space-x-2 px-5 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow"
             >
               <Calendar className="h-4 w-4" />
-              <span>Book Now</span>
+              <span>{t('nav.book_now', 'Book Now')}</span>
             </Link>
 
-            {/* Соцсети */}
+            {/* Social Media */}
             <div className="flex items-center space-x-2 ml-4">
               <a href="#" className="p-2 text-gray-600 hover:text-primary-600 transition duration-300 hover:scale-110">
                 <Facebook className="h-4 w-4" />
@@ -112,7 +97,7 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Кнопка меню — mobile */}
+          {/* Mobile menu button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-lg"
@@ -121,7 +106,7 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Мобильное меню */}
+        {/* Mobile menu */}
         {isMenuOpen && (
           <div className="md:hidden bg-white/95 backdrop-blur-md rounded-lg shadow-lg mt-2 animate-slide-up">
             <div className="px-4 py-6 space-y-4">
@@ -147,7 +132,7 @@ const Header = () => {
                   className="flex items-center justify-center w-full bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition"
                 >
                   <Calendar className="h-4 w-4 mr-2" />
-                  Book Now
+                  {t('nav.book_now', 'Book Now')}
                 </Link>
 
                 <div className="flex items-center justify-between mt-4">
@@ -163,19 +148,7 @@ const Header = () => {
                     </a>
                   </div>
 
-                  <div className="flex space-x-2">
-                    {languages.map((lang) => (
-                      <button
-                        key={lang}
-                        onClick={() => setCurrentLang(lang)}
-                        className={`px-3 py-1 text-sm rounded ${
-                          currentLang === lang ? 'bg-primary-600 text-white' : 'text-gray-600 hover:bg-gray-100'
-                        }`}
-                      >
-                        {lang}
-                      </button>
-                    ))}
-                  </div>
+                  <LanguageSelector showLabel={false} />
                 </div>
               </div>
             </div>

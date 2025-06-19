@@ -24,15 +24,15 @@ const EventsPage = () => {
     caption: "Garda Yacht Racing 4"
   },
   {
-    url: "https://i.postimg.cc/23tX3T9r/temp-Image-S31m-Ms.avif",
+    url: "https://i.postimg.cc/025gWBpM/temp-Image-S31m-Ms.avif",
     caption: "Garda Yacht Racing 5"
   },
   {
-    url: "https://i.postimg.cc/HJGg5dSW/temp-Image-GC3d-NH.avif",
+    url: "https://i.postimg.cc/ZqnKGqpN/temp-Image-GC3d-NH.avif",
     caption: "Garda Yacht Racing 6"
   },
   {
-    url: "https://i.postimg.cc/BjjSHh4p/temp-Image7-PJCLf.avif",
+    url: "https://i.postimg.cc/RZRWr8Yk/temp-Image7-PJCLf.avif",
     caption: "Garda Yacht Racing 7"
   }
 ];

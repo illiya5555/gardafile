@@ -153,7 +153,7 @@ const CalendarManagement = () => {
         },
         {
           date: dateStr,
-          time: '13:30-17:30',
+          time: '13:30-18:00',
           max_participants: 5,
           price_per_person: 195,
           is_active: true

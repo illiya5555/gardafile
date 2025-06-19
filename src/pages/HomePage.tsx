@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Users, Award, Camera, MapPin, Star, Wind, Anchor, Trophy, Shield, Clock, CheckCircle } from 'lucide-react';
 import { supabase, Testimonial, testConnection } from '../lib/supabase';
+import { useTranslation } from '../context/LanguageContext'; // Import useTranslation
 
 const HomePage = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [connectionError, setConnectionError] = useState(false);
+  const { t } = useTranslation(); // Initialize useTranslation
 
   // Experience section gallery images
   const experienceImages = [
@@ -108,28 +110,28 @@ const HomePage = () => {
   const features = [
     {
       icon: Trophy,
-      title: "Real Racing Format",
-      description: "Authentic yacht regatta with team dynamics, medals, and true competition."
+      title: t('home.features.item1.title', "Real Racing Format"),
+      description: t('home.features.item1.description', "Authentic yacht regatta with team dynamics, medals, and true competition.")
     },
     {
       icon: Users,
-      title: "Professional Skipper",
-      description: "Certified and experienced sailing captains on every boat."
+      title: t('home.features.item2.title', "Professional Skipper"),
+      description: t('home.features.item2.description', "Certified and experienced sailing captains on every boat.")
     },
     {
       icon: Camera,
-      title: "Photo & Video",
-      description: "Professional photos and videos of your race day to remember and share."
+      title: t('home.features.item3.title', "Photo & Video"),
+      description: t('home.features.item3.description', "Professional photos and videos of your race day to remember and share.")
     },
     {
       icon: Shield,
-      title: "Fully Insured",
-      description: "Complete safety coverage and modern equipment included."
+      title: t('home.features.item4.title', "Fully Insured"),
+      description: t('home.features.item4.description', "Complete safety coverage and modern equipment included.")
     },
     {
       icon: Star,
-      title: "Accessible & Premium",
-      description: "A top-level regatta experience open to everyone — no experience needed."
+      title: t('home.features.item5.title', "Accessible & Premium"),
+      description: t('home.features.item5.description', "A top-level regatta experience open to everyone — no experience needed.")
     }
   ];
 
@@ -189,41 +191,40 @@ const HomePage = () => {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="animate-slide-up">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 font-serif">
-              Experience the Thrill of
-              <span className="block text-gold-300">Yacht Racing</span>
+              {t('home.hero.title_part1', "Experience the Thrill of")}
+              <span className="block text-gold-300">{t('home.hero.title_part2', "Yacht Racing")}</span>
             </h1>
             <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Daily yacht racing experiences in world-famous Lake Garda with professional skippers, 
-              racing medals, and unforgettable memories
+              {t('home.hero.subtitle', "Daily yacht racing experiences in world-famous Lake Garda with professional skippers, racing medals, and unforgettable memories")}
             </p>
             
             {/* Price & CTA */}
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 mb-8 max-w-md mx-auto border border-white/20">
               <div className="text-center mb-6">
                 <div className="text-5xl font-bold text-gold-300 mb-2">€195</div>
-                <p className="text-white/80">per person • Full day experience</p>
+                <p className="text-white/80">{t('home.hero.price_description', "per person • Full day experience")}</p>
               </div>
               
               <div className="space-y-3 mb-6 text-left">
                 <div className="flex items-center space-x-3 text-white/90">
                   <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>Real yacht racing format</span>
+                  <span>{t('home.hero.feature1', "Real yacht racing format")}</span>
                 </div>
                 <div className="flex items-center space-x-3 text-white/90">
                   <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>Professional skipper on every boat</span>
+                  <span>{t('home.hero.feature2', "Professional skipper on every boat")}</span>
                 </div>
                 <div className="flex items-center space-x-3 text-white/90">
                   <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>Open to all skill levels – no experience needed</span>
+                  <span>{t('home.hero.feature3', "Open to all skill levels – no experience needed")}</span>
                 </div>
                 <div className="flex items-center space-x-3 text-white/90">
                   <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>Professional photos & videos from the race</span>
+                  <span>{t('home.hero.feature4', "Professional photos & videos from the race")}</span>
                 </div>
                 <div className="flex items-center space-x-3 text-white/90">
                   <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>All equipment provided</span>
+                  <span>{t('home.hero.feature5', "All equipment provided")}</span>
                 </div>
               </div>
               
@@ -231,7 +232,7 @@ const HomePage = () => {
                 to="/booking"
                 className="w-full bg-primary-600 text-white py-4 px-6 rounded-xl font-semibold text-lg hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
               >
-                Book Your Adventure
+                {t('home.hero.cta', "Book Your Adventure")}
               </Link>
             </div>
           </div>
@@ -250,11 +251,10 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-serif">
-              Why Choose Garda Racing?
+              {t('home.features.title', "Why Choose Garda Racing?")}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We provide the complete yacht racing experience with professional guidance, 
-              premium equipment, and memories that last a lifetime.
+              {t('home.features.subtitle', "We provide the complete yacht racing experience with professional guidance, premium equipment, and memories that last a lifetime.")}
             </p>
           </div>
 
@@ -292,7 +292,7 @@ const HomePage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-serif">
-                Your Perfect Day on Lake Garda
+                {t('home.experience.title', "Your Perfect Day on Lake Garda")}
               </h2>
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
@@ -300,8 +300,8 @@ const HomePage = () => {
                     1
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Morning Briefing</h3>
-                    <p className="text-gray-600">Meet your professional skipper and learn the basics of yacht racing in a relaxed, friendly environment.</p>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('home.experience.step1.title', "Morning Briefing")}</h3>
+                    <p className="text-gray-600">{t('home.experience.step1.description', "Meet your professional skipper and learn the basics of yacht racing in a relaxed, friendly environment.")}</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
@@ -309,8 +309,8 @@ const HomePage = () => {
                     2
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Racing Experience</h3>
-                    <p className="text-gray-600">Participate in authentic yacht races with other boats, experiencing the thrill of competition on beautiful Lake Garda.</p>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('home.experience.step2.title', "Racing Experience")}</h3>
+                    <p className="text-gray-600">{t('home.experience.step2.description', "Participate in authentic yacht races with other boats, experiencing the thrill of competition on beautiful Lake Garda.")}</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
@@ -318,8 +318,8 @@ const HomePage = () => {
                     3
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Medal Ceremony</h3>
-                    <p className="text-gray-600">Celebrate your achievement with an official medal ceremony and receive your personalized racing certificate.</p>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('home.experience.step3.title', "Medal Ceremony")}</h3>
+                    <p className="text-gray-600">{t('home.experience.step3.description', "Celebrate your achievement with an official medal ceremony and receive your personalized racing certificate.")}</p>
                   </div>
                 </div>
               </div>
@@ -328,7 +328,7 @@ const HomePage = () => {
                   to="/events"
                   className="bg-primary-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
                 >
-                  Learn More About the Experience
+                  {t('home.experience.cta', "Learn More About the Experience")}
                 </Link>
               </div>
             </div>
@@ -371,14 +371,14 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-serif">
-              What Our Sailors Say
+              {t('home.testimonials.title', "What Our Sailors Say")}
             </h2>
             <p className="text-xl text-gray-600">
-              Join thousands of satisfied customers who've experienced the magic of Lake Garda racing
+              {t('home.testimonials.subtitle', "Join thousands of satisfied customers who've experienced the magic of Lake Garda racing")}
             </p>
             {connectionError && (
               <p className="text-sm text-amber-600 mt-2">
-                Currently showing sample testimonials - database connection unavailable
+                {t('home.testimonials.connection_error', "Currently showing sample testimonials - database connection unavailable")}
               </p>
             )}
           </div>
@@ -417,28 +417,28 @@ const HomePage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-4xl md:text-5xl font-bold mb-6 font-serif">
-                Prime Location in Riva del Garda
+                {t('home.location.title', "Prime Location in Riva del Garda")}
               </h2>
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
                   <MapPin className="h-6 w-6 text-gold-400 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">Easy Access from Munich</h3>
-                    <p className="text-white/80">Just 4 hours drive from Munich, making it perfect for weekend getaways and corporate events.</p>
+                    <h3 className="text-xl font-semibold mb-2">{t('home.location.item1.title', "Easy Access from Munich")}</h3>
+                    <p className="text-white/80">{t('home.location.item1.description', "Just 4 hours drive from Munich, making it perfect for weekend getaways and corporate events.")}</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
                   <Anchor className="h-6 w-6 text-gold-400 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">World-Class Sailing Conditions</h3>
-                    <p className="text-white/80">Lake Garda offers consistent winds and stunning Alpine scenery, making it Europe's premier sailing destination.</p>
+                    <h3 className="text-xl font-semibold mb-2">{t('home.location.item2.title', "World-Class Sailing Conditions")}</h3>
+                    <p className="text-white/80">{t('home.location.item2.description', "Lake Garda offers consistent winds and stunning Alpine scenery, making it Europe's premier sailing destination.")}</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
                   <Clock className="h-6 w-6 text-gold-400 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">Daily Departures</h3>
-                    <p className="text-white/80">Multiple time slots available daily from March to October, with flexible booking options.</p>
+                    <h3 className="text-xl font-semibold mb-2">{t('home.location.item3.title', "Daily Departures")}</h3>
+                    <p className="text-white/80">{t('home.location.item3.description', "Multiple time slots available daily from March to October, with flexible booking options.")}</p>
                   </div>
                 </div>
               </div>
@@ -462,7 +462,7 @@ const HomePage = () => {
               <div className="absolute -top-6 -right-6 bg-gold-500 text-white p-4 rounded-xl shadow-lg">
                 <div className="text-center">
                   <p className="text-2xl font-bold">4.9★</p>
-                  <p className="text-sm">Google Rating</p>
+                  <p className="text-sm">{t('home.location.google_rating', "Google Rating")}</p>
                 </div>
               </div>
             </div>
@@ -475,11 +475,10 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-serif">
-              Our Trusted Partners
+              {t('home.partners.title', "Our Trusted Partners")}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We work with the world's leading yacht and marine equipment manufacturers 
-              to provide you with the best possible sailing experience.
+              {t('home.partners.subtitle', "We work with the world's leading yacht and marine equipment manufacturers to provide you with the best possible sailing experience.")}
             </p>
           </div>
 
@@ -501,13 +500,13 @@ const HomePage = () => {
 
           <div className="mt-12 text-center">
             <p className="text-gray-600 mb-6">
-              Interested in partnering with us? We're always looking for quality brands that share our passion for sailing.
+              {t('home.partners.cta_text', "Interested in partnering with us? We're always looking for quality brands that share our passion for sailing.")}
             </p>
             <Link
               to="/contact"
               className="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300 inline-block"
             >
-              Contact Us About Partnerships
+              {t('home.partners.cta', "Contact Us About Partnerships")}
             </Link>
           </div>
         </div>
@@ -517,17 +516,16 @@ const HomePage = () => {
       <section className="py-20 bg-primary-600 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 font-serif">
-            Ready for Your Sailing Adventure?
+            {t('home.final_cta.title', "Ready for Your Sailing Adventure?")}
           </h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Join us for an unforgettable day of yacht racing on Lake Garda. 
-            No experience necessary - just bring your sense of adventure!
+            {t('home.final_cta.subtitle', "Join us for an unforgettable day of yacht racing on Lake Garda. No experience necessary - just bring your sense of adventure!")}
           </p>
           <Link
             to="/booking"
             className="bg-white text-primary-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-lg"
           >
-            Book Now - €195
+            {t('home.final_cta.cta', "Book Now - €195")}
           </Link>
         </div>
       </section>

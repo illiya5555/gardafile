@@ -209,7 +209,6 @@ const BookingCalendarPage = () => {
               <Clock className="h-4 w-4" />
               <span>Afternoon: 13:30-18:00</span>
             </div>
-            </div>
           </div>
         </div>
 

@@ -207,11 +207,8 @@ const BookingCalendarPage = () => {
             </div>
             <div className="flex items-center space-x-2">
               <Clock className="h-4 w-4" />
-              <span>Afternoon: 13:30-17:30</span>
+              <span>Afternoon: 13:30-18:00</span>
             </div>
-            <div className="flex items-center space-x-2">
-              <Users className="h-4 w-4" />
-              <span>Max 5 people per regatta</span>
             </div>
           </div>
         </div>

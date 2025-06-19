@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { supabase } from '../lib/supabase';
 
 interface Translation {
@@ -8,19 +8,27 @@ interface Translation {
   category: string;
 }
 
-interface LanguageContextType {
+export interface LanguageConfig {
+  code: string;
+  name: string;
+  flag: string;
+}
+
+export interface LanguageContextType {
   currentLanguage: string;
-  setLanguage: (lang: string) => void;
-  t: (key: string, fallback?: string) => string;
-  isLoading: boolean;
+  translations: Record<string, string>;
+  loading: boolean;
   error: string | null;
-  availableLanguages: { code: string; name: string; flag: string }[];
+  changeLanguage: (languageCode: string) => Promise<void>;
+  t: (key: string, fallback?: string) => string;
+  isRTL: boolean;
+  supportedLanguages: LanguageConfig[];
 }
 
 // Import the context from the proper location
 import { LanguageContext } from '../context/LanguageContext';
 
-const AVAILABLE_LANGUAGES = [
+const AVAILABLE_LANGUAGES: LanguageConfig[] = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
   { code: 'it', name: 'Italiano', flag: '🇮🇹' },
   { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
@@ -57,6 +65,9 @@ const AVAILABLE_LANGUAGES = [
   { code: 'ca', name: 'Català', flag: '🏴󠁥󠁳󠁣󠁴󠁿' },
   { code: 'gl', name: 'Galego', flag: '🏴󠁥󠁳󠁧󠁡󠁿' },
 ];
+
+// RTL languages
+const RTL_LANGUAGES = ['ar', 'he', 'fa', 'ur'];
 
 // Fallback translations for critical UI elements
 const FALLBACK_TRANSLATIONS: Record<string, Record<string, string>> = {
@@ -207,10 +218,84 @@ export const createTranslationFunction = (translations: Record<string, string>) 
   };
 };
 
+// Core language hook that manages state - this is used by the LanguageProvider
 export const useLanguage = (): LanguageContextType => {
+  const [currentLanguage, setCurrentLanguage] = useState<string>('en');
+  const [translations, setTranslations] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Initialize language on mount
+  useEffect(() => {
+    const initializeLanguage = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Try to get saved language from localStorage
+        const savedLanguage = localStorage.getItem('preferred-language') || 'en';
+        
+        // Load translations for the saved language
+        const loadedTranslations = await loadTranslations(savedLanguage);
+        
+        setCurrentLanguage(savedLanguage);
+        setTranslations(loadedTranslations);
+      } catch (err) {
+        console.error('Failed to initialize language:', err);
+        setError('Failed to load language settings');
+        
+        // Fallback to English
+        setCurrentLanguage('en');
+        setTranslations(FALLBACK_TRANSLATIONS.en);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeLanguage();
+  }, []);
+
+  const changeLanguage = async (languageCode: string): Promise<void> => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const loadedTranslations = await loadTranslations(languageCode);
+      
+      setCurrentLanguage(languageCode);
+      setTranslations(loadedTranslations);
+      
+      // Save to localStorage
+      localStorage.setItem('preferred-language', languageCode);
+    } catch (err) {
+      console.error('Failed to change language:', err);
+      setError('Failed to change language');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const t = createTranslationFunction(translations);
+  const isRTL = RTL_LANGUAGES.includes(currentLanguage);
+
+  return {
+    currentLanguage,
+    translations,
+    loading,
+    error,
+    changeLanguage,
+    t,
+    isRTL,
+    supportedLanguages: AVAILABLE_LANGUAGES,
+  };
+};
+
+// Hook for consuming the context (used by components)
+export const useLanguageContext = (): LanguageContextType => {
   const context = useContext(LanguageContext);
   if (context === undefined) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
+    throw new Error('useLanguageContext must be used within a LanguageProvider');
   }
   return context;
 };
@@ -219,4 +304,4 @@ export const useLanguage = (): LanguageContextType => {
 export { AVAILABLE_LANGUAGES, FALLBACK_TRANSLATIONS };
 
 // Export for backward compatibility
-export default useLanguage;
+export default useLanguageContext;

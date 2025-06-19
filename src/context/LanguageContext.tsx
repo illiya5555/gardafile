@@ -1,16 +1,5 @@
 import React, { createContext, useContext, ReactNode } from 'react';
-import { useLanguage, LanguageConfig } from '../hooks/useLanguage';
-
-interface LanguageContextType {
-  currentLanguage: string;
-  translations: Record<string, string>;
-  loading: boolean;
-  error: string | null;
-  changeLanguage: (languageCode: string) => Promise<void>;
-  t: (key: string, fallback?: string) => string;
-  isRTL: boolean;
-  supportedLanguages: LanguageConfig[];
-}
+import { useLanguage, LanguageContextType } from '../hooks/useLanguage';
 
 export const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 

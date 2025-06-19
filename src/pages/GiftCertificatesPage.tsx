@@ -4,7 +4,6 @@ import { Gift, Star, Heart, Calendar, Users, Award, CheckCircle, Phone, Mail, Cr
 
 const GiftCertificatesPage = () => {
   const [selectedAmount, setSelectedAmount] = useState('195');
-  const [customAmount, setCustomAmount] = useState('');
   const [recipientName, setRecipientName] = useState('');
   const [recipientEmail, setRecipientEmail] = useState('');
   const [senderName, setSenderName] = useState('');
@@ -12,8 +11,7 @@ const GiftCertificatesPage = () => {
   const [deliveryDate, setDeliveryDate] = useState('');
 
   const predefinedAmounts = [
-    { value: '195', label: '€195', description: 'Single sailing experience' },
-    { value: 'custom', label: 'Custom', description: 'Choose your own amount' }
+    { value: '195', label: '€195', description: 'Single sailing experience' }
   ];
 
   const giftIdeas = [
@@ -56,8 +54,7 @@ const GiftCertificatesPage = () => {
   ];
 
   const handlePurchase = () => {
-    const amount = selectedAmount === 'custom' ? customAmount : selectedAmount;
-    if (!amount || !recipientName || !recipientEmail || !senderName) {
+    if (!recipientName || !recipientEmail || !senderName) {
       alert('Please fill in all required fields');
       return;
     }
@@ -110,7 +107,7 @@ const GiftCertificatesPage = () => {
               {/* Amount Selection */}
               <div className="mb-8">
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">Select Amount</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                   {predefinedAmounts.map((amount) => (
                     <button
                       key={amount.value}
@@ -126,22 +123,6 @@ const GiftCertificatesPage = () => {
                     </button>
                   ))}
                 </div>
-                
-                {selectedAmount === 'custom' && (
-                  <div className="mt-4">
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Custom Amount (€)
-                    </label>
-                    <input
-                      type="number"
-                      value={customAmount}
-                      onChange={(e) => setCustomAmount(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                      placeholder="Enter amount"
-                      min="50"
-                    />
-                  </div>
-                )}
               </div>
 
               {/* Recipient Information */}
@@ -231,7 +212,7 @@ const GiftCertificatesPage = () => {
               >
                 <CreditCard className="h-5 w-5" />
                 <span>
-                  Purchase Gift Certificate - €{selectedAmount === 'custom' ? customAmount || '0' : selectedAmount}
+                  Purchase Gift Certificate - €{selectedAmount}
                 </span>
               </button>
             </div>
@@ -248,7 +229,7 @@ const GiftCertificatesPage = () => {
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-6">
                   <div className="text-center">
                     <div className="text-4xl font-bold text-gold-300 mb-2">
-                      €{selectedAmount === 'custom' ? customAmount || '0' : selectedAmount}
+                      €{selectedAmount}
                     </div>
                     <p className="text-white/80">Yacht Racing Experience</p>
                   </div>
@@ -265,7 +246,7 @@ const GiftCertificatesPage = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-white/80">Valid Until:</span>
-                    <span>{new Date(Date.now() + 2 * 365 * 24 * 60 * 60 * 1000).toLocaleDateString()}</span>
+                    <span>{new Date(Date.now() + 2 * 30 * 24 * 60 * 60 * 1000).toLocaleDateString()}</span>
                   </div>
                 </div>
 

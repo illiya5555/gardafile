@@ -170,7 +170,7 @@ const ContactPage = () => {
                 ></iframe>
               </div>
             </div>
-          </div> {/* ← Закрываем Contact Information */}
+          </div>
 
           {/* Contact Form */}
           <div>
@@ -197,6 +197,8 @@ const ContactPage = () => {
                       <p className="text-red-600 text-sm">{error}</p>
                     </div>
                   )}
+                  
+                  {/* Name and Email Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
@@ -207,7 +209,8 @@ const ContactPage = () => {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                        placeholder="Your name"
                         required
                       />
                     </div>
@@ -220,11 +223,14 @@ const ContactPage = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                        placeholder="your@email.com"
                         required
                       />
                     </div>
                   </div>
+                  
+                  {/* Phone and Subject Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
@@ -234,6 +240,7 @@ const ContactPage = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handlePhoneChange}
+                        className="transition-all duration-300"
                       />
                     </div>
                     <div>
@@ -244,7 +251,7 @@ const ContactPage = () => {
                         name="subject"
                         value={formData.subject}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
                         required
                       >
                         <option value="">Select subject</option>
@@ -256,6 +263,8 @@ const ContactPage = () => {
                       </select>
                     </div>
                   </div>
+                  
+                  {/* Message */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
                       Message *
@@ -265,15 +274,17 @@ const ContactPage = () => {
                       value={formData.message}
                       onChange={handleInputChange}
                       rows={6}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 resize-none"
                       placeholder="Tell us about your questions or wishes..."
                       required
                     />
                   </div>
+                  
+                  {/* Submit Button */}
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-primary-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                    className="w-full bg-primary-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center space-x-2"
                   >
                     {loading ? (
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>

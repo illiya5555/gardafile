@@ -410,11 +410,13 @@ const EventsPage = () => {
               <p className="text-gray-600 mb-6">Still have questions? We're here to help!</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
-                  href="tel:+393447770077"
-                  className="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300"
-                >
-                  Call +39 344 777 00 77
-                </a>
+  href="https://wa.me/393447770077"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="flex items-center justify-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300"
+>
+  <span>WhatsApp</span>
+</a>
                 <a
                   href="mailto:info@gardaracing.com"
                   className="bg-gray-100 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors duration-300"

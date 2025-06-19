@@ -1,395 +1,147 @@
 import React, { useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { Link } from 'react-router-dom';
+import { Anchor, MapPin, Phone, Mail, Award, Shield, Clock, Lock } from 'lucide-react';
+import AdminLogin from './AdminLogin';
 import { useTranslation } from '../context/LanguageContext';
-import PhoneInput from '../components/PhoneInput';
 
-const ContactPage = () => {
+const Footer = () => {
   const { t } = useTranslation();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '+39 ',
-    subject: '',
-    message: ''
-  });
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-    if (error) setError('');
-  };
-
-  const handlePhoneChange = (value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      phone: value
-    }));
-    if (error) setError('');
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    try {
-      const { error: insertError } = await supabase
-        .from('unified_inquiries')
-        .insert({
-          type: 'contact',
-          customer_name: formData.name,
-          customer_email: formData.email,
-          customer_phone: formData.phone || null,
-          subject: formData.subject,
-          message: formData.message,
-          status: 'new',
-          source: 'website'
-        });
-
-      if (insertError) throw insertError;
-
-      setSubmitted(true);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '+39 ',
-        subject: '',
-        message: ''
-      });
-    } catch (error: any) {
-      console.error('Error submitting contact form:', error);
-      setError(error.message || t('contact.form.error', 'An error occurred while sending your message. Please try again.'));
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
 
   return (
-    <div className="pt-20">
-      {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 font-serif">
-            {t('contact.hero.title', 'Contact Us')}
-          </h1>
-          <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
-            {t('contact.hero.subtitle', 'We are ready to answer all your questions and help organize an unforgettable sailing adventure on Lake Garda')}
-          </p>
-        </div>
-      </section>
-
+    <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          {/* Contact Information */}
-          <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">
-              {t('contact.info.title', 'Contact Information')}
-            </h2>
-            <div className="space-y-8">
-              <div className="flex items-start space-x-4">
-                <div className="bg-primary-100 p-3 rounded-lg">
-                  <MapPin className="h-6 w-6 text-primary-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    {t('contact.info.address.title', 'Address')}
-                  </h3>
-                  <p className="text-gray-600">
-                    Viale Giancarlo Maroni 4<br />
-                    38066 Riva del Garda TN<br />
-                    Italia
-                  </p>
-                </div>
-              </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Company Info */}
+          <div className="space-y-6">
+            <div className="flex items-center space-x-3">
+  <img
+    src="/gardalogo.png"
+    alt="Garda Racing Logo"
+    className="h-20 w-20 object-contain"
+  />
+  <div>
+    <h3 className="text-xl font-bold">Garda Racing</h3>
+    <p className="text-gray-400 text-sm">Yacht Club</p>
+  </div>
+</div>
 
-              <div className="flex items-start space-x-4">
-                <div className="bg-primary-100 p-3 rounded-lg">
-                  <Phone className="h-6 w-6 text-primary-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    {t('contact.info.phone.title', 'Phone')}
-                  </h3>
-                  <a 
-                    href="tel:+393447770077" 
-                    className="text-primary-600 hover:text-primary-700 transition-colors duration-300"
-                  >
-                    +39 344 777 00 77
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="bg-primary-100 p-3 rounded-lg">
-                  <Mail className="h-6 w-6 text-primary-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    {t('contact.info.email.title', 'Email')}
-                  </h3>
-                  <div className="space-y-1">
-                    <a 
-                      href="mailto:info@gardaracing.com" 
-                      className="block text-primary-600 hover:text-primary-700 transition-colors duration-300"
-                    >
-                      info@gardaracing.com
-                    </a>
-                    <a 
-                      href="mailto:corporate@gardaracing.com" 
-                      className="block text-primary-600 hover:text-primary-700 transition-colors duration-300"
-                    >
-                      corporate@gardaracing.com
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="bg-primary-100 p-3 rounded-lg">
-                  <Clock className="h-6 w-6 text-primary-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    {t('contact.info.hours.title', 'Operating Hours')}
-                  </h3>
-                  <div className="text-gray-600">
-                    <p>{t('contact.info.hours.daily', 'Daily: 8:00 AM - 7:00 PM')}</p>
-                    <p>{t('contact.info.hours.season', 'Season: March - October')}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Map */}
-            <div className="mt-12">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                {t('contact.info.map.title', 'How to find us')}
-              </h3>
-              <div className="rounded-xl overflow-hidden w-full h-64">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2777.3711841622!2d10.844166699999999!3d45.883888899999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47821727e0319b4d%3A0xe35bcd19dae63816!2sFraglia%20Vela%20Riva!5e0!3m2!1sru!2sil!4v1750324990471!5m2!1sru!2sil"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                ></iframe>
-              </div>
-            </div>
+            <p className="text-gray-300 leading-relaxed">
+              Experience the thrill of yacht racing on the world-famous Lake Garda. 
+              Professional instruction, premium equipment, and unforgettable memories.
+            </p>
           </div>
 
-          {/* Contact Form */}
+          {/* Quick Links */}
           <div>
-            <div className="bg-white rounded-2xl shadow-lg p-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">
-                {t('contact.form.title', 'Send a message')}
-              </h2>
-              {submitted ? (
-                <div className="text-center py-8">
-                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <CheckCircle className="h-8 w-8 text-green-600" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
+            <ul className="space-y-3">
+              <li>
+                <Link to="/" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  {t('nav.home', 'Home')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/events" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  {t('nav.events', 'Events')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/booking" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  {t('nav.book_now', 'Book Now')}
+                </Link>
+              </li>
+              <li>
+                <a href="#" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  {t('nav.services', 'Corporate Events')}
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  Gift Vouchers
+                </a>
+              </li>
+            </ul>
+          </div>
                     {t('contact.form.success.title', 'Message sent!')}
-                  </h3>
-                  <p className="text-gray-600">
+          {/* Contact Info */}
+          <div>
                     {t('contact.form.success.message', 'We will contact you shortly.')}
-                  </p>
-                  <button
-                    onClick={() => setSubmitted(false)}
-                    className="mt-4 text-primary-600 hover:text-primary-700 transition-colors duration-300"
-                  >
+            <ul className="space-y-4">
+              <li className="flex items-start space-x-3">
+                <MapPin className="h-5 w-5 text-primary-500 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-gray-300">Viale Giancarlo Maroni 4</p>
                     {t('contact.form.success.send_another', 'Send another message')}
-                  </button>
+                  <p className="text-gray-300">Italia</p>
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {error && (
-                    <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                      <p className="text-red-600 text-sm">{error}</p>
-                    </div>
-                  )}
-                  
-                  {/* Name and Email Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        {t('contact.form.name.label', 'Name')} *
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
-                        placeholder={t('contact.form.name.placeholder', 'Your name')}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        {t('contact.form.email.label', 'Email')} *
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
-                        placeholder={t('contact.form.email.placeholder', 'your@email.com')}
-                        required
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* Phone Field - Full Width */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      {t('contact.form.phone.label', 'Phone')}
-                    </label>
-                    <PhoneInput
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handlePhoneChange}
-                      className="w-full"
-                    />
-                  </div>
-                  
-                  {/* Subject Field - Full Width */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      {t('contact.form.subject.label', 'Subject')} *
-                    </label>
-                    <select
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
-                      required
-                    >
-                      <option value="">{t('contact.form.subject.placeholder', 'Select subject')}</option>
-                      <option value="booking">{t('contact.form.subject.booking', 'Booking')}</option>
-                      <option value="corporate">{t('contact.form.subject.corporate', 'Corporate Events')}</option>
-                      <option value="general">{t('contact.form.subject.general', 'General Questions')}</option>
-                      <option value="partnership">{t('contact.form.subject.partnership', 'Partnership')}</option>
-                      <option value="other">{t('contact.form.subject.other', 'Other')}</option>
-                    </select>
-                  </div>
-                  
-                  {/* Message */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      {t('contact.form.message.label', 'Message')} *
-                    </label>
-                    <textarea
-                      name="message"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      rows={6}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 resize-none"
-                      placeholder={t('contact.form.message.placeholder', 'Tell us about your questions or wishes...')}
-                      required
-                    />
-                  </div>
-                  
-                  {/* Submit Button */}
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full bg-primary-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center space-x-2"
-                  >
-                    {loading ? (
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    ) : (
-                      <>
-                        <Send className="h-5 w-5" />
-                        <span>{t('contact.form.submit', 'Send message')}</span>
-                      </>
-                    )}
-                  </button>
-                </form>
-              )}
-            </div>
+              </li>
+              <li className="flex items-center space-x-3">
+                    {t('contact.info.hours.title', 'Operating Hours')}
+                <a href="tel:+393447770077" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  +39 344 777 00 77
+                </a>
+              </li>
+              <li className="flex items-center space-x-3">
+                <Mail className="h-5 w-5 text-primary-500" />
+                <a href="mailto:info@gardaracing.com" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  info@gardaracing.com
+                </a>
+              </li>
+            </ul>
+          </div>
 
-            {/* Quick Contact */}
-            <div className="mt-8 bg-primary-50 rounded-2xl p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                {t('contact.quick.title', 'Need quick help?')}
-              </h3>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <a
-                  href="https://t.me/VETER_ITA"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-colors duration-300"
-                  style={{ backgroundColor: '#0088cc', color: 'white' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#006699'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0088cc'}
-                >
-                  <span>💬</span>
-                  <span>Telegram</span>
-                </a>
-                <a
-                  href="https://wa.me/393447770077"
-                  className="flex items-center justify-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300"
-                >
-                  <span>WhatsApp</span>
-                </a>
+          {/* Certifications */}
+          <div>
+            <h4 className="text-lg font-semibold mb-6">Certifications</h4>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <Shield className="h-5 w-5 text-green-400" />
+                <span className="text-gray-300 text-sm">Fully Insured</span>
               </div>
+              <div className="flex items-center space-x-3">
+                <Clock className="h-5 w-5 text-blue-400" />
+                <span className="text-gray-300 text-sm">24/7 Support</span>
+              </div>
+            </div>
+            <div className="mt-6 p-4 bg-gray-800 rounded-lg">
+              <p className="text-sm text-gray-300 mb-2">Operating Hours:</p>
+              <p className="text-sm text-white">Daily: 8:00 AM - 7:00 PM</p>
+              <p className="text-sm text-gray-400">March - October</p>
             </div>
           </div>
         </div>
 
-        {/* FAQ Section */}
-        <div className="mt-20">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
-            {t('contact.faq.title', 'Frequently asked questions')}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                {t('contact.faq.booking.question', 'How to book?')}
-              </h3>
-              <p className="text-gray-600">
-                {t('contact.faq.booking.answer', 'You can book through our website, call us, or email us. We will confirm your booking within 24 hours.')}
-              </p>
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-800 mt-12 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="flex flex-wrap justify-center md:justify-start space-x-6 text-sm text-gray-400">
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Privacy Policy</a>
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Terms & Conditions</a>
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Cancellation Policy</a>
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">GDPR</a>
+              {/* Малозаметная кнопка администратора */}
+              <button
+                onClick={() => setShowAdminLogin(true)}
+                className="text-gray-600 hover:text-gray-400 transition-colors duration-300 opacity-30 hover:opacity-60"
+                title="Admin Access"
+              >
+                <Lock className="h-3 w-3" />
+              </button>
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                {t('contact.faq.weather.question', 'What weather is suitable for sailing?')}
-              </h3>
-              <p className="text-gray-600">
-                {t('contact.faq.weather.answer', 'We go to sea with winds from 5 to 25 knots. In adverse conditions, we will offer a reschedule or a full refund.')}
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                {t('contact.faq.experience.question', 'Is sailing experience required?')}
-              </h3>
-              <p className="text-gray-600">
-                {t('contact.faq.experience.answer', 'No, experience is not required. Our professional instructors will teach you everything you need and ensure safety on the water.')}
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                {t('contact.faq.included.question', 'What is included in the price?')}
-              </h3>
-              <p className="text-gray-600">
-                {t('contact.faq.included.answer', 'The price includes: professional skipper, all equipment, instruction, participant medal, and professional photos.')}
-              </p>
-            </div>
+            <p className="text-sm text-gray-400">
+              © 2025 Garda Racing Yacht Club. All rights reserved.
+            </p>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Admin Login Modal */}
+      {showAdminLogin && (
+        <AdminLogin onClose={() => setShowAdminLogin(false)} />
+      )}
+    </footer>
   );
 };
 
-export default ContactPage;
+export default Footer;

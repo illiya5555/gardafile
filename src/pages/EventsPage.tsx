@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Play, Clock, Users, Award, Camera, Wind, Anchor, CheckCircle, Star } from 'lucide-react';
+import { useTranslation } from '../context/LanguageContext';
 
 const EventsPage = () => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
 
@@ -92,12 +94,10 @@ const EventsPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h1 className="text-4xl md:text-6xl font-bold mb-6 font-serif">
-                The Complete Racing Experience
+                {t('events.title', 'The Complete Racing Experience')}
               </h1>
               <p className="text-xl text-white/90 mb-8 leading-relaxed">
-                From beginner to champion in one day. Experience authentic yacht racing 
-                on Lake Garda with professional instruction, competitive races, and 
-                official recognition of your achievement.
+                {t('events.subtitle', 'From beginner to champion in one day. Experience authentic yacht racing on Lake Garda with professional instruction, competitive races, and official recognition of your achievement.')}
               </p>
               <div className="flex flex-wrap gap-4 mb-8">
                 <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
@@ -117,7 +117,7 @@ const EventsPage = () => {
                 to="/booking"
                 className="bg-gold-500 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gold-600 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
               >
-                Book Your Experience - €195
+                {t('booking.cta', 'Book Your Experience - €195')}
               </Link>
             </div>
             <div className="relative">

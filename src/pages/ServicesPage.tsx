@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Users, Award, Calendar, Phone, Mail, CheckCircle, Star, MapPin, Clock, Music, Utensils, Car, Video } from 'lucide-react';
 import { supabase, CorporatePackage, AdditionalService, CorporateInquiry } from '../lib/supabase';
+import { useTranslation } from '../context/LanguageContext';
 
 const ServicesPage = () => {
+  const { t } = useTranslation();
   const [packages, setPackages] = useState<CorporatePackage[]>([]);
   const [additionalServices, setAdditionalServices] = useState<AdditionalService[]>([]);
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
@@ -200,11 +202,10 @@ const ServicesPage = () => {
       <section className="relative py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 font-serif animate-fade-in">
-            Corporate Services
+            {t('services.title', 'Corporate Services')}
           </h1>
           <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed animate-slide-up">
-            Create unforgettable corporate events on Lake Garda. 
-            Professionally organized regattas to strengthen team spirit.
+            {t('services.subtitle', 'Create unforgettable corporate events on Lake Garda. Professionally organized regattas to strengthen team spirit.')}
           </p>
         </div>
       </section>

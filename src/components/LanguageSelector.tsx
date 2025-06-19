@@ -5,11 +5,13 @@ import { useLanguageContext } from '../context/LanguageContext';
 interface LanguageSelectorProps {
   className?: string;
   showLabel?: boolean;
+  compact?: boolean;
 }
 
 const LanguageSelector: React.FC<LanguageSelectorProps> = ({ 
   className = '', 
-  showLabel = true 
+  showLabel = true,
+  compact = false
 }) => {
   const { currentLanguage, changeLanguage, supportedLanguages, loading } = useLanguageContext();
   const [isOpen, setIsOpen] = useState(false);
@@ -28,7 +30,9 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       <button
         onClick={() => setIsOpen(!isOpen)}
         disabled={loading}
-        className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-all duration-300 disabled:opacity-50"
+        className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-all duration-300 disabled:opacity-50 ${
+          compact ? 'text-sm' : ''
+        }`}
         aria-label="Select language"
       >
         <Globe className="h-4 w-4" />
@@ -52,7 +56,9 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
+        <div className={`absolute right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto ${
+          compact ? 'w-48' : 'w-64'
+        }`}>
           <div className="py-2">
             {supportedLanguages.map((language) => (
               <button
@@ -66,10 +72,15 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
                   <span className="text-lg" role="img" aria-label={language.name}>
                     {language.flag}
                   </span>
-                  <div>
-                    <div className="font-medium">{language.nativeName}</div>
-                    <div className="text-sm text-gray-500">{language.name}</div>
-                  </div>
+                  {!compact && (
+                    <div>
+                      <div className="font-medium">{language.nativeName}</div>
+                      <div className="text-sm text-gray-500">{language.name}</div>
+                    </div>
+                  )}
+                  {compact && (
+                    <div className="font-medium">{language.code.toUpperCase()}</div>
+                  )}
                 </div>
                 {language.code === currentLanguage && (
                   <Check className="h-4 w-4 text-blue-600" />

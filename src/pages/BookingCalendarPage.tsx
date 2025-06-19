@@ -5,6 +5,7 @@ import { useCalendar } from '../context/CalendarContext';
 import PaymentButton from '../components/PaymentButton';
 import { stripeProducts } from '../stripe-config';
 import PhoneInput from '../components/PhoneInput';
+import { useTranslation } from '../context/LanguageContext';
 
 interface BookingFormData {
   date: string;
@@ -18,6 +19,7 @@ interface BookingFormData {
 }
 
 const BookingCalendarPage = () => {
+  const { t } = useTranslation();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedTime, setSelectedTime] = useState<string>('');
@@ -204,10 +206,10 @@ const BookingCalendarPage = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">
-            Book Your Regatta Experience
+            {t('booking.title', 'Book Your Regatta Experience')}
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Choose a date and time for an unforgettable yacht racing experience on Lake Garda
+            {t('booking.subtitle', 'Choose a date and time for an unforgettable yacht racing experience on Lake Garda')}
           </p>
           <div className="mt-4 flex justify-center space-x-8 text-sm text-gray-600">
             <div className="flex items-center space-x-2">
@@ -552,7 +554,7 @@ const BookingCalendarPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Full Name *
+                        {t('form.name', 'Full Name')} *
                       </label>
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -569,7 +571,7 @@ const BookingCalendarPage = () => {
 
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Email *
+                        {t('form.email', 'Email')} *
                       </label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -586,7 +588,7 @@ const BookingCalendarPage = () => {
 
                     <div className="md:col-span-2">
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Phone *
+                        {t('form.phone', 'Phone')} *
                       </label>
                       <PhoneInput
                         value={bookingData.customerPhone || '+39 '}
@@ -601,7 +603,7 @@ const BookingCalendarPage = () => {
                     disabled={!bookingData.customerName || !bookingData.customerEmail || !bookingData.customerPhone}
                     className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Proceed to payment
+                    {t('booking.proceed_payment', 'Proceed to payment')}
                   </button>
                 </div>
               )}

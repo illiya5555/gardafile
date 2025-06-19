@@ -31,7 +31,7 @@ const CorporateSailingPage = () => {
                 <p className="text-lg text-gray-700 leading-relaxed mb-6">
                   In just one day, your team becomes a true crew: participants are divided into teams, 
                   receive instructions, train under the guidance of professional skippers, and compete 
-                  in a yacht race on J/70 class sports boats.
+                  in a yacht race on J-70 / J-80 class sports boats.
                 </p>
                 <p className="text-lg text-gray-700 leading-relaxed">
                   This is more than just fun — it's a model of modern business: teamwork, rapid 

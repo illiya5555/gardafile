@@ -5,7 +5,7 @@ import { Play, Clock, Users, Award, Camera, Wind, Anchor, MapPin, CheckCircle, S
 
 const EventsPage = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const galleryImages = [
   {

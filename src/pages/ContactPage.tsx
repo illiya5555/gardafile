@@ -152,14 +152,22 @@ const ContactPage = () => {
               </div>
             </div>
 
-            {/* Map */}
-            <div className="mt-12">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">How to find us</h3>
-              <div className="bg-gray-200 rounded-xl h-64 flex items-center justify-center">
-                <p className="text-gray-600">Interactive map</p>
-              </div>
-            </div>
-          </div>
+          {/* Map */}
+<div className="mt-12">
+  <h3 className="text-xl font-semibold text-gray-900 mb-4">How to find us</h3>
+  <div className="rounded-xl overflow-hidden w-full h-64">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2777.3711841622!2d10.844166699999999!3d45.883888899999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47821727e0319b4d%3A0xe35bcd19dae63816!2sFraglia%20Vela%20Riva!5e0!3m2!1sru!2sil!4v1750324990471!5m2!1sru!2sil"
+      width="100%"
+      height="100%"
+      style={{ border: 0 }}
+      allowFullScreen=""
+      loading="lazy"
+      referrerPolicy="no-referrer-when-downgrade"
+    ></iframe>
+  </div>
+</div>
+
 
           {/* Contact Form */}
           <div>

@@ -1,3 +1,4 @@
+мне нужно чтоб ты интегрировал этот блок вместо существующего блока в этом коде:
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Play, Clock, Users, Award, Camera, Wind, Anchor, MapPin, CheckCircle, Star, Calendar } from 'lucide-react';
@@ -95,59 +96,57 @@ const EventsPage = () => {
   return (
     <div className="pt-20">
       {/* Hero Section */}
-<section className="relative py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white overflow-hidden">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-      <div>
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 font-serif leading-tight">
-          The Complete Racing Experience
-        </h1>
-        <p className="text-xl text-white/90 mb-8 leading-relaxed">
-          From beginner to champion in one day. Experience authentic yacht racing 
-          on Lake Garda with professional instruction, competitive races, and 
-          official recognition of your achievement.
-        </p>
-        <div className="flex flex-wrap gap-4 mb-8">
-          <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
-            <Clock className="h-5 w-5 text-gold-400" />
-            <span>3–4 hours</span>
-          </div>
-          <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
-            <Users className="h-5 w-5 text-gold-400" />
-            <span>4–5 people</span>
-          </div>
-          <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
-            <Award className="h-5 w-5 text-gold-400" />
-            <span>Medal included</span>
+      <section className="relative py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h1 className="text-4xl md:text-6xl font-bold mb-6 font-serif">
+                The Complete Racing Experience
+              </h1>
+              <p className="text-xl text-white/90 mb-8 leading-relaxed">
+                From beginner to champion in one day. Experience authentic yacht racing 
+                on Lake Garda with professional instruction, competitive races, and 
+                official recognition of your achievement.
+              </p>
+              <div className="flex flex-wrap gap-4 mb-8">
+                <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
+                  <Clock className="h-5 w-5 text-gold-400" />
+                  <span>3-4 hours</span>
+                </div>
+                <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
+                  <Users className="h-5 w-5 text-gold-400" />
+                  <span>4-5 people</span>
+                </div>
+                <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
+                  <Award className="h-5 w-5 text-gold-400" />
+                  <span>Medal included</span>
+                </div>
+              </div>
+              <Link
+                to="/booking"
+                className="bg-gold-500 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gold-600 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
+              >
+                Book Your Experience - €195
+              </Link>
+            </div>
+            <div className="relative">
+              <img
+                src={galleryImages[selectedImage].url}
+                alt={galleryImages[selectedImage].caption}
+                className="rounded-2xl shadow-2xl w-full h-96 object-cover"
+              />
+              <div className="absolute bottom-4 left-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-3">
+                <p className="text-white text-center">{galleryImages[selectedImage].caption}</p>
+              </div>
+              <button className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-2xl hover:bg-black/30 transition-colors duration-300 group">
+                <div className="bg-white/20 backdrop-blur-sm rounded-full p-4 group-hover:scale-110 transition-transform duration-300">
+                  <Play className="h-8 w-8 text-white" />
+                </div>
+              </button>
+            </div>
           </div>
         </div>
-        <Link
-          to="/booking"
-          className="bg-gold-500 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gold-600 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
-        >
-          Book Your Experience – €195
-        </Link>
-      </div>
-      <div className="relative">
-        <img
-          src={galleryImages[selectedImage].url}
-          alt={galleryImages[selectedImage].caption}
-          className="rounded-2xl shadow-2xl w-full h-96 object-cover"
-        />
-        <div className="absolute bottom-4 left-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-3">
-          <p className="text-white text-center">{galleryImages[selectedImage].caption}</p>
-        </div>
-        <button className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-2xl hover:bg-black/30 transition-colors duration-300 group">
-          <div className="bg-white/20 backdrop-blur-sm rounded-full p-4 group-hover:scale-110 transition-transform duration-300">
-            <Play className="h-8 w-8 text-white" />
-          </div>
-        </button>
-      </div>
-    </div>
-  </div>
-  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-blue-950 opacity-30" />
-</section>
-
+      </section>
 
       {/* Navigation Tabs */}
       <section className="bg-white border-b border-gray-200 sticky top-20 z-40">
@@ -290,43 +289,57 @@ const EventsPage = () => {
         )}
 
         {/* Gallery */}
-        {activeTab === 'gallery' && (
-          <div className="animate-fade-in">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Experience Gallery</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {galleryImages.map((image, index) => (
-                <div
-                  key={index}
-                  className="relative group cursor-pointer overflow-hidden rounded-xl"
-                  onClick={() => setSelectedImage(index)}
-                >
-                  <img
-                    src={image.url}
-                    alt={image.caption}
-                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <p className="text-white font-semibold text-center px-4">{image.caption}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-12 text-center">
-              <p className="text-gray-600 mb-6">Want to see more? Follow us on social media for daily updates!</p>
-              <div className="flex justify-center space-x-4">
-                <a href="#" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-300">
-                  Facebook
-                </a>
-                <a href="#" className="bg-pink-600 text-white px-6 py-3 rounded-lg hover:bg-pink-700 transition-colors duration-300">
-                  Instagram
-                </a>
-                <a href="#" className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors duration-300">
-                  YouTube
-                </a>
-              </div>
-            </div>
+              {/* Image Modal */}
+      {selectedImage !== null && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div
+            className="relative max-w-5xl w-full px-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={galleryImages[selectedImage].url}
+              alt={galleryImages[selectedImage].caption}
+              className="max-h-[80vh] w-full object-contain rounded-xl shadow-lg"
+            />
+            <p className="text-white text-center mt-4">
+              {galleryImages[selectedImage].caption}
+            </p>
+
+            {/* Prev */}
+            {selectedImage > 0 && (
+              <button
+                onClick={() => setSelectedImage(selectedImage - 1)}
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-3 rounded-full"
+              >
+                ‹
+              </button>
+            )}
+
+            {/* Next */}
+            {selectedImage < galleryImages.length - 1 && (
+              <button
+                onClick={() => setSelectedImage(selectedImage + 1)}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-3 rounded-full"
+              >
+                ›
+              </button>
+            )}
+
+            {/* Close */}
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute top-4 right-4 text-white bg-white/20 hover:bg-white/40 p-2 rounded-full"
+              title="Close"
+            >
+              ✕
+            </button>
           </div>
-        )}
+        </div>
+      )}
+
 
         {/* Weather */}
         {activeTab === 'weather' && (

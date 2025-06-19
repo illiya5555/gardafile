@@ -82,13 +82,13 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
   const selectedCountry = countryCodes.find(c => c.code === countryCode) || countryCodes[0];
 
   return (
-    <div className="relative">
+    <div className={`relative ${className}`}>
       <div className="flex">
         {/* Country code selector */}
         <div className="relative">
           <button
             type="button"
-            className="flex items-center space-x-1 px-3 py-3 bg-gray-100 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex items-center space-x-1 px-3 py-3 bg-gray-100 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
             onClick={() => setIsOpen(!isOpen)}
           >
             <span className="text-lg">{selectedCountry.flag}</span>
@@ -107,7 +107,7 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
                 <button
                   key={country.code}
                   type="button"
-                  className="flex items-center w-full px-4 py-2 text-left hover:bg-gray-100"
+                  className="flex items-center w-full px-4 py-2 text-left hover:bg-gray-100 transition-colors duration-300"
                   onClick={() => handleCountryCodeChange(country.code)}
                 >
                   <span className="text-lg mr-2">{country.flag}</span>
@@ -125,7 +125,7 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
           name={name}
           value={number}
           onChange={handleNumberChange}
-          className={`flex-1 px-4 py-3 border border-gray-300 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
+          className="flex-1 px-4 py-3 border border-gray-300 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
           placeholder={placeholder}
           required={required}
         />

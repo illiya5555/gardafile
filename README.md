@@ -179,3 +179,5 @@ STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_publishable_key
 ## License
 
 This project is proprietary software for Garda Racing Yacht Club.
+
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/illiya5555/gardafile)

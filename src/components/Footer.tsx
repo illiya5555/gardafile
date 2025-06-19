@@ -16,7 +16,7 @@ const Footer = () => {
   <img
     src="/gardalogo.png"
     alt="Garda Racing Logo"
-    className="h-16 w-16 object-contain"
+    className="h-20 w-20 object-contain"
   />
   <div>
     <h3 className="text-xl font-bold">Garda Racing</h3>

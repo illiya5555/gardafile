@@ -110,7 +110,7 @@ export const useLanguage = (): UseLanguageReturn => {
           .from('user_preferences')
           .select('language_code')
           .eq('user_id', user.id)
-          .single();
+          .maybeSingle();
         
         if (preference?.language_code) {
           return preference.language_code;

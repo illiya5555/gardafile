@@ -89,7 +89,7 @@ const GiftCertificatesPage = () => {
             </div>
             <div className="flex items-center space-x-2">
               <CheckCircle className="h-5 w-5 text-green-400" />
-              <span>Valid for 2 Years</span>
+              <span>Valid for 2 Months</span>
             </div>
             <div className="flex items-center space-x-2">
               <CheckCircle className="h-5 w-5 text-green-400" />
@@ -287,7 +287,7 @@ const GiftCertificatesPage = () => {
                     'Racing medal and certificate',
                     'Professional photography',
                     'Flexible booking (subject to availability)',
-                    'Valid for 2 years from purchase date'
+                    'Valid for 2 months from purchase date'
                   ].map((feature, index) => (
                     <div key={index} className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
@@ -397,7 +397,7 @@ const GiftCertificatesPage = () => {
             {[
               {
                 question: "How long are gift certificates valid?",
-                answer: "All gift certificates are valid for 2 years from the date of purchase, giving recipients plenty of time to plan their sailing adventure."
+                answer: "All gift certificates are valid for 2 months from the date of purchase, giving recipients plenty of time to plan their sailing adventure."
               },
               {
                 question: "Can gift certificates be used for any sailing experience?",

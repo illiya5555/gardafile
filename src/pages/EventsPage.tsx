@@ -95,57 +95,59 @@ const EventsPage = () => {
   return (
     <div className="pt-20">
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 font-serif">
-                The Complete Racing Experience
-              </h1>
-              <p className="text-xl text-white/90 mb-8 leading-relaxed">
-                From beginner to champion in one day. Experience authentic yacht racing 
-                on Lake Garda with professional instruction, competitive races, and 
-                official recognition of your achievement.
-              </p>
-              <div className="flex flex-wrap gap-4 mb-8">
-                <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
-                  <Clock className="h-5 w-5 text-gold-400" />
-                  <span>3-4 hours</span>
-                </div>
-                <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
-                  <Users className="h-5 w-5 text-gold-400" />
-                  <span>4-5 people</span>
-                </div>
-                <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
-                  <Award className="h-5 w-5 text-gold-400" />
-                  <span>Medal included</span>
-                </div>
-              </div>
-              <Link
-                to="/booking"
-                className="bg-gold-500 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gold-600 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
-              >
-                Book Your Experience - €195
-              </Link>
-            </div>
-            <div className="relative">
-              <img
-                src={galleryImages[selectedImage].url}
-                alt={galleryImages[selectedImage].caption}
-                className="rounded-2xl shadow-2xl w-full h-96 object-cover"
-              />
-              <div className="absolute bottom-4 left-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-3">
-                <p className="text-white text-center">{galleryImages[selectedImage].caption}</p>
-              </div>
-              <button className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-2xl hover:bg-black/30 transition-colors duration-300 group">
-                <div className="bg-white/20 backdrop-blur-sm rounded-full p-4 group-hover:scale-110 transition-transform duration-300">
-                  <Play className="h-8 w-8 text-white" />
-                </div>
-              </button>
-            </div>
+<section className="relative py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white overflow-hidden">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div>
+        <h1 className="text-4xl md:text-6xl font-bold mb-6 font-serif leading-tight">
+          The Complete Racing Experience
+        </h1>
+        <p className="text-xl text-white/90 mb-8 leading-relaxed">
+          From beginner to champion in one day. Experience authentic yacht racing 
+          on Lake Garda with professional instruction, competitive races, and 
+          official recognition of your achievement.
+        </p>
+        <div className="flex flex-wrap gap-4 mb-8">
+          <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
+            <Clock className="h-5 w-5 text-gold-400" />
+            <span>3–4 hours</span>
+          </div>
+          <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
+            <Users className="h-5 w-5 text-gold-400" />
+            <span>4–5 people</span>
+          </div>
+          <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
+            <Award className="h-5 w-5 text-gold-400" />
+            <span>Medal included</span>
           </div>
         </div>
-      </section>
+        <Link
+          to="/booking"
+          className="bg-gold-500 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gold-600 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
+        >
+          Book Your Experience – €195
+        </Link>
+      </div>
+      <div className="relative">
+        <img
+          src={galleryImages[selectedImage].url}
+          alt={galleryImages[selectedImage].caption}
+          className="rounded-2xl shadow-2xl w-full h-96 object-cover"
+        />
+        <div className="absolute bottom-4 left-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-3">
+          <p className="text-white text-center">{galleryImages[selectedImage].caption}</p>
+        </div>
+        <button className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-2xl hover:bg-black/30 transition-colors duration-300 group">
+          <div className="bg-white/20 backdrop-blur-sm rounded-full p-4 group-hover:scale-110 transition-transform duration-300">
+            <Play className="h-8 w-8 text-white" />
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-blue-950 opacity-30" />
+</section>
+
 
       {/* Navigation Tabs */}
       <section className="bg-white border-b border-gray-200 sticky top-20 z-40">

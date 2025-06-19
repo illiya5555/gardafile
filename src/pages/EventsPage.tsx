@@ -44,7 +44,7 @@ const EventsPage = () => {
   ];
 
   const equipment = [
-    "Professional racing yacht (J-70)",
+    "Professional racing yacht (J-70/J-80)",
     "All safety equipment (life jackets, water)",
     "Professional sailing gear",
     "First aid kit and emergency equipment"
@@ -369,7 +369,7 @@ const EventsPage = () => {
                 <div className="mt-8 p-6 bg-gold-50 rounded-xl">
                   <h4 className="text-xl font-semibold text-gray-900 mb-3">Premium Yachts</h4>
                   <p className="text-gray-700">
-                    We use modern J-70 high-performance yachts. 
+                    We use modern J-70/J-80 high-performance yachts. 
                     These boats are specifically chosen for their racing capabilities while 
                     maintaining comfort and safety for our participants.
                   </p>

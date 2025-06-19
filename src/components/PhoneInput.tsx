@@ -82,8 +82,8 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
   const selectedCountry = countryCodes.find(c => c.code === countryCode) || countryCodes[0];
 
   return (
-    <div className={`relative ${className}`}>
-      <div className="flex">
+    <div className={`relative w-full ${className}`}>
+      <div className="flex w-full">
         {/* Country code selector */}
         <div className="relative">
           <button

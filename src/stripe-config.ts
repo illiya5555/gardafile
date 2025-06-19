@@ -12,9 +12,9 @@ export interface StripeProduct {
 
 export const stripeProducts: StripeProduct[] = [
   {
-    id: 'prod_SWD13VWgaEUI4a',
-    priceId: 'price_1RbAbcHGLVvZbOy8R1225QhL',
-    name: 'Garda',
+    id: 'garda-racing-experience',
+    priceId: 'price_1234567890', // Replace with your actual Stripe price ID
+    name: 'Garda Racing Experience',
     description: 'Premium yacht racing experience on Lake Garda with professional skipper, equipment, and medal ceremony.',
     price: 195.00,
     currency: 'EUR',
@@ -28,6 +28,23 @@ export const stripeProducts: StripeProduct[] = [
       '4-hour sailing experience'
     ],
     popular: true
+  },
+  {
+    id: 'premium-membership',
+    priceId: 'price_0987654321', // Replace with your actual Stripe price ID
+    name: 'Premium Membership',
+    description: 'Monthly membership with exclusive benefits and discounts.',
+    price: 29.99,
+    currency: 'EUR',
+    mode: 'subscription',
+    features: [
+      'Priority booking access',
+      '20% discount on all experiences',
+      'Exclusive member events',
+      'Free professional photos',
+      'Complimentary equipment upgrades'
+    ],
+    popular: false
   }
 ];
 

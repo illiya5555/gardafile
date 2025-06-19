@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import PhoneInput from '../components/PhoneInput';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: '',
+    phone: '+39 ',
     subject: '',
     message: ''
   });
@@ -18,6 +19,14 @@ const ContactPage = () => {
     setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value
+    }));
+    if (error) setError('');
+  };
+
+  const handlePhoneChange = (value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      phone: value
     }));
     if (error) setError('');
   };
@@ -47,7 +56,7 @@ const ContactPage = () => {
       setFormData({
         name: '',
         email: '',
-        phone: '',
+        phone: '+39 ',
         subject: '',
         message: ''
       });
@@ -221,12 +230,10 @@ const ContactPage = () => {
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
                         Phone
                       </label>
-                      <input
-                        type="tel"
+                      <PhoneInput
                         name="phone"
                         value={formData.phone}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        onChange={handlePhoneChange}
                       />
                     </div>
                     <div>

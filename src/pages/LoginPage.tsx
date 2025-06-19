@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, User, ArrowRight, AlertCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import PhoneInput from '../components/PhoneInput';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [phone, setPhone] = useState('+39 ');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -75,6 +77,7 @@ const LoginPage = () => {
           data: {
             first_name: firstName,
             last_name: lastName,
+            phone: phone
           },
         },
       });
@@ -98,6 +101,10 @@ const LoginPage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePhoneChange = (value: string) => {
+    setPhone(value);
   };
 
   return (
@@ -218,6 +225,18 @@ const LoginPage = () => {
               </button>
             </div>
           </div>
+
+          {!isLogin && (
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                Phone
+              </label>
+              <PhoneInput
+                value={phone}
+                onChange={handlePhoneChange}
+              />
+            </div>
+          )}
 
           {isLogin && (
             <div className="flex items-center justify-between">

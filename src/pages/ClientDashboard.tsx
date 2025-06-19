@@ -29,6 +29,7 @@ import {
 import { supabase } from '../lib/supabase';
 import { useSubscription } from '../hooks/useSubscription';
 import { useOrders } from '../hooks/useOrders';
+import PhoneInput from '../components/PhoneInput';
 
 interface Booking {
   id: string;
@@ -114,7 +115,7 @@ const ClientDashboard = () => {
       setUpdatedProfile({
         first_name: data.first_name || '',
         last_name: data.last_name || '',
-        phone: data.phone || ''
+        phone: data.phone || '+39 '
       });
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -158,6 +159,13 @@ const ClientDashboard = () => {
     } catch (error) {
       console.error('Error fetching bookings:', error);
     }
+  };
+
+  const handlePhoneChange = (value: string) => {
+    setUpdatedProfile(prev => ({
+      ...prev,
+      phone: value
+    }));
   };
 
   const updateProfile = async () => {
@@ -553,12 +561,9 @@ const ClientDashboard = () => {
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Phone
                         </label>
-                        <input
-                          type="tel"
-                          value={updatedProfile.phone || ''}
-                          onChange={(e) => setUpdatedProfile({...updatedProfile, phone: e.target.value})}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="+39 123 456 7890"
+                        <PhoneInput
+                          value={updatedProfile.phone || '+39 '}
+                          onChange={handlePhoneChange}
                         />
                       </div>
 

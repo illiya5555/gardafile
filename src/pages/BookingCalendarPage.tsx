@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import { useCalendar } from '../context/CalendarContext';
 import PaymentButton from '../components/PaymentButton';
 import { stripeProducts } from '../stripe-config';
+import PhoneInput from '../components/PhoneInput';
 
 interface BookingFormData {
   date: string;
@@ -54,11 +55,12 @@ const BookingCalendarPage = () => {
         setBookingData({
           customerName: `${data.first_name || ''} ${data.last_name || ''}`.trim(),
           customerEmail: data.email || user.email,
-          customerPhone: data.phone || ''
+          customerPhone: data.phone || '+39 '
         });
       } else {
         setBookingData({
-          customerEmail: user.email
+          customerEmail: user.email,
+          customerPhone: '+39 '
         });
       }
     }
@@ -96,6 +98,13 @@ const BookingCalendarPage = () => {
 
   const handleTimeSelect = (time: string) => {
     setSelectedTime(time);
+  };
+
+  const handlePhoneChange = (value: string) => {
+    setBookingData(prev => ({
+      ...prev,
+      customerPhone: value
+    }));
   };
 
   const calculateTotalPrice = () => {
@@ -579,17 +588,11 @@ const BookingCalendarPage = () => {
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
                         Phone *
                       </label>
-                      <div className="relative">
-                        <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                        <input
-                          type="tel"
-                          value={bookingData.customerPhone || ''}
-                          onChange={(e) => setBookingData({...bookingData, customerPhone: e.target.value})}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="+39 345 678 9012"
-                          required
-                        />
-                      </div>
+                      <PhoneInput
+                        value={bookingData.customerPhone || '+39 '}
+                        onChange={handlePhoneChange}
+                        required
+                      />
                     </div>
                   </div>
 

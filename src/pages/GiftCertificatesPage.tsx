@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Gift, Star, Heart, Calendar, Users, Award, CheckCircle, Phone, Mail, CreditCard, Download } from 'lucide-react';
+import PhoneInput from '../components/PhoneInput';
 
 const GiftCertificatesPage = () => {
   const [selectedAmount, setSelectedAmount] = useState('195');
   const [recipientName, setRecipientName] = useState('');
   const [recipientEmail, setRecipientEmail] = useState('');
   const [senderName, setSenderName] = useState('');
+  const [senderPhone, setSenderPhone] = useState('+39 ');
   const [personalMessage, setPersonalMessage] = useState('');
   const [deliveryDate, setDeliveryDate] = useState('');
 
@@ -52,6 +54,10 @@ const GiftCertificatesPage = () => {
       occasions: ["Retirement Party", "Career Change", "New Beginnings"]
     }
   ];
+
+  const handlePhoneChange = (value: string) => {
+    setSenderPhone(value);
+  };
 
   const handlePurchase = () => {
     if (!recipientName || !recipientEmail || !senderName) {
@@ -173,6 +179,15 @@ const GiftCertificatesPage = () => {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                       placeholder="Your name"
                       required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Your Phone
+                    </label>
+                    <PhoneInput
+                      value={senderPhone}
+                      onChange={handlePhoneChange}
                     />
                   </div>
                   <div>

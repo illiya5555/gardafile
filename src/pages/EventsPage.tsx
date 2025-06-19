@@ -1,42 +1,22 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Play, Clock, Users, Award, Camera, Wind, Anchor, MapPin, CheckCircle, Star, Calendar } from 'lucide-react';
+import { Play, Clock, Users, Award, Camera, Wind, Anchor, CheckCircle, Star } from 'lucide-react';
 
 const EventsPage = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState<number | null>(null);
 
   const galleryImages = [
-  {
-    url: "https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif",
-    caption: "Garda Yacht Racing 1"
-  },
-  {
-    url: "https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif",
-    caption: "Garda Yacht Racing 2"
-  },
-  {
-    url: "https://i.postimg.cc/d1MvNFGZ/temp-Image66m3b-Q.avif",
-    caption: "Garda Yacht Racing 3"
-  },
-  {
-    url: "https://i.postimg.cc/m2Z4581j/temp-Image3ioz3-A.avif",
-    caption: "Garda Yacht Racing 4"
-  },
-  {
-    url: "https://i.postimg.cc/025gWBpM/temp-Image-S31m-Ms.avif",
-    caption: "Garda Yacht Racing 5"
-  },
-  {
-    url: "https://i.postimg.cc/ZqnKGqpN/temp-Image-GC3d-NH.avif",
-    caption: "Garda Yacht Racing 6"
-  },
-  {
-    url: "https://i.postimg.cc/RZRWr8Yk/temp-Image7-PJCLf.avif",
-    caption: "Garda Yacht Racing 7"
-  }
-];
+    { url: "https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif", caption: "Garda Yacht Racing 1" },
+    { url: "https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif", caption: "Garda Yacht Racing 2" },
+    { url: "https://i.postimg.cc/d1MvNFGZ/temp-Image66m3b-Q.avif", caption: "Garda Yacht Racing 3" },
+    { url: "https://i.postimg.cc/m2Z4581j/temp-Image3ioz3-A.avif", caption: "Garda Yacht Racing 4" },
+    { url: "https://i.postimg.cc/025gWBpM/temp-Image-S31m-Ms.avif", caption: "Garda Yacht Racing 5" },
+    { url: "https://i.postimg.cc/ZqnKGqpN/temp-Image-GC3d-NH.avif", caption: "Garda Yacht Racing 6" },
+    { url: "https://i.postimg.cc/RZRWr8Yk/temp-Image7-PJCLf.avif", caption: "Garda Yacht Racing 7" }
+  ];
 
+  // --- Data arrays as in original code ---
   const morningSchedule = [
     { time: "08:30", activity: "Welcome & Registration", description: "Meet your skipper and fellow sailors" },
     { time: "09:00", activity: "Safety Briefing", description: "Essential safety procedures and equipment overview" },
@@ -92,6 +72,18 @@ const EventsPage = () => {
     }
   ];
 
+  // Функции для модалки галереи:
+  const openGallery = (index: number) => setSelectedImage(index);
+  const closeGallery = () => setSelectedImage(null);
+  const prevImage = () => {
+    if (selectedImage === null) return;
+    setSelectedImage((selectedImage - 1 + galleryImages.length) % galleryImages.length);
+  };
+  const nextImage = () => {
+    if (selectedImage === null) return;
+    setSelectedImage((selectedImage + 1) % galleryImages.length);
+  };
+
   return (
     <div className="pt-20">
       {/* Hero Section */}
@@ -130,12 +122,12 @@ const EventsPage = () => {
             </div>
             <div className="relative">
               <img
-                src={galleryImages[selectedImage].url}
-                alt={galleryImages[selectedImage].caption}
+                src={galleryImages[0].url}
+                alt={galleryImages[0].caption}
                 className="rounded-2xl shadow-2xl w-full h-96 object-cover"
               />
               <div className="absolute bottom-4 left-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-3">
-                <p className="text-white text-center">{galleryImages[selectedImage].caption}</p>
+                <p className="text-white text-center">{galleryImages[0].caption}</p>
               </div>
               <button className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-2xl hover:bg-black/30 transition-colors duration-300 group">
                 <div className="bg-white/20 backdrop-blur-sm rounded-full p-4 group-hover:scale-110 transition-transform duration-300">
@@ -158,7 +150,7 @@ const EventsPage = () => {
               { id: 'weather', label: 'Weather' },
               { id: 'equipment', label: 'Equipment' },
               { id: 'faq', label: 'FAQ' }
-            ].map((tab) => (
+            ].map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
@@ -266,7 +258,6 @@ const EventsPage = () => {
                   ))}
                 </div>
               </div>
-              
               <div>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-6 text-center">Afternoon Session</h3>
                 <div className="space-y-6">
@@ -288,193 +279,114 @@ const EventsPage = () => {
         )}
 
         {/* Gallery */}
-      {selectedImage !== null && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-          onClick={() => setSelectedImage(null)}
-        >
-          <div
-            className="relative max-w-5xl w-full px-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <img
-              src={galleryImages[selectedImage].url}
-              alt={galleryImages[selectedImage].caption}
-              className="max-h-[80vh] w-full object-contain rounded-xl shadow-lg"
-            />
-            <p className="text-white text-center mt-4">
-              {galleryImages[selectedImage].caption}
-            </p>
+        {activeTab === 'gallery' && (
+          <div className="animate-fade-in">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Experience Gallery</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {galleryImages.map((image, index) => (
+                <div
+                  key={index}
+                  className="relative group cursor-pointer overflow-hidden rounded-xl"
+                  onClick={() => openGallery(index)}
+                >
+                  <img
+                    src={image.url}
+                    alt={image.caption}
+                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <p className="text-white font-semibold text-center px-4">{image.caption}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-            {/* Prev */}
-            {selectedImage > 0 && (
-              <button
-                onClick={() => setSelectedImage(selectedImage - 1)}
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-3 rounded-full"
+            {/* Modal Overlay */}
+            {selectedImage !== null && (
+              <div
+                className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
+                onClick={closeGallery}
               >
-                ‹
-              </button>
+                <div
+                  className="relative max-w-4xl w-full rounded-lg overflow-hidden"
+                  onClick={e => e.stopPropagation()}
+                >
+                  <img
+                    src={galleryImages[selectedImage].url}
+                    alt={galleryImages[selectedImage].caption}
+                    className="w-full max-h-[80vh] object-contain rounded-lg"
+                  />
+                  <p className="text-center text-white mt-2">{galleryImages[selectedImage].caption}</p>
+                  <button
+                    onClick={closeGallery}
+                    className="absolute top-3 right-3 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 transition"
+                    aria-label="Close"
+                  >
+                    ✕
+                  </button>
+                  <button
+                    onClick={prevImage}
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 rounded-full p-3 hover:bg-opacity-75 transition"
+                    aria-label="Previous Image"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    onClick={nextImage}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 rounded-full p-3 hover:bg-opacity-75 transition"
+                    aria-label="Next Image"
+                  >
+                    ›
+                  </button>
+                </div>
+              </div>
             )}
-
-            {/* Next */}
-            {selectedImage < galleryImages.length - 1 && (
-              <button
-                onClick={() => setSelectedImage(selectedImage + 1)}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-3 rounded-full"
-              >
-                ›
-              </button>
-            )}
-
-            {/* Close */}
-            <button
-              onClick={() => setSelectedImage(null)}
-              className="absolute top-4 right-4 text-white bg-white/20 hover:bg-white/40 p-2 rounded-full"
-              title="Close"
-            >
-              ✕
-            </button>
           </div>
-        </div>
-      )}
-
+        )}
 
         {/* Weather */}
         {activeTab === 'weather' && (
           <div className="animate-fade-in">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Weather Conditions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-              {weatherConditions.map((item, index) => (
-                <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
-                  <item.icon className="h-12 w-12 text-primary-600 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.condition}</h3>
-                  <p className="text-2xl font-bold text-primary-600">{item.value}</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Typical Weather Conditions</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {weatherConditions.map(({ condition, value, icon: Icon }, i) => (
+                <div key={i} className="flex flex-col items-center p-6 bg-white rounded-xl shadow-md border border-gray-100">
+                  <Icon className="h-10 w-10 text-primary-600 mb-4" />
+                  <p className="font-semibold text-lg text-gray-900">{condition}</p>
+                  <p className="text-gray-600">{value}</p>
                 </div>
               ))}
-            </div>
-            <div className="bg-blue-50 p-8 rounded-xl">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Why Lake Garda is Perfect for Sailing</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <h4 className="text-xl font-semibold text-gray-900 mb-4">Consistent Winds</h4>
-                  <p className="text-gray-700 mb-4">
-                    Lake Garda enjoys reliable thermal winds that develop daily, creating perfect sailing conditions. 
-                    The morning "Peler" wind from the north and afternoon "Ora" wind from the south provide 
-                    consistent sailing throughout the day.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="text-xl font-semibold text-gray-900 mb-4">Protected Waters</h4>
-                  <p className="text-gray-700 mb-4">
-                    Surrounded by mountains, Lake Garda offers protected waters that are ideal for learning 
-                    and racing. The lake's size provides enough space for proper racing while maintaining 
-                    safe conditions for all skill levels.
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         )}
 
         {/* Equipment */}
         {activeTab === 'equipment' && (
-          <div className="animate-fade-in">
+          <div className="animate-fade-in max-w-3xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Equipment Provided</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              <div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-6">What's Included</h3>
-                <div className="space-y-4">
-                  {equipment.map((item, index) => (
-                    <div key={index} className="flex items-center space-x-3">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0" />
-                      <span className="text-gray-700">{item}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-8 p-6 bg-gold-50 rounded-xl">
-                  <h4 className="text-xl font-semibold text-gray-900 mb-3">Premium Yachts</h4>
-                  <p className="text-gray-700">
-                    We use modern J-70/J-80 high-performance yachts. 
-                    These boats are specifically chosen for their racing capabilities while 
-                    maintaining comfort and safety for our participants.
-                  </p>
-                </div>
-              </div>
-              <div>
-                <img
-                  src="https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=600"
-                  alt="Professional sailing equipment"
-                  className="rounded-xl shadow-lg w-full h-96 object-cover"
-                />
-                <div className="mt-6 p-6 bg-primary-50 rounded-xl">
-                  <h4 className="text-xl font-semibold text-gray-900 mb-3">Safety First</h4>
-                  <p className="text-gray-700">
-                    All safety equipment meets international standards. Our boats are regularly 
-                    inspected and maintained to the highest standards. Every participant receives 
-                    a comprehensive safety briefing before departure.
-                  </p>
-                </div>
-              </div>
-            </div>
+            <ul className="list-disc list-inside space-y-4 text-gray-700 text-lg">
+              {equipment.map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
+            </ul>
           </div>
         )}
 
         {/* FAQ */}
         {activeTab === 'faq' && (
-          <div className="animate-fade-in">
+          <div className="animate-fade-in max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Frequently Asked Questions</h2>
-            <div className="max-w-4xl mx-auto space-y-6">
-              {faqs.map((faq, index) => (
-                <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">{faq.question}</h3>
-                  <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
+            <div className="space-y-6">
+              {faqs.map(({ question, answer }, i) => (
+                <div key={i} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                  <h3 className="text-xl font-semibold mb-2 text-gray-900">{question}</h3>
+                  <p className="text-gray-700">{answer}</p>
                 </div>
               ))}
-            </div>
-            <div className="mt-12 text-center">
-              <p className="text-gray-600 mb-6">Still have questions? We're here to help!</p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a
-  href="https://wa.me/393447770077"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="flex items-center justify-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300"
->
-  <span>WhatsApp</span>
-</a>
-                        <a
-                  href="https://t.me/VETER_ITA"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-colors duration-300"
-                  style={{ backgroundColor: '#0088cc', color: 'white' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#006699'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0088cc'}
-                >
-                  <span>💬</span>
-                  <span>Telegram</span>
-                </a>
-              </div>
             </div>
           </div>
         )}
       </div>
-
-      {/* CTA Section */}
-      <section className="py-16 bg-primary-600 text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Start Racing?</h2>
-          <p className="text-xl text-white/90 mb-8">
-            Book your yacht racing experience today and create memories that will last a lifetime.
-          </p>
-          <Link
-            to="/booking"
-            className="bg-white text-primary-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
-          >
-            Book Now - €195 per person
-          </Link>
-        </div>
-      </section>
     </div>
   );
 };

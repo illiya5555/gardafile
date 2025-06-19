@@ -213,57 +213,63 @@ const ServicesPage = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            {/* Corporate Regattas Block */}
-            <Link 
-              to="/corporate-sailing"
-              className="relative group cursor-pointer overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105"
-            >
-              <div 
-                className="h-80 bg-cover bg-center relative"
-                style={{ backgroundImage: 'url(https://i.postimg.cc/JhjJ21S9/Boas-1775.jpg)' }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
-                  <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary-200 transition-colors duration-300">
-                    <Users className="h-8 w-8 text-primary-600" />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-3">🧭 Corporate Sailing Regatta</h3>
-                  <p className="text-white/90 leading-relaxed">
-                    We offer a unique team-building program through participation in a real sailing regatta. 
-                    Strengthen team spirit and create unforgettable memories on Lake Garda.
-                  </p>
-                  <div className="mt-4 inline-flex items-center text-white/80 group-hover:text-white transition-colors duration-300">
-                    <span className="text-sm font-medium">Learn more →</span>
-                  </div>
+            {/* Corporate Regattas Card */}
+            <div className="flex flex-col rounded-2xl shadow-lg overflow-hidden transition-all duration-500 hover:shadow-2xl group">
+              <Link to="/corporate-sailing" className="block overflow-hidden">
+                <div 
+                  className="h-64 bg-cover bg-center relative transition-transform duration-500 group-hover:scale-105"
+                  style={{ backgroundImage: 'url(https://i.postimg.cc/JhjJ21S9/Boas-1775.jpg)' }}
+                >
                 </div>
+              </Link>
+              <div className="p-6 bg-white flex-1 flex flex-col">
+                <div className="flex items-center mb-4">
+                  <div className="bg-primary-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                    <Users className="h-6 w-6 text-primary-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">🧭 Corporate Sailing Regatta</h3>
+                </div>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  We offer a unique team-building program through participation in a real sailing regatta. 
+                  Strengthen team spirit and create unforgettable memories on Lake Garda.
+                </p>
+                <Link 
+                  to="/corporate-sailing"
+                  className="mt-auto text-primary-600 hover:text-primary-700 font-medium inline-flex items-center transition-colors duration-300"
+                >
+                  <span>Learn more →</span>
+                </Link>
               </div>
-            </Link>
+            </div>
 
-            {/* Gift Certificates Block */}
-            <Link 
-              to="/gift-certificates"
-              className="relative group cursor-pointer overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105"
-            >
-              <div 
-                className="h-80 bg-cover bg-center relative"
-                style={{ backgroundImage: 'url(https://i.postimg.cc/1XvDrJbX/image.png)' }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
-                  <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary-200 transition-colors duration-300">
-                    <Award className="h-8 w-8 text-primary-600" />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-3">🎁 Gift Certificates</h3>
-                  <p className="text-white/90 leading-relaxed">
-                    Perfect gift for sailing enthusiasts. Give the gift of an unforgettable 
-                    yacht racing experience on beautiful Lake Garda.
-                  </p>
-                  <div className="mt-4 inline-flex items-center text-white/80 group-hover:text-white transition-colors duration-300">
-                    <span className="text-sm font-medium">Learn more →</span>
-                  </div>
+            {/* Gift Certificates Card */}
+            <div className="flex flex-col rounded-2xl shadow-lg overflow-hidden transition-all duration-500 hover:shadow-2xl group">
+              <Link to="/gift-certificates" className="block overflow-hidden">
+                <div 
+                  className="h-64 bg-cover bg-center relative transition-transform duration-500 group-hover:scale-105"
+                  style={{ backgroundImage: 'url(https://i.postimg.cc/1XvDrJbX/image.png)' }}
+                >
                 </div>
+              </Link>
+              <div className="p-6 bg-white flex-1 flex flex-col">
+                <div className="flex items-center mb-4">
+                  <div className="bg-primary-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                    <Award className="h-6 w-6 text-primary-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">🎁 Gift Certificates</h3>
+                </div>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  Perfect gift for sailing enthusiasts. Give the gift of an unforgettable 
+                  yacht racing experience on beautiful Lake Garda.
+                </p>
+                <Link 
+                  to="/gift-certificates"
+                  className="mt-auto text-primary-600 hover:text-primary-700 font-medium inline-flex items-center transition-colors duration-300"
+                >
+                  <span>Learn more →</span>
+                </Link>
               </div>
-            </Link>
+            </div>
           </div>
         </div>
       </section>

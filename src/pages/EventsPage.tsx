@@ -1,4 +1,3 @@
-мне нужно чтоб ты интегрировал этот блок вместо существующего блока в этом коде:
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Play, Clock, Users, Award, Camera, Wind, Anchor, MapPin, CheckCircle, Star, Calendar } from 'lucide-react';

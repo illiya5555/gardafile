@@ -1,177 +1,149 @@
 import React, { useState } from 'react';
-import { X, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { Link } from 'react-router-dom';
+import { Anchor, MapPin, Phone, Mail, Award, Shield, Clock, Lock } from 'lucide-react';
+import AdminLogin from './AdminLogin';
+import { useTranslation } from '../context/LanguageContext';
+import { useTranslation } from '../context/LanguageContext';
 
-interface AdminLoginProps {
-  onClose: () => void;
-}
-
-const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        if (error.message === 'Invalid login credentials') {
-          setError('Неверный email или пароль. Убедитесь, что пользователь зарегистрирован в системе.');
-        } else {
-          setError(error.message);
-        }
-        return;
-      }
-
-      if (data.user) {
-        // Проверяем, является ли пользователь администратором
-        // В реальном приложении это должно проверяться через роли в базе данных
-        if (email === 'admin@gardaracing.com') {
-          alert('Добро пожаловать в административную панель!');
-          // Перенаправляем на админ-панель
-          window.location.href = '/admin';
-          onClose();
-        } else {
-          setError('У вас нет прав администратора');
-          await supabase.auth.signOut();
-        }
-      }
-    } catch (error: any) {
-      setError(error.message || 'Ошибка входа');
-    } finally {
-      setLoading(false);
-    }
-  };
+const Footer = () => {
+  const { t } = useTranslation();
+  const { t } = useTranslation();
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 animate-slide-up">
-        <div className="p-8">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
+    <footer className="bg-gray-900 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Company Info */}
+          <div className="space-y-6">
             <div className="flex items-center space-x-3">
-              <div className="bg-primary-100 p-2 rounded-lg">
-                <Lock className="h-6 w-6 text-primary-600" />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-gray-900">Admin Access</h2>
-                <p className="text-sm text-gray-600">Вход в административную панель</p>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors duration-300"
-            >
-              <X className="h-6 w-6" />
-            </button>
+  <img
+    src="/gardalogo.png"
+    alt="Garda Racing Logo"
+    className="h-20 w-20 object-contain"
+  />
+  <div>
+    <h3 className="text-xl font-bold">Garda Racing</h3>
+    <p className="text-gray-400 text-sm">Yacht Club</p>
+  </div>
+</div>
+
+            <p className="text-gray-300 leading-relaxed">
+              Experience the thrill of yacht racing on the world-famous Lake Garda. 
+              Professional instruction, premium equipment, and unforgettable memories.
+            </p>
           </div>
 
-          {/* Setup Instructions */}
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="flex items-start space-x-3">
-              <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-              <div>
-                <h3 className="text-sm font-semibold text-blue-900 mb-1">
-                  Настройка администратора
-                </h3>
-                <p className="text-xs text-blue-700 mb-2">
-                  Для входа необходимо создать пользователя в Supabase:
-                </p>
-                <ol className="text-xs text-blue-700 space-y-1 list-decimal list-inside">
-                  <li>Откройте Supabase Dashboard</li>
-                  <li>Перейдите в Authentication → Users</li>
-                  <li>Создайте пользователя с email: admin@gardaracing.com</li>
-                  <li>Используйте созданные credentials для входа</li>
-                </ol>
-              </div>
-            </div>
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
+            <ul className="space-y-3">
+              <li>
+                <Link to="/" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  {t('nav.home', 'Home')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/events" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  {t('nav.events', 'Events')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/booking" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  {t('nav.book_now', 'Book Now')}
+                </Link>
+              </li>
+              <li>
+                <a href="#" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  {t('nav.services', 'Corporate Events')}
+                </a>
+              </li>
+              <li>
+                  {t('nav.events', 'Events')}
+                  Gift Vouchers
+                </a>
+              </li>
+            </ul>
           </div>
 
-          {/* Error Message */}
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <div className="flex items-start space-x-2">
-                <AlertCircle className="h-4 w-4 text-red-600 mt-0.5 flex-shrink-0" />
-                <p className="text-sm text-red-600">{error}</p>
+          {/* Contact Info */}
+          <div>
+            <h4 className="text-lg font-semibold mb-6">{t('footer.contact.title', 'Contact')}</h4>
+            <ul className="space-y-4">
+              <li className="flex items-start space-x-3">
+                <MapPin className="h-5 w-5 text-primary-500 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-gray-300">Viale Giancarlo Maroni 4</p>
+                  <p className="text-gray-300">38066 Riva del Garda TN</p>
+                  <p className="text-gray-300">Italia</p>
+                </div>
+              </li>
+              <li className="flex items-center space-x-3">
+                <Phone className="h-5 w-5 text-primary-500" />
+                <a href="tel:+393447770077" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  +39 344 777 00 77
+                </a>
+              </li>
+              <li className="flex items-center space-x-3">
+                <Mail className="h-5 w-5 text-primary-500" />
+                <a href="mailto:info@gardaracing.com" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  info@gardaracing.com
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Certifications */}
+          <div>
+            <h4 className="text-lg font-semibold mb-6">{t('footer.certifications.title', 'Certifications')}</h4>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <Shield className="h-5 w-5 text-green-400" />
+                <span className="text-gray-300 text-sm">{t('footer.certifications.insured', 'Fully Insured')}</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Clock className="h-5 w-5 text-blue-400" />
+                <span className="text-gray-300 text-sm">{t('footer.certifications.support', '24/7 Support')}</span>
               </div>
             </div>
-          )}
-
-          {/* Login Form */}
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 text-gray-900 bg-white placeholder-gray-500"
-                placeholder="admin@gardaracing.com"
-                required
-              />
+            <div className="mt-6 p-4 bg-gray-800 rounded-lg">
+              <p className="text-sm text-gray-300 mb-2">{t('footer.operating_hours', 'Operating Hours:')}</p>
+              <p className="text-sm text-white">{t('footer.daily_hours', 'Daily: 8:00 AM - 7:00 PM')}</p>
+              <p className="text-sm text-gray-400">{t('footer.season', 'March - October')}</p>
             </div>
+          </div>
+        </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-2">
-                Пароль
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 text-gray-900 bg-white placeholder-gray-500"
-                  placeholder="••••••••"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-300"
-                >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                </button>
-              </div>
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-800 mt-12 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="flex flex-wrap justify-center md:justify-start space-x-6 text-sm text-gray-400">
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Privacy Policy</a>
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Terms & Conditions</a>
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Cancellation Policy</a>
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">GDPR</a>
+              {/* Малозаметная кнопка администратора */}
+              <button
+                onClick={() => setShowAdminLogin(true)}
+                className="text-gray-600 hover:text-gray-400 transition-colors duration-300 opacity-30 hover:opacity-60"
+                title="Admin Access"
+              >
+                <Lock className="h-3 w-3" />
+              </button>
             </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-            >
-              {loading ? (
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-              ) : (
-                <>
-                  <Lock className="h-4 w-4" />
-                  <span>Войти</span>
-                </>
-              )}
-            </button>
-          </form>
-
-          {/* Info */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <p className="text-xs text-gray-600 text-center">
-              Доступ только для администраторов Garda Racing Yacht Club
+            <p className="text-sm text-gray-400">
+              © 2025 Garda Racing Yacht Club. All rights reserved.
             </p>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Admin Login Modal */}
+      {showAdminLogin && (
+        <AdminLogin onClose={() => setShowAdminLogin(false)} />
+      )}
+    </footer>
   );
 };
 
-export default AdminLogin;
+export default Footer;

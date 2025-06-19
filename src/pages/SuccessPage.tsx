@@ -1,164 +1,149 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { CheckCircle, Calendar, Download, Mail, ArrowRight } from 'lucide-react';
-import { useOrders } from '../hooks/useOrders';
-import { useSubscription } from '../hooks/useSubscription';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Anchor, MapPin, Phone, Mail, Award, Shield, Clock, Lock } from 'lucide-react';
+import AdminLogin from './AdminLogin';
+import { useTranslation } from '../context/LanguageContext';
+import { useTranslation } from '../context/LanguageContext';
 
-const SuccessPage = () => {
-  const [searchParams] = useSearchParams();
-  const sessionId = searchParams.get('session_id');
-  const [loading, setLoading] = useState(true);
-  const { orders, refetch: refetchOrders } = useOrders();
-  const { subscription, refetch: refetchSubscription } = useSubscription();
-
-  useEffect(() => {
-    // Refetch data to get the latest order/subscription info
-    const fetchData = async () => {
-      await Promise.all([refetchOrders(), refetchSubscription()]);
-      setLoading(false);
-    };
-    
-    fetchData();
-  }, []);
-
-  // Find the order that matches the session ID if available
-  const order = sessionId ? orders.find(o => o.checkout_session_id === sessionId) : null;
+const Footer = () => {
+  const { t } = useTranslation();
+  const { t } = useTranslation();
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 pt-20 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 space-y-8 animate-fade-in">
-        <div className="text-center">
-          <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle className="h-8 w-8 text-green-600" />
+    <footer className="bg-gray-900 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Company Info */}
+          <div className="space-y-6">
+            <div className="flex items-center space-x-3">
+  <img
+    src="/gardalogo.png"
+    alt="Garda Racing Logo"
+    className="h-20 w-20 object-contain"
+  />
+  <div>
+    <h3 className="text-xl font-bold">Garda Racing</h3>
+    <p className="text-gray-400 text-sm">Yacht Club</p>
+  </div>
+</div>
+
+            <p className="text-gray-300 leading-relaxed">
+              Experience the thrill of yacht racing on the world-famous Lake Garda. 
+              Professional instruction, premium equipment, and unforgettable memories.
+            </p>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            Payment Successful!
-          </h2>
-          <p className="text-gray-600">
-            Thank you for your purchase. Your booking has been confirmed.
-          </p>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
+            <ul className="space-y-3">
+              <li>
+                <Link to="/" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  {t('nav.home', 'Home')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/events" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  {t('nav.events', 'Events')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/booking" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  {t('nav.book_now', 'Book Now')}
+                </Link>
+              </li>
+              <li>
+                <a href="#" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  {t('nav.services', 'Corporate Events')}
+                </a>
+              </li>
+              <li>
+                  {t('nav.events', 'Events')}
+                  Gift Vouchers
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h4 className="text-lg font-semibold mb-6">{t('footer.contact.title', 'Contact')}</h4>
+            <ul className="space-y-4">
+              <li className="flex items-start space-x-3">
+                <MapPin className="h-5 w-5 text-primary-500 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-gray-300">Viale Giancarlo Maroni 4</p>
+                  <p className="text-gray-300">38066 Riva del Garda TN</p>
+                  <p className="text-gray-300">Italia</p>
+                </div>
+              </li>
+              <li className="flex items-center space-x-3">
+                <Phone className="h-5 w-5 text-primary-500" />
+                <a href="tel:+393447770077" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  +39 344 777 00 77
+                </a>
+              </li>
+              <li className="flex items-center space-x-3">
+                <Mail className="h-5 w-5 text-primary-500" />
+                <a href="mailto:info@gardaracing.com" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  info@gardaracing.com
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Certifications */}
+          <div>
+            <h4 className="text-lg font-semibold mb-6">{t('footer.certifications.title', 'Certifications')}</h4>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <Shield className="h-5 w-5 text-green-400" />
+                <span className="text-gray-300 text-sm">{t('footer.certifications.insured', 'Fully Insured')}</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Clock className="h-5 w-5 text-blue-400" />
+                <span className="text-gray-300 text-sm">{t('footer.certifications.support', '24/7 Support')}</span>
+              </div>
+            </div>
+            <div className="mt-6 p-4 bg-gray-800 rounded-lg">
+              <p className="text-sm text-gray-300 mb-2">{t('footer.operating_hours', 'Operating Hours:')}</p>
+              <p className="text-sm text-white">{t('footer.daily_hours', 'Daily: 8:00 AM - 7:00 PM')}</p>
+              <p className="text-sm text-gray-400">{t('footer.season', 'March - October')}</p>
+            </div>
+          </div>
         </div>
 
-        {loading ? (
-          <div className="text-center py-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-2 text-gray-600">Loading your order details...</p>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {order && (
-              <div className="bg-gray-50 p-6 rounded-xl">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Order ID:</span>
-                    <span className="font-medium">{order.order_id}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Amount:</span>
-                    <span className="font-medium">
-                      {new Intl.NumberFormat('en-US', {
-                        style: 'currency',
-                        currency: order.currency.toUpperCase()
-                      }).format(order.amount_total / 100)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Date:</span>
-                    <span className="font-medium">
-                      {new Date(order.order_date).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Status:</span>
-                    <span className="font-medium text-green-600 capitalize">
-                      {order.order_status}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {subscription && subscription.subscription_status === 'active' && (
-              <div className="bg-blue-50 p-6 rounded-xl">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Subscription</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Status:</span>
-                    <span className="font-medium text-blue-600 capitalize">
-                      {subscription.subscription_status}
-                    </span>
-                  </div>
-                  {subscription.current_period_end && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Next billing date:</span>
-                      <span className="font-medium">
-                        {new Date(subscription.current_period_end * 1000).toLocaleDateString()}
-                      </span>
-                    </div>
-                  )}
-                  {subscription.payment_method_last4 && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Payment method:</span>
-                      <span className="font-medium capitalize">
-                        {subscription.payment_method_brand} •••• {subscription.payment_method_last4}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900">What's Next?</h3>
-              <div className="space-y-3">
-                <div className="flex items-start space-x-3">
-                  <Mail className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="text-gray-700">
-                      We've sent a confirmation email with all the details of your booking.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <Calendar className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="text-gray-700">
-                      Your experience is now confirmed. Please arrive 15 minutes before your scheduled time.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <Download className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="text-gray-700">
-                      You can access your booking details and receipt from your account dashboard.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col space-y-4">
-              <Link
-                to="/dashboard"
-                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 flex items-center justify-center space-x-2"
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-800 mt-12 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="flex flex-wrap justify-center md:justify-start space-x-6 text-sm text-gray-400">
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Privacy Policy</a>
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Terms & Conditions</a>
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Cancellation Policy</a>
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">GDPR</a>
+              {/* Малозаметная кнопка администратора */}
+              <button
+                onClick={() => setShowAdminLogin(true)}
+                className="text-gray-600 hover:text-gray-400 transition-colors duration-300 opacity-30 hover:opacity-60"
+                title="Admin Access"
               >
-                <span>Go to My Dashboard</span>
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-              <Link
-                to="/"
-                className="w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-300 text-center"
-              >
-                Return to Home
-              </Link>
+                <Lock className="h-3 w-3" />
+              </button>
             </div>
+            <p className="text-sm text-gray-400">
+              © 2025 Garda Racing Yacht Club. All rights reserved.
+            </p>
           </div>
-        )}
+        </div>
       </div>
-    </div>
+
+      {/* Admin Login Modal */}
+      {showAdminLogin && (
+        <AdminLogin onClose={() => setShowAdminLogin(false)} />
+      )}
+    </footer>
   );
 };
 
-export default SuccessPage;
+export default Footer;

@@ -1,223 +1,149 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, Award, Camera, Shield, Clock, CheckCircle, Star, MapPin, Phone, Mail, Calendar } from 'lucide-react';
+import { Anchor, MapPin, Phone, Mail, Award, Shield, Clock, Lock } from 'lucide-react';
+import AdminLogin from './AdminLogin';
+import { useTranslation } from '../context/LanguageContext';
+import { useTranslation } from '../context/LanguageContext';
 
-const CorporateSailingPage = () => {
+const Footer = () => {
+  const { t } = useTranslation();
+  const { t } = useTranslation();
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
+
   return (
-    <div className="pt-20">
-      {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-30"
-          style={{ backgroundImage: 'url(https://i.postimg.cc/JhjJ21S9/Boas-1775.jpg)' }}
-        ></div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 font-serif">
-            🧭 Corporate Sailing Regatta on Lake Garda
-          </h1>
-          <p className="text-xl text-white/90 mb-8 max-w-4xl mx-auto leading-relaxed">
-            We offer a unique team-building program through participation in a real sailing regatta.
-          </p>
-        </div>
-      </section>
+    <footer className="bg-gray-900 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Company Info */}
+          <div className="space-y-6">
+            <div className="flex items-center space-x-3">
+  <img
+    src="/gardalogo.png"
+    alt="Garda Racing Logo"
+    className="h-20 w-20 object-contain"
+  />
+  <div>
+    <h3 className="text-xl font-bold">Garda Racing</h3>
+    <p className="text-gray-400 text-sm">Yacht Club</p>
+  </div>
+</div>
 
-      {/* Main Content */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Left Column - Content */}
-            <div className="space-y-8">
-              <div>
-                <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  In just one day, your team becomes a true crew: participants are divided into teams, 
-                  receive instructions, train under the guidance of professional skippers, and compete 
-                  in a yacht race on J-70 / J-80 class sports boats.
-                </p>
-                <p className="text-lg text-gray-700 leading-relaxed">
-                  This is more than just fun — it's a model of modern business: teamwork, rapid 
-                  decision-making, strategy, trust, and adrenaline.
-                </p>
-              </div>
+            <p className="text-gray-300 leading-relaxed">
+              Experience the thrill of yacht racing on the world-famous Lake Garda. 
+              Professional instruction, premium equipment, and unforgettable memories.
+            </p>
+          </div>
 
-              {/* Program Includes */}
-              <div className="bg-blue-50 p-8 rounded-2xl">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">⚓ The program includes:</h2>
-                <div className="space-y-4">
-                  {[
-                    'Theoretical briefing on shore',
-                    'Practical training on board',
-                    'Full sailing regatta (3–5 races)',
-                    'Professional skippers on every yacht',
-                    'Supervision by a judging team and technical support boats',
-                    'Individual life vests for all participants'
-                  ].map((item, index) => (
-                    <div key={index} className="flex items-center space-x-3">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0" />
-                      <span className="text-gray-700">{item}</span>
-                    </div>
-                  ))}
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
+            <ul className="space-y-3">
+              <li>
+                <Link to="/" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  {t('nav.home', 'Home')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/events" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  {t('nav.events', 'Events')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/booking" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  {t('nav.book_now', 'Book Now')}
+                </Link>
+              </li>
+              <li>
+                <a href="#" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  {t('nav.services', 'Corporate Events')}
+                </a>
+              </li>
+              <li>
+                  {t('nav.events', 'Events')}
+                  Gift Vouchers
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h4 className="text-lg font-semibold mb-6">{t('footer.contact.title', 'Contact')}</h4>
+            <ul className="space-y-4">
+              <li className="flex items-start space-x-3">
+                <MapPin className="h-5 w-5 text-primary-500 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-gray-300">Viale Giancarlo Maroni 4</p>
+                  <p className="text-gray-300">38066 Riva del Garda TN</p>
+                  <p className="text-gray-300">Italia</p>
                 </div>
-              </div>
+              </li>
+              <li className="flex items-center space-x-3">
+                <Phone className="h-5 w-5 text-primary-500" />
+                <a href="tel:+393447770077" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  +39 344 777 00 77
+                </a>
+              </li>
+              <li className="flex items-center space-x-3">
+                <Mail className="h-5 w-5 text-primary-500" />
+                <a href="mailto:info@gardaracing.com" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
+                  info@gardaracing.com
+                </a>
+              </li>
+            </ul>
+          </div>
 
-              {/* Optional Extras */}
-              <div className="bg-gold-50 p-8 rounded-2xl">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">🎁 Optional extras:</h2>
-                <div className="space-y-3">
-                  {[
-                    'Branded teamwear (caps, jackets, polo shirts, T-shirts)',
-                    'Yacht branding with your company logo (stickers on both sides)',
-                    'Professional photo and video coverage',
-                    'Prizes for the winning team',
-                    'Closing dinner with music and a relaxed atmosphere',
-                    'Hotel accommodation near the yacht club',
-                    'Transfers from Verona / Milan airports',
-                    'Guided tours and custom experiences around Lake Garda'
-                  ].map((item, index) => (
-                    <div key={index} className="flex items-start space-x-3">
-                      <span className="text-gold-600 font-bold">–</span>
-                      <span className="text-gray-700">{item}</span>
-                    </div>
-                  ))}
-                </div>
+          {/* Certifications */}
+          <div>
+            <h4 className="text-lg font-semibold mb-6">{t('footer.certifications.title', 'Certifications')}</h4>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <Shield className="h-5 w-5 text-green-400" />
+                <span className="text-gray-300 text-sm">{t('footer.certifications.insured', 'Fully Insured')}</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Clock className="h-5 w-5 text-blue-400" />
+                <span className="text-gray-300 text-sm">{t('footer.certifications.support', '24/7 Support')}</span>
               </div>
             </div>
-
-            {/* Right Column - Benefits & CTA */}
-            <div className="space-y-8">
-              {/* What Your Team Gets */}
-              <div className="bg-primary-50 p-8 rounded-2xl">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">💡 What your team gets:</h2>
-                <div className="space-y-4">
-                  {[
-                    { icon: '🔹', text: 'A bright and unifying emotional experience' },
-                    { icon: '🔹', text: 'New skills in communication and fast decision-making under pressure' },
-                    { icon: '🔹', text: 'A true sense of teamwork and engagement' },
-                    { icon: '🔹', text: 'Informal connections and real networking' }
-                  ].map((item, index) => (
-                    <div key={index} className="flex items-start space-x-3">
-                      <span className="text-primary-600 text-xl">{item.icon}</span>
-                      <span className="text-gray-700">{item.text}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-6 p-4 bg-white rounded-lg border-l-4 border-primary-600">
-                  <p className="text-gray-700 italic">
-                    "On the water, it's actions that matter — and your team will feel it firsthand."
-                  </p>
-                </div>
-              </div>
-
-              {/* Gallery */}
-              <div className="grid grid-cols-2 gap-4">
-                <img
-                  src="https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif?auto=compress&cs=tinysrgb&w=400"
-                  alt="Corporate sailing team"
-                  className="rounded-xl shadow-lg w-full h-48 object-cover"
-                />
-                <img
-                  src="https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif?auto=compress&cs=tinysrgb&w=400"
-                  alt="Team building on yacht"
-                  className="rounded-xl shadow-lg w-full h-48 object-cover"
-                />
-                <img
-                  src="https://i.postimg.cc/d1MvNFGZ/temp-Image66m3b-Q.avif?auto=compress&cs=tinysrgb&w=400"
-                  alt="Lake Garda sailing"
-                  className="rounded-xl shadow-lg w-full h-48 object-cover"
-                />
-                <img
-                  src="https://i.postimg.cc/m2Z4581j/temp-Image3ioz3-A.avif?auto=compress&cs=tinysrgb&w=400"
-                  alt="Award ceremony"
-                  className="rounded-xl shadow-lg w-full h-48 object-cover"
-                />
-              </div>
-
-              {/* Contact CTA */}
-              <div className="bg-gradient-to-br from-blue-600 to-primary-600 p-8 rounded-2xl text-white">
-                <h3 className="text-2xl font-bold mb-4">Ready to organize your corporate regatta?</h3>
-                <p className="text-white/90 mb-6">
-                  Contact us for a personalized quote and detailed program planning.
-                </p>
-                <div className="space-y-4">
-                  <a
-                    href="tel:+393447770077"
-                    className="flex items-center space-x-3 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-lg hover:bg-white/30 transition-all duration-300"
-                  >
-                    <Phone className="h-5 w-5" />
-                    <span>+39 344 777 00 77</span>
-                  </a>
-                  <a
-                    href="mailto:corporate@gardaracing.com"
-                    className="flex items-center space-x-3 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-lg hover:bg-white/30 transition-all duration-300"
-                  >
-                    <Mail className="h-5 w-5" />
-                    <span>corporate@gardaracing.com</span>
-                  </a>
-                  <Link
-                    to="/contact"
-                    className="flex items-center justify-center space-x-3 bg-white text-primary-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300"
-                  >
-                    <Calendar className="h-5 w-5" />
-                    <span>Request Quote</span>
-                  </Link>
-                </div>
-              </div>
+            <div className="mt-6 p-4 bg-gray-800 rounded-lg">
+              <p className="text-sm text-gray-300 mb-2">{t('footer.operating_hours', 'Operating Hours:')}</p>
+              <p className="text-sm text-white">{t('footer.daily_hours', 'Daily: 8:00 AM - 7:00 PM')}</p>
+              <p className="text-sm text-gray-400">{t('footer.season', 'March - October')}</p>
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Why Choose Our Corporate Sailing Program?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                icon: Users,
-                title: "Team Building",
-                description: "Strengthen bonds through shared challenges and victories on the water"
-              },
-              {
-                icon: Award,
-                title: "Professional Organization",
-                description: "Experienced event coordinators ensure seamless execution"
-              },
-              {
-                icon: Camera,
-                title: "Memorable Documentation",
-                description: "Professional photography and videography capture every moment"
-              },
-              {
-                icon: Shield,
-                title: "Safety First",
-                description: "Fully insured with certified skippers and safety equipment"
-              }
-            ].map((feature, index) => (
-              <div key={index} className="text-center group">
-                <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <feature.icon className="h-8 w-8 text-primary-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
-              </div>
-            ))}
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-800 mt-12 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="flex flex-wrap justify-center md:justify-start space-x-6 text-sm text-gray-400">
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Privacy Policy</a>
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Terms & Conditions</a>
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Cancellation Policy</a>
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">GDPR</a>
+              {/* Малозаметная кнопка администратора */}
+              <button
+                onClick={() => setShowAdminLogin(true)}
+                className="text-gray-600 hover:text-gray-400 transition-colors duration-300 opacity-30 hover:opacity-60"
+                title="Admin Access"
+              >
+                <Lock className="h-3 w-3" />
+              </button>
+            </div>
+            <p className="text-sm text-gray-400">
+              © 2025 Garda Racing Yacht Club. All rights reserved.
+            </p>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Back to Services */}
-      <section className="py-12 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Link
-            to="/services"
-            className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 font-medium transition-colors duration-300"
-          >
-            <span>← Back to Services</span>
-          </Link>
-        </div>
-      </section>
-    </div>
+      {/* Admin Login Modal */}
+      {showAdminLogin && (
+        <AdminLogin onClose={() => setShowAdminLogin(false)} />
+      )}
+    </footer>
   );
 };
 
-export default CorporateSailingPage;
+export default Footer;

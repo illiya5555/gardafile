@@ -13,12 +13,17 @@ const Footer = () => {
           {/* Company Info */}
           <div className="space-y-6">
             <div className="flex items-center space-x-3">
-              <Anchor className="h-8 w-8 text-primary-500" />
-              <div>
-                <h3 className="text-xl font-bold">Garda Racing</h3>
-                <p className="text-gray-400 text-sm">Yacht Club</p>
-              </div>
-            </div>
+  <img
+    src="/gardalogo.png"
+    alt="Garda Racing Logo"
+    className="h-12 w-12 object-contain"
+  />
+  <div>
+    <h3 className="text-xl font-bold">Garda Racing</h3>
+    <p className="text-gray-400 text-sm">Yacht Club</p>
+  </div>
+</div>
+
             <p className="text-gray-300 leading-relaxed">
               Experience the thrill of yacht racing on the world-famous Lake Garda. 
               Professional instruction, premium equipment, and unforgettable memories.

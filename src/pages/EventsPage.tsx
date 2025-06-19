@@ -7,23 +7,35 @@ const EventsPage = () => {
   const [selectedImage, setSelectedImage] = useState(0);
 
   const galleryImages = [
-    {
-      url: "https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=800",
-      caption: "Racing on Lake Garda"
-    },
-    {
-      url: "https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=800",
-      caption: "Riva del Garda Harbor"
-    },
-    {
-      url: "https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=800",
-      caption: "Professional Instruction"
-    },
-    {
-      url: "https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=800",
-      caption: "Medal Ceremony"
-    }
-  ];
+  {
+    url: "https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif",
+    caption: "Garda Yacht Racing 1"
+  },
+  {
+    url: "https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif",
+    caption: "Garda Yacht Racing 2"
+  },
+  {
+    url: "https://i.postimg.cc/d1MvNFGZ/temp-Image66m3b-Q.avif",
+    caption: "Garda Yacht Racing 3"
+  },
+  {
+    url: "https://i.postimg.cc/m2Z4581j/temp-Image3ioz3-A.avif",
+    caption: "Garda Yacht Racing 4"
+  },
+  {
+    url: "https://i.postimg.cc/23tX3T9r/temp-Image-S31m-Ms.avif",
+    caption: "Garda Yacht Racing 5"
+  },
+  {
+    url: "https://i.postimg.cc/HJGg5dSW/temp-Image-GC3d-NH.avif",
+    caption: "Garda Yacht Racing 6"
+  },
+  {
+    url: "https://i.postimg.cc/BjjSHh4p/temp-Image7-PJCLf.avif",
+    caption: "Garda Yacht Racing 7"
+  }
+];
 
   const morningSchedule = [
     { time: "08:30", activity: "Welcome & Registration", description: "Meet your skipper and fellow sailors" },

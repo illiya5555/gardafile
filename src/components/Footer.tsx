@@ -123,7 +123,7 @@ const Footer = () => {
               </button>
             </div>
             <p className="text-sm text-gray-400">
-              © 2024 Garda Racing Yacht Club. All rights reserved.
+              © 2025 Garda Racing Yacht Club. All rights reserved.
             </p>
           </div>
         </div>

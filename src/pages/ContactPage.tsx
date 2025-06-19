@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useTranslation } from '../context/LanguageContext';
 import PhoneInput from '../components/PhoneInput';
 
 const ContactPage = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -62,7 +64,7 @@ const ContactPage = () => {
       });
     } catch (error: any) {
       console.error('Error submitting contact form:', error);
-      setError(error.message || 'An error occurred while sending your message. Please try again.');
+      setError(error.message || t('contact.form.error', 'An error occurred while sending your message. Please try again.'));
     } finally {
       setLoading(false);
     }
@@ -74,11 +76,10 @@ const ContactPage = () => {
       <section className="relative py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 font-serif">
-            Contact Us
+            {t('contact.hero.title', 'Contact Us')}
           </h1>
           <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
-            We are ready to answer all your questions and help organize 
-            an unforgettable sailing adventure on Lake Garda
+            {t('contact.hero.subtitle', 'We are ready to answer all your questions and help organize an unforgettable sailing adventure on Lake Garda')}
           </p>
         </div>
       </section>
@@ -87,14 +88,18 @@ const ContactPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Contact Information */}
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Contact Information</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">
+              {t('contact.info.title', 'Contact Information')}
+            </h2>
             <div className="space-y-8">
               <div className="flex items-start space-x-4">
                 <div className="bg-primary-100 p-3 rounded-lg">
                   <MapPin className="h-6 w-6 text-primary-600" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Address</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    {t('contact.info.address.title', 'Address')}
+                  </h3>
                   <p className="text-gray-600">
                     Viale Giancarlo Maroni 4<br />
                     38066 Riva del Garda TN<br />
@@ -108,7 +113,9 @@ const ContactPage = () => {
                   <Phone className="h-6 w-6 text-primary-600" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Phone</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    {t('contact.info.phone.title', 'Phone')}
+                  </h3>
                   <a 
                     href="tel:+393447770077" 
                     className="text-primary-600 hover:text-primary-700 transition-colors duration-300"
@@ -123,7 +130,9 @@ const ContactPage = () => {
                   <Mail className="h-6 w-6 text-primary-600" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Email</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    {t('contact.info.email.title', 'Email')}
+                  </h3>
                   <div className="space-y-1">
                     <a 
                       href="mailto:info@gardaracing.com" 
@@ -146,10 +155,12 @@ const ContactPage = () => {
                   <Clock className="h-6 w-6 text-primary-600" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Operating Hours</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    {t('contact.info.hours.title', 'Operating Hours')}
+                  </h3>
                   <div className="text-gray-600">
-                    <p>Daily: 8:00 AM - 7:00 PM</p>
-                    <p>Season: March - October</p>
+                    <p>{t('contact.info.hours.daily', 'Daily: 8:00 AM - 7:00 PM')}</p>
+                    <p>{t('contact.info.hours.season', 'Season: March - October')}</p>
                   </div>
                 </div>
               </div>
@@ -157,7 +168,9 @@ const ContactPage = () => {
 
             {/* Map */}
             <div className="mt-12">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">How to find us</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                {t('contact.info.map.title', 'How to find us')}
+              </h3>
               <div className="rounded-xl overflow-hidden w-full h-64">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2777.3711841622!2d10.844166699999999!3d45.883888899999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47821727e0319b4d%3A0xe35bcd19dae63816!2sFraglia%20Vela%20Riva!5e0!3m2!1sru!2sil!4v1750324990471!5m2!1sru!2sil"
@@ -175,19 +188,25 @@ const ContactPage = () => {
           {/* Contact Form */}
           <div>
             <div className="bg-white rounded-2xl shadow-lg p-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Send a message</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">
+                {t('contact.form.title', 'Send a message')}
+              </h2>
               {submitted ? (
                 <div className="text-center py-8">
                   <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                     <CheckCircle className="h-8 w-8 text-green-600" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Message sent!</h3>
-                  <p className="text-gray-600">We will contact you shortly.</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    {t('contact.form.success.title', 'Message sent!')}
+                  </h3>
+                  <p className="text-gray-600">
+                    {t('contact.form.success.message', 'We will contact you shortly.')}
+                  </p>
                   <button
                     onClick={() => setSubmitted(false)}
                     className="mt-4 text-primary-600 hover:text-primary-700 transition-colors duration-300"
                   >
-                    Send another message
+                    {t('contact.form.success.send_another', 'Send another message')}
                   </button>
                 </div>
               ) : (
@@ -202,7 +221,7 @@ const ContactPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Name *
+                        {t('contact.form.name.label', 'Name')} *
                       </label>
                       <input
                         type="text"
@@ -210,13 +229,13 @@ const ContactPage = () => {
                         value={formData.name}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
-                        placeholder="Your name"
+                        placeholder={t('contact.form.name.placeholder', 'Your name')}
                         required
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Email *
+                        {t('contact.form.email.label', 'Email')} *
                       </label>
                       <input
                         type="email"
@@ -224,7 +243,7 @@ const ContactPage = () => {
                         value={formData.email}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
-                        placeholder="your@email.com"
+                        placeholder={t('contact.form.email.placeholder', 'your@email.com')}
                         required
                       />
                     </div>
@@ -233,7 +252,7 @@ const ContactPage = () => {
                   {/* Phone Field - Full Width */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Phone
+                      {t('contact.form.phone.label', 'Phone')}
                     </label>
                     <PhoneInput
                       name="phone"
@@ -246,7 +265,7 @@ const ContactPage = () => {
                   {/* Subject Field - Full Width */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Subject *
+                      {t('contact.form.subject.label', 'Subject')} *
                     </label>
                     <select
                       name="subject"
@@ -255,19 +274,19 @@ const ContactPage = () => {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
                       required
                     >
-                      <option value="">Select subject</option>
-                      <option value="booking">Booking</option>
-                      <option value="corporate">Corporate Events</option>
-                      <option value="general">General Questions</option>
-                      <option value="partnership">Partnership</option>
-                      <option value="other">Other</option>
+                      <option value="">{t('contact.form.subject.placeholder', 'Select subject')}</option>
+                      <option value="booking">{t('contact.form.subject.booking', 'Booking')}</option>
+                      <option value="corporate">{t('contact.form.subject.corporate', 'Corporate Events')}</option>
+                      <option value="general">{t('contact.form.subject.general', 'General Questions')}</option>
+                      <option value="partnership">{t('contact.form.subject.partnership', 'Partnership')}</option>
+                      <option value="other">{t('contact.form.subject.other', 'Other')}</option>
                     </select>
                   </div>
                   
                   {/* Message */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Message *
+                      {t('contact.form.message.label', 'Message')} *
                     </label>
                     <textarea
                       name="message"
@@ -275,7 +294,7 @@ const ContactPage = () => {
                       onChange={handleInputChange}
                       rows={6}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 resize-none"
-                      placeholder="Tell us about your questions or wishes..."
+                      placeholder={t('contact.form.message.placeholder', 'Tell us about your questions or wishes...')}
                       required
                     />
                   </div>
@@ -291,7 +310,7 @@ const ContactPage = () => {
                     ) : (
                       <>
                         <Send className="h-5 w-5" />
-                        <span>Send message</span>
+                        <span>{t('contact.form.submit', 'Send message')}</span>
                       </>
                     )}
                   </button>
@@ -301,7 +320,9 @@ const ContactPage = () => {
 
             {/* Quick Contact */}
             <div className="mt-8 bg-primary-50 rounded-2xl p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Need quick help?</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                {t('contact.quick.title', 'Need quick help?')}
+              </h3>
               <div className="flex flex-col sm:flex-row gap-4">
                 <a
                   href="https://t.me/VETER_ITA"
@@ -328,34 +349,40 @@ const ContactPage = () => {
 
         {/* FAQ Section */}
         <div className="mt-20">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Frequently asked questions</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
+            {t('contact.faq.title', 'Frequently asked questions')}
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">How to book?</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                {t('contact.faq.booking.question', 'How to book?')}
+              </h3>
               <p className="text-gray-600">
-                You can book through our website, call us, or email us. 
-                We will confirm your booking within 24 hours.
+                {t('contact.faq.booking.answer', 'You can book through our website, call us, or email us. We will confirm your booking within 24 hours.')}
               </p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">What weather is suitable for sailing?</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                {t('contact.faq.weather.question', 'What weather is suitable for sailing?')}
+              </h3>
               <p className="text-gray-600">
-                We go to sea with winds from 5 to 25 knots. In adverse conditions, 
-                we will offer a reschedule or a full refund.
+                {t('contact.faq.weather.answer', 'We go to sea with winds from 5 to 25 knots. In adverse conditions, we will offer a reschedule or a full refund.')}
               </p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Is sailing experience required?</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                {t('contact.faq.experience.question', 'Is sailing experience required?')}
+              </h3>
               <p className="text-gray-600">
-                No, experience is not required. Our professional instructors will teach you everything you need 
-                and ensure safety on the water.
+                {t('contact.faq.experience.answer', 'No, experience is not required. Our professional instructors will teach you everything you need and ensure safety on the water.')}
               </p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">What is included in the price?</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                {t('contact.faq.included.question', 'What is included in the price?')}
+              </h3>
               <p className="text-gray-600">
-                The price includes: professional skipper, all equipment, instruction, 
-                participant medal, and professional photos.
+                {t('contact.faq.included.answer', 'The price includes: professional skipper, all equipment, instruction, participant medal, and professional photos.')}
               </p>
             </div>
           </div>

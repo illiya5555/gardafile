@@ -447,7 +447,7 @@ const HomePage = () => {
               {/* YouTube Video */}
               <div className="relative rounded-2xl shadow-2xl overflow-hidden">
                 <iframe
-                  src="https://www.youtube.com/embed/Xe6PkWx3i1c?autoplay=1&mute=1&loop=1&playlist=stuuOv0GUG8&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&disablekb=1&fs=0&cc_load_policy=0&playsinline=1&autohide=1"
+                  src="https://www.youtube.com/embed/Xe6PkWx3i1c?autoplay=1&mute=1&loop=1&playlist=Xe6PkWx3i1c&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&disablekb=1&fs=0&cc_load_policy=0&playsinline=1&autohide=1"
                   title="Lake Garda Location Video"
                   className="w-full h-96 object-cover"
                   style={{

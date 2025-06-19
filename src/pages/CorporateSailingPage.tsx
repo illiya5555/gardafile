@@ -1,147 +1,221 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Anchor, MapPin, Phone, Mail, Award, Shield, Clock, Lock } from 'lucide-react';
-import AdminLogin from './AdminLogin';
+import { Users, Calendar, MapPin, Star, Check, ArrowRight } from 'lucide-react';
 import { useTranslation } from '../context/LanguageContext';
 
-const Footer = () => {
+const CorporateSailingPage = () => {
   const { t } = useTranslation();
-  const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
+
+  const packages = [
+    {
+      id: 'team-building',
+      name: 'Team Building Experience',
+      duration: '4 hours',
+      participants: '8-15 people',
+      price: 1200,
+      description: 'Perfect for team building activities with competitive sailing challenges.',
+      features: [
+        'Professional sailing instruction',
+        'Team-based sailing competitions',
+        'Safety equipment included',
+        'Post-sailing refreshments',
+        'Team building activities on shore'
+      ],
+      popular: true
+    },
+    {
+      id: 'executive-day',
+      name: 'Executive Sailing Day',
+      duration: '6 hours',
+      participants: '6-12 people',
+      price: 1800,
+      description: 'Exclusive sailing experience for executives and VIP clients.',
+      features: [
+        'Premium yacht charter',
+        'Personal sailing instructor',
+        'Gourmet lunch on board',
+        'Professional photography',
+        'Champagne welcome',
+        'Flexible itinerary'
+      ],
+      popular: false
+    },
+    {
+      id: 'multi-day',
+      name: 'Multi-Day Corporate Retreat',
+      duration: '2-3 days',
+      participants: '10-20 people',
+      price: 3500,
+      description: 'Comprehensive sailing retreat with accommodation and activities.',
+      features: [
+        'Multi-day sailing program',
+        'Hotel accommodation',
+        'All meals included',
+        'Evening entertainment',
+        'Meeting facilities',
+        'Professional event coordination'
+      ],
+      popular: false
+    }
+  ];
 
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Company Info */}
-          <div className="space-y-6">
-            <div className="flex items-center space-x-3">
-  <img
-    src="/gardalogo.png"
-    alt="Garda Racing Logo"
-    className="h-20 w-20 object-contain"
-  />
-  <div>
-    <h3 className="text-xl font-bold">Garda Racing</h3>
-    <p className="text-gray-400 text-sm">Yacht Club</p>
-  </div>
-</div>
-
-            <p className="text-gray-300 leading-relaxed">
-              Experience the thrill of yacht racing on the world-famous Lake Garda. 
-              Professional instruction, premium equipment, and unforgettable memories.
-            </p>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
-            <ul className="space-y-3">
-              <li>
-                <Link to="/" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  {t('nav.home', 'Home')}
-                </Link>
-              </li>
-              <li>
-                <Link to="/events" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  {t('nav.events', 'Events')}
-                </Link>
-              </li>
-              <li>
-                <Link to="/booking" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  {t('nav.book_now', 'Book Now')}
-                </Link>
-              </li>
-              <li>
-                <a href="#" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  {t('nav.services', 'Corporate Events')}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  Gift Vouchers
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Contact Info */}
-          <div>
-            <h4 className="text-lg font-semibold mb-6">{t('footer.contact.title', 'Contact')}</h4>
-            <ul className="space-y-4">
-              <li className="flex items-start space-x-3">
-                <MapPin className="h-5 w-5 text-primary-500 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-gray-300">Viale Giancarlo Maroni 4</p>
-                  <p className="text-gray-300">38066 Riva del Garda TN</p>
-                  <p className="text-gray-300">Italia</p>
-                </div>
-              </li>
-              <li className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-primary-500" />
-                <a href="tel:+393447770077" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  +39 344 777 00 77
-                </a>
-              </li>
-              <li className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-primary-500" />
-                <a href="mailto:info@gardaracing.com" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  info@gardaracing.com
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Certifications */}
-          <div>
-            <h4 className="text-lg font-semibold mb-6">{t('footer.certifications.title', 'Certifications')}</h4>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <Shield className="h-5 w-5 text-green-400" />
-                <span className="text-gray-300 text-sm">{t('footer.certifications.insured', 'Fully Insured')}</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Clock className="h-5 w-5 text-blue-400" />
-                <span className="text-gray-300 text-sm">{t('footer.certifications.support', '24/7 Support')}</span>
-              </div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <div className="relative bg-primary-900 text-white py-24">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-900 to-primary-800 opacity-90"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-5xl font-bold mb-6">
+            {t('corporate.title', 'Corporate Sailing Events')}
+          </h1>
+          <p className="text-xl text-primary-100 max-w-3xl mx-auto mb-8">
+            {t('corporate.subtitle', 'Create unforgettable team experiences on the beautiful waters of Lake Garda. Professional sailing instruction, team building activities, and premium service.')}
+          </p>
+          <div className="flex items-center justify-center space-x-8 text-sm">
+            <div className="flex items-center space-x-2">
+              <Users className="h-5 w-5" />
+              <span>Team Building</span>
             </div>
-            <div className="mt-6 p-4 bg-gray-800 rounded-lg">
-              <p className="text-sm text-gray-300 mb-2">{t('footer.operating_hours', 'Operating Hours:')}</p>
-              <p className="text-sm text-white">{t('footer.daily_hours', 'Daily: 8:00 AM - 7:00 PM')}</p>
-              <p className="text-sm text-gray-400">{t('footer.season', 'March - October')}</p>
+            <div className="flex items-center space-x-2">
+              <Star className="h-5 w-5" />
+              <span>Premium Service</span>
             </div>
-          </div>
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="border-t border-gray-800 mt-12 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="flex flex-wrap justify-center md:justify-start space-x-6 text-sm text-gray-400">
-              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Privacy Policy</a>
-              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Terms & Conditions</a>
-              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Cancellation Policy</a>
-              <a href="#" className="hover:text-primary-500 transition-colors duration-300">GDPR</a>
-              {/* Малозаметная кнопка администратора */}
-              <button
-                onClick={() => setShowAdminLogin(true)}
-                className="text-gray-600 hover:text-gray-400 transition-colors duration-300 opacity-30 hover:opacity-60"
-                title="Admin Access"
-              >
-                <Lock className="h-3 w-3" />
-              </button>
+            <div className="flex items-center space-x-2">
+              <MapPin className="h-5 w-5" />
+              <span>Lake Garda</span>
             </div>
-            <p className="text-sm text-gray-400">
-              © 2025 Garda Racing Yacht Club. All rights reserved.
-            </p>
           </div>
         </div>
       </div>
 
-      {/* Admin Login Modal */}
-      {showAdminLogin && (
-        <AdminLogin onClose={() => setShowAdminLogin(false)} />
-      )}
-    </footer>
+      {/* Packages Section */}
+      <div className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              {t('corporate.packages.title', 'Corporate Packages')}
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              {t('corporate.packages.subtitle', 'Choose from our carefully designed corporate sailing packages, each tailored to different group sizes and objectives.')}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {packages.map((pkg) => (
+              <div
+                key={pkg.id}
+                className={`relative bg-white rounded-lg shadow-lg p-6 transition-all duration-300 hover:shadow-xl ${
+                  pkg.popular ? 'ring-2 ring-primary-500' : ''
+                }`}
+              >
+                {pkg.popular && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <span className="bg-primary-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                      Most Popular
+                    </span>
+                  </div>
+                )}
+                
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{pkg.name}</h3>
+                  <p className="text-gray-600 mb-4">{pkg.description}</p>
+                  <div className="text-3xl font-bold text-primary-600 mb-2">
+                    €{pkg.price.toLocaleString()}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {pkg.duration} • {pkg.participants}
+                  </div>
+                </div>
+
+                <ul className="space-y-3 mb-6">
+                  {pkg.features.map((feature, index) => (
+                    <li key={index} className="flex items-center space-x-3">
+                      <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
+                      <span className="text-gray-700">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  onClick={() => setSelectedPackage(pkg.id)}
+                  className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center space-x-2"
+                >
+                  <span>Request Quote</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Benefits Section */}
+      <div className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              {t('corporate.benefits.title', 'Why Choose Corporate Sailing?')}
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="h-8 w-8 text-primary-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Team Building</h3>
+              <p className="text-gray-600">
+                Strengthen team bonds through collaborative sailing challenges and shared experiences on the water.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Star className="h-8 w-8 text-primary-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Professional Service</h3>
+              <p className="text-gray-600">
+                Expert instructors, premium equipment, and dedicated event coordination for a seamless experience.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MapPin className="h-8 w-8 text-primary-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Stunning Location</h3>
+              <p className="text-gray-600">
+                Lake Garda's beautiful waters and mountain scenery provide the perfect backdrop for corporate events.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="py-16 bg-primary-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            {t('corporate.cta.title', 'Ready to Plan Your Corporate Event?')}
+          </h2>
+          <p className="text-lg text-gray-600 mb-8">
+            {t('corporate.cta.subtitle', 'Contact our team to discuss your requirements and create a customized sailing experience for your group.')}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button className="bg-primary-600 text-white px-8 py-3 rounded-lg hover:bg-primary-700 transition-colors">
+              {t('corporate.cta.contact', 'Contact Us')}
+            </button>
+            <a
+              href="tel:+393447770077"
+              className="border border-primary-600 text-primary-600 px-8 py-3 rounded-lg hover:bg-primary-50 transition-colors"
+            >
+              {t('corporate.cta.call', 'Call +39 344 777 00 77')}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default Footer;
+export default CorporateSailingPage;

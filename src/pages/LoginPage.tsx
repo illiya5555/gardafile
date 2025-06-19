@@ -1,147 +1,244 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Anchor, MapPin, Phone, Mail, Award, Shield, Clock, Lock } from 'lucide-react';
-import AdminLogin from './AdminLogin';
+import { Link, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import { useTranslation } from '../context/LanguageContext';
 
-const Footer = () => {
+const LoginPage = () => {
   const { t } = useTranslation();
-  const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const navigate = useNavigate();
+  const [isLogin, setIsLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    firstName: '',
+    lastName: ''
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      // Simulate authentication
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      if (isLogin) {
+        // Login logic
+        navigate('/dashboard');
+      } else {
+        // Registration logic
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      console.error('Authentication error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
 
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Company Info */}
-          <div className="space-y-6">
-            <div className="flex items-center space-x-3">
-  <img
-    src="/gardalogo.png"
-    alt="Garda Racing Logo"
-    className="h-20 w-20 object-contain"
-  />
-  <div>
-    <h3 className="text-xl font-bold">Garda Racing</h3>
-    <p className="text-gray-400 text-sm">Yacht Club</p>
-  </div>
-</div>
-
-            <p className="text-gray-300 leading-relaxed">
-              Experience the thrill of yacht racing on the world-famous Lake Garda. 
-              Professional instruction, premium equipment, and unforgettable memories.
-            </p>
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <Link to="/" className="flex items-center justify-center space-x-3 mb-6">
+          <img
+            src="/gardalogo.png"
+            alt="Garda Racing Logo"
+            className="h-16 w-16 object-contain"
+          />
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-900">Garda Racing</h2>
+            <p className="text-sm text-gray-600">Yacht Club</p>
           </div>
-
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
-            <ul className="space-y-3">
-              <li>
-                <Link to="/" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  {t('nav.home', 'Home')}
-                </Link>
-              </li>
-              <li>
-                <Link to="/events" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  {t('nav.events', 'Events')}
-                </Link>
-              </li>
-              <li>
-                <Link to="/booking" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  {t('nav.book_now', 'Book Now')}
-                </Link>
-              </li>
-              <li>
-                <a href="#" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  {t('nav.services', 'Corporate Events')}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  Gift Vouchers
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Contact Info */}
-          <div>
-            <h4 className="text-lg font-semibold mb-6">{t('footer.contact.title', 'Contact')}</h4>
-            <ul className="space-y-4">
-              <li className="flex items-start space-x-3">
-                <MapPin className="h-5 w-5 text-primary-500 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-gray-300">Viale Giancarlo Maroni 4</p>
-                  <p className="text-gray-300">38066 Riva del Garda TN</p>
-                  <p className="text-gray-300">Italia</p>
-                </div>
-              </li>
-              <li className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-primary-500" />
-                <a href="tel:+393447770077" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  +39 344 777 00 77
-                </a>
-              </li>
-              <li className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-primary-500" />
-                <a href="mailto:info@gardaracing.com" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  info@gardaracing.com
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Certifications */}
-          <div>
-            <h4 className="text-lg font-semibold mb-6">{t('footer.certifications.title', 'Certifications')}</h4>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <Shield className="h-5 w-5 text-green-400" />
-                <span className="text-gray-300 text-sm">{t('footer.certifications.insured', 'Fully Insured')}</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Clock className="h-5 w-5 text-blue-400" />
-                <span className="text-gray-300 text-sm">{t('footer.certifications.support', '24/7 Support')}</span>
-              </div>
-            </div>
-            <div className="mt-6 p-4 bg-gray-800 rounded-lg">
-              <p className="text-sm text-gray-300 mb-2">{t('footer.operating_hours', 'Operating Hours:')}</p>
-              <p className="text-sm text-white">{t('footer.daily_hours', 'Daily: 8:00 AM - 7:00 PM')}</p>
-              <p className="text-sm text-gray-400">{t('footer.season', 'March - October')}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="border-t border-gray-800 mt-12 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="flex flex-wrap justify-center md:justify-start space-x-6 text-sm text-gray-400">
-              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Privacy Policy</a>
-              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Terms & Conditions</a>
-              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Cancellation Policy</a>
-              <a href="#" className="hover:text-primary-500 transition-colors duration-300">GDPR</a>
-              {/* Малозаметная кнопка администратора */}
+        </Link>
+        
+        <h2 className="text-center text-3xl font-extrabold text-gray-900">
+          {isLogin 
+            ? t('auth.login.title', 'Sign in to your account')
+            : t('auth.register.title', 'Create your account')
+          }
+        </h2>
+        <p className="mt-2 text-center text-sm text-gray-600">
+          {isLogin ? (
+            <>
+              {t('auth.login.no_account', "Don't have an account?")}{' '}
               <button
-                onClick={() => setShowAdminLogin(true)}
-                className="text-gray-600 hover:text-gray-400 transition-colors duration-300 opacity-30 hover:opacity-60"
-                title="Admin Access"
+                onClick={() => setIsLogin(false)}
+                className="font-medium text-primary-600 hover:text-primary-500"
               >
-                <Lock className="h-3 w-3" />
+                {t('auth.login.sign_up', 'Sign up')}
               </button>
-            </div>
-            <p className="text-sm text-gray-400">
-              © 2025 Garda Racing Yacht Club. All rights reserved.
-            </p>
-          </div>
-        </div>
+            </>
+          ) : (
+            <>
+              {t('auth.register.have_account', 'Already have an account?')}{' '}
+              <button
+                onClick={() => setIsLogin(true)}
+                className="font-medium text-primary-600 hover:text-primary-500"
+              >
+                {t('auth.register.sign_in', 'Sign in')}
+              </button>
+            </>
+          )}
+        </p>
       </div>
 
-      {/* Admin Login Modal */}
-      {showAdminLogin && (
-        <AdminLogin onClose={() => setShowAdminLogin(false)} />
-      )}
-    </footer>
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            {!isLogin && (
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                    {t('auth.register.first_name', 'First name')}
+                  </label>
+                  <div className="mt-1 relative">
+                    <input
+                      id="firstName"
+                      name="firstName"
+                      type="text"
+                      required={!isLogin}
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                    />
+                    <User className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                    {t('auth.register.last_name', 'Last name')}
+                  </label>
+                  <div className="mt-1 relative">
+                    <input
+                      id="lastName"
+                      name="lastName"
+                      type="text"
+                      required={!isLogin}
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                    />
+                    <User className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                {t('auth.email', 'Email address')}
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                />
+                <Mail className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                {t('auth.password', 'Password')}
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete={isLogin ? 'current-password' : 'new-password'}
+                  required
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className="appearance-none block w-full px-3 py-2 pl-10 pr-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                />
+                <Lock className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
+            </div>
+
+            {!isLogin && (
+              <div>
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                  {t('auth.register.confirm_password', 'Confirm password')}
+                </label>
+                <div className="mt-1 relative">
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    required={!isLogin}
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                  />
+                  <Lock className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                </div>
+              </div>
+            )}
+
+            {isLogin && (
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <input
+                    id="remember-me"
+                    name="remember-me"
+                    type="checkbox"
+                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  />
+                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                    {t('auth.login.remember_me', 'Remember me')}
+                  </label>
+                </div>
+
+                <div className="text-sm">
+                  <a href="#" className="font-medium text-primary-600 hover:text-primary-500">
+                    {t('auth.login.forgot_password', 'Forgot your password?')}
+                  </a>
+                </div>
+              </div>
+            )}
+
+            <div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                ) : (
+                  isLogin ? t('auth.login.sign_in_button', 'Sign in') : t('auth.register.sign_up_button', 'Sign up')
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default Footer;
+export default LoginPage;

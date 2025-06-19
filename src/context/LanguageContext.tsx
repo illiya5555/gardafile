@@ -12,7 +12,7 @@ interface LanguageContextType {
   supportedLanguages: LanguageConfig[];
 }
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+export const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const languageData = useLanguage();

@@ -4,8 +4,10 @@ import { Anchor, MapPin, Phone, Mail, Award, Shield, Clock, Lock } from 'lucide-
 import AdminLogin from './AdminLogin';
 import { useTranslation } from '../context/LanguageContext';
 import { useTranslation } from '../context/LanguageContext';
+import { useTranslation } from '../context/LanguageContext';
 
 const Footer = () => {
+  const { t } = useTranslation();
   const { t } = useTranslation();
   const { t } = useTranslation();
   const [showAdminLogin, setShowAdminLogin] = useState(false);
@@ -59,7 +61,7 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                  <span>{t('dashboard.my_profile', 'My Profile')}</span>
+                  {t('nav.events', 'Events')}
                   Gift Vouchers
                 </a>
               </li>

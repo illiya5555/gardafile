@@ -1,149 +1,95 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Anchor, MapPin, Phone, Mail, Award, Shield, Clock, Lock } from 'lucide-react';
-import AdminLogin from './AdminLogin';
-import { useTranslation } from '../context/LanguageContext';
-import { useTranslation } from '../context/LanguageContext';
+import { X, Lock, User } from 'lucide-react';
 
-const Footer = () => {
-  const { t } = useTranslation();
-  const { t } = useTranslation();
-  const [showAdminLogin, setShowAdminLogin] = useState(false);
+interface AdminLoginProps {
+  onClose: () => void;
+}
+
+const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
+  const [credentials, setCredentials] = useState({
+    username: '',
+    password: ''
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // TODO: Implement actual admin authentication
+    console.log('Admin login attempt:', credentials);
+    onClose();
+  };
 
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Company Info */}
-          <div className="space-y-6">
-            <div className="flex items-center space-x-3">
-  <img
-    src="/gardalogo.png"
-    alt="Garda Racing Logo"
-    className="h-20 w-20 object-contain"
-  />
-  <div>
-    <h3 className="text-xl font-bold">Garda Racing</h3>
-    <p className="text-gray-400 text-sm">Yacht Club</p>
-  </div>
-</div>
-
-            <p className="text-gray-300 leading-relaxed">
-              Experience the thrill of yacht racing on the world-famous Lake Garda. 
-              Professional instruction, premium equipment, and unforgettable memories.
-            </p>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex items-center space-x-2">
+            <Lock className="h-6 w-6 text-gray-600" />
+            <h2 className="text-xl font-semibold text-gray-900">Admin Access</h2>
           </div>
-
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
-            <ul className="space-y-3">
-              <li>
-                <Link to="/" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  {t('nav.home', 'Home')}
-                </Link>
-              </li>
-              <li>
-                <Link to="/events" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  {t('nav.events', 'Events')}
-                </Link>
-              </li>
-              <li>
-                <Link to="/booking" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  {t('nav.book_now', 'Book Now')}
-                </Link>
-              </li>
-              <li>
-                <a href="#" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  {t('nav.services', 'Corporate Events')}
-                </a>
-              </li>
-              <li>
-                  {t('nav.events', 'Events')}
-                  Gift Vouchers
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Contact Info */}
-          <div>
-            <h4 className="text-lg font-semibold mb-6">{t('footer.contact.title', 'Contact')}</h4>
-            <ul className="space-y-4">
-              <li className="flex items-start space-x-3">
-                <MapPin className="h-5 w-5 text-primary-500 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-gray-300">Viale Giancarlo Maroni 4</p>
-                  <p className="text-gray-300">38066 Riva del Garda TN</p>
-                  <p className="text-gray-300">Italia</p>
-                </div>
-              </li>
-              <li className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-primary-500" />
-                <a href="tel:+393447770077" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  +39 344 777 00 77
-                </a>
-              </li>
-              <li className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-primary-500" />
-                <a href="mailto:info@gardaracing.com" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  info@gardaracing.com
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Certifications */}
-          <div>
-            <h4 className="text-lg font-semibold mb-6">{t('footer.certifications.title', 'Certifications')}</h4>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <Shield className="h-5 w-5 text-green-400" />
-                <span className="text-gray-300 text-sm">{t('footer.certifications.insured', 'Fully Insured')}</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Clock className="h-5 w-5 text-blue-400" />
-                <span className="text-gray-300 text-sm">{t('footer.certifications.support', '24/7 Support')}</span>
-              </div>
-            </div>
-            <div className="mt-6 p-4 bg-gray-800 rounded-lg">
-              <p className="text-sm text-gray-300 mb-2">{t('footer.operating_hours', 'Operating Hours:')}</p>
-              <p className="text-sm text-white">{t('footer.daily_hours', 'Daily: 8:00 AM - 7:00 PM')}</p>
-              <p className="text-sm text-gray-400">{t('footer.season', 'March - October')}</p>
-            </div>
-          </div>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <X className="h-6 w-6" />
+          </button>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-gray-800 mt-12 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="flex flex-wrap justify-center md:justify-start space-x-6 text-sm text-gray-400">
-              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Privacy Policy</a>
-              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Terms & Conditions</a>
-              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Cancellation Policy</a>
-              <a href="#" className="hover:text-primary-500 transition-colors duration-300">GDPR</a>
-              {/* Малозаметная кнопка администратора */}
-              <button
-                onClick={() => setShowAdminLogin(true)}
-                className="text-gray-600 hover:text-gray-400 transition-colors duration-300 opacity-30 hover:opacity-60"
-                title="Admin Access"
-              >
-                <Lock className="h-3 w-3" />
-              </button>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+              Username
+            </label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                id="username"
+                value={credentials.username}
+                onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                placeholder="Enter username"
+                required
+              />
             </div>
-            <p className="text-sm text-gray-400">
-              © 2025 Garda Racing Yacht Club. All rights reserved.
-            </p>
           </div>
-        </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="password"
+                id="password"
+                value={credentials.password}
+                onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                placeholder="Enter password"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="flex space-x-3 pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="flex-1 px-4 py-2 text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
+            >
+              Login
+            </button>
+          </div>
+        </form>
       </div>
-
-      {/* Admin Login Modal */}
-      {showAdminLogin && (
-        <AdminLogin onClose={() => setShowAdminLogin(false)} />
-      )}
-    </footer>
+    </div>
   );
 };
 
-export default Footer;
+export default AdminLogin;

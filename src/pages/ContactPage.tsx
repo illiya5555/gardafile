@@ -19,7 +19,6 @@ const ContactPage = () => {
       ...prev,
       [e.target.name]: e.target.value
     }));
-    // Clear error when user starts typing
     if (error) setError('');
   };
 
@@ -29,7 +28,6 @@ const ContactPage = () => {
     setError('');
 
     try {
-      // Insert contact inquiry into the unified_inquiries table
       const { error: insertError } = await supabase
         .from('unified_inquiries')
         .insert({
@@ -43,11 +41,8 @@ const ContactPage = () => {
           source: 'website'
         });
 
-      if (insertError) {
-        throw insertError;
-      }
+      if (insertError) throw insertError;
 
-      // Success - show confirmation and reset form
       setSubmitted(true);
       setFormData({
         name: '',
@@ -84,7 +79,6 @@ const ContactPage = () => {
           {/* Contact Information */}
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-8">Contact Information</h2>
-            
             <div className="space-y-8">
               <div className="flex items-start space-x-4">
                 <div className="bg-primary-100 p-3 rounded-lg">
@@ -152,28 +146,27 @@ const ContactPage = () => {
               </div>
             </div>
 
-          {/* Map */}
-<div className="mt-12">
-  <h3 className="text-xl font-semibold text-gray-900 mb-4">How to find us</h3>
-  <div className="rounded-xl overflow-hidden w-full h-64">
-    <iframe
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2777.3711841622!2d10.844166699999999!3d45.883888899999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47821727e0319b4d%3A0xe35bcd19dae63816!2sFraglia%20Vela%20Riva!5e0!3m2!1sru!2sil!4v1750324990471!5m2!1sru!2sil"
-      width="100%"
-      height="100%"
-      style={{ border: 0 }}
-      allowFullScreen=""
-      loading="lazy"
-      referrerPolicy="no-referrer-when-downgrade"
-    ></iframe>
-  </div>
-</div>
-
+            {/* Map */}
+            <div className="mt-12">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">How to find us</h3>
+              <div className="rounded-xl overflow-hidden w-full h-64">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2777.3711841622!2d10.844166699999999!3d45.883888899999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47821727e0319b4d%3A0xe35bcd19dae63816!2sFraglia%20Vela%20Riva!5e0!3m2!1sru!2sil!4v1750324990471!5m2!1sru!2sil"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
+            </div>
+          </div> {/* ← Закрываем Contact Information */}
 
           {/* Contact Form */}
           <div>
             <div className="bg-white rounded-2xl shadow-lg p-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-8">Send a message</h2>
-              
               {submitted ? (
                 <div className="text-center py-8">
                   <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -190,13 +183,11 @@ const ContactPage = () => {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Error Message */}
                   {error && (
                     <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
                       <p className="text-red-600 text-sm">{error}</p>
                     </div>
                   )}
-
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
@@ -225,7 +216,6 @@ const ContactPage = () => {
                       />
                     </div>
                   </div>
-
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
@@ -259,7 +249,6 @@ const ContactPage = () => {
                       </select>
                     </div>
                   </div>
-
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
                       Message *
@@ -274,7 +263,6 @@ const ContactPage = () => {
                       required
                     />
                   </div>
-
                   <button
                     type="submit"
                     disabled={loading}

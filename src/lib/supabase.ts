@@ -29,18 +29,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     headers: {
       'X-Client-Info': 'garda-racing-app'
     },
-    fetch: (url, options = {}) => {
-      // Add timeout and retry logic
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-      
-      return fetch(url, {
-        ...options,
-        signal: controller.signal,
-      }).finally(() => {
-        clearTimeout(timeoutId);
-      });
-    }
   },
   db: {
     schema: 'public'
@@ -51,6 +39,14 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     }
   }
 });
+
+// Connection status tracker
+let connectionStatus: 'unknown' | 'connected' | 'disconnected' = 'unknown';
+let lastConnectionTest = 0;
+const CONNECTION_TEST_INTERVAL = 60000; // 1 minute
+
+// Get connection status
+export const getConnectionStatus = () => connectionStatus;
 
 // Retry utility function
 const retryWithBackoff = async <T>(
@@ -72,7 +68,7 @@ const retryWithBackoff = async <T>(
       
       // Exponential backoff
       const delay = baseDelay * Math.pow(2, attempt);
-      console.warn(`Attempt ${attempt + 1} failed, retrying in ${delay}ms...`, error);
+      console.warn(`Supabase connection attempt ${attempt + 1} failed, retrying in ${delay}ms...`);
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
@@ -80,12 +76,96 @@ const retryWithBackoff = async <T>(
   throw lastError!;
 };
 
-// Enhanced test connection function with better error handling and retry logic
+// Enhanced test connection function with cached results
 export const testConnection = async () => {
+  // Return cached result if recent
+  const now = Date.now();
+  if (connectionStatus !== 'unknown' && (now - lastConnectionTest) < CONNECTION_TEST_INTERVAL) {
+    return connectionStatus === 'connected';
+  }
+
   try {
-    console.log('Testing Supabase connection to:', supabaseUrl);
+    console.log('Testing Supabase connection...');
     
-    // Test with retry logic
+    // Simple connection test without retries for faster response
+    const { error } = await supabase
+      .from('testimonials')
+      .select('id')
+      .limit(1);
+    
+    if (error) {
+      throw new Error(`Supabase query error: ${error.message}`);
+    }
+    
+    connectionStatus = 'connected';
+    lastConnectionTest = now;
+    console.log('Supabase connection successful');
+    return true;
+  } catch (error) {
+    connectionStatus = 'disconnected';
+    lastConnectionTest = now;
+    
+    // Only log detailed error info in development
+    if (import.meta.env.DEV) {
+      console.warn('Supabase connection failed:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        url: supabaseUrl
+      });
+    }
+    
+    return false;
+  }
+};
+
+// Safe query wrapper that handles connection issues gracefully
+export const safeQuery = async <T>(
+  queryFn: () => Promise<{ data: T | null; error: any }>,
+  fallbackData: T | null = null
+): Promise<{ data: T | null; error: any; isOffline: boolean }> => {
+  try {
+    // Quick connection check
+    if (connectionStatus === 'disconnected') {
+      return {
+        data: fallbackData,
+        error: { message: 'Offline mode - using cached data' },
+        isOffline: true
+      };
+    }
+
+    const result = await queryFn();
+    
+    if (result.error) {
+      connectionStatus = 'disconnected';
+      return {
+        data: fallbackData,
+        error: result.error,
+        isOffline: true
+      };
+    }
+    
+    connectionStatus = 'connected';
+    return {
+      data: result.data,
+      error: null,
+      isOffline: false
+    };
+  } catch (error) {
+    connectionStatus = 'disconnected';
+    return {
+      data: fallbackData,
+      error: { message: error instanceof Error ? error.message : 'Connection failed' },
+      isOffline: true
+    };
+  }
+};
+
+// Retry-enabled query for critical operations
+export const retryQuery = async <T>(
+  queryFn: () => Promise<{ data: T | null; error: any }>,
+  fallbackData: T | null = null,
+  maxRetries: number = 2
+): Promise<{ data: T | null; error: any; isOffline: boolean }> => {
+  try {
     const result = await retryWithBackoff(async () => {
       const { data, error } = await supabase
         .from('testimonials')
@@ -93,37 +173,28 @@ export const testConnection = async () => {
         .limit(1);
       
       if (error) {
-        throw new Error(`Supabase query error: ${error.message}`);
+        throw error;
       }
       
       return data;
-    });
+    }, maxRetries);
     
-    console.log('Supabase connection successful');
-    return true;
+    connectionStatus = 'connected';
+    const queryResult = await queryFn();
+    
+    return {
+      data: queryResult.data,
+      error: queryResult.error,
+      isOffline: false
+    };
   } catch (error) {
-    console.error('Supabase connection test failed:', {
-      error: error instanceof Error ? error.message : 'Unknown error',
-      url: supabaseUrl,
-      hasKey: !!supabaseAnonKey
-    });
+    connectionStatus = 'disconnected';
     
-    // Provide specific error guidance
-    if (error instanceof Error) {
-      if (error.message.includes('Failed to fetch') || error.name === 'AbortError') {
-        console.error('Network connectivity issue detected. Please check:');
-        console.error('1. Your internet connection');
-        console.error('2. That your Supabase project is active and accessible');
-        console.error('3. Firewall or proxy settings that might block the connection');
-        console.error('4. The VITE_SUPABASE_URL is correct:', supabaseUrl);
-      } else if (error.message.includes('Invalid API key')) {
-        console.error('Authentication issue. Please check your VITE_SUPABASE_ANON_KEY');
-      } else if (error.message.includes('relation') && error.message.includes('does not exist')) {
-        console.error('Database schema issue. The testimonials table may not exist.');
-      }
-    }
-    
-    return false;
+    return {
+      data: fallbackData,
+      error: { message: error instanceof Error ? error.message : 'Connection failed' },
+      isOffline: true
+    };
   }
 };
 

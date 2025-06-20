@@ -28,6 +28,7 @@ export interface LanguageContextType {
 
 // Import the context from the proper location
 import { LanguageContext } from '../context/LanguageContext';
+import { safeQuery } from '../lib/supabase';
 
 const AVAILABLE_LANGUAGES: LanguageConfig[] = [
   { code: 'en', name: 'English', nativeName: 'English', flag: '🇺🇸' },
@@ -135,70 +136,43 @@ const FALLBACK_TRANSLATIONS: Record<string, Record<string, string>> = {
   },
 };
 
-// Retry utility function
-const retryWithBackoff = async <T>(
-  fn: () => Promise<T>,
-  maxRetries: number = 3,
-  baseDelay: number = 1000
-): Promise<T> => {
-  let lastError: Error;
-  
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try {
-      return await fn();
-    } catch (error) {
-      lastError = error as Error;
-      
-      if (attempt === maxRetries) {
-        throw lastError;
-      }
-      
-      // Exponential backoff
-      const delay = baseDelay * Math.pow(2, attempt);
-      console.warn(`Translation load attempt ${attempt + 1} failed, retrying in ${delay}ms...`, error);
-      await new Promise(resolve => setTimeout(resolve, delay));
-    }
-  }
-  
-  throw lastError!;
-};
-
 // Load translations with enhanced error handling and retry logic
 export const loadTranslations = async (languageCode: string) => {
   try {
     console.log(`Loading translations for language: ${languageCode}`);
     
-    const result = await retryWithBackoff(async () => {
-      const { data, error } = await supabase
+    const { data, error, isOffline } = await safeQuery(
+      () => supabase
         .from('translations')
         .select('key, text')
-        .eq('language_code', languageCode);
-      
-      if (error) {
-        throw new Error(`Database error: ${error.message}`);
-      }
-      
-      return data;
-    });
+        .eq('language_code', languageCode),
+      []
+    );
     
-    if (result && result.length > 0) {
-      const translationMap = result.reduce((acc: Record<string, string>, item: Translation) => {
+    // Get fallback translations
+    const fallbackTranslations = FALLBACK_TRANSLATIONS[languageCode] || FALLBACK_TRANSLATIONS.en;
+    
+    if (data && data.length > 0 && !isOffline) {
+      const translationMap = data.reduce((acc: Record<string, string>, item: Translation) => {
         acc[item.key] = item.text;
         return acc;
       }, {});
       
       // Merge with fallback translations
-      const fallbackTranslations = FALLBACK_TRANSLATIONS[languageCode] || FALLBACK_TRANSLATIONS.en;
       const mergedTranslations = { ...fallbackTranslations, ...translationMap };
       
-      console.log(`Successfully loaded ${result.length} translations for ${languageCode}`);
+      console.log(`Successfully loaded ${data.length} translations for ${languageCode}`);
       return mergedTranslations;
     } else {
-      console.warn(`No translations found for language: ${languageCode}, using fallbacks`);
-      return FALLBACK_TRANSLATIONS[languageCode] || FALLBACK_TRANSLATIONS.en;
+      if (isOffline) {
+        console.log(`Working offline - using fallback translations for ${languageCode}`);
+      } else {
+        console.log(`No translations found for language: ${languageCode}, using fallbacks`);
+      }
+      return fallbackTranslations;
     }
   } catch (error) {
-    console.error('Error loading translations:', error);
+    console.warn('Error loading translations, using fallbacks:', error);
     
     // Use fallback translations on error
     const fallbackTranslations = FALLBACK_TRANSLATIONS[languageCode] || FALLBACK_TRANSLATIONS.en;
@@ -248,8 +222,8 @@ export const useLanguage = (): LanguageContextType => {
         setCurrentLanguage(savedLanguage);
         setTranslations(loadedTranslations);
       } catch (err) {
-        console.error('Failed to initialize language:', err);
-        setError('Failed to load language settings');
+        console.warn('Failed to initialize language, using fallbacks:', err);
+        setError(null); // Don't show error for offline mode
         
         // Fallback to English
         setCurrentLanguage('en');
@@ -275,9 +249,15 @@ export const useLanguage = (): LanguageContextType => {
       // Save to localStorage
       localStorage.setItem('preferred-language', languageCode);
     } catch (err) {
-      console.error('Failed to change language:', err);
-      setError('Failed to change language');
-      throw err;
+      console.warn('Failed to change language, using fallbacks:', err);
+      
+      // Still switch to the requested language using fallbacks
+      const fallbackTranslations = FALLBACK_TRANSLATIONS[languageCode] || FALLBACK_TRANSLATIONS.en;
+      setCurrentLanguage(languageCode);
+      setTranslations(fallbackTranslations);
+      localStorage.setItem('preferred-language', languageCode);
+      
+      setError(null); // Don't show error for offline mode
     } finally {
       setLoading(false);
     }

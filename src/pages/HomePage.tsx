@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Users, Award, Camera, MapPin, Star, Wind, Anchor, Trophy, Shield, Clock, CheckCircle } from 'lucide-react';
-import { supabase, Testimonial, testConnection } from '../lib/supabase';
+import { supabase, Testimonial, safeQuery } from '../lib/supabase';
 import { useTranslation } from '../context/LanguageContext'; // Import useTranslation
 
 const HomePage = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [connectionError, setConnectionError] = useState(false);
+  const [isOffline, setIsOffline] = useState(false);
   const { t } = useTranslation(); // Initialize useTranslation
 
   // Experience section gallery images
@@ -70,39 +70,27 @@ const HomePage = () => {
 
   const fetchTestimonials = async () => {
     try {
-      // First test the connection
-      const isConnected = await testConnection();
-      if (!isConnected) {
-        console.warn('Supabase connection failed, using fallback testimonials');
-        setConnectionError(true);
-        setTestimonials(fallbackTestimonials);
-        return;
-      }
+      const { data, error, isOffline: offline } = await safeQuery(
+        () => supabase
+          .from('testimonials')
+          .select('*')
+          .eq('is_featured', true)
+          .order('created_at', { ascending: false })
+          .limit(3),
+        fallbackTestimonials
+      );
+      
+      setIsOffline(offline);
 
-      const { data, error } = await supabase
-        .from('testimonials')
-        .select('*')
-        .eq('is_featured', true)
-        .order('created_at', { ascending: false })
-        .limit(3);
-
-      if (error) {
-        console.error('Error fetching testimonials:', error);
-        throw error;
-      }
-
-      if (data && data.length > 0) {
+      if (data && data.length > 0 && !offline) {
         setTestimonials(data);
-        setConnectionError(false);
       } else {
-        // No testimonials found in database, use fallback
-        console.log('No testimonials found in database, using fallback');
+        // Use fallback testimonials when offline or no data
         setTestimonials(fallbackTestimonials);
       }
     } catch (error) {
-      console.error('Error fetching testimonials:', error);
-      setConnectionError(true);
-      // Use fallback testimonials when database fails
+      console.warn('Using fallback testimonials due to connection issues');
+      setIsOffline(true);
       setTestimonials(fallbackTestimonials);
     }
   };
@@ -376,9 +364,9 @@ const HomePage = () => {
             <p className="text-xl text-gray-600">
               {t('home.testimonials.subtitle', "Join thousands of satisfied customers who've experienced the magic of Lake Garda racing")}
             </p>
-            {connectionError && (
+            {isOffline && (
               <p className="text-sm text-amber-600 mt-2">
-                {t('home.testimonials.connection_error', "Currently showing sample testimonials - database connection unavailable")}
+                {t('home.testimonials.offline_notice', "Currently showing sample testimonials - working in offline mode")}
               </p>
             )}
           </div>

@@ -11,7 +11,7 @@ import ContactPage from './pages/ContactPage';
 import BookingCalendarPage from './pages/BookingCalendarPage';
 import CorporateSailingPage from './pages/CorporateSailingPage';
 import GiftCertificatesPage from './pages/GiftCertificatesPage';
-import AdminDashboard from './pages/AdminDashboard';
+import AdminDashboard from '../modules/admin/pages/AdminDashboard';
 import ChatWidget from './components/ChatWidget';
 import LoginPage from './pages/LoginPage';
 import SuccessPage from './pages/SuccessPage';

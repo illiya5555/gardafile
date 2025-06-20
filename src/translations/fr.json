@@ -68,6 +68,38 @@
       "premium_service": "Service Premium",
       "lake_garda": "Lac de Garde"
     },
+    "packages": {
+      "title": "Forfaits Entreprise",
+      "subtitle": "Choisissez parmi nos forfaits de voile d'entreprise soigneusement conçus, chacun adapté à différentes tailles de groupes et objectifs.",
+      "most_popular": "Plus Populaire",
+      "team_spirit": {
+        "name": "Expérience Team Building",
+        "description": "Parfait pour les activités de team building avec des défis de voile compétitifs.",
+        "participants": "8-15 personnes",
+        "duration": "4 heures"
+      }
+    },
+    "benefits": {
+      "title": "Pourquoi Choisir la Voile d'Entreprise?",
+      "team_building": {
+        "title": "Team Building",
+        "description": "Renforcez les liens d'équipe grâce à des défis de voile collaboratifs et des expériences partagées sur l'eau."
+      },
+      "professional_service": {
+        "title": "Service Professionnel",
+        "description": "Instructeurs experts, équipement premium et coordination dédiée des événements pour une expérience sans faille."
+      },
+      "stunning_location": {
+        "title": "Cadre Magnifique",
+        "description": "Les belles eaux du Lac de Garde et le paysage montagneux offrent le cadre parfait pour les événements d'entreprise."
+      }
+    },
+    "cta": {
+      "title": "Prêt à Planifier Votre Événement d'Entreprise?",
+      "subtitle": "Contactez notre équipe pour discuter de vos besoins et créer une expérience de voile personnalisée pour votre groupe.",
+      "contact": "Contactez-Nous",
+      "call": "Appelez +39 344 777 00 77"
+    },
     "teambuilding": {
       "title": "La Voile comme Team Building Parfait",
       "subtitle": "Format unique, émotions qui unissent",
@@ -133,6 +165,47 @@
     "email": "E-mail",
     "phone": "Téléphone",
     "message": "Message",
-    "submit": "Envoyer le Message"
+    "submit": "Envoyer le Message",
+    "required": "Champ obligatoire",
+    "invalid_email": "Veuillez saisir une adresse email valide",
+    "invalid_phone": "Veuillez saisir un numéro de téléphone valide",
+    "password_too_short": "Le mot de passe doit comporter au moins 8 caractères",
+    "passwords_dont_match": "Les mots de passe ne correspondent pas",
+    "please_fill_required": "Veuillez remplir tous les champs obligatoires"
+  },
+  "contact": {
+    "title": "Contactez-Nous",
+    "subtitle": "Entrez en contact avec notre équipe pour toute question concernant les expériences de régate sur le Lac de Garde",
+    "info": {
+      "title": "Nous Contacter",
+      "address": "Adresse",
+      "phone": "Téléphone",
+      "email": "Email",
+      "hours": "Heures d'ouverture",
+      "daily": "Tous les jours: 8:00 - 19:00",
+      "season": "Mars - Octobre"
+    },
+    "form": {
+      "title": "Envoyez-nous un Message",
+      "name": "Nom complet",
+      "name_placeholder": "Votre nom complet",
+      "email": "Adresse email",
+      "email_placeholder": "votre@email.com",
+      "phone": "Numéro de téléphone",
+      "phone_placeholder": "Votre numéro de téléphone",
+      "message": "Message",
+      "message_placeholder": "Dites-nous comment nous pouvons vous aider...",
+      "sending": "Envoi en cours...",
+      "send": "Envoyer le message"
+    },
+    "success": {
+      "title": "Message Envoyé!",
+      "message": "Merci de nous avoir contactés. Nous vous répondrons bientôt.",
+      "send_another": "Envoyer un autre message"
+    },
+    "map": {
+      "title": "Notre Emplacement",
+      "get_directions": "Obtenir l'itinéraire"
+    }
   }
 }

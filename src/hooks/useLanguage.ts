@@ -93,7 +93,7 @@ const FALLBACK_TRANSLATIONS: Record<string, Record<string, string>> = {
     'home.partners.raymarine.description': 'Elettronica marina',
     'home.partners.spinlock.name': 'Spinlock',
     'home.partners.spinlock.description': 'Attrezzature di sicurezza',
-    'corporate.cta.subtitle': 'Contatta il nostro team per discutere i tuoi requisiti e creare un'esperienza di vela personalizzata per il tuo gruppo.',
+    'corporate.cta.subtitle': 'Contatta il nostro team per discutere i tuoi requisiti e creare un\'esperienza di vela personalizzata per il tuo gruppo.',
     'corporate.cta.call': 'Chiama +39 344 777 00 77',
     'nav.services': 'Servizi',
     'nav.events': 'Eventi',

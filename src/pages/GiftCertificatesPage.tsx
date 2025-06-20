@@ -14,7 +14,7 @@ const GiftCertificatesPage = () => {
     message: ''
   });
 
-  const predefinedAmounts = [195, 390, 585, 780];
+  const predefinedAmounts = [195];
 
   const handleInputChange = (field: string, value: string) => {
     setRecipientInfo(prev => ({
@@ -63,23 +63,20 @@ const GiftCertificatesPage = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-3">
                   {t('gift.form.amount', 'Select Amount')}
                 </label>
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                  {predefinedAmounts.map((amount) => (
-                    <button
-                      key={amount}
-                      onClick={() => {
-                        setSelectedAmount(amount);
-                        setCustomAmount('');
-                      }}
-                      className={`p-3 rounded-lg border-2 transition-colors ${
-                        selectedAmount === amount
-                          ? 'border-primary-500 bg-primary-50 text-primary-700'
-                          : 'border-gray-300 hover:border-gray-400'
-                      }`}
-                    >
-                      €{amount}
-                    </button>
-                  ))}
+                <div className="mb-4">
+                  <button
+                    onClick={() => {
+                      setSelectedAmount(195);
+                      setCustomAmount('');
+                    }}
+                    className={`w-full p-3 rounded-lg border-2 transition-colors ${
+                      selectedAmount === 195
+                        ? 'border-primary-500 bg-primary-50 text-primary-700'
+                        : 'border-gray-300 hover:border-gray-400'
+                    }`}
+                  >
+                    €195
+                  </button>
                 </div>
                 <div>
                   <input
@@ -179,13 +176,10 @@ const GiftCertificatesPage = () => {
               <button
                 onClick={handlePurchase}
                 disabled={!selectedAmount && !customAmount}
-                className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center space-x-2"
+                className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center space-x-2 hover:scale-105"
               >
                 <Gift className="h-5 w-5" />
-                <span>
-                  {t('gift.form.purchase', 'Purchase Gift Certificate')} - €
-                  {selectedAmount || parseInt(customAmount) || 0}
-                </span>
+                <span>{t('gift.form.purchase', 'Purchase Gift Certificate')} - €195</span>
               </button>
             </div>
 

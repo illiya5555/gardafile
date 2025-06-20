@@ -75,6 +75,54 @@ export default {
         'hero-pattern': 'linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%)',
       }
     },
+    // Add RTL-aware spacing utilities
+    spacing: {
+      ...Array.from({ length: 101 }, (_, i) => i * 0.5)
+        .reduce((acc, i) => {
+          acc[i] = `${i * 0.25}rem`;
+          return acc;
+        }, {}),
+      'start-0': '0',
+      'end-0': '0',
+      'inset-inline-start-0': '0',
+      'inset-inline-end-0': '0',
+    },
   },
-  plugins: [],
+  plugins: [
+    // Add a plugin for RTL-aware CSS
+    function({ addUtilities }) {
+      const newUtilities = {
+        '.start-0': {
+          left: '0',
+          '.rtl &': {
+            left: 'auto',
+            right: '0',
+          },
+        },
+        '.end-0': {
+          right: '0',
+          '.rtl &': {
+            right: 'auto',
+            left: '0',
+          },
+        },
+        '.me-auto': {
+          marginRight: 'auto',
+          '.rtl &': {
+            marginRight: '0',
+            marginLeft: 'auto',
+          },
+        },
+        '.ms-auto': {
+          marginLeft: 'auto',
+          '.rtl &': {
+            marginLeft: '0',
+            marginRight: 'auto',
+          },
+        },
+      };
+
+      addUtilities(newUtilities);
+    }
+  ],
 };

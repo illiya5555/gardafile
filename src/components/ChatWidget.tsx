@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MessageSquare, X, Send } from 'lucide-react';
+import { useTranslation } from '../context/LanguageContext';
 
 interface Message {
   id: string;
@@ -9,11 +10,12 @@ interface Message {
 }
 
 const ChatWidget = () => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Hello! How can I help you with your yacht racing experience today?',
+      text: t('chat.initial_message', 'Hello! How can I help you with your yacht racing experience today?'),
       isBot: true,
       timestamp: new Date()
     }
@@ -38,7 +40,7 @@ const ChatWidget = () => {
     setTimeout(() => {
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: 'Thank you for your message! Our team will get back to you shortly. For immediate assistance, please call +39 344 777 00 77.',
+        text: t('chat.auto_response', 'Thank you for your message! Our team will get back to you shortly. For immediate assistance, please call +39 344 777 00 77.'),
         isBot: true,
         timestamp: new Date()
       };
@@ -63,7 +65,7 @@ const ChatWidget = () => {
         <div className="fixed bottom-6 right-6 z-50 w-80 h-96 bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col">
           {/* Header */}
           <div className="bg-primary-600 text-white p-4 rounded-t-lg flex justify-between items-center">
-            <h3 className="font-semibold">Garda Racing Support</h3>
+            <h3 className="font-semibold">{t('chat.support_title', 'Garda Racing Support')}</h3>
             <button
               onClick={() => setIsOpen(false)}
               className="text-white hover:text-gray-200 transition-colors"
@@ -107,7 +109,7 @@ const ChatWidget = () => {
                 type="text"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                placeholder="Type your message..."
+                placeholder={t('chat.placeholder', 'Type your message...')}
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
               />
               <button

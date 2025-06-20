@@ -18,56 +18,56 @@ const EventsPage = () => {
     { url: "https://i.postimg.cc/RZRWr8Yk/temp-Image7-PJCLf.avif", caption: "Garda Yacht Racing 7" }
   ];
 
-  // --- Data arrays as in original code ---
+  // --- Data arrays with translations ---
   const morningSchedule = [
-    { time: "08:30", activity: "Welcome & Registration", description: "Meet your skipper and fellow sailors" },
-    { time: "09:00", activity: "Safety Briefing", description: "Essential safety procedures and equipment overview" },
-    { time: "09:30", activity: "Sailing Basics", description: "Learn fundamental sailing techniques" },
-    { time: "10:00", activity: "First Race", description: "Practice race to get comfortable" },
-    { time: "13:30", activity: "Medal Ceremony", description: "Awards and certificate presentation" },
-    { time: "13:30", activity: "Photo Session", description: "Professional photos with your medals" }
+    { time: "08:30", activity: t("events.schedule.welcome_registration", "Welcome & Registration"), description: t("events.schedule.welcome_registration_desc", "Meet your skipper and fellow sailors") },
+    { time: "09:00", activity: t("events.schedule.safety_briefing", "Safety Briefing"), description: t("events.schedule.safety_briefing_desc", "Essential safety procedures and equipment overview") },
+    { time: "09:30", activity: t("events.schedule.sailing_basics", "Sailing Basics"), description: t("events.schedule.sailing_basics_desc", "Learn fundamental sailing techniques") },
+    { time: "10:00", activity: t("events.schedule.first_race", "First Race"), description: t("events.schedule.first_race_desc", "Practice race to get comfortable") },
+    { time: "13:30", activity: t("events.schedule.medal_ceremony_award", "Medal Ceremony"), description: t("events.schedule.medal_ceremony_desc", "Awards and certificate presentation") },
+    { time: "13:30", activity: t("events.schedule.photo_session", "Photo Session"), description: t("events.schedule.photo_session_desc", "Professional photos with your medals") }
   ];
 
   const afternoonSchedule = [
-    { time: "13:00", activity: "Welcome & Registration", description: "Meet your skipper and fellow sailors" },
-    { time: "13:30", activity: "Safety Briefing", description: "Essential safety procedures and equipment overview" },
-    { time: "14:00", activity: "Sailing Basics", description: "Learn fundamental sailing techniques" },
-    { time: "14:30", activity: "First Race", description: "Practice race to get comfortable" },
-    { time: "18:00", activity: "Medal Ceremony", description: "Awards and certificate presentation" },
-    { time: "18:00", activity: "Photo Session", description: "Professional photos with your medals" }
+    { time: "13:00", activity: t("events.schedule.welcome_registration", "Welcome & Registration"), description: t("events.schedule.welcome_registration_desc", "Meet your skipper and fellow sailors") },
+    { time: "13:30", activity: t("events.schedule.safety_briefing", "Safety Briefing"), description: t("events.schedule.safety_briefing_desc", "Essential safety procedures and equipment overview") },
+    { time: "14:00", activity: t("events.schedule.sailing_basics", "Sailing Basics"), description: t("events.schedule.sailing_basics_desc", "Learn fundamental sailing techniques") },
+    { time: "14:30", activity: t("events.schedule.first_race", "First Race"), description: t("events.schedule.first_race_desc", "Practice race to get comfortable") },
+    { time: "18:00", activity: t("events.schedule.medal_ceremony_award", "Medal Ceremony"), description: t("events.schedule.medal_ceremony_desc", "Awards and certificate presentation") },
+    { time: "18:00", activity: t("events.schedule.photo_session", "Photo Session"), description: t("events.schedule.photo_session_desc", "Professional photos with your medals") }
   ];
 
   const weatherConditions = [
-    { condition: "Wind Speed", value: "8-15 knots", icon: Wind },
-    { condition: "Temperature", value: "18-28°C", icon: Clock },
-    { condition: "Visibility", value: "Excellent", icon: Star },
-    { condition: "Water Temp", value: "16-24°C", icon: Anchor }
+    { condition: t("events.weather.wind_speed", "Wind Speed"), value: t("events.weather.wind_speed_value", "8-15 knots"), icon: Wind },
+    { condition: t("events.weather.temperature", "Temperature"), value: t("events.weather.temperature_value", "18-28°C"), icon: Clock },
+    { condition: t("events.weather.visibility", "Visibility"), value: t("events.weather.visibility_value", "Excellent"), icon: Star },
+    { condition: t("events.weather.water_temp", "Water Temp"), value: t("events.weather.water_temp_value", "16-24°C"), icon: Anchor }
   ];
 
   const faqs = [
     {
-      question: "Do I need sailing experience?",
-      answer: "No sailing experience is required! Our professional skippers will teach you everything you need to know. We welcome complete beginners and experienced sailors alike."
+      question: t("events.faq.sailing_experience", "Do I need sailing experience?"),
+      answer: t("events.faq.sailing_experience_answer", "No sailing experience is required! Our professional skippers will teach you everything you need to know. We welcome complete beginners and experienced sailors alike.")
     },
     {
-      question: "What should I bring?",
-      answer: "Bring comfortable clothes, sunscreen, a hat, and a change of clothes. We provide all sailing equipment, safety gear."
+      question: t("events.faq.what_to_bring", "What should I bring?"),
+      answer: t("events.faq.what_to_bring_answer", "Bring comfortable clothes, sunscreen, a hat, and a change of clothes. We provide all sailing equipment, safety gear.")
     },
     {
-      question: "What if the weather is bad?",
-      answer: "Safety is our priority. If conditions are unsafe, we'll reschedule your experience at no extra cost. Light rain doesn't stop us - it's part of the adventure!"
+      question: t("events.faq.bad_weather", "What if the weather is bad?"),
+      answer: t("events.faq.bad_weather_answer", "Safety is our priority. If conditions are unsafe, we'll reschedule your experience at no extra cost. Light rain doesn't stop us - it's part of the adventure!")
     },
     {
-      question: "How many people per boat?",
-      answer: "Each yacht accommodates 4-5 participants plus the professional skipper. This ensures personalized attention."
+      question: t("events.faq.people_per_boat", "How many people per boat?"),
+      answer: t("events.faq.people_per_boat_answer", "Each yacht accommodates 4-5 participants plus the professional skipper. This ensures personalized attention.")
     },
     {
-      question: "Can I bring my camera?",
-      answer: "Absolutely! We also provide professional photography services. You'll receive high-quality photos and videos of your racing experience within 24 hours."
+      question: t("events.faq.bring_camera", "Can I bring my camera?"),
+      answer: t("events.faq.bring_camera_answer", "Absolutely! We also provide professional photography services. You'll receive high-quality photos and videos of your racing experience within 24 hours.")
     }
   ];
 
-  // Функции для модалки галереи:
+  // Functions for gallery modal:
   const openGallery = (index: number) => setSelectedImage(index);
   const closeGallery = () => setSelectedImage(null);
   const prevImage = () => {
@@ -95,15 +95,15 @@ const EventsPage = () => {
               <div className="flex flex-wrap gap-4 mb-8">
                 <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
                   <Clock className="h-5 w-5 text-gold-400" />
-                  <span>3-4 hours</span>
+                  <span>{t('home.features.duration', '3-4 hours')}</span>
                 </div>
                 <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
                   <Users className="h-5 w-5 text-gold-400" />
-                  <span>4-5 people</span>
+                  <span>{t('home.features.participants', '4-5 people')}</span>
                 </div>
                 <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
                   <Award className="h-5 w-5 text-gold-400" />
-                  <span>Medal included</span>
+                  <span>{t('home.features.medal', 'Medal included')}</span>
                 </div>
               </div>
               <Link
@@ -137,12 +137,12 @@ const EventsPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex space-x-8 overflow-x-auto">
             {[
-              { id: 'overview', label: 'Overview' },
-              { id: 'schedule', label: 'Schedule' },
-              { id: 'gallery', label: 'Gallery' },
-              { id: 'weather', label: 'Weather' },
-              { id: 'equipment', label: 'Equipment' },
-              { id: 'faq', label: 'FAQ' }
+              { id: 'overview', label: t('events.tabs.overview', 'Overview') },
+              { id: 'schedule', label: t('events.tabs.schedule', 'Schedule') },
+              { id: 'gallery', label: t('events.tabs.gallery', 'Gallery') },
+              { id: 'weather', label: t('events.tabs.weather', 'Weather') },
+              { id: 'equipment', label: t('events.tabs.equipment', 'Equipment') },
+              { id: 'faq', label: t('events.tabs.faq', 'FAQ') }
             ].map(tab => (
               <button
                 key={tab.id}
@@ -167,15 +167,15 @@ const EventsPage = () => {
           <div className="space-y-16 animate-fade-in">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">What Makes Our Experience Special</h2>
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">{t('events.overview.what_makes_special', 'What Makes Our Experience Special')}</h2>
                 <div className="space-y-6">
                   <div className="flex items-start space-x-4">
                     <div className="bg-primary-100 p-3 rounded-lg">
                       <Users className="h-6 w-6 text-primary-600" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">Professional Instruction</h3>
-                      <p className="text-gray-600">Learn from certified sailing professionals with years of racing experience on Lake Garda.</p>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('events.overview.professional_instruction', 'Professional Instruction')}</h3>
+                      <p className="text-gray-600">{t('events.overview.professional_instruction_desc', 'Learn from certified sailing professionals with years of racing experience on Lake Garda.')}</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">
@@ -183,8 +183,8 @@ const EventsPage = () => {
                       <Award className="h-6 w-6 text-primary-600" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">Authentic Racing</h3>
-                      <p className="text-gray-600">Participate in real yacht races with official timing, scoring, and medal ceremonies.</p>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('events.overview.authentic_racing', 'Authentic Racing')}</h3>
+                      <p className="text-gray-600">{t('events.overview.authentic_racing_desc', 'Participate in real yacht races with official timing, scoring, and medal ceremonies.')}</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">
@@ -192,36 +192,36 @@ const EventsPage = () => {
                       <Camera className="h-6 w-6 text-primary-600" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">Professional Documentation</h3>
-                      <p className="text-gray-600">High-quality photos and videos of your experience, delivered within 24 hours.</p>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('events.overview.professional_documentation', 'Professional Documentation')}</h3>
+                      <p className="text-gray-600">{t('events.overview.professional_documentation_desc', 'High-quality photos and videos of your experience, delivered within 24 hours.')}</p>
                     </div>
                   </div>
                 </div>
               </div>
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">Racing Format</h2>
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">{t('events.overview.racing_format', 'Racing Format')}</h2>
                 <div className="bg-gray-50 p-6 rounded-xl">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Pro-Level One-Day Regatta</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('events.overview.pro_level_regatta', 'Pro-Level One-Day Regatta')}</h3>
                   <ul className="space-y-3">
                     <li className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-green-500" />
-                      <span className="text-gray-700">Races held on J/70 class professional sailing yachts</span>
+                      <span className="text-gray-700">{t('events.overview.j70_yachts', 'Races held on J/70 class professional sailing yachts')}</span>
                     </li>
                     <li className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-green-500" />
-                      <span className="text-gray-700">Each boat includes a licensed skipper and full crew</span>
+                      <span className="text-gray-700">{t('events.overview.licensed_skipper', 'Each boat includes a licensed skipper and full crew')}</span>
                     </li>
                     <li className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-green-500" />
-                      <span className="text-gray-700">3–5 official races per day, scored under sailing sport rules</span>
+                      <span className="text-gray-700">{t('events.overview.official_races', '3–5 official races per day, scored under sailing sport rules')}</span>
                     </li>
                     <li className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-green-500" />
-                      <span className="text-gray-700">Supervised by a qualified judging team and technical support boats</span>
+                      <span className="text-gray-700">{t('events.overview.judging_team', 'Supervised by a qualified judging team and technical support boats')}</span>
                     </li>
                     <li className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-green-500" />
-                      <span className="text-gray-700">Medal ceremony and certificates for top crews</span>
+                      <span className="text-gray-700">{t('events.overview.medal_ceremony_certificates', 'Medal ceremony and certificates for top crews')}</span>
                     </li>
                   </ul>
                 </div>
@@ -233,10 +233,10 @@ const EventsPage = () => {
         {/* Schedule */}
         {activeTab === 'schedule' && (
           <div className="animate-fade-in">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Daily Schedule</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('events.schedule.daily_schedule', 'Daily Schedule')}</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-6 text-center">Morning Session</h3>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-6 text-center">{t('events.schedule.morning_session', 'Morning Session')}</h3>
                 <div className="space-y-6">
                   {morningSchedule.map((item, index) => (
                     <div key={index} className="flex items-start space-x-6 p-6 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
@@ -252,7 +252,7 @@ const EventsPage = () => {
                 </div>
               </div>
               <div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-6 text-center">Afternoon Session</h3>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-6 text-center">{t('events.schedule.afternoon_session', 'Afternoon Session')}</h3>
                 <div className="space-y-6">
                   {afternoonSchedule.map((item, index) => (
                     <div key={index} className="flex items-start space-x-6 p-6 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
@@ -274,7 +274,7 @@ const EventsPage = () => {
         {/* Gallery */}
         {activeTab === 'gallery' && (
           <div className="animate-fade-in">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Experience Gallery</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('events.gallery.experience_gallery', 'Experience Gallery')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {galleryImages.map((image, index) => (
                 <div
@@ -340,7 +340,7 @@ const EventsPage = () => {
         {/* Weather */}
         {activeTab === 'weather' && (
           <div className="animate-fade-in">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Typical Weather Conditions</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('events.weather.typical_conditions', 'Typical Weather Conditions')}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {weatherConditions.map(({ condition, value, icon: Icon }, i) => (
                 <div key={i} className="flex flex-col items-center p-6 bg-white rounded-xl shadow-md border border-gray-100">
@@ -356,7 +356,7 @@ const EventsPage = () => {
         {/* Equipment */}
         {activeTab === 'equipment' && (
           <div className="animate-fade-in">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Equipment Provided</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('events.equipment.equipment_provided', 'Equipment Provided')}</h2>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
               {/* Safety First Section */}
@@ -365,10 +365,10 @@ const EventsPage = () => {
                   <div className="bg-green-100 p-3 rounded-lg mr-4">
                     <Shield className="h-8 w-8 text-green-600" />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900">Safety First</h3>
+                  <h3 className="text-2xl font-bold text-gray-900">{t('events.equipment.safety_first', 'Safety First')}</h3>
                 </div>
                 <p className="text-gray-700 leading-relaxed">
-                  All safety equipment meets international standards. Our boats are regularly inspected and maintained to the highest standards. Every participant receives a comprehensive safety briefing before departure.
+                  {t('events.equipment.safety_description', 'All safety equipment meets international standards. Our boats are regularly inspected and maintained to the highest standards. Every participant receives a comprehensive safety briefing before departure.')}
                 </p>
               </div>
 
@@ -378,10 +378,10 @@ const EventsPage = () => {
                   <div className="bg-blue-100 p-3 rounded-lg mr-4">
                     <Anchor className="h-8 w-8 text-blue-600" />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900">Premium Yachts</h3>
+                  <h3 className="text-2xl font-bold text-gray-900">{t('events.equipment.premium_yachts', 'Premium Yachts')}</h3>
                 </div>
                 <p className="text-gray-700 leading-relaxed">
-                  We use modern J-70/J-80 high-performance yachts. These boats are specifically chosen for their racing capabilities while maintaining comfort and safety for our participants.
+                  {t('events.equipment.premium_yachts_desc', 'We use modern J-70/J-80 high-performance yachts. These boats are specifically chosen for their racing capabilities while maintaining comfort and safety for our participants.')}
                 </p>
               </div>
             </div>
@@ -391,45 +391,45 @@ const EventsPage = () => {
               <div className="relative rounded-2xl shadow-2xl overflow-hidden">
                 <img
                   src="https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif"
-                  alt="Professional J-70/J-80 Racing Yacht"
+                  alt={t('events.equipment.professional_j70_yacht', 'Professional J-70/J-80 Racing Yacht')}
                   className="w-full h-96 object-cover"
                 />
                 <div className="absolute bottom-4 left-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-4">
-                  <p className="text-white text-center font-semibold">Professional J-70/J-80 Racing Yacht</p>
+                  <p className="text-white text-center font-semibold">{t('events.equipment.professional_j70_yacht', 'Professional J-70/J-80 Racing Yacht')}</p>
                 </div>
               </div>
             </div>
 
             {/* Equipment List */}
             <div className="bg-gray-50 p-8 rounded-2xl">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Complete Equipment List</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">{t('events.equipment.complete_list', 'Complete Equipment List')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
                     <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                    <span className="text-gray-700">Professional racing yacht (J-70/J-80)</span>
+                    <span className="text-gray-700">{t('events.equipment.racing_yacht', 'Professional racing yacht (J-70/J-80)')}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                    <span className="text-gray-700">All safety equipment (life jackets, water)</span>
+                    <span className="text-gray-700">{t('events.equipment.safety_equipment', 'All safety equipment (life jackets, water)')}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                    <span className="text-gray-700">Professional sailing gear</span>
+                    <span className="text-gray-700">{t('events.equipment.sailing_gear', 'Professional sailing gear')}</span>
                   </div>
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
                     <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                    <span className="text-gray-700">First aid kit and emergency equipment</span>
+                    <span className="text-gray-700">{t('events.equipment.first_aid', 'First aid kit and emergency equipment')}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                    <span className="text-gray-700">Professional photography equipment</span>
+                    <span className="text-gray-700">{t('events.equipment.photo_equipment', 'Professional photography equipment')}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                    <span className="text-gray-700">Racing medals and certificates</span>
+                    <span className="text-gray-700">{t('events.equipment.medals_certificates', 'Racing medals and certificates')}</span>
                   </div>
                 </div>
               </div>
@@ -440,7 +440,7 @@ const EventsPage = () => {
         {/* FAQ */}
         {activeTab === 'faq' && (
           <div className="animate-fade-in max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Frequently Asked Questions</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('events.faq.frequently_asked', 'Frequently Asked Questions')}</h2>
             <div className="space-y-6">
               {faqs.map(({ question, answer }, i) => (
                 <div key={i} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">

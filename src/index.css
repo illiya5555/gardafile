@@ -1,3 +1,48 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* RTL Support */
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+.rtl .ltr-text {
+  direction: ltr;
+  text-align: left;
+}
+
+/* For elements that should maintain LTR direction even in RTL mode */
+.ltr-element {
+  direction: ltr !important;
+}
+
+/* Special case for flex directions in RTL */
+.rtl .flex-row {
+  flex-direction: row-reverse;
+}
+
+.rtl .flex-row-reverse {
+  flex-direction: row;
+}
+
+.rtl .space-x-1 > :not([hidden]) ~ :not([hidden]),
+.rtl .space-x-2 > :not([hidden]) ~ :not([hidden]),
+.rtl .space-x-3 > :not([hidden]) ~ :not([hidden]),
+.rtl .space-x-4 > :not([hidden]) ~ :not([hidden]),
+.rtl .space-x-6 > :not([hidden]) ~ :not([hidden]),
+.rtl .space-x-8 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1 !important;
+}
+
+/* Correct margins for RTL layouts */
+.rtl .me-auto {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+.rtl .ms-auto {
+  margin-left: 0;
+  margin-right: auto;
+}

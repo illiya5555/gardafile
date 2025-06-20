@@ -8,7 +8,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
-  const { t } = useTranslation();
+  const { t, isRTL } = useTranslation();
 
   const navigation = [
     { name: t('nav.home', 'Home'), href: '/' },
@@ -41,19 +41,19 @@ const Header = () => {
             <div className="relative">
               <img
                 src="/gardalogo.png"
-                alt="Garda Racing Yacht Club"
+                alt={t("header.logo.title", "Garda Racing Yacht Club")}
                 className="h-16 w-16 object-contain group-hover:scale-110 transition-transform duration-300"
               />
               <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-yellow-400 rounded-full animate-pulse"></div>
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-xl font-bold text-gray-900">Garda Racing</h1>
-              <p className="text-sm text-gray-600">Yacht Club</p>
+              <h1 className="text-xl font-bold text-gray-900">{t("header.logo.title", "Garda Racing")}</h1>
+              <p className="text-sm text-gray-600">{t("header.logo.subtitle", "Yacht Club")}</p>
             </div>
           </Link>
 
           {/* Navigation — desktop */}
-          <nav className="hidden md:flex items-center space-x-6">
+          <nav className={`hidden md:flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-6`}>
             {navigation.map((item) => (
               <Link
                 key={item.name}

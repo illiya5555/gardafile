@@ -37,6 +37,8 @@ const AVAILABLE_LANGUAGES: LanguageConfig[] = [
   { code: 'fr', name: 'French', nativeName: 'Français', flag: '🇫🇷' },
   { code: 'es', name: 'Spanish', nativeName: 'Español', flag: '🇪🇸' },
   { code: 'ru', name: 'Russian', nativeName: 'Русский', flag: '🇷🇺' },
+  { code: 'pl', name: 'Polish', nativeName: 'Polski', flag: '🇵🇱' },
+  { code: 'he', name: 'Hebrew', nativeName: 'עברית', flag: '🇮🇱' }
 ];
 
 // RTL languages
@@ -377,6 +379,52 @@ const FALLBACK_TRANSLATIONS: Record<string, Record<string, string>> = {
     'corporate.inquiry.form.participants': 'Количество участников',
     'corporate.inquiry.form.submit': 'Оставить заявку'
   },
+  pl: {
+    'nav.home': 'Strona główna',
+    'nav.services': 'Usługi',
+    'nav.events': 'Wydarzenia',
+    'nav.contact': 'Kontakt',
+    'nav.book_now': 'Zarezerwuj',
+    'common.loading': 'Ładowanie...',
+    'common.error': 'Błąd',
+    'common.retry': 'Spróbuj ponownie',
+    'form.name': 'Imię i nazwisko',
+    'form.email': 'Email',
+    'form.phone': 'Telefon',
+    'form.message': 'Wiadomość',
+    'form.submit': 'Wyślij wiadomość',
+    'home.hero.title_part1': 'Doświadcz emocji',
+    'home.hero.title_part2': 'regat jachtowych',
+    'home.hero.subtitle': 'Codzienne doświadczenia regat jachtowych na słynnym Jeziorze Garda z profesjonalnymi skipperami, medalami i niezapomnianymi wspomnieniami',
+    'home.hero.price_description': 'za osobę • Całodniowe doświadczenie',
+    'home.features.duration': '3-4 godziny',
+    'home.features.participants': '4-5 osób',
+    'home.features.medal': 'Medal w zestawie',
+    'home.testimonials.offline_notice': 'Obecnie wyświetlane są przykładowe opinie - tryb offline'
+  },
+  he: {
+    'nav.home': 'בית',
+    'nav.services': 'שירותים',
+    'nav.events': 'אירועים',
+    'nav.contact': 'צור קשר',
+    'nav.book_now': 'הזמן עכשיו',
+    'common.loading': 'טוען...',
+    'common.error': 'שגיאה',
+    'common.retry': 'נסה שוב',
+    'form.name': 'שם',
+    'form.email': 'אימייל',
+    'form.phone': 'טלפון',
+    'form.message': 'הודעה',
+    'form.submit': 'שלח הודעה',
+    'home.hero.title_part1': 'חווה את הריגוש של',
+    'home.hero.title_part2': 'תחרויות יאכטות',
+    'home.hero.subtitle': 'חוויות יומיות של מירוצי יאכטות באגם גארדה המפורסם עם סקיפרים מקצועיים, מדליות ותחרויות וזיכרונות בלתי נשכחים',
+    'home.hero.price_description': 'לאדם • חוויה ליום שלם',
+    'home.features.duration': '3-4 שעות',
+    'home.features.participants': '4-5 אנשים',
+    'home.features.medal': 'מדליה כלולה',
+    'home.testimonials.offline_notice': 'מציג כרגע המלצות לדוגמה - עובד במצב לא מקוון'
+  }
 };
 
 // Load translations with enhanced error handling and retry logic

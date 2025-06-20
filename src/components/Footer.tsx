@@ -16,26 +16,25 @@ const Footer = () => {
           {/* Company Info */}
           <div className="space-y-6">
             <div className="flex items-center space-x-3">
-  <img
-    src="/gardalogo.png"
-    alt="Garda Racing Logo"
-    className="h-20 w-20 object-contain"
-  />
-  <div>
-    <h3 className="text-xl font-bold">Garda Racing</h3>
-    <p className="text-gray-400 text-sm">Yacht Club</p>
-  </div>
-</div>
+              <img
+                src="/gardalogo.png"
+                alt={t("footer.logo.title", "Garda Racing Logo")}
+                className="h-20 w-20 object-contain"
+              />
+              <div>
+                <h3 className="text-xl font-bold">{t("footer.logo.title", "Garda Racing")}</h3>
+                <p className="text-gray-400 text-sm">{t("footer.logo.subtitle", "Yacht Club")}</p>
+              </div>
+            </div>
 
             <p className="text-gray-300 leading-relaxed">
-              Experience the thrill of yacht racing on the world-famous Lake Garda. 
-              Professional instruction, premium equipment, and unforgettable memories.
+              {t("footer.description", "Experience the thrill of yacht racing on the world-famous Lake Garda. Professional instruction, premium equipment, and unforgettable memories.")}
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
+            <h4 className="text-lg font-semibold mb-6">{t("footer.quick_links.title", "Quick Links")}</h4>
             <ul className="space-y-3">
               <li>
                 <Link to="/" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
@@ -59,7 +58,7 @@ const Footer = () => {
               </li>
               <li>
                 <a href="#" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  Gift Vouchers
+                  {t('gift.title', 'Gift Vouchers')}
                 </a>
               </li>
             </ul>
@@ -72,21 +71,21 @@ const Footer = () => {
               <li className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-primary-500 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="text-gray-300">Viale Giancarlo Maroni 4</p>
-                  <p className="text-gray-300">38066 Riva del Garda TN</p>
-                  <p className="text-gray-300">Italia</p>
+                  <p className="text-gray-300">{t('footer.address.street', 'Viale Giancarlo Maroni 4')}</p>
+                  <p className="text-gray-300">{t('footer.address.city', '38066 Riva del Garda TN')}</p>
+                  <p className="text-gray-300">{t('footer.address.country', 'Italia')}</p>
                 </div>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-primary-500" />
                 <a href="tel:+393447770077" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  +39 344 777 00 77
+                  {t('footer.phone', '+39 344 777 00 77')}
                 </a>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-primary-500" />
                 <a href="mailto:info@gardaracing.com" className="text-gray-300 hover:text-primary-500 transition-colors duration-300">
-                  info@gardaracing.com
+                  {t('footer.email', 'info@gardaracing.com')}
                 </a>
               </li>
             </ul>
@@ -117,10 +116,10 @@ const Footer = () => {
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="flex flex-wrap justify-center md:justify-start space-x-6 text-sm text-gray-400">
-              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Privacy Policy</a>
-              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Terms & Conditions</a>
-              <a href="#" className="hover:text-primary-500 transition-colors duration-300">Cancellation Policy</a>
-              <a href="#" className="hover:text-primary-500 transition-colors duration-300">GDPR</a>
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">{t('footer.links.privacy_policy', 'Privacy Policy')}</a>
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">{t('footer.links.terms_conditions', 'Terms & Conditions')}</a>
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">{t('footer.links.cancellation_policy', 'Cancellation Policy')}</a>
+              <a href="#" className="hover:text-primary-500 transition-colors duration-300">{t('footer.links.gdpr', 'GDPR')}</a>
               {/* Малозаметная кнопка администратора */}
               <button
                 onClick={() => setShowAdminLogin(true)}
@@ -131,7 +130,7 @@ const Footer = () => {
               </button>
             </div>
             <p className="text-sm text-gray-400">
-              © 2025 Garda Racing Yacht Club. All rights reserved.
+              {t('footer.copyright', '© 2025 Garda Racing Yacht Club. All rights reserved.')}
             </p>
           </div>
         </div>

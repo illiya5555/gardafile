@@ -2,6 +2,7 @@ import React from 'react';
 import { CreditCard, Loader2 } from 'lucide-react';
 import { useStripeCheckout } from '../hooks/useStripe';
 import { getProductByPriceId, formatPrice } from '../stripe-config';
+import { useTranslation } from '../context/LanguageContext';
 
 interface PaymentButtonProps {
   priceId: string;
@@ -28,6 +29,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
   showPrice = true,
   variant = 'primary'
 }) => {
+  const { t } = useTranslation();
   const { redirectToCheckout, loading, error } = useStripeCheckout();
 
   const product = getProductByPriceId(priceId);
@@ -57,10 +59,10 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
     if (children) return children;
     
     if (product && showPrice) {
-      return `Pay ${formatPrice(product.price, product.currency)}`;
+      return `${mode === 'subscription' ? t('payment.subscribe_now', 'Subscribe Now') : t('payment.pay_now', 'Pay Now')} ${formatPrice(product.price, product.currency)}`;
     }
     
-    return mode === 'subscription' ? 'Subscribe Now' : 'Pay Now';
+    return mode === 'subscription' ? t('payment.subscribe_now', 'Subscribe Now') : t('payment.pay_now', 'Pay Now');
   };
 
   return (
@@ -80,7 +82,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
         {loading ? (
           <>
             <Loader2 className="h-5 w-5 animate-spin" />
-            <span>Processing...</span>
+            <span>{t('payment.processing', 'Processing...')}</span>
           </>
         ) : (
           <>
@@ -98,7 +100,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
       
       {product && (
         <p className="text-xs text-gray-500 text-center">
-          Secure payment powered by Stripe
+          {t('payment.secure_payment', 'Secure payment powered by Stripe')}
         </p>
       )}
     </div>

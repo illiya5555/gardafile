@@ -424,6 +424,19 @@
   "services": {
     "title": "Servizi Aziendali",
     "subtitle": "Crea eventi aziendali indimenticabili sul Lago di Garda. Regate organizzate professionalmente per rafforzare lo spirito di squadra."
+    "inquiry": {
+      "company_name": "Nome Azienda *"
+    }
+  },
+  "corporate": {
+    "packages": {
+      "most_popular": "Più Popolare"
+    },
+    "benefits": {
+      "team_building": {
+        "title": "Costruzione del Team"
+      }
+    }
   },
   "contact": {
     "title": "Contattaci",

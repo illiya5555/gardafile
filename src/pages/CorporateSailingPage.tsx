@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Users, Calendar, MapPin, Star, Check, ArrowRight } from 'lucide-react';
 import { useTranslation } from '../context/LanguageContext';
+import { Link } from 'react-router-dom';
 
 const CorporateSailingPage = () => {
   const { t } = useTranslation();
@@ -89,62 +90,117 @@ const CorporateSailingPage = () => {
       </div>
 
       {/* Packages Section */}
-      <div className="py-16">
+      <div className="py-16 bg-gradient-to-br from-blue-50 to-blue-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              {t('corporate.packages.title', 'Corporate Packages')}
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Яхтинг как идеальный тимбилдинг
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {t('corporate.packages.subtitle', 'Choose from our carefully designed corporate sailing packages, each tailored to different group sizes and objectives.')}
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto mb-8">
+              Нестандартный формат, эмоции, которые объединяют
             </p>
+            
+            <div className="flex justify-center mb-12">
+              <Link 
+                to="/contact" 
+                className="bg-primary-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg inline-flex items-center space-x-2"
+              >
+                <span>Оставить заявку</span>
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </div>
+            
+            <div className="rounded-2xl overflow-hidden shadow-2xl mb-12 max-w-4xl mx-auto">
+              <img 
+                src="https://images.pexels.com/photos/273886/pexels-photo-273886.jpeg" 
+                alt="Команда на яхте" 
+                className="w-full h-[500px] object-cover" 
+              />
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {packages.map((pkg) => (
-              <div
-                key={pkg.id}
-                className={`relative bg-white rounded-lg shadow-lg p-6 transition-all duration-300 hover:shadow-xl ${
-                  pkg.popular ? 'ring-2 ring-primary-500' : ''
-                }`}
-              >
-                {pkg.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-primary-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
-                      Most Popular
-                    </span>
-                  </div>
-                )}
-                
-                <div className="text-center mb-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{pkg.name}</h3>
-                  <p className="text-gray-600 mb-4">{pkg.description}</p>
-                  <div className="text-3xl font-bold text-primary-600 mb-2">
-                    €{pkg.price.toLocaleString()}
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {pkg.duration} • {pkg.participants}
+          {/* Почему яхтинг = идеальный тимбилдинг */}
+          <div className="mb-20">
+            <h3 className="text-3xl font-bold text-gray-900 mb-10 text-center">
+              Почему яхтинг = идеальный тимбилдинг?
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                <div className="text-4xl font-bold text-primary-600 mb-4">🤝</div>
+                <h4 className="text-xl font-semibold text-gray-900 mb-3">Развитие командного взаимодействия</h4>
+                <p className="text-gray-600">Совместное управление яхтой требует слаженности и четкого распределения ролей</p>
+              </div>
+              
+              <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                <div className="text-4xl font-bold text-primary-600 mb-4">🧭</div>
+                <h4 className="text-xl font-semibold text-gray-900 mb-3">Лидерство и ответственность</h4>
+                <p className="text-gray-600">Принятие решений в реальных условиях, когда от каждого зависит общий результат</p>
+              </div>
+              
+              <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                <div className="text-4xl font-bold text-primary-600 mb-4">🧘</div>
+                <h4 className="text-xl font-semibold text-gray-900 mb-3">Снятие стресса и перезагрузка</h4>
+                <p className="text-gray-600">Природа, свежий воздух и новый опыт – идеальная среда для перезагрузки</p>
+              </div>
+              
+              <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                <div className="text-4xl font-bold text-primary-600 mb-4">🌊</div>
+                <h4 className="text-xl font-semibold text-gray-900 mb-3">Эмоциональный заряд и доверие</h4>
+                <p className="text-gray-600">Яркие эмоции и совместное преодоление трудностей сближают команду</p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Как проходит тимбилдинг */}
+          <div className="mb-20">
+            <h3 className="text-3xl font-bold text-gray-900 mb-10 text-center">
+              Как проходит тимбилдинг?
+            </h3>
+            
+            <div className="max-w-3xl mx-auto">
+              <div className="space-y-12">
+                <div className="flex items-center space-x-6">
+                  <div className="bg-primary-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0">1</div>
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-2">Брифинг и инструктаж</h4>
+                    <p className="text-gray-600">Знакомство с яхтой, базовые принципы управления, техника безопасности</p>
                   </div>
                 </div>
-
-                <ul className="space-y-3 mb-6">
-                  {pkg.features.map((feature, index) => (
-                    <li key={index} className="flex items-center space-x-3">
-                      <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
-                      <span className="text-gray-700">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <button
-                  onClick={() => setSelectedPackage(pkg.id)}
-                  className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center space-x-2"
-                >
-                  <span>Request Quote</span>
-                  <ArrowRight className="h-4 w-4" />
-                </button>
+                
+                <div className="flex items-center space-x-6">
+                  <div className="bg-primary-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0">2</div>
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-2">Разделение на команды</h4>
+                    <p className="text-gray-600">Формирование экипажей, распределение ролей и ответственности</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-6">
+                  <div className="bg-primary-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0">3</div>
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-2">Яхтенные гонки с судейством</h4>
+                    <p className="text-gray-600">Соревнования между командами по заданному маршруту, с профессиональной оценкой</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-6">
+                  <div className="bg-primary-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0">4</div>
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-2">Командные задания на воде</h4>
+                    <p className="text-gray-600">Выполнение специальных упражнений, направленных на развитие коммуникации и доверия</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-6">
+                  <div className="bg-primary-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0">5</div>
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-2">Награждение и афтепати</h4>
+                    <p className="text-gray-600">Торжественное подведение итогов, вручение наград и праздничный ужин</p>
+                  </div>
+                </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>
@@ -193,24 +249,59 @@ const CorporateSailingPage = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="py-16 bg-primary-50">
+      <div className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            {t('corporate.cta.title', 'Ready to Plan Your Corporate Event?')}
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">
+            Готовы объединить команду на волне эмоций?
           </h2>
-          <p className="text-lg text-gray-600 mb-8">
-            {t('corporate.cta.subtitle', 'Contact our team to discuss your requirements and create a customized sailing experience for your group.')}
+          <p className="text-lg text-gray-600 mb-10">
+            Оставьте заявку — мы предложим решение под ваши цели и бюджет
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-primary-600 text-white px-8 py-3 rounded-lg hover:bg-primary-700 transition-colors">
-              {t('corporate.cta.contact', 'Contact Us')}
-            </button>
-            <a
-              href="tel:+393447770077"
-              className="border border-primary-600 text-primary-600 px-8 py-3 rounded-lg hover:bg-primary-50 transition-colors"
-            >
-              {t('corporate.cta.call', 'Call +39 344 777 00 77')}
-            </a>
+          
+          <div className="bg-white shadow-xl rounded-2xl p-8 max-w-xl mx-auto border border-gray-100">
+            <form className="space-y-6">
+              <div>
+                <input 
+                  type="text" 
+                  placeholder="Имя" 
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              
+              <div>
+                <input 
+                  type="tel" 
+                  placeholder="Телефон" 
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              
+              <div>
+                <input 
+                  type="text" 
+                  placeholder="Компания" 
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+              </div>
+              
+              <div>
+                <input 
+                  type="number" 
+                  placeholder="Количество участников" 
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+              </div>
+              
+              <button 
+                type="submit" 
+                className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg inline-flex items-center justify-center space-x-2"
+              >
+                <span>Оставить заявку</span>
+                <ArrowRight className="h-5 w-5" />
+              </button>
+            </form>
           </div>
         </div>
       </div>

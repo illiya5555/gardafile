@@ -1,0 +1,626 @@
+# Извлеченные строки для перевода
+# Формат: ключ=английский_текст
+# Если строка уже использует t(), записан только ключ
+
+# === ФАЙЛЫ СТРАНИЦ (src/pages/) ===
+
+# src/pages/HomePage.tsx
+# Уже переведенные строки (только ключи):
+home.hero.title_part1
+home.hero.title_part2
+home.hero.subtitle
+home.hero.price_description
+home.hero.feature1
+home.hero.feature2
+home.hero.feature3
+home.hero.feature4
+home.hero.feature5
+home.hero.cta
+home.features.title
+home.features.subtitle
+home.features.item1.title
+home.features.item1.description
+home.features.item2.title
+home.features.item2.description
+home.features.item3.title
+home.features.item3.description
+home.features.item4.title
+home.features.item4.description
+home.features.item5.title
+home.features.item5.description
+home.experience.title
+home.experience.step1.title
+home.experience.step1.description
+home.experience.step2.title
+home.experience.step2.description
+home.experience.step3.title
+home.experience.step3.description
+home.experience.cta
+home.testimonials.title
+home.testimonials.subtitle
+home.testimonials.connection_error
+home.location.title
+home.location.item1.title
+home.location.item1.description
+home.location.item2.title
+home.location.item2.description
+home.location.item3.title
+home.location.item3.description
+home.location.google_rating
+home.partners.title
+home.partners.subtitle
+home.partners.cta_text
+home.partners.cta
+home.final_cta.title
+home.final_cta.subtitle
+home.final_cta.cta
+
+# Жестко закодированные строки, требующие перевода:
+home.features.duration=3-4 hours
+home.features.participants=4-5 people
+home.features.medal=Medal included
+home.partners.bavaria_yachts.name=Bavaria Yachts
+home.partners.bavaria_yachts.description=Premium yacht manufacturer
+home.partners.garmin_marine.name=Garmin Marine
+home.partners.garmin_marine.description=Navigation technology
+home.partners.helly_hansen.name=Helly Hansen
+home.partners.helly_hansen.description=Professional sailing gear
+home.partners.musto_sailing.name=Musto Sailing
+home.partners.musto_sailing.description=Technical sailing clothing
+home.partners.raymarine.name=Raymarine
+home.partners.raymarine.description=Marine electronics
+home.partners.spinlock.name=Spinlock
+home.partners.spinlock.description=Safety equipment
+
+# src/pages/BookingCalendarPage.tsx
+# Уже переведенные строки (только ключи):
+booking.title
+booking.subtitle
+booking.proceed_payment
+
+# Жестко закодированные строки, требующие перевода:
+booking.steps.select_date=Select Date
+booking.steps.time_participants=Time & Participants
+booking.steps.details=Details
+booking.steps.payment=Payment
+booking.time.morning=Morning: 8:30-12:30
+booking.time.afternoon=Afternoon: 13:30-18:00
+booking.progress.step=Step
+booking.calendar.select_date=Select Date
+booking.calendar.change_date=← Change date
+booking.calendar.time_participants=Select time and participants
+booking.calendar.participants_max=Number of participants (max 5 per regatta)
+booking.calendar.available_times=Available regatta times
+booking.calendar.loading_times=Loading available times...
+booking.calendar.no_slots=No available time slots
+booking.calendar.no_slots_description=There are no available time slots for this date. Please select another date.
+booking.calendar.choose_another_date=Choose Another Date
+booking.calendar.continue_details=Continue to details
+booking.calendar.morning_regatta=Morning Regatta
+booking.calendar.afternoon_regatta=Afternoon Regatta
+booking.calendar.per_person=per person
+booking.calendar.up_to_participants=Up to {count} participants
+booking.details.your_details=Your details
+booking.details.back_to_time=← Back to time selection
+booking.details.back_to_details=← Back to details
+booking.payment.payment=Payment
+booking.payment.secure_payment=Secure payment with Stripe
+booking.payment.secure_description=Your payment is secured by Stripe's industry-leading encryption. We never store your credit card information.
+booking.payment.order_summary=Order Summary
+booking.payment.date=Date:
+booking.payment.time=Time:
+booking.payment.participants=Participants:
+booking.payment.total=Total:
+booking.payment.sign_in_required=Please sign in to continue
+booking.payment.sign_in_description=You need to be signed in to complete your booking. This helps us keep track of your bookings and provide better service.
+booking.payment.sign_in_button=Sign in to continue
+booking.payment.no_account=Don't have an account?
+booking.payment.create_account=Create one now
+booking.summary.regatta_summary=Regatta Summary
+booking.summary.duration=Duration:
+booking.summary.duration_4_hours=4 hours
+booking.summary.price_per_person=per person for 4-hour regatta
+booking.included.professional_skipper=Professional skipper
+booking.included.safety_equipment=All safety equipment
+booking.included.racing_instruction=Racing instruction and training
+booking.included.medal_ceremony=Medal ceremony
+booking.included.professional_photography=Professional photography
+booking.notices.free_cancellation=Free cancellation 48 hours prior
+booking.notices.insurance_included=Full insurance included
+booking.availability.june_july_notice=June/July Availability Notice
+booking.availability.june_weekends=During June, regattas are available only on weekends (Saturday & Sunday). Weekdays are fully booked for private events.
+booking.availability.july_weekends=During July, regattas are available only on weekends (Saturday & Sunday). Weekdays are fully booked for private events.
+booking.availability.full_availability=Full Availability
+booking.availability.all_dates=All dates are available for booking during {month}. Choose any day that works for you!
+booking.legend.selected=Selected
+booking.legend.available=Available
+booking.legend.booked=Booked
+booking.legend.past_unavailable=Past/Unavailable
+booking.form.creating_booking=Creating booking...
+
+# src/pages/EventsPage.tsx
+# Уже переведенные строки (только ключи):
+events.title
+events.subtitle
+
+# Жестко закодированные строки, требующие перевода:
+events.complete_experience=The Complete Racing Experience
+events.beginner_to_champion=From beginner to champion in one day. Experience authentic yacht racing on Lake Garda with professional instruction, competitive races, and official recognition of your achievement.
+events.tabs.overview=Overview
+events.tabs.schedule=Schedule
+events.tabs.gallery=Gallery
+events.tabs.weather=Weather
+events.tabs.equipment=Equipment
+events.tabs.faq=FAQ
+events.overview.what_makes_special=What Makes Our Experience Special
+events.overview.professional_instruction=Professional Instruction
+events.overview.professional_instruction_desc=Learn from certified sailing professionals with years of racing experience on Lake Garda.
+events.overview.authentic_racing=Authentic Racing
+events.overview.authentic_racing_desc=Participate in real yacht races with official timing, scoring, and medal ceremonies.
+events.overview.professional_documentation=Professional Documentation
+events.overview.professional_documentation_desc=High-quality photos and videos of your experience, delivered within 24 hours.
+events.overview.racing_format=Racing Format
+events.overview.pro_level_regatta=Pro-Level One-Day Regatta
+events.overview.j70_yachts=Races held on J/70 class professional sailing yachts
+events.overview.licensed_skipper=Each boat includes a licensed skipper and full crew
+events.overview.official_races=3–5 official races per day, scored under sailing sport rules
+events.overview.judging_team=Supervised by a qualified judging team and technical support boats
+events.overview.medal_ceremony_certificates=Medal ceremony and certificates for top crews
+events.schedule.daily_schedule=Daily Schedule
+events.schedule.morning_session=Morning Session
+events.schedule.afternoon_session=Afternoon Session
+events.schedule.welcome_registration=Welcome & Registration
+events.schedule.welcome_registration_desc=Meet your skipper and fellow sailors
+events.schedule.safety_briefing=Safety Briefing
+events.schedule.safety_briefing_desc=Essential safety procedures and equipment overview
+events.schedule.sailing_basics=Sailing Basics
+events.schedule.sailing_basics_desc=Learn fundamental sailing techniques
+events.schedule.first_race=First Race
+events.schedule.first_race_desc=Practice race to get comfortable
+events.schedule.medal_ceremony_award=Medal Ceremony
+events.schedule.medal_ceremony_desc=Awards and certificate presentation
+events.schedule.photo_session=Photo Session
+events.schedule.photo_session_desc=Professional photos with your medals
+events.gallery.experience_gallery=Experience Gallery
+events.weather.typical_conditions=Typical Weather Conditions
+events.weather.wind_speed=Wind Speed
+events.weather.wind_speed_value=8-15 knots
+events.weather.temperature=Temperature
+events.weather.temperature_value=18-28°C
+events.weather.visibility=Visibility
+events.weather.visibility_value=Excellent
+events.weather.water_temp=Water Temp
+events.weather.water_temp_value=16-24°C
+events.equipment.equipment_provided=Equipment Provided
+events.equipment.safety_first=Safety First
+events.equipment.safety_description=All safety equipment meets international standards. Our boats are regularly inspected and maintained to the highest standards. Every participant receives a comprehensive safety briefing before departure.
+events.equipment.premium_yachts=Premium Yachts
+events.equipment.premium_yachts_desc=We use modern J-70/J-80 high-performance yachts. These boats are specifically chosen for their racing capabilities while maintaining comfort and safety for our participants.
+events.equipment.complete_list=Complete Equipment List
+events.equipment.racing_yacht=Professional racing yacht (J-70/J-80)
+events.equipment.safety_equipment=All safety equipment (life jackets, water)
+events.equipment.sailing_gear=Professional sailing gear
+events.equipment.first_aid=First aid kit and emergency equipment
+events.equipment.photo_equipment=Professional photography equipment
+events.equipment.medals_certificates=Racing medals and certificates
+events.faq.frequently_asked=Frequently Asked Questions
+events.faq.sailing_experience=Do I need sailing experience?
+events.faq.sailing_experience_answer=No sailing experience is required! Our professional skippers will teach you everything you need to know. We welcome complete beginners and experienced sailors alike.
+events.faq.what_to_bring=What should I bring?
+events.faq.what_to_bring_answer=Bring comfortable clothes, sunscreen, a hat, and a change of clothes. We provide all sailing equipment, safety gear.
+events.faq.bad_weather=What if the weather is bad?
+events.faq.bad_weather_answer=Safety is our priority. If conditions are unsafe, we'll reschedule your experience at no extra cost. Light rain doesn't stop us - it's part of the adventure!
+events.faq.people_per_boat=How many people per boat?
+events.faq.people_per_boat_answer=Each yacht accommodates 4-5 participants plus the professional skipper. This ensures personalized attention.
+events.faq.bring_camera=Can I bring my camera?
+events.faq.bring_camera_answer=Absolutely! We also provide professional photography services. You'll receive high-quality photos and videos of your racing experience within 24 hours.
+
+# src/pages/ServicesPage.tsx
+# Уже переведенные строки (только ключи):
+services.title
+services.subtitle
+
+# Жестко закодированные строки, требующие перевода:
+services.corporate_regatta.title=🧭 Corporate Sailing Regatta
+services.corporate_regatta.description=We offer a unique team-building program through participation in a real sailing regatta. Strengthen team spirit and create unforgettable memories on Lake Garda.
+services.corporate_regatta.learn_more=Learn more →
+services.gift_certificates.title=🎁 Gift Certificates
+services.gift_certificates.description=Perfect gift for sailing enthusiasts. Give the gift of an unforgettable yacht racing experience on beautiful Lake Garda.
+services.gift_certificates.learn_more=Learn more →
+services.inquiry.title=Corporate Package Inquiry
+services.inquiry.company_name=Company Name *
+services.inquiry.contact_person=Contact Person *
+services.inquiry.email=Email *
+services.inquiry.phone=Phone *
+services.inquiry.participants_count=Number of Participants *
+services.inquiry.preferred_date=Preferred Date
+services.inquiry.additional_requests=Additional Requests
+services.inquiry.additional_requests_placeholder=Tell us about your event requirements...
+services.inquiry.cancel=Cancel
+services.inquiry.send=Send Inquiry
+services.inquiry.sending=Sending...
+services.inquiry.success=Your inquiry has been sent! We will contact you shortly.
+
+# src/pages/ContactPage.tsx
+# Уже переведенные строки (только ключи):
+contact.title
+contact.subtitle
+contact.info.title
+contact.info.address
+contact.info.phone
+contact.info.email
+contact.info.hours
+contact.info.daily
+contact.info.season
+contact.form.title
+contact.form.name
+contact.form.name_placeholder
+contact.form.email
+contact.form.email_placeholder
+contact.form.phone
+contact.form.phone_placeholder
+contact.form.message
+contact.form.message_placeholder
+contact.form.sending
+contact.form.send
+contact.success.title
+contact.success.message
+contact.success.send_another
+
+# src/pages/CorporateSailingPage.tsx
+# Уже переведенные строки (только ключи):
+corporate.title
+corporate.subtitle
+
+# Жестко закодированные строки, требующие перевода:
+corporate.overview.team_building=Team building
+corporate.overview.premium_service=Premium Service
+corporate.overview.stunning_location=Lake Garda
+corporate.packages.title=Corporate Packages
+corporate.packages.subtitle=Choose from our carefully designed corporate sailing packages, each tailored to different group sizes and objectives.
+corporate.packages.most_popular=Most Popular
+corporate.packages.team_spirit.name=Team Spirit
+corporate.packages.team_spirit.description=Perfect for small teams looking to build stronger connections
+corporate.packages.team_spirit.participants=12-24 people
+corporate.packages.team_spirit.duration=4 hours
+corporate.packages.team_spirit.features.1=Professional skippers
+corporate.packages.team_spirit.features.2=Safety briefing
+corporate.packages.team_spirit.features.3=Team races
+corporate.packages.team_spirit.features.4=Event photography
+corporate.packages.team_spirit.features.5=Participant certificates
+corporate.packages.team_spirit.features.6=Light lunch on shore
+corporate.packages.corporate_challenge.name=Corporate Challenge
+corporate.packages.corporate_challenge.description=Our most popular package for medium-sized corporate groups
+corporate.packages.corporate_challenge.participants=24-48 people
+corporate.packages.corporate_challenge.duration=6 hours
+corporate.packages.corporate_challenge.features.1=Everything from Team Spirit
+corporate.packages.corporate_challenge.features.2=Professional videography
+corporate.packages.corporate_challenge.features.3=Award ceremony
+corporate.packages.corporate_challenge.features.4=Trophies and medals
+corporate.packages.corporate_challenge.features.5=Italian cuisine banquet
+corporate.packages.corporate_challenge.features.6=Hotel transfer
+corporate.packages.corporate_challenge.features.7=Personal coordinator
+corporate.packages.executive_regatta.name=Executive Regatta
+corporate.packages.executive_regatta.description=Premium experience for large corporate events
+corporate.packages.executive_regatta.participants=48-96 people
+corporate.packages.executive_regatta.duration=8 hours
+corporate.packages.executive_regatta.features.1=Everything from Corporate Challenge
+corporate.packages.executive_regatta.features.2=VIP area for executives
+corporate.packages.executive_regatta.features.3=Live music and entertainment
+corporate.packages.executive_regatta.features.4=Premium beverages
+corporate.packages.executive_regatta.features.5=Personalized gifts
+corporate.packages.executive_regatta.features.6=Professional host
+corporate.packages.executive_regatta.features.7=Additional activities organization
+corporate.packages.request_quote=Request Quote
+corporate.benefits.title=Why Choose Corporate Sailing?
+corporate.benefits.team_building.title=Team Building
+corporate.benefits.team_building.description=Strengthen team bonds through collaborative sailing challenges and shared experiences on the water.
+corporate.benefits.professional_service.title=Professional Service
+corporate.benefits.professional_service.description=Expert instructors, premium equipment, and dedicated event coordination for a seamless experience.
+corporate.benefits.stunning_location.title=Stunning Location
+corporate.benefits.stunning_location.description=Lake Garda's beautiful waters and mountain scenery provide the perfect backdrop for corporate events.
+corporate.cta.title=Ready to Plan Your Corporate Event?
+corporate.cta.subtitle=Contact our team to discuss your requirements and create a customized sailing experience for your group.
+corporate.cta.contact=Contact Us
+corporate.cta.call=Call +39 344 777 00 77
+
+# src/pages/GiftCertificatesPage.tsx
+# Уже переведенные строки (только ключи):
+gift.title
+gift.subtitle
+gift.form.title
+gift.form.amount
+gift.form.recipient
+gift.form.recipient_name
+gift.form.recipient_email
+gift.form.purchaser
+gift.form.your_name
+gift.form.your_email
+gift.form.message
+gift.form.optional
+gift.form.message_placeholder
+gift.form.purchase
+gift.features.title
+gift.features.romantic
+gift.features.birthdays
+gift.features.family
+gift.features.special
+gift.how_it_works.title
+gift.how_it_works.step1
+gift.how_it_works.step1_desc
+gift.how_it_works.step2
+gift.how_it_works.step2_desc
+gift.how_it_works.step3
+gift.how_it_works.step3_desc
+gift.validity.title
+gift.validity.duration
+gift.validity.flexible
+
+# src/pages/LoginPage.tsx
+# Уже переведенные строки (только ключи):
+auth.login.title
+auth.login.no_account
+auth.login.sign_up
+auth.register.title
+auth.register.have_account
+auth.register.sign_in
+auth.register.first_name
+auth.register.last_name
+auth.email
+auth.password
+auth.register.confirm_password
+auth.login.remember_me
+auth.login.forgot_password
+auth.login.sign_in_button
+auth.register.sign_up_button
+
+# src/pages/SuccessPage.tsx
+# Уже переведенные строки (только ключи):
+success.title
+success.subtitle
+success.next_steps
+success.email_confirmation
+success.email_description
+success.contact_call
+success.contact_description
+success.prepare_experience
+success.prepare_description
+success.booking_reference
+success.reference_note
+success.view_booking
+success.back_home
+success.questions
+success.call_us
+success.email_us
+
+# src/pages/ClientDashboard.tsx
+# Уже переведенные строки (только ключи):
+dashboard.welcome
+dashboard.subtitle
+dashboard.settings
+dashboard.your_bookings
+dashboard.no_bookings
+
+# Жестко закодированные строки, требующие перевода:
+dashboard.stats.total_bookings=Total Bookings
+dashboard.stats.confirmed=Confirmed
+dashboard.stats.total_participants=Total Participants
+dashboard.booking.participants_single=participant
+dashboard.booking.participants_plural=participants
+dashboard.booking.status.confirmed=confirmed
+dashboard.booking.status.pending=pending
+dashboard.booking.status.cancelled=cancelled
+
+# === ФАЙЛЫ КОМПОНЕНТОВ (src/components/) ===
+
+# src/components/Header.tsx
+# Уже переведенные строки (только ключи):
+nav.home
+nav.events
+nav.services
+nav.contact
+nav.book_now
+
+# Жестко закодированные строки, требующие перевода:
+header.logo.title=Garda Racing
+header.logo.subtitle=Yacht Club
+
+# src/components/Footer.tsx
+# Уже переведенные строки (только ключи):
+footer.contact.title
+footer.certifications.title
+footer.certifications.insured
+footer.certifications.support
+footer.operating_hours
+footer.daily_hours
+footer.season
+
+# Жестко закодированные строки, требующие перевода:
+footer.logo.title=Garda Racing
+footer.logo.subtitle=Yacht Club
+footer.quick_links.title=Quick Links
+footer.description=Experience the thrill of yacht racing on the world-famous Lake Garda. Professional instruction, premium equipment, and unforgettable memories.
+footer.address.street=Viale Giancarlo Maroni 4
+footer.address.city=38066 Riva del Garda TN
+footer.address.country=Italia
+footer.phone=+39 344 777 00 77
+footer.email=info@gardaracing.com
+footer.certifications.fully_insured=Fully Insured
+footer.certifications.support_24_7=24/7 Support
+footer.operating_hours_label=Operating Hours:
+footer.daily_schedule=Daily: 8:00 AM - 7:00 PM
+footer.season_period=March - October
+footer.links.privacy_policy=Privacy Policy
+footer.links.terms_conditions=Terms & Conditions
+footer.links.cancellation_policy=Cancellation Policy
+footer.links.gdpr=GDPR
+footer.copyright=© 2025 Garda Racing Yacht Club. All rights reserved.
+
+# src/components/ChatWidget.tsx
+# Жестко закодированные строки, требующие перевода:
+chat.support_title=Garda Racing Support
+chat.initial_message=Hello! How can I help you with your yacht racing experience today?
+chat.placeholder=Type your message...
+chat.auto_response=Thank you for your message! Our team will get back to you shortly. For immediate assistance, please call +39 344 777 00 77.
+
+# src/components/PaymentButton.tsx
+# Жестко закодированные строки, требующие перевода:
+payment.processing=Processing...
+payment.pay_now=Pay Now
+payment.subscribe_now=Subscribe Now
+payment.secure_payment=Secure payment powered by Stripe
+
+# src/components/PhoneInput.tsx
+# Жестко закодированные строки, требующие перевода:
+phone.select_country=Select country code
+phone.countries.italy=Italy
+phone.countries.germany=Germany
+phone.countries.austria=Austria
+phone.countries.france=France
+phone.countries.switzerland=Switzerland
+phone.countries.netherlands=Netherlands
+phone.countries.united_kingdom=United Kingdom
+phone.countries.spain=Spain
+phone.countries.sweden=Sweden
+phone.countries.norway=Norway
+phone.countries.finland=Finland
+phone.countries.denmark=Denmark
+phone.countries.poland=Poland
+phone.countries.czech_republic=Czech Republic
+phone.countries.slovakia=Slovakia
+phone.countries.hungary=Hungary
+phone.countries.belgium=Belgium
+phone.countries.israel=Israel
+phone.countries.australia=Australia
+phone.countries.united_states=United States
+phone.countries.canada=Canada
+phone.countries.brazil=Brazil
+phone.countries.uae=UAE
+phone.countries.turkey=Turkey
+phone.countries.romania=Romania
+phone.countries.greece=Greece
+phone.countries.slovenia=Slovenia
+phone.countries.croatia=Croatia
+phone.countries.serbia=Serbia
+phone.countries.ukraine=Ukraine
+phone.countries.bulgaria=Bulgaria
+
+# === СЛУЖЕБНЫЕ ФАЙЛЫ (src/utils/) ===
+
+# src/utils/seo.ts
+# Жестко закодированные строки, требующие перевода:
+seo.home.title=Garda Racing Yacht Club - Premium Sailing Experiences on Lake Garda
+seo.home.description=Daily yacht racing experiences in world-famous Lake Garda. Professional skipper, racing medals, and unforgettable memories. Book your €195 sailing adventure today!
+seo.home.keywords=Lake Garda sailing, yacht racing, Riva del Garda, sailing experience, yacht charter, racing course
+seo.events.title=Yacht Racing Events - Complete Day Program | Garda Racing
+seo.events.description=Discover our complete yacht racing program on Lake Garda. Professional instruction, authentic racing, medal ceremony, and professional photos included.
+seo.events.keywords=yacht racing program, sailing lessons Lake Garda, racing events, sailing instruction
+seo.services.title=Corporate Services & Team Building | Garda Racing Yacht Club
+seo.services.description=Professional corporate sailing events and team building activities on Lake Garda. Custom packages for groups from 12 to 96 participants.
+seo.services.keywords=corporate sailing, team building Lake Garda, corporate events, sailing team building
+seo.contact.title=Contact Us - Garda Racing Yacht Club | Lake Garda Sailing
+seo.contact.description=Get in touch with Garda Racing Yacht Club. Located in Riva del Garda, Italy. Phone: +39 345 678 9012. Professional sailing experiences since 2008.
+seo.contact.keywords=contact Garda Racing, Riva del Garda sailing, yacht club contact, Lake Garda sailing contact
+seo.booking.title=Book Your Yacht Racing Adventure | Garda Racing Yacht Club
+seo.booking.description=Book your yacht racing experience on Lake Garda. €195 per person includes professional skipper, equipment, racing medal, and photos. Easy online booking.
+seo.booking.keywords=book yacht racing, Lake Garda booking, sailing reservation, yacht charter booking
+
+# === КОМПОНЕНТЫ АДМИНИСТРАТОРА (src/components/admin/) ===
+
+# src/components/admin/BookingsCalendar.tsx
+# Жестко закодированные строки, требующие перевода:
+admin.bookings.title=Bookings Calendar
+admin.bookings.subtitle=Manage yacht and racing bookings with drag-and-drop
+admin.bookings.export=Export
+admin.bookings.new_booking=New Booking
+admin.bookings.all_statuses=All Statuses
+admin.bookings.pending=Pending
+admin.bookings.confirmed=Confirmed
+admin.bookings.cancelled=Cancelled
+admin.bookings.completed=Completed
+admin.bookings.search_placeholder=Search bookings...
+admin.bookings.conflicts_detected={count} booking conflicts detected
+admin.bookings.loading=Loading calendar...
+admin.bookings.more=+{count} more
+admin.bookings.details_title=Booking Details
+admin.bookings.customer=Customer
+admin.bookings.yacht=Yacht
+admin.bookings.email=Email
+admin.bookings.phone=Phone
+admin.bookings.date_time=Date & Time
+admin.bookings.participants=Participants
+admin.bookings.participants_people={count} people
+admin.bookings.total_price=Total Price
+admin.bookings.status=Status
+admin.bookings.conflict_warning=This booking conflicts with another booking for the same yacht
+admin.bookings.close=Close
+admin.bookings.send_confirmation=Send Confirmation
+admin.bookings.edit_booking=Edit Booking
+
+# И так далее для остальных admin компонентов...
+
+# === ОБЩИЕ ЭЛЕМЕНТЫ ===
+common.loading=Loading...
+common.error=Error
+common.retry=Retry
+common.save=Save
+common.cancel=Cancel
+common.delete=Delete
+common.edit=Edit
+common.view=View
+common.close=Close
+common.back=Back
+common.next=Next
+common.previous=Previous
+common.submit=Submit
+common.yes=Yes
+common.no=No
+common.confirm=Confirm
+common.success=Success
+common.warning=Warning
+common.info=Information
+
+# === ФОРМЫ ===
+form.required=Required field
+form.invalid_email=Please enter a valid email address
+form.invalid_phone=Please enter a valid phone number
+form.password_too_short=Password must be at least 8 characters
+form.passwords_dont_match=Passwords do not match
+form.please_fill_required=Please fill in all required fields
+
+# === НАВИГАЦИЯ ===
+nav.admin=Admin
+nav.dashboard=Dashboard
+nav.profile=Profile
+nav.logout=Logout
+nav.login=Login
+nav.register=Register
+
+# === СТАТУСЫ ===
+status.pending=Pending
+status.confirmed=Confirmed
+status.cancelled=Cancelled
+status.completed=Completed
+status.active=Active
+status.inactive=Inactive
+
+# === ВАЛЮТА И ЦЕНЫ ===
+currency.eur=EUR
+currency.usd=USD
+price.per_person=per person
+price.total=Total
+price.subtotal=Subtotal
+price.discount=Discount
+price.tax=Tax
+
+# === ДАТЫ И ВРЕМЯ ===
+date.today=Today
+date.tomorrow=Tomorrow
+date.yesterday=Yesterday
+date.this_week=This week
+date.next_week=Next week
+date.this_month=This month
+date.next_month=Next month
+time.morning=Morning
+time.afternoon=Afternoon
+time.evening=Evening

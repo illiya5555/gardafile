@@ -116,7 +116,9 @@ const FALLBACK_TRANSLATIONS: Record<string, Record<string, string>> = {
     'home.features.item3.title': 'Photo & Vidéo',
     'home.features.item3.description': 'Photos et vidéos professionnelles de votre journée de course à retenir et à partager.',
     'home.features.item4.title': 'Entièrement Assuré',
-    'home.features.item4.description': 'Couverture de sécurité complète et équipement moderne inclus.'
+    'home.features.item4.description': 'Couverture de sécurité complète et équipement moderne inclus.',
+    'home.features.item5.title': 'Accessible et Premium',
+    'home.features.item5.description': 'Une expérience de régate de haut niveau ouverte à tous - aucune expérience nécessaire.'
   },
   es: {
     'nav.home': 'Inicio',
@@ -145,7 +147,9 @@ const FALLBACK_TRANSLATIONS: Record<string, Record<string, string>> = {
     'home.features.item3.title': 'Foto y Video',
     'home.features.item3.description': 'Fotos y videos profesionales de su día de regata para recordar y compartir.',
     'home.features.item4.title': 'Totalmente Asegurado',
-    'home.features.item4.description': 'Cobertura de seguridad completa y equipo moderno incluido.'
+    'home.features.item4.description': 'Cobertura de seguridad completa y equipo moderno incluido.',
+    'home.features.item5.title': 'Accesible y Premium',
+    'home.features.item5.description': 'Una experiencia de regata de alto nivel abierta a todos - no se necesita experiencia.'
   },
   ru: {
     'nav.home': 'Главная',

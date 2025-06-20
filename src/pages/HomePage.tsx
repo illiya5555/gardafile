@@ -262,10 +262,7 @@ const HomePage = () => {
           <div className="flex justify-center mt-12">
             <div className="text-center group hover:scale-105 transition-transform duration-300 max-w-sm">
               <div className="bg-primary-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-100 transition-colors duration-300">
-                {(() => {
-                  const IconComponent = features[4].icon;
-                  return <IconComponent className="h-10 w-10 text-primary-600" />;
-                })()}
+                <features[4].icon className="h-10 w-10 text-primary-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">{features[4].title}</h3>
               <p className="text-gray-600 leading-relaxed">{features[4].description}</p>
@@ -364,9 +361,9 @@ const HomePage = () => {
             <p className="text-xl text-gray-600">
               {t('home.testimonials.subtitle', "Join thousands of satisfied customers who've experienced the magic of Lake Garda racing")}
             </p>
-            {isOffline && (
+            {isOffline && testimonials.length > 0 && (
               <p className="text-sm text-amber-600 mt-2">
-                {t('home.testimonials.offline_notice', "Currently showing sample testimonials - working in offline mode")}
+                {t('home.testimonials.connection_error', "Currently showing sample testimonials - database connection unavailable")}
               </p>
             )}
           </div>
@@ -477,10 +474,10 @@ const HomePage = () => {
                   <img
                     src={partner.logo}
                     alt={partner.name}
-                    className="w-full h-16 object-cover rounded-lg mb-4 grayscale group-hover:grayscale-0 transition-all duration-300"
+                    className="w-full h-16 object-cover rounded-lg mb-4 grayscale group-hover:grayscale-0 transition-all duration-300" 
                   />
-                  <h3 className="font-semibold text-gray-900 mb-1">{partner.name}</h3>
-                  <p className="text-sm text-gray-600">{partner.description}</p>
+                  <h3 className="font-semibold text-gray-900 mb-1">{t(`home.partners.${partner.name.toLowerCase().replace(/\s+/g, '_')}.name`, partner.name)}</h3>
+                  <p className="text-sm text-gray-600">{t(`home.partners.${partner.name.toLowerCase().replace(/\s+/g, '_')}.description`, partner.description)}</p>
                 </div>
               </div>
             ))}

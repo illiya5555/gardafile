@@ -66,6 +66,17 @@ serve(async (req) => {
     // Parse the request body
     const { price_id, mode = 'payment', success_url, cancel_url, metadata = {} } = await req.json();
 
+    // Check for undefined price_id first
+    if (price_id === undefined) {
+      return new Response(
+        JSON.stringify({ error: 'price_id is not defined' }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 400,
+        }
+      )
+    }
+
     if (typeof price_id !== 'string' || price_id.trim() === '') {
       return new Response(
         JSON.stringify({ error: 'Price ID is required' }),

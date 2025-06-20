@@ -95,34 +95,34 @@ const AdminDashboard = () => {
   ]);
 
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        setLoading(true);
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user) {
+          navigate('/');
+          return;
+        }
+
+        // For a production environment, you might want to check if the user has an admin role
+        // by creating the necessary tables (profiles, user_roles) and relationships
+        
+        setUser(user);
+        // Only fetch data after authentication is confirmed
+        fetchStats();
+        fetchBookings();
+        fetchClients();
+      } catch (error) {
+        console.error('Auth error:', error);
+        navigate('/');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
     checkAuth();
   }, []);
-
-  const checkAuth = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        navigate('/');
-        return;
-      }
-
-      // For now, we'll allow any authenticated user to access the admin dashboard
-      // In a production environment, you would implement proper role-based access control
-      // by creating the necessary tables (profiles, user_roles) and relationships
-      
-      setUser(user);
-      // Only fetch data after authentication is confirmed
-      fetchStats();
-      fetchBookings();
-      fetchClients();
-    } catch (error) {
-      console.error('Auth error:', error);
-      navigate('/');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const fetchStats = async () => {
     try {

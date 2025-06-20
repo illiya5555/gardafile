@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Anchor, MapPin, Phone, Mail, Award, Shield, Clock, Lock } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 import AdminLogin from './AdminLogin';
 import { useTranslation } from '../context/LanguageContext';
 

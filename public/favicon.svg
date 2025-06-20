@@ -1,1 +1,21 @@
-<iframe width="449" height="798" src="https://www.youtube.com/embed/RC2xoJokKrQ" title="видео на страницу евентов" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300">
+  <!-- Red pennant background -->
+  <polygon points="0,0 500,150 0,300" fill="#d32f2f"/>
+  
+  <!-- Yellow/gold crossed lines -->
+  <line x1="60" y1="60" x2="230" y2="240" stroke="#f9d423" stroke-width="12"/>
+  <line x1="60" y1="240" x2="230" y2="60" stroke="#f9d423" stroke-width="12"/>
+  
+  <!-- White letters -->
+  <!-- G -->
+  <path d="M100,190 C80,190 65,170 65,150 C65,130 80,110 100,110 C115,110 125,120 125,120 L115,140 C115,140 110,130 100,130 C90,130 85,140 85,150 C85,160 90,170 100,170 C110,170 115,160 115,160 L115,150 L100,150 L100,135 L130,135 L130,155 C130,155 120,190 100,190 Z" fill="white"/>
+  
+  <!-- R -->
+  <path d="M170,110 L220,110 C235,110 245,120 245,135 C245,150 235,160 220,160 L190,160 L190,190 L170,190 L170,110 Z M190,140 L215,140 C218,140 220,138 220,135 C220,132 218,130 215,130 L190,130 L190,140 Z" fill="white"/>
+  
+  <!-- Y -->
+  <path d="M290,110 L310,110 L330,145 L350,110 L370,110 L335,165 L335,190 L315,190 L315,165 L290,110 Z" fill="white"/>
+  
+  <!-- C -->
+  <path d="M100,190 C80,190 65,170 65,150 C65,130 80,110 100,110 C115,110 125,120 125,120 L115,140 C115,140 110,130 100,130 C90,130 85,140 85,150 C85,160 90,170 100,170 C110,170 115,160 115,160 L125,175 C125,175 115,190 100,190 Z" fill="white" transform="translate(0, 100)"/>
+</svg>

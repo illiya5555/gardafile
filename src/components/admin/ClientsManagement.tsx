@@ -59,41 +59,60 @@ const ClientsManagement = () => {
   const fetchClients = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      
+      // Шаг 1: Получаем всех клиентов
+      const { data: clients, error: clientsError } = await supabase
         .from('profiles')
         .select('*')
         .order(sortBy, { ascending: sortOrder === 'asc' });
 
-      if (error) throw error;
+      if (clientsError) throw clientsError;
+      
+      if (!clients || clients.length === 0) {
+        setClients([]);
+        setLoading(false);
+        return;
+      }
 
-      // Fetch booking statistics for each client
-      const clientsWithStats = await Promise.all(
-        (data || []).map(async (client) => {
-          const { data: bookings } = await supabase
-            .from('bookings')
-            .select('total_price, created_at')
-            .eq('user_id', client.id);
-
-          const { data: yachtBookings } = await supabase
-            .from('yacht_bookings')
-            .select('total_price, created_at')
-            .eq('user_id', client.id);
-
-          const allBookings = [...(bookings || []), ...(yachtBookings || [])];
-          const totalSpent = allBookings.reduce((sum, booking) => sum + parseFloat(booking.total_price), 0);
-          const lastBooking = allBookings.length > 0 
-            ? allBookings.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0].created_at
-            : null;
-
-          return {
-            ...client,
-            bookings_count: allBookings.length,
-            total_spent: totalSpent,
-            last_booking: lastBooking,
-            client_category: client.client_category || 'new'
-          };
-        })
-      );
+      // Шаг 2: Получаем все бронирования в одном запросе
+      const clientIds = clients.map(client => client.id);
+      
+      const { data: reservations, error: reservationsError } = await supabase
+        .from('reservations')
+        .select('user_id, total_price, created_at, status')
+        .in('user_id', clientIds)
+        .not('user_id', 'is', null);
+        
+      if (reservationsError) throw reservationsError;
+      
+      // Шаг 3: Обрабатываем данные на стороне клиента
+      const clientsWithStats = clients.map(client => {
+        // Фильтруем бронирования для этого клиента
+        const clientReservations = reservations?.filter(r => r.user_id === client.id) || [];
+        
+        // Рассчитываем статистику
+        const bookingsCount = clientReservations.length;
+        const totalSpent = clientReservations.reduce((sum, booking) => 
+          sum + parseFloat(booking.total_price || '0'), 0);
+        
+        // Получаем дату последнего бронирования
+        let lastBooking = null;
+        if (clientReservations.length > 0) {
+          // Сортируем по дате создания в убывающем порядке, чтобы получить самое последнее бронирование
+          const sortedReservations = [...clientReservations].sort(
+            (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          );
+          lastBooking = sortedReservations[0].created_at;
+        }
+        
+        return {
+          ...client,
+          bookings_count: bookingsCount,
+          total_spent: totalSpent,
+          last_booking: lastBooking,
+          client_category: client.client_category || 'new'
+        };
+      });
 
       setClients(clientsWithStats);
     } catch (error) {
@@ -220,7 +239,7 @@ const ClientsManagement = () => {
   };
 
   const getClientValue = (client: Client) => {
-    if (!client.total_spent) return 'New';
+    if (!client.total_spent || client.total_spent === 0) return 'New';
     if (client.total_spent >= 1000) return 'High Value';
     if (client.total_spent >= 500) return 'Medium Value';
     return 'Low Value';

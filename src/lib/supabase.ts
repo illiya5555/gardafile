@@ -3,27 +3,47 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables:', {
-    url: !!supabaseUrl,
-    key: !!supabaseAnonKey
-  });
-  throw new Error('Missing Supabase environment variables. Please check your .env file.');
+// Enhanced validation with better error messages
+if (!supabaseUrl) {
+  console.error('❌ VITE_SUPABASE_URL is not defined in environment variables');
+  console.error('📝 Please check your .env file and ensure it contains:');
+  console.error('   VITE_SUPABASE_URL=https://your-project.supabase.co');
+  throw new Error('Missing VITE_SUPABASE_URL environment variable. Please check your .env file.');
 }
 
-// Validate URL format
+if (!supabaseAnonKey) {
+  console.error('❌ VITE_SUPABASE_ANON_KEY is not defined in environment variables');
+  console.error('📝 Please check your .env file and ensure it contains:');
+  console.error('   VITE_SUPABASE_ANON_KEY=your_anon_key');
+  throw new Error('Missing VITE_SUPABASE_ANON_KEY environment variable. Please check your .env file.');
+}
+
+// Validate URL format with more detailed error
 try {
-  new URL(supabaseUrl);
+  const url = new URL(supabaseUrl);
+  if (!url.hostname.includes('supabase.co') && !url.hostname.includes('localhost')) {
+    console.warn('⚠️  URL does not appear to be a Supabase URL:', supabaseUrl);
+  }
+  console.log('✅ Supabase URL format is valid:', supabaseUrl);
 } catch (error) {
-  console.error('Invalid Supabase URL format:', supabaseUrl);
+  console.error('❌ Invalid Supabase URL format:', supabaseUrl);
+  console.error('📝 Expected format: https://your-project.supabase.co');
   throw new Error('Invalid Supabase URL format. Please check your VITE_SUPABASE_URL in .env file.');
 }
+
+// Validate anon key format
+if (!supabaseAnonKey.startsWith('eyJ')) {
+  console.warn('⚠️  Anon key does not appear to be in correct JWT format');
+  console.warn('📝 Expected format: eyJ... (should start with eyJ)');
+}
+
+console.log('🔧 Initializing Supabase client...');
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
-    detectSessionInUrl: false, // Prevent issues with URL-based session detection
+    detectSessionInUrl: false,
   },
   global: {
     headers: {
@@ -48,6 +68,58 @@ const CONNECTION_TEST_INTERVAL = 60000; // 1 minute
 // Get connection status
 export const getConnectionStatus = () => connectionStatus;
 
+// Enhanced test connection function with better error reporting
+export const testConnection = async () => {
+  const now = Date.now();
+  if (connectionStatus !== 'unknown' && (now - lastConnectionTest) < CONNECTION_TEST_INTERVAL) {
+    return connectionStatus === 'connected';
+  }
+
+  try {
+    console.log('🔍 Testing Supabase connection...');
+    
+    // Use a more reliable test - just ping the auth endpoint
+    const { data, error } = await supabase
+      .from('translations')
+      .select('id')
+      .limit(1);
+    
+    if (error) {
+      console.error('❌ Supabase connection test failed:', error);
+      throw new Error(`Supabase query error: ${error.message}`);
+    }
+    
+    connectionStatus = 'connected';
+    lastConnectionTest = now;
+    console.log('✅ Supabase connection successful');
+    return true;
+  } catch (error) {
+    connectionStatus = 'disconnected';
+    lastConnectionTest = now;
+    
+    console.error('❌ Supabase connection failed');
+    console.error('🔧 Troubleshooting steps:');
+    console.error('   1. Check your .env file exists and contains correct values');
+    console.error('   2. Restart your development server (npm run dev)');
+    console.error('   3. Verify your Supabase project is active at:', supabaseUrl);
+    console.error('   4. Check your network connection');
+    
+    if (error instanceof Error) {
+      console.error('   Error details:', error.message);
+      
+      // Provide specific guidance based on error type
+      if (error.message.includes('Failed to fetch')) {
+        console.error('   💡 This usually means:');
+        console.error('      - Your Supabase project URL is incorrect');
+        console.error('      - Your network is blocking the request');
+        console.error('      - Your Supabase project is paused/inactive');
+      }
+    }
+    
+    return false;
+  }
+};
+
 // Retry utility function
 const retryWithBackoff = async <T>(
   fn: () => Promise<T>,
@@ -66,55 +138,13 @@ const retryWithBackoff = async <T>(
         throw lastError;
       }
       
-      // Exponential backoff
       const delay = baseDelay * Math.pow(2, attempt);
-      console.warn(`Supabase connection attempt ${attempt + 1} failed, retrying in ${delay}ms...`);
+      console.warn(`🔄 Retry attempt ${attempt + 1}/${maxRetries} in ${delay}ms...`);
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
   
   throw lastError!;
-};
-
-// Enhanced test connection function with cached results
-export const testConnection = async () => {
-  // Return cached result if recent
-  const now = Date.now();
-  if (connectionStatus !== 'unknown' && (now - lastConnectionTest) < CONNECTION_TEST_INTERVAL) {
-    return connectionStatus === 'connected';
-  }
-
-  try {
-    console.log('Testing Supabase connection...');
-    
-    // Simple connection test without retries for faster response
-    const { error } = await supabase
-      .from('testimonials')
-      .select('id')
-      .limit(1);
-    
-    if (error) {
-      throw new Error(`Supabase query error: ${error.message}`);
-    }
-    
-    connectionStatus = 'connected';
-    lastConnectionTest = now;
-    console.log('Supabase connection successful');
-    return true;
-  } catch (error) {
-    connectionStatus = 'disconnected';
-    lastConnectionTest = now;
-    
-    // Only log detailed error info in development
-    if (import.meta.env.DEV) {
-      console.warn('Supabase connection failed:', {
-        error: error instanceof Error ? error.message : 'Unknown error',
-        url: supabaseUrl
-      });
-    }
-    
-    return false;
-  }
 };
 
 // Safe query wrapper that handles connection issues gracefully
@@ -123,8 +153,8 @@ export const safeQuery = async <T>(
   fallbackData: T | null = null
 ): Promise<{ data: T | null; error: any; isOffline: boolean }> => {
   try {
-    // Quick connection check
     if (connectionStatus === 'disconnected') {
+      console.warn('⚠️  Using offline mode - connection previously failed');
       return {
         data: fallbackData,
         error: { message: 'Offline mode - using cached data' },
@@ -135,6 +165,7 @@ export const safeQuery = async <T>(
     const result = await queryFn();
     
     if (result.error) {
+      console.error('❌ Query failed:', result.error);
       connectionStatus = 'disconnected';
       return {
         data: fallbackData,
@@ -150,6 +181,7 @@ export const safeQuery = async <T>(
       isOffline: false
     };
   } catch (error) {
+    console.error('❌ Query exception:', error);
     connectionStatus = 'disconnected';
     return {
       data: fallbackData,
@@ -166,9 +198,9 @@ export const retryQuery = async <T>(
   maxRetries: number = 2
 ): Promise<{ data: T | null; error: any; isOffline: boolean }> => {
   try {
-    const result = await retryWithBackoff(async () => {
+    await retryWithBackoff(async () => {
       const { data, error } = await supabase
-        .from('testimonials')
+        .from('translations')
         .select('id')
         .limit(1);
       
@@ -188,6 +220,7 @@ export const retryQuery = async <T>(
       isOffline: false
     };
   } catch (error) {
+    console.error('❌ Retry query failed:', error);
     connectionStatus = 'disconnected';
     
     return {
@@ -198,48 +231,7 @@ export const retryQuery = async <T>(
   }
 };
 
-// Enhanced Supabase client with error handling wrapper
-const createSupabaseWrapper = () => {
-  const originalFrom = supabase.from.bind(supabase);
-  
-  supabase.from = (table: string) => {
-    const query = originalFrom(table);
-    const originalSelect = query.select.bind(query);
-    
-    query.select = (...args: any[]) => {
-      const selectQuery = originalSelect(...args);
-      const originalThen = selectQuery.then?.bind(selectQuery);
-      
-      if (originalThen) {
-        selectQuery.then = (onFulfilled?: any, onRejected?: any) => {
-          return originalThen(
-            (result: any) => {
-              if (result.error) {
-                console.error(`Supabase query error on table '${table}':`, result.error);
-              }
-              return onFulfilled ? onFulfilled(result) : result;
-            },
-            (error: any) => {
-              console.error(`Supabase network error on table '${table}':`, error);
-              return onRejected ? onRejected(error) : Promise.reject(error);
-            }
-          );
-        };
-      }
-      
-      return selectQuery;
-    };
-    
-    return query;
-  };
-  
-  return supabase;
-};
-
-// Initialize the wrapper
-createSupabaseWrapper();
-
-// Database types
+// Database types (keeping existing types)
 export interface Booking {
   id: string;
   customer_name: string;
@@ -327,7 +319,6 @@ export interface CorporateInquiry {
   created_at: string;
 }
 
-// New yacht booking interface
 export interface YachtBooking {
   id: string;
   yacht_id: string;
@@ -346,7 +337,6 @@ export interface YachtBooking {
   updated_at: string;
 }
 
-// Yacht interface
 export interface Yacht {
   id: string;
   name: string;
@@ -358,3 +348,8 @@ export interface Yacht {
   image_url?: string;
   created_at: string;
 }
+
+// Test connection on module load
+testConnection().catch(() => {
+  console.warn('⚠️  Initial connection test failed - check your Supabase configuration');
+});

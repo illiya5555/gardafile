@@ -128,6 +128,7 @@ const FALLBACK_TRANSLATIONS: Record<string, Record<string, string>> = {
     'common.loading': 'Загрузка...',
     'common.error': 'Ошибка',
     'common.retry': 'Повторить',
+    'home.hero.price_description': 'на человека • Опыт на целый день',
     'form.name': 'Имя',
     'form.email': 'Электронная почта',
     'form.phone': 'Телефон',

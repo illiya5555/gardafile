@@ -1,0 +1,539 @@
+{
+  "nav": {
+    "home": "Home",
+    "events": "Eventi",
+    "services": "Servizi",
+    "contact": "Contatti",
+    "book_now": "Prenota Ora",
+    "admin": "Admin",
+    "dashboard": "Dashboard",
+    "profile": "Profilo",
+    "logout": "Esci",
+    "login": "Accedi",
+    "register": "Registrati",
+    "back_to_top": "Torna su",
+    "previous_page": "Pagina precedente",
+    "next_page": "Pagina successiva",
+    "first_page": "Prima pagina",
+    "last_page": "Ultima pagina",
+    "go_to_page": "Vai alla pagina {{page}}"
+  },
+  "header": {
+    "logo": {
+      "title": "Garda Racing",
+      "subtitle": "Yacht Club"
+    }
+  },
+  "footer": {
+    "logo": {
+      "title": "Garda Racing",
+      "subtitle": "Yacht Club"
+    },
+    "description": "Vivi l'emozione della vela da regata sul famoso Lago di Garda. Istruzione professionale, attrezzature premium e ricordi indimenticabili.",
+    "quick_links": {
+      "title": "Link Rapidi"
+    },
+    "contact": {
+      "title": "Contatti"
+    },
+    "address": {
+      "street": "Viale Giancarlo Maroni 4",
+      "city": "38066 Riva del Garda TN",
+      "country": "Italia"
+    },
+    "phone": "+39 344 777 00 77",
+    "email": "info@gardaracing.com",
+    "certifications": {
+      "title": "Certificazioni",
+      "insured": "Completamente Assicurati",
+      "support": "Assistenza 24/7",
+      "fully_insured": "Completamente Assicurati",
+      "support_24_7": "Assistenza 24/7"
+    },
+    "operating_hours": "Orari di Apertura:",
+    "operating_hours_label": "Orari di Apertura:",
+    "daily_hours": "Giornaliero: 8:00 - 19:00",
+    "daily_schedule": "Giornaliero: 8:00 - 19:00",
+    "season": "Marzo - Ottobre",
+    "season_period": "Marzo - Ottobre",
+    "links": {
+      "privacy_policy": "Privacy Policy",
+      "terms_conditions": "Termini e Condizioni",
+      "cancellation_policy": "Politica di Cancellazione",
+      "gdpr": "GDPR"
+    },
+    "copyright": "© 2025 Garda Racing Yacht Club. Tutti i diritti riservati."
+  },
+  "home": {
+    "hero": {
+      "title_part1": "Vivi l'Emozione della",
+      "title_part2": "Vela da Regata",
+      "subtitle": "Esperienze quotidiane di vela da regata sul famoso Lago di Garda con skipper professionali, medaglie e ricordi indimenticabili",
+      "price_description": "per persona • Esperienza giornata completa",
+      "feature1": "Formato di regata autentico",
+      "feature2": "Skipper professionale su ogni barca",
+      "feature3": "Aperto a tutti i livelli - nessuna esperienza richiesta",
+      "feature4": "Foto e video professionali della regata",
+      "feature5": "Tutta l'attrezzatura fornita",
+      "cta": "Prenota la Tua Avventura"
+    },
+    "features": {
+      "title": "Perché Scegliere Garda Racing?",
+      "subtitle": "Offriamo l'esperienza completa di vela da regata con guida professionale, attrezzature premium e ricordi che durano per sempre.",
+      "duration": "3-4 ore",
+      "participants": "4-5 persone",
+      "medal": "Medaglia inclusa",
+      "item1": {
+        "title": "Formato di Regata Autentico",
+        "description": "Autentica regata velica con dinamiche di squadra, medaglie e vera competizione."
+      },
+      "item2": {
+        "title": "Skipper Professionale",
+        "description": "Capitani di vela certificati ed esperti su ogni barca."
+      },
+      "item3": {
+        "title": "Foto e Video",
+        "description": "Foto e video professionali della tua giornata di regata da ricordare e condividere."
+      },
+      "item4": {
+        "title": "Completamente Assicurati",
+        "description": "Copertura di sicurezza completa e attrezzature moderne incluse."
+      },
+      "item5": {
+        "title": "Accessibile e Premium",
+        "description": "Un'esperienza di regata di alto livello aperta a tutti - nessuna esperienza necessaria."
+      }
+    },
+    "experience": {
+      "title": "La Tua Giornata Perfetta sul Lago di Garda",
+      "step1": {
+        "title": "Briefing Mattutino",
+        "description": "Incontra il tuo skipper professionale e impara le basi della vela da regata in un ambiente rilassato e amichevole."
+      },
+      "step2": {
+        "title": "Esperienza di Regata",
+        "description": "Partecipa ad autentiche regate con altre barche, vivendo l'emozione della competizione sul bellissimo Lago di Garda."
+      },
+      "step3": {
+        "title": "Cerimonia delle Medaglie",
+        "description": "Celebra il tuo successo con una cerimonia ufficiale delle medaglie e ricevi il tuo certificato personalizzato di regata."
+      },
+      "cta": "Scopri di Più sull'Esperienza"
+    },
+    "testimonials": {
+      "title": "Cosa Dicono i Nostri Velisti",
+      "subtitle": "Unisciti a migliaia di clienti soddisfatti che hanno vissuto la magia delle regate del Lago di Garda",
+      "connection_error": "Attualmente vengono mostrate testimonianze di esempio - connessione al database non disponibile"
+    },
+    "location": {
+      "title": "Posizione Privilegiata a Riva del Garda",
+      "google_rating": "Valutazione Google",
+      "item1": {
+        "title": "Facile Accesso da Monaco",
+        "description": "Solo 4 ore di guida da Monaco, perfetto per weekend e eventi aziendali."
+      },
+      "item2": {
+        "title": "Condizioni di Navigazione di Classe Mondiale",
+        "description": "Il Lago di Garda offre venti costanti e paesaggi alpini mozzafiato, rendendolo la destinazione velica premier d'Europa."
+      },
+      "item3": {
+        "title": "Partenze Giornaliere",
+        "description": "Più fasce orarie disponibili quotidianamente da marzo a ottobre, con opzioni di prenotazione flessibili."
+      }
+    },
+    "partners": {
+      "title": "I Nostri Partner di Fiducia",
+      "subtitle": "Collaboriamo con i principali produttori mondiali di yacht e attrezzature marine per offrirti la migliore esperienza velica possibile.",
+      "cta_text": "Interessato a diventare nostro partner? Cerchiamo sempre marchi di qualità che condividano la nostra passione per la vela.",
+      "cta": "Contattaci per Partnership",
+      "bavaria_yachts": {
+        "name": "Bavaria Yachts",
+        "description": "Produttore premium di yacht"
+      },
+      "garmin_marine": {
+        "name": "Garmin Marine",
+        "description": "Tecnologia di navigazione"
+      },
+      "helly_hansen": {
+        "name": "Helly Hansen",
+        "description": "Abbigliamento professionale da vela"
+      },
+      "musto_sailing": {
+        "name": "Musto Sailing",
+        "description": "Abbigliamento tecnico da vela"
+      },
+      "raymarine": {
+        "name": "Raymarine",
+        "description": "Elettronica marina"
+      },
+      "spinlock": {
+        "name": "Spinlock",
+        "description": "Attrezzature di sicurezza"
+      }
+    },
+    "final_cta": {
+      "title": "Pronto per la Tua Avventura Velica?",
+      "subtitle": "Unisciti a noi per una giornata indimenticabile di vela da regata sul Lago di Garda. Nessuna esperienza necessaria - porta solo il tuo spirito d'avventura!",
+      "cta": "Prenota Ora - €195"
+    }
+  },
+  "booking": {
+    "title": "Prenota la Tua Esperienza di Regata",
+    "subtitle": "Scegli una data e un orario per un'indimenticabile esperienza di vela da regata sul Lago di Garda",
+    "proceed_payment": "Procedi al pagamento",
+    "cta": "Prenota la Tua Esperienza - €195",
+    "steps": {
+      "select_date": "Seleziona Data",
+      "time_participants": "Orario e Partecipanti",
+      "details": "Dettagli",
+      "payment": "Pagamento"
+    },
+    "time": {
+      "morning": "Mattina: 8:30-12:30",
+      "afternoon": "Pomeriggio: 13:30-18:00"
+    },
+    "progress": {
+      "step": "Passo"
+    },
+    "calendar": {
+      "select_date": "Seleziona Data",
+      "change_date": "← Cambia data",
+      "time_participants": "Seleziona orario e partecipanti",
+      "participants_max": "Numero di partecipanti (max 5 per regata)",
+      "available_times": "Orari di regata disponibili",
+      "loading_times": "Caricamento orari disponibili...",
+      "no_slots": "Nessun orario disponibile",
+      "no_slots_description": "Non ci sono orari disponibili per questa data. Seleziona un'altra data.",
+      "choose_another_date": "Scegli Un'Altra Data",
+      "continue_details": "Continua ai dettagli",
+      "morning_regatta": "Regata Mattutina",
+      "afternoon_regatta": "Regata Pomeridiana",
+      "per_person": "per persona",
+      "up_to_participants": "Fino a {{count}} partecipanti",
+      "4_hours": "(4 ore)",
+      "selected_date": "Data selezionata:"
+    },
+    "details": {
+      "your_details": "I tuoi dettagli",
+      "back_to_time": "← Torna alla selezione orario"
+    },
+    "payment": {
+      "payment": "Pagamento",
+      "back_to_details": "← Torna ai dettagli",
+      "secure_payment": "Pagamento sicuro con Stripe",
+      "secure_description": "Il tuo pagamento è protetto dalla crittografia leader del settore di Stripe. Non memorizziamo mai le informazioni della tua carta di credito.",
+      "order_summary": "Riepilogo Ordine",
+      "date": "Data:",
+      "time": "Orario:",
+      "participants": "Partecipanti:",
+      "total": "Totale:",
+      "sign_in_required": "Accedi per continuare",
+      "sign_in_description": "Devi essere loggato per completare la prenotazione. Questo ci aiuta a tenere traccia delle tue prenotazioni e fornire un servizio migliore.",
+      "sign_in_button": "Accedi per continuare",
+      "no_account": "Non hai un account?",
+      "create_account": "Creane uno ora"
+    },
+    "summary": {
+      "regatta_summary": "Riepilogo Regata",
+      "duration": "Durata:",
+      "duration_4_hours": "4 ore",
+      "price_per_person": "€195 per persona per regata di 4 ore"
+    },
+    "included": {
+      "professional_skipper": "Skipper professionale",
+      "safety_equipment": "Tutta l'attrezzatura di sicurezza",
+      "racing_instruction": "Istruzione di regata e allenamento",
+      "medal_ceremony": "Cerimonia delle medaglie",
+      "professional_photography": "Fotografia professionale"
+    },
+    "notices": {
+      "free_cancellation": "Cancellazione gratuita 48 ore prima",
+      "insurance_included": "Assicurazione completa inclusa"
+    },
+    "availability": {
+      "june_july_notice": "Avviso Disponibilità Giugno/Luglio",
+      "june_weekends": "Durante giugno, le regate sono disponibili solo nei weekend (sabato e domenica). I giorni feriali sono completamente prenotati per eventi privati.",
+      "july_weekends": "Durante luglio, le regate sono disponibili solo nei weekend (sabato e domenica). I giorni feriali sono completamente prenotati per eventi privati.",
+      "full_availability": "{{month}} - Piena Disponibilità",
+      "all_dates": "Tutte le date sono disponibili per la prenotazione durante {{month}}. Scegli qualsiasi giorno che ti va bene!"
+    },
+    "legend": {
+      "selected": "Selezionato",
+      "available": "Disponibile",
+      "booked": "Prenotato",
+      "past_unavailable": "Passato/Non disponibile"
+    },
+    "form": {
+      "creating_booking": "Creazione prenotazione..."
+    }
+  },
+  "events": {
+    "title": "L'Esperienza di Regata Completa",
+    "subtitle": "Da principiante a campione in un giorno. Vivi l'autentica vela da regata sul Lago di Garda con istruzione professionale, regate competitive e riconoscimento ufficiale del tuo successo."
+  },
+  "services": {
+    "title": "Servizi Aziendali",
+    "subtitle": "Crea eventi aziendali indimenticabili sul Lago di Garda. Regate organizzate professionalmente per rafforzare lo spirito di squadra."
+  },
+  "contact": {
+    "title": "Contattaci",
+    "subtitle": "Mettiti in contatto con il nostro team per qualsiasi domanda sulle esperienze di vela da regata sul Lago di Garda"
+  },
+  "form": {
+    "name": "Nome Completo",
+    "email": "Email",
+    "phone": "Telefono",
+    "message": "Messaggio",
+    "submit": "Invia Messaggio",
+    "required": "Campo obbligatorio",
+    "invalid_email": "Inserisci un indirizzo email valido",
+    "invalid_phone": "Inserisci un numero di telefono valido",
+    "password_too_short": "La password deve essere di almeno 8 caratteri",
+    "passwords_dont_match": "Le password non corrispondono",
+    "please_fill_required": "Compila tutti i campi obbligatori"
+  },
+  "auth": {
+    "login": {
+      "title": "Accedi al tuo account",
+      "no_account": "Non hai un account?",
+      "sign_up": "Registrati",
+      "remember_me": "Ricordami",
+      "forgot_password": "Password dimenticata?",
+      "sign_in_button": "Accedi"
+    },
+    "register": {
+      "title": "Crea il tuo account",
+      "have_account": "Hai già un account?",
+      "sign_in": "Accedi",
+      "first_name": "Nome",
+      "last_name": "Cognome",
+      "confirm_password": "Conferma password",
+      "sign_up_button": "Registrati"
+    },
+    "email": "Indirizzo email",
+    "password": "Password"
+  },
+  "success": {
+    "title": "Prenotazione Confermata!",
+    "subtitle": "Grazie per aver scelto Garda Racing. La tua esperienza di vela da regata è stata prenotata con successo.",
+    "next_steps": "Cosa succede ora?",
+    "email_confirmation": "Conferma Email",
+    "email_description": "Riceverai un'email di conferma con tutti i dettagli entro 5 minuti.",
+    "contact_call": "Ti Chiameremo",
+    "contact_description": "Il nostro team ti contatterà entro 24 ore per confermare i dettagli e rispondere a eventuali domande.",
+    "prepare_experience": "Preparati per la Tua Esperienza",
+    "prepare_description": "Ti invieremo una guida di preparazione con tutto quello che devi sapere.",
+    "booking_reference": "Riferimento Prenotazione:",
+    "reference_note": "Conserva questo riferimento per i tuoi archivi.",
+    "view_booking": "Visualizza le Mie Prenotazioni",
+    "back_home": "Torna alla Home",
+    "questions": "Domande o modifiche necessarie?",
+    "call_us": "Chiamaci: +39 344 777 00 77",
+    "email_us": "Email: info@gardaracing.com"
+  },
+  "dashboard": {
+    "welcome": "Bentornato!",
+    "subtitle": "Gestisci le tue prenotazioni di vela da regata e il profilo",
+    "settings": "Impostazioni",
+    "your_bookings": "Le Tue Prenotazioni",
+    "no_bookings": "Nessuna prenotazione trovata"
+  },
+  "common": {
+    "loading": "Caricamento...",
+    "error": "Errore",
+    "retry": "Riprova",
+    "save": "Salva",
+    "cancel": "Annulla",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "view": "Visualizza",
+    "close": "Chiudi",
+    "back": "Indietro",
+    "next": "Avanti",
+    "previous": "Precedente",
+    "submit": "Invia",
+    "yes": "Sì",
+    "no": "No",
+    "confirm": "Conferma",
+    "success": "Successo",
+    "warning": "Avvertimento",
+    "info": "Informazione",
+    "search": "Cerca",
+    "filter": "Filtro",
+    "sort": "Ordina",
+    "all": "Tutto",
+    "none": "Nessuno",
+    "select": "Seleziona",
+    "add": "Aggiungi",
+    "remove": "Rimuovi",
+    "update": "Aggiorna",
+    "create": "Crea",
+    "manage": "Gestisci",
+    "settings": "Impostazioni",
+    "help": "Aiuto",
+    "about": "Informazioni",
+    "more": "Di più",
+    "less": "Di meno",
+    "show": "Mostra",
+    "hide": "Nascondi",
+    "expand": "Espandi",
+    "collapse": "Comprimi",
+    "refresh": "Aggiorna",
+    "reload": "Ricarica",
+    "reset": "Reimposta",
+    "clear": "Cancella",
+    "upload": "Carica",
+    "download": "Scarica",
+    "export": "Esporta",
+    "import": "Importa",
+    "copy": "Copia",
+    "paste": "Incolla",
+    "cut": "Taglia",
+    "undo": "Annulla",
+    "redo": "Ripeti",
+    "print": "Stampa",
+    "share": "Condividi",
+    "send": "Invia",
+    "receive": "Ricevi",
+    "open": "Apri",
+    "new": "Nuovo",
+    "recent": "Recente",
+    "popular": "Popolare",
+    "featured": "In evidenza",
+    "recommended": "Consigliato",
+    "available": "Disponibile",
+    "unavailable": "Non disponibile",
+    "active": "Attivo",
+    "inactive": "Inattivo",
+    "enabled": "Abilitato",
+    "disabled": "Disabilitato",
+    "online": "Online",
+    "offline": "Offline",
+    "public": "Pubblico",
+    "private": "Privato",
+    "draft": "Bozza",
+    "published": "Pubblicato",
+    "archived": "Archiviato"
+  },
+  "status": {
+    "pending": "In Attesa",
+    "confirmed": "Confermato",
+    "cancelled": "Annullato",
+    "completed": "Completato",
+    "active": "Attivo",
+    "inactive": "Inattivo",
+    "approved": "Approvato",
+    "rejected": "Rifiutato",
+    "processing": "Elaborazione",
+    "failed": "Fallito",
+    "draft": "Bozza",
+    "published": "Pubblicato",
+    "archived": "Archiviato",
+    "new": "Nuovo",
+    "in_progress": "In Corso",
+    "on_hold": "In Sospeso",
+    "expired": "Scaduto"
+  },
+  "currency": {
+    "eur": "EUR",
+    "usd": "USD",
+    "symbol": {
+      "eur": "€",
+      "usd": "$"
+    }
+  },
+  "price": {
+    "per_person": "per persona",
+    "total": "Totale",
+    "subtotal": "Subtotale",
+    "discount": "Sconto",
+    "tax": "Tassa",
+    "fee": "Commissione",
+    "free": "Gratuito",
+    "from": "Da",
+    "starting_at": "A partire da",
+    "contact_for_price": "Contatta per il prezzo",
+    "price_on_request": "Prezzo su richiesta"
+  },
+  "date": {
+    "today": "Oggi",
+    "tomorrow": "Domani",
+    "yesterday": "Ieri",
+    "this_week": "Questa settimana",
+    "next_week": "Prossima settimana",
+    "this_month": "Questo mese",
+    "next_month": "Prossimo mese",
+    "this_year": "Quest'anno",
+    "next_year": "Prossimo anno",
+    "last_week": "Settimana scorsa",
+    "last_month": "Mese scorso",
+    "last_year": "Anno scorso"
+  },
+  "time": {
+    "morning": "Mattina",
+    "afternoon": "Pomeriggio",
+    "evening": "Sera",
+    "night": "Notte",
+    "hour": "Ora",
+    "hours": "Ore",
+    "minute": "Minuto",
+    "minutes": "Minuti",
+    "second": "Secondo",
+    "seconds": "Secondi",
+    "am": "AM",
+    "pm": "PM",
+    "now": "Ora",
+    "recently": "Di recente"
+  },
+  "messages": {
+    "success": {
+      "general": "Operazione completata con successo"
+    },
+    "error": {
+      "general": "Si è verificato un errore. Riprova."
+    },
+    "warning": {
+      "general": "Controlla i tuoi dati e riprova"
+    },
+    "info": {
+      "general": "Informazioni aggiornate"
+    },
+    "confirm": {
+      "delete": "Sei sicuro di voler eliminare questo elemento?",
+      "save": "Salvare le modifiche?",
+      "cancel": "Annullare l'operazione?"
+    },
+    "no_data": "Nessun dato disponibile",
+    "loading_data": "Caricamento dati...",
+    "data_saved": "Dati salvati con successo",
+    "data_updated": "Dati aggiornati con successo",
+    "data_deleted": "Dati eliminati con successo",
+    "operation_failed": "Operazione fallita",
+    "try_again": "Riprova",
+    "contact_support": "Contatta il supporto se il problema persiste"
+  },
+  "actions": {
+    "book_now": "Prenota Ora",
+    "learn_more": "Scopri di Più",
+    "get_started": "Inizia",
+    "contact_us": "Contattaci",
+    "call_now": "Chiama Ora",
+    "email_us": "Scrivici",
+    "request_quote": "Richiedi Preventivo",
+    "view_details": "Visualizza Dettagli",
+    "read_more": "Leggi di Più",
+    "show_less": "Mostra Meno",
+    "load_more": "Carica di Più",
+    "try_again": "Riprova",
+    "go_back": "Torna Indietro",
+    "continue": "Continua",
+    "proceed": "Procedi",
+    "finish": "Termina",
+    "complete": "Completa",
+    "start": "Inizia",
+    "stop": "Ferma",
+    "pause": "Pausa",
+    "resume": "Riprendi",
+    "restart": "Riavvia"
+  }
+}

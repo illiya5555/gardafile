@@ -122,7 +122,7 @@ serve(async (req) => {
     } else {
       // Non-authenticated user - create a temporary Stripe customer using email from metadata
       if (!metadata.customer_email) {
-        return new Response(
+        payment_method_types: ['auto'],
           JSON.stringify({ error: 'Customer email is required for non-authenticated users' }),
           {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },

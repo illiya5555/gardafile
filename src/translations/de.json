@@ -64,6 +64,95 @@
     },
     "copyright": "© 2025 Garda Racing Yacht Club. Alle Rechte vorbehalten."
   },
+  "events": {
+    "title": "Das komplette Regatta-Erlebnis",
+    "subtitle": "Vom Anfänger zum Champion an einem Tag. Erleben Sie authentischen Segelrennsport am Gardasee mit professionellem Unterricht, Wettkampfregatten und offizieller Anerkennung Ihrer Leistung.",
+    "complete_experience": "Das komplette Regatta-Erlebnis",
+    "beginner_to_champion": "Vom Anfänger zum Champion an einem Tag. Erleben Sie authentischen Segelrennsport am Gardasee mit professionellem Unterricht, Wettkampfregatten und offizieller Anerkennung Ihrer Leistung.",
+    "tabs": {
+      "overview": "Übersicht",
+      "schedule": "Zeitplan",
+      "gallery": "Galerie",
+      "weather": "Wetter",
+      "equipment": "Ausrüstung",
+      "faq": "FAQ"
+    },
+    "overview": {
+      "what_makes_special": "Was unser Erlebnis besonders macht",
+      "professional_instruction": "Professioneller Unterricht",
+      "professional_instruction_desc": "Lernen Sie von zertifizierten Segelprofis mit jahrelanger Regattaerfahrung am Gardasee.",
+      "authentic_racing": "Authentisches Rennen",
+      "authentic_racing_desc": "Nehmen Sie an echten Yachtrennen mit offizieller Zeitmessung, Wertung und Medaillenzeremonien teil.",
+      "professional_documentation": "Professionelle Dokumentation",
+      "professional_documentation_desc": "Hochwertige Fotos und Videos Ihres Erlebnisses, innerhalb von 24 Stunden geliefert.",
+      "racing_format": "Rennformat",
+      "pro_level_regatta": "Profi-Level Eintages-Regatta",
+      "j70_yachts": "Rennen auf professionellen J/70-Klasse-Segelyachten",
+      "licensed_skipper": "Jedes Boot beinhaltet einen lizenzierten Skipper und eine komplette Crew",
+      "official_races": "3–5 offizielle Rennen pro Tag, nach Segelsportregeln gewertet",
+      "judging_team": "Beaufsichtigt von einem qualifizierten Schiedsrichterteam und technischen Supportbooten",
+      "medal_ceremony_certificates": "Medaillenzeremonie und Zertifikate für die besten Crews"
+    },
+    "schedule": {
+      "daily_schedule": "Tagesplan",
+      "morning_session": "Vormittagssitzung",
+      "afternoon_session": "Nachmittagssitzung",
+      "welcome_registration": "Willkommen & Registrierung",
+      "welcome_registration_desc": "Treffen Sie Ihren Skipper und Ihre Segelkollegen",
+      "safety_briefing": "Sicherheitsbriefing",
+      "safety_briefing_desc": "Wesentliche Sicherheitsverfahren und Ausrüstungsübersicht",
+      "sailing_basics": "Segelgrundlagen",
+      "sailing_basics_desc": "Lernen Sie grundlegende Segeltechniken",
+      "first_race": "Erstes Rennen",
+      "first_race_desc": "Übungsrennen zum Eingewöhnen",
+      "medal_ceremony_award": "Medaillenzeremonie",
+      "medal_ceremony_desc": "Auszeichnungen und Zertifikatsübergabe",
+      "photo_session": "Fotosession",
+      "photo_session_desc": "Professionelle Fotos mit Ihren Medaillen"
+    },
+    "gallery": {
+      "experience_gallery": "Erlebnisgalerie"
+    },
+    "weather": {
+      "typical_conditions": "Typische Wetterbedingungen",
+      "wind_speed": "Windgeschwindigkeit",
+      "wind_speed_value": "8-15 Knoten",
+      "temperature": "Temperatur",
+      "temperature_value": "18-28°C",
+      "visibility": "Sicht",
+      "visibility_value": "Ausgezeichnet",
+      "water_temp": "Wassertemperatur",
+      "water_temp_value": "16-24°C"
+    },
+    "equipment": {
+      "equipment_provided": "Ausrüstung wird gestellt",
+      "safety_first": "Sicherheit geht vor",
+      "safety_description": "Alle Sicherheitsausrüstungen entsprechen internationalen Standards. Unsere Boote werden regelmäßig inspiziert und nach höchsten Standards gewartet. Jeder Teilnehmer erhält vor der Abfahrt eine umfassende Sicherheitseinweisung.",
+      "premium_yachts": "Premium-Yachten",
+      "premium_yachts_desc": "Wir verwenden moderne J-70/J-80 Hochleistungsyachten. Diese Boote werden speziell wegen ihrer Rennfähigkeiten ausgewählt, während Komfort und Sicherheit für unsere Teilnehmer gewährleistet sind.",
+      "professional_j70_yacht": "Professionelle J-70/J-80 Rennyacht",
+      "complete_list": "Vollständige Ausrüstungsliste",
+      "racing_yacht": "Professionelle Rennyacht (J-70/J-80)",
+      "safety_equipment": "Gesamte Sicherheitsausrüstung (Schwimmwesten, Wasser)",
+      "sailing_gear": "Professionelle Segelausrüstung",
+      "first_aid": "Erste-Hilfe-Set und Notfallausrüstung",
+      "photo_equipment": "Professionelle Fotoausrüstung",
+      "medals_certificates": "Rennmedaillen und Zertifikate"
+    },
+    "faq": {
+      "frequently_asked": "Häufig gestellte Fragen",
+      "sailing_experience": "Benötige ich Segelerfahrung?",
+      "sailing_experience_answer": "Es ist keine Segelerfahrung erforderlich! Unsere professionellen Skipper bringen Ihnen alles bei, was Sie wissen müssen. Wir heißen sowohl absolute Anfänger als auch erfahrene Segler willkommen.",
+      "what_to_bring": "Was soll ich mitbringen?",
+      "what_to_bring_answer": "Bringen Sie bequeme Kleidung, Sonnencreme, einen Hut und Wechselkleidung mit. Wir stellen die gesamte Segelausrüstung und Sicherheitsausrüstung zur Verfügung.",
+      "bad_weather": "Was ist, wenn das Wetter schlecht ist?",
+      "bad_weather_answer": "Sicherheit hat bei uns oberste Priorität. Wenn die Bedingungen unsicher sind, verschieben wir Ihr Erlebnis ohne zusätzliche Kosten. Leichter Regen hält uns nicht auf – das gehört zum Abenteuer dazu!",
+      "people_per_boat": "Wie viele Personen pro Boot?",
+      "people_per_boat_answer": "Jede Yacht bietet Platz für 4-5 Teilnehmer plus den professionellen Skipper. Dies gewährleistet eine persönliche Betreuung.",
+      "bring_camera": "Kann ich meine Kamera mitbringen?",
+      "bring_camera_answer": "Absolut! Wir bieten auch professionelle Fotodienste an. Sie erhalten hochwertige Fotos und Videos Ihres Rennerlebnisses innerhalb von 24 Stunden."
+    }
+  },
   "home": {
     "hero": {
       "title_part1": "Erleben Sie den Nervenkitzel des",

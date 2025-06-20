@@ -125,6 +125,95 @@
     "links": {
       "privacy_policy": "Privacy Policy",
   },
+  "events": {
+    "title": "L'Esperienza di Regata Completa",
+    "subtitle": "Da principiante a campione in un giorno. Vivi l'autentica vela da regata sul Lago di Garda con istruzione professionale, regate competitive e riconoscimento ufficiale del tuo successo.",
+    "complete_experience": "L'Esperienza di Regata Completa",
+    "beginner_to_champion": "Da principiante a campione in un giorno. Vivi l'autentica vela da regata sul Lago di Garda con istruzione professionale, regate competitive e riconoscimento ufficiale del tuo successo.",
+    "tabs": {
+      "overview": "Panoramica",
+      "schedule": "Programma",
+      "gallery": "Galleria",
+      "weather": "Meteo",
+      "equipment": "Attrezzatura",
+      "faq": "FAQ"
+    },
+    "overview": {
+      "what_makes_special": "Cosa Rende la Nostra Esperienza Speciale",
+      "professional_instruction": "Istruzione Professionale",
+      "professional_instruction_desc": "Impara da professionisti della vela certificati con anni di esperienza di regata sul Lago di Garda.",
+      "authentic_racing": "Regata Autentica",
+      "authentic_racing_desc": "Partecipa a vere regate con cronometraggio ufficiale, punteggi e cerimonie di premiazione.",
+      "professional_documentation": "Documentazione Professionale",
+      "professional_documentation_desc": "Foto e video di alta qualità della tua esperienza, consegnati entro 24 ore.",
+      "racing_format": "Formato di Regata",
+      "pro_level_regatta": "Regata di Livello Pro di un Giorno",
+      "j70_yachts": "Regate su yacht a vela professionali classe J/70",
+      "licensed_skipper": "Ogni barca include uno skipper con licenza e un equipaggio completo",
+      "official_races": "3-5 regate ufficiali al giorno, con punteggio secondo le regole dello sport velico",
+      "judging_team": "Supervisionato da un team di giudici qualificati e barche di supporto tecnico",
+      "medal_ceremony_certificates": "Cerimonia delle medaglie e certificati per i migliori equipaggi"
+    },
+    "schedule": {
+      "daily_schedule": "Programma Giornaliero",
+      "morning_session": "Sessione Mattutina",
+      "afternoon_session": "Sessione Pomeridiana",
+      "welcome_registration": "Benvenuto e Registrazione",
+      "welcome_registration_desc": "Incontra il tuo skipper e i tuoi compagni velisti",
+      "safety_briefing": "Briefing di Sicurezza",
+      "safety_briefing_desc": "Panoramica essenziale delle procedure di sicurezza e dell'attrezzatura",
+      "sailing_basics": "Basi della Vela",
+      "sailing_basics_desc": "Impara le tecniche fondamentali della vela",
+      "first_race": "Prima Regata",
+      "first_race_desc": "Regata di prova per prendere confidenza",
+      "medal_ceremony_award": "Cerimonia delle Medaglie",
+      "medal_ceremony_desc": "Premiazioni e consegna dei certificati",
+      "photo_session": "Sessione Fotografica",
+      "photo_session_desc": "Foto professionali con le tue medaglie"
+    },
+    "gallery": {
+      "experience_gallery": "Galleria Esperienze"
+    },
+    "weather": {
+      "typical_conditions": "Condizioni Meteorologiche Tipiche",
+      "wind_speed": "Velocità del Vento",
+      "wind_speed_value": "8-15 nodi",
+      "temperature": "Temperatura",
+      "temperature_value": "18-28°C",
+      "visibility": "Visibilità",
+      "visibility_value": "Eccellente",
+      "water_temp": "Temperatura Acqua",
+      "water_temp_value": "16-24°C"
+    },
+    "equipment": {
+      "equipment_provided": "Attrezzatura Fornita",
+      "safety_first": "La Sicurezza Prima di Tutto",
+      "safety_description": "Tutta l'attrezzatura di sicurezza soddisfa gli standard internazionali. Le nostre barche sono regolarmente ispezionate e mantenute secondo i più alti standard. Ogni partecipante riceve un briefing completo sulla sicurezza prima della partenza.",
+      "premium_yachts": "Yacht Premium",
+      "premium_yachts_desc": "Utilizziamo yacht moderni ad alte prestazioni J-70/J-80. Queste barche sono scelte specificamente per le loro capacità di regata pur mantenendo comfort e sicurezza per i nostri partecipanti.",
+      "professional_j70_yacht": "Yacht da Regata Professionale J-70/J-80",
+      "complete_list": "Elenco Completo Attrezzatura",
+      "racing_yacht": "Yacht da regata professionale (J-70/J-80)",
+      "safety_equipment": "Tutta l'attrezzatura di sicurezza (giubbotti di salvataggio, acqua)",
+      "sailing_gear": "Attrezzatura da vela professionale",
+      "first_aid": "Kit di pronto soccorso e attrezzatura di emergenza",
+      "photo_equipment": "Attrezzatura fotografica professionale",
+      "medals_certificates": "Medaglie e certificati di regata"
+    },
+    "faq": {
+      "frequently_asked": "Domande Frequenti",
+      "sailing_experience": "Ho bisogno di esperienza di vela?",
+      "sailing_experience_answer": "Non è richiesta alcuna esperienza di vela! I nostri skipper professionali ti insegneranno tutto ciò che devi sapere. Diamo il benvenuto sia ai principianti assoluti che ai velisti esperti.",
+      "what_to_bring": "Cosa devo portare?",
+      "what_to_bring_answer": "Porta vestiti comodi, crema solare, un cappello e un cambio di vestiti. Forniamo tutta l'attrezzatura da vela e di sicurezza.",
+      "bad_weather": "Cosa succede se il tempo è brutto?",
+      "bad_weather_answer": "La sicurezza è la nostra priorità. Se le condizioni non sono sicure, riprogrammeremo la tua esperienza senza costi aggiuntivi. La pioggia leggera non ci ferma, fa parte dell'avventura!",
+      "people_per_boat": "Quante persone per barca?",
+      "people_per_boat_answer": "Ogni yacht ospita 4-5 partecipanti più lo skipper professionale. Questo garantisce un'attenzione personalizzata.",
+      "bring_camera": "Posso portare la mia macchina fotografica?",
+      "bring_camera_answer": "Assolutamente! Offriamo anche servizi fotografici professionali. Riceverai foto e video di alta qualità della tua esperienza di regata entro 24 ore."
+    }
+  },
   "home": {
     "hero": {
       "title_part1": "Vivi l'Emozione della",

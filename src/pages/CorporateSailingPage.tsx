@@ -206,42 +206,44 @@ const CorporateSailingPage = () => {
       </div>
 
       {/* Benefits Section */}
-      <div className="py-16 bg-white">
+      <div className="py-16 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              {t('corporate.benefits.title', 'Why Choose Corporate Sailing?')}
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              Почему яхтинг = идеальный тимбилдинг?
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="h-8 w-8 text-primary-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Team Building</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <div className="text-4xl font-bold text-primary-600 mb-4">🤝</div>
+              <h4 className="text-xl font-semibold text-gray-900 mb-3">Развитие командного взаимодействия</h4>
               <p className="text-gray-600">
-                Strengthen team bonds through collaborative sailing challenges and shared experiences on the water.
+                Совместное управление яхтой требует слаженности и четкого распределения ролей
               </p>
             </div>
 
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Star className="h-8 w-8 text-primary-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Professional Service</h3>
+            <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <div className="text-4xl font-bold text-primary-600 mb-4">🧭</div>
+              <h4 className="text-xl font-semibold text-gray-900 mb-3">Лидерство и ответственность</h4>
               <p className="text-gray-600">
-                Expert instructors, premium equipment, and dedicated event coordination for a seamless experience.
+                Принятие решений в реальных условиях, когда от каждого зависит общий результат
               </p>
             </div>
 
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MapPin className="h-8 w-8 text-primary-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Stunning Location</h3>
+            <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <div className="text-4xl font-bold text-primary-600 mb-4">🧘</div>
+              <h4 className="text-xl font-semibold text-gray-900 mb-3">Снятие стресса и перезагрузка</h4>
               <p className="text-gray-600">
-                Lake Garda's beautiful waters and mountain scenery provide the perfect backdrop for corporate events.
+                Природа, свежий воздух и новый опыт – идеальная среда для перезагрузки
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <div className="text-4xl font-bold text-primary-600 mb-4">🌊</div>
+              <h4 className="text-xl font-semibold text-gray-900 mb-3">Эмоциональный заряд и доверие</h4>
+              <p className="text-gray-600">
+                Яркие эмоции и совместное преодоление трудностей сближают команду
               </p>
             </div>
           </div>

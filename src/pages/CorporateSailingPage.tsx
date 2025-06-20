@@ -205,50 +205,6 @@ const CorporateSailingPage = () => {
         </div>
       </div>
 
-      {/* Benefits Section */}
-      <div className="py-16 bg-white relative" id="benefits-section">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              {t('corporate.why_sailing.title', 'Why Sailing = Perfect Team Building?')}
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-              <div className="text-4xl font-bold text-primary-600 mb-4">🤝</div>
-              <h4 className="text-xl font-semibold text-gray-900 mb-3">{t('corporate.why_sailing.team.title', 'Team Interaction Development')}</h4>
-              <p className="text-gray-600">
-                {t('corporate.why_sailing.team.description', 'Joint yacht management requires cohesion and clear role distribution')}
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-              <div className="text-4xl font-bold text-primary-600 mb-4">🧭</div>
-              <h4 className="text-xl font-semibold text-gray-900 mb-3">{t('corporate.why_sailing.leadership.title', 'Leadership and Responsibility')}</h4>
-              <p className="text-gray-600">
-                {t('corporate.why_sailing.leadership.description', 'Decision-making in real conditions where everyone impacts the overall result')}
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-              <div className="text-4xl font-bold text-primary-600 mb-4">🧘</div>
-              <h4 className="text-xl font-semibold text-gray-900 mb-3">{t('corporate.why_sailing.stress.title', 'Stress Relief and Reset')}</h4>
-              <p className="text-gray-600">
-                {t('corporate.why_sailing.stress.description', 'Nature, fresh air, and new experiences – the perfect environment for a reset')}
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-              <div className="text-4xl font-bold text-primary-600 mb-4">🌊</div>
-              <h4 className="text-xl font-semibold text-gray-900 mb-3">{t('corporate.why_sailing.emotions.title', 'Emotional Charge and Trust')}</h4>
-              <p className="text-gray-600">
-                {t('corporate.why_sailing.emotions.description', 'Vibrant emotions and jointly overcoming challenges bring the team closer together')}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* CTA Section */}
       <div className="py-16 bg-white">

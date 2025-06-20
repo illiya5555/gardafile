@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Play, Clock, Users, Award, Camera, Wind, Anchor, CheckCircle, Star } from 'lucide-react';
+import { Play, Clock, Users, Award, Camera, Wind, Anchor, CheckCircle, Star, Shield } from 'lucide-react';
 import { useTranslation } from '../context/LanguageContext';
 
 const EventsPage = () => {
@@ -35,13 +35,6 @@ const EventsPage = () => {
     { time: "14:30", activity: "First Race", description: "Practice race to get comfortable" },
     { time: "18:00", activity: "Medal Ceremony", description: "Awards and certificate presentation" },
     { time: "18:00", activity: "Photo Session", description: "Professional photos with your medals" }
-  ];
-
-  const equipment = [
-    "Professional racing yacht (J-70/J-80)",
-    "All safety equipment (life jackets, water)",
-    "Professional sailing gear",
-    "First aid kit and emergency equipment"
   ];
 
   const weatherConditions = [
@@ -362,13 +355,85 @@ const EventsPage = () => {
 
         {/* Equipment */}
         {activeTab === 'equipment' && (
-          <div className="animate-fade-in max-w-3xl mx-auto">
+          <div className="animate-fade-in">
             <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Equipment Provided</h2>
-            <ul className="list-disc list-inside space-y-4 text-gray-700 text-lg">
-              {equipment.map((item, i) => (
-                <li key={i}>{item}</li>
-              ))}
-            </ul>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+              {/* Safety First Section */}
+              <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+                <div className="flex items-center mb-6">
+                  <div className="bg-green-100 p-3 rounded-lg mr-4">
+                    <Shield className="h-8 w-8 text-green-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">Safety First</h3>
+                </div>
+                <p className="text-gray-700 leading-relaxed">
+                  All safety equipment meets international standards. Our boats are regularly inspected and maintained to the highest standards. Every participant receives a comprehensive safety briefing before departure.
+                </p>
+              </div>
+
+              {/* Premium Yachts Section */}
+              <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+                <div className="flex items-center mb-6">
+                  <div className="bg-blue-100 p-3 rounded-lg mr-4">
+                    <Anchor className="h-8 w-8 text-blue-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">Premium Yachts</h3>
+                </div>
+                <p className="text-gray-700 leading-relaxed">
+                  We use modern J-70/J-80 high-performance yachts. These boats are specifically chosen for their racing capabilities while maintaining comfort and safety for our participants.
+                </p>
+              </div>
+            </div>
+
+            {/* Yacht Image */}
+            <div className="mb-12">
+              <div className="relative rounded-2xl shadow-2xl overflow-hidden">
+                <img
+                  src="https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif"
+                  alt="Professional J-70/J-80 Racing Yacht"
+                  className="w-full h-96 object-cover"
+                />
+                <div className="absolute bottom-4 left-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-4">
+                  <p className="text-white text-center font-semibold">Professional J-70/J-80 Racing Yacht</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Equipment List */}
+            <div className="bg-gray-50 p-8 rounded-2xl">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Complete Equipment List</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-gray-700">Professional racing yacht (J-70/J-80)</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-gray-700">All safety equipment (life jackets, water)</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-gray-700">Professional sailing gear</span>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-gray-700">First aid kit and emergency equipment</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-gray-700">Professional photography equipment</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-gray-700">Racing medals and certificates</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 

@@ -147,7 +147,7 @@ const FALLBACK_TRANSLATIONS: Record<string, Record<string, string>> = {
     'home.hero.feature4': 'Fotos y videos profesionales de la regata',
     'home.hero.feature5': 'Todo el equipamiento incluido',
     'home.features.item1.title': 'Formato de Regata Real',
-    'home.features.item1.description': 'Auténtica regata de yates con dinámica de equipo, medallas y verdadera competición.',
+    'home.features.item1.description': 'Authentique régate de yacht avec dynamique d\'équipe, médailles et vraie compétition.',
     'home.features.item2.title': 'Patrón Profesional',
     'home.features.item2.description': 'Capitanes de vela certificados y experimentados en cada barco.',
     'home.features.item3.title': 'Foto y Video',

@@ -362,7 +362,10 @@
   },
   "services": {
     "title": "Firmenservice",
-    "subtitle": "Schaffen Sie unvergessliche Firmenevents am Gardasee. Professionell organisierte Regatten zur Stärkung des Teamgeists."
+    "subtitle": "Schaffen Sie unvergessliche Firmenevents am Gardasee. Professionell organisierte Regatten zur Stärkung des Teamgeists.",
+    "inquiry": {
+      "company_name": "Firmenname *"
+    }
   },
   "contact": {
     "title": "Kontaktieren Sie uns",
@@ -624,5 +627,31 @@
     "pause": "Pausieren",
     "resume": "Fortsetzen",
     "restart": "Neu starten"
+  },
+  "chat": {
+    "support_title": "Garda Racing Support",
+    "initial_message": "Hallo! Wie kann ich Ihnen heute bei Ihrem Yacht-Rennerlebnis helfen?",
+    "placeholder": "Type your message..."
+  },
+  "payment": {
+    "processing": "Verarbeitung...",
+    "pay_now": "Pay Now",
+    "subscribe_now": "Subscribe Now",
+    "secure_payment": "Secure payment powered by Stripe"
+  },
+  "admin_login": {
+    "title": "Admin-Zugang",
+    "username": "Username",
+    "password": "Password"
+  },
+  "corporate": {
+    "packages": {
+      "most_popular": "Am beliebtesten"
+    },
+    "benefits": {
+      "team_building": {
+        "title": "Teambuilding"
+      }
+    }
   }
 }

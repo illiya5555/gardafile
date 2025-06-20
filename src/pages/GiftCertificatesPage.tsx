@@ -14,7 +14,7 @@ const GiftCertificatesPage = () => {
     message: ''
   });
 
-  const predefinedAmounts = [199, 398, 597, 796];
+  const predefinedAmounts = [195, 390, 585, 780];
 
   const handleInputChange = (field: string, value: string) => {
     setRecipientInfo(prev => ({

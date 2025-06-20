@@ -13,7 +13,7 @@ export interface StripeProduct {
 export const stripeProducts: StripeProduct[] = [
   {
     id: 'garda-racing-experience',
-    priceId: 'price_1QU9hXP5kZ8hHdOdcTgEKktf', // Replace with your actual Stripe price ID for €195 yacht racing experience
+    priceId: 'price_1RbAbcHGLVvZbOy8R1225QhL', // Live Stripe price ID
     name: 'Garda Racing Experience',
     description: 'Premium yacht racing experience on Lake Garda with professional skipper, equipment, and medal ceremony.',
     price: 195.00,
@@ -29,23 +29,6 @@ export const stripeProducts: StripeProduct[] = [
     ],
     popular: true
   },
-  {
-    id: 'premium-membership',
-    priceId: 'price_1QU9hXP5kZ8hHdOdcTgEKktg', // Replace with your actual Stripe price ID for monthly membership
-    name: 'Premium Membership',
-    description: 'Monthly membership with exclusive benefits and discounts.',
-    price: 29.99,
-    currency: 'EUR',
-    mode: 'subscription',
-    features: [
-      'Priority booking access',
-      '20% discount on all experiences',
-      'Exclusive member events',
-      'Free professional photos',
-      'Complimentary equipment upgrades'
-    ],
-    popular: false
-  }
 ];
 
 export const getProductById = (id: string): StripeProduct | undefined => {
@@ -67,7 +50,7 @@ export const formatPrice = (price: number, currency: string = 'EUR'): string => 
 // Helper function to check if a product is available
 export const isProductAvailable = (productId: string): boolean => {
   const product = getProductById(productId);
-  return !!product;
+  return !!product && productId === 'garda-racing-experience'; // Only the racing experience is available
 };
 
 // Configuration for different environments

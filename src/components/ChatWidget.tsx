@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { MessageSquare, X, Send } from 'lucide-react';
 import { useTranslation } from '../context/LanguageContext';
-import { supabase } from '../lib/supabase';
 
 interface Message {
   id: string;
@@ -22,13 +21,11 @@ const ChatWidget = () => {
     }
   ]);
   const [inputText, setInputText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSendMessage = async (e: React.FormEvent) => {
+  const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputText.trim()) return;
 
-    // Add user message to chat
     const userMessage: Message = {
       id: Date.now().toString(),
       text: inputText,
@@ -38,73 +35,17 @@ const ChatWidget = () => {
 
     setMessages(prev => [...prev, userMessage]);
     setInputText('');
-    setIsLoading(true);
 
-    try {
-      // First, save the user message to the database
-      await supabase.from('chat_messages').insert({
-        message: inputText,
-        sender_type: 'user',
-        created_at: new Date().toISOString()
-      });
-
-      // Simple AI response simulation for the chat widget
-      // In a real scenario this would call the AI edge function
-      const aiResponses = [
-        "Привет! Я помощник Garda Racing Yacht Club в Рива-дель-Гарда. У нас проходят ежедневные регаты на быстрых яхтах J70. Можно присоединиться в любую дату, даже если ты никогда не гонял — на борту будет шкипер! Участие от 195€. Хочешь посмотреть доступные даты?",
-        "На нашем сайте вы можете забронировать место в регате уже сегодня. Стоимость участия — от 195€ за человека, включая профессионального шкипера, все снаряжение и медали победителям. Какую дату вы рассматриваете для участия?",
-        "Garda Racing Yacht Club — это новый способ попробовать яхтинг и участвовать в регатах на современных яхтах J70. Мы находимся в Рива-дель-Гарда, на озере Гарда в Италии. Наши регаты доступны новичкам. Могу я помочь вам с бронированием?"
-      ];
-      
-      // Choose a response based on input
-      let responseIndex = 0;
-      const lowerInput = inputText.toLowerCase();
-      
-      if (lowerInput.includes("дата") || lowerInput.includes("когда") || 
-          lowerInput.includes("бронирование") || lowerInput.includes("цена")) {
-        responseIndex = 1;
-      } else if (lowerInput.includes("что") || lowerInput.includes("клуб") || 
-                lowerInput.includes("где") || lowerInput.includes("как")) {
-        responseIndex = 2;
-      }
-      
-      const aiResponseText = aiResponses[responseIndex];
-
-      // Save the AI response to the database
-      await supabase.from('chat_messages').insert({
-        message: aiResponseText,
-        sender_type: 'bot',
-        created_at: new Date().toISOString()
-      });
-
-      // Add bot response to chat
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: aiResponseText,
-        isBot: true,
-        timestamp: new Date()
-      };
-
-      // Simulate a small delay for more natural conversation flow
-      setTimeout(() => {
-        setMessages(prev => [...prev, botMessage]);
-        setIsLoading(false);
-      }, 1000);
-      
-    } catch (error) {
-      console.error("Error in chat interaction:", error);
-      
-      // Fallback response in case of error
+    // Simulate bot response
+    setTimeout(() => {
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: t('chat.auto_response', 'Thank you for your message! Our team will get back to you shortly. For immediate assistance, please call +39 344 777 00 77.'),
         isBot: true,
         timestamp: new Date()
       };
-      
       setMessages(prev => [...prev, botMessage]);
-      setIsLoading(false);
-    }
+    }, 1000);
   };
 
   return (
@@ -159,19 +100,6 @@ const ChatWidget = () => {
                 </div>
               </div>
             ))}
-            
-            {/* Loading indicator */}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-gray-100 p-3 rounded-lg">
-                  <div className="flex space-x-2">
-                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"></div>
-                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Input */}
@@ -183,12 +111,10 @@ const ChatWidget = () => {
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder={t('chat.placeholder', 'Type your message...')}
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
-                disabled={isLoading}
               />
               <button
                 type="submit"
-                className="bg-primary-600 hover:bg-primary-700 text-white p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={isLoading || !inputText.trim()}
+                className="bg-primary-600 hover:bg-primary-700 text-white p-2 rounded-lg transition-colors"
               >
                 <Send className="h-4 w-4" />
               </button>

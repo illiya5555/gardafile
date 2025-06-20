@@ -206,44 +206,44 @@ const CorporateSailingPage = () => {
       </div>
 
       {/* Benefits Section */}
-      <div className="py-16 bg-white relative">
+      <div className="py-16 bg-white relative" id="benefits-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              Почему яхтинг = идеальный тимбилдинг?
+              {t('corporate.why_sailing.title', 'Why Sailing = Perfect Team Building?')}
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
               <div className="text-4xl font-bold text-primary-600 mb-4">🤝</div>
-              <h4 className="text-xl font-semibold text-gray-900 mb-3">Развитие командного взаимодействия</h4>
+              <h4 className="text-xl font-semibold text-gray-900 mb-3">{t('corporate.why_sailing.team.title', 'Team Interaction Development')}</h4>
               <p className="text-gray-600">
-                Совместное управление яхтой требует слаженности и четкого распределения ролей
+                {t('corporate.why_sailing.team.description', 'Joint yacht management requires cohesion and clear role distribution')}
               </p>
             </div>
 
             <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
               <div className="text-4xl font-bold text-primary-600 mb-4">🧭</div>
-              <h4 className="text-xl font-semibold text-gray-900 mb-3">Лидерство и ответственность</h4>
+              <h4 className="text-xl font-semibold text-gray-900 mb-3">{t('corporate.why_sailing.leadership.title', 'Leadership and Responsibility')}</h4>
               <p className="text-gray-600">
-                Принятие решений в реальных условиях, когда от каждого зависит общий результат
+                {t('corporate.why_sailing.leadership.description', 'Decision-making in real conditions where everyone impacts the overall result')}
               </p>
             </div>
 
             <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
               <div className="text-4xl font-bold text-primary-600 mb-4">🧘</div>
-              <h4 className="text-xl font-semibold text-gray-900 mb-3">Снятие стресса и перезагрузка</h4>
+              <h4 className="text-xl font-semibold text-gray-900 mb-3">{t('corporate.why_sailing.stress.title', 'Stress Relief and Reset')}</h4>
               <p className="text-gray-600">
-                Природа, свежий воздух и новый опыт – идеальная среда для перезагрузки
+                {t('corporate.why_sailing.stress.description', 'Nature, fresh air, and new experiences – the perfect environment for a reset')}
               </p>
             </div>
             
             <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
               <div className="text-4xl font-bold text-primary-600 mb-4">🌊</div>
-              <h4 className="text-xl font-semibold text-gray-900 mb-3">Эмоциональный заряд и доверие</h4>
+              <h4 className="text-xl font-semibold text-gray-900 mb-3">{t('corporate.why_sailing.emotions.title', 'Emotional Charge and Trust')}</h4>
               <p className="text-gray-600">
-                Яркие эмоции и совместное преодоление трудностей сближают команду
+                {t('corporate.why_sailing.emotions.description', 'Vibrant emotions and jointly overcoming challenges bring the team closer together')}
               </p>
             </div>
           </div>

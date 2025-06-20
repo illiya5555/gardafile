@@ -66,7 +66,7 @@ serve(async (req) => {
     // Parse the request body
     const { price_id, mode = 'payment', success_url, cancel_url, metadata = {} } = await req.json();
 
-    if (!price_id) {
+    if (typeof price_id !== 'string' || price_id.trim() === '') {
       return new Response(
         JSON.stringify({ error: 'Price ID is required' }),
         {

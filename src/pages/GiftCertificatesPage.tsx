@@ -4,8 +4,7 @@ import { useTranslation } from '../context/LanguageContext';
 
 const GiftCertificatesPage = () => {
   const { t } = useTranslation();
-  const [selectedAmount, setSelectedAmount] = useState<number | null>(199);
-  const [customAmount, setCustomAmount] = useState('');
+  const [selectedAmount] = useState<number>(195);
   const [recipientInfo, setRecipientInfo] = useState({
     recipientName: '',
     recipientEmail: '',
@@ -26,7 +25,7 @@ const GiftCertificatesPage = () => {
   const handlePurchase = () => {
     // Handle gift certificate purchase
     console.log('Purchase gift certificate:', {
-      amount: selectedAmount || parseInt(customAmount),
+      amount: selectedAmount,
       recipient: recipientInfo
     });
   };
@@ -65,30 +64,10 @@ const GiftCertificatesPage = () => {
                 </label>
                 <div className="mb-4">
                   <button
-                    onClick={() => {
-                      setSelectedAmount(195);
-                      setCustomAmount('');
-                    }}
-                    className={`w-full p-3 rounded-lg border-2 transition-colors ${
-                      selectedAmount === 195
-                        ? 'border-primary-500 bg-primary-50 text-primary-700'
-                        : 'border-gray-300 hover:border-gray-400'
-                    }`}
+                    className="w-full p-3 rounded-lg border-2 border-primary-500 bg-primary-50 text-primary-700 transition-colors"
                   >
                     €195
                   </button>
-                </div>
-                <div>
-                  <input
-                    type="number"
-                    placeholder="Custom amount (€)"
-                    value={customAmount}
-                    onChange={(e) => {
-                      setCustomAmount(e.target.value);
-                      setSelectedAmount(null);
-                    }}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  />
                 </div>
               </div>
 
@@ -175,11 +154,10 @@ const GiftCertificatesPage = () => {
               {/* Purchase Button */}
               <button
                 onClick={handlePurchase}
-                disabled={!selectedAmount && !customAmount}
                 className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center space-x-2 hover:scale-105"
               >
                 <Gift className="h-5 w-5" />
-                <span>{t('gift.form.purchase', 'Purchase Gift Certificate')} - €195</span>
+                <span>{t('gift.form.purchase', 'Purchase Gift Certificate')} - €{selectedAmount}</span>
               </button>
             </div>
 

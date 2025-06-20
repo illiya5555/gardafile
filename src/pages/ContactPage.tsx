@@ -71,6 +71,34 @@ const ContactPage = () => {
           </p>
         </div>
 
+        {/* Google Map */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+            {t('contact.map.title', 'Our Location')}
+          </h2>
+          <div className="w-full h-[450px] rounded-lg overflow-hidden shadow-lg">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2777.3711841622!2d10.844166699999999!3d45.883888899999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47821727e0319b4d%3A0xe35bcd19dae63816!2sFraglia%20Vela%20Riva!5e0!3m2!1sru!2sil!4v1750415746957!5m2!1sru!2sil" 
+              width="100%" 
+              height="100%" 
+              style={{ border: 0 }} 
+              allowFullScreen={true} 
+              loading="lazy" 
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Garda Racing Yacht Club Location"
+            ></iframe>
+          </div>
+          <div className="mt-4 flex justify-center">
+            <a 
+              href="https://maps.google.com/?q=Fraglia+Vela+Riva,+Viale+Giancarlo+Maroni+4,+38066+Riva+del+Garda+TN,+Italia" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 text-primary-600 hover:text-primary-700 transition-colors"
+            >
+              <span>{t('contact.map.get_directions', 'Get Directions')}</span>
+            </a>
+          </div>
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Information */}
           <div className="space-y-8">

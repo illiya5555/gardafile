@@ -30,14 +30,7 @@ export const useStripe = (): UseStripeReturn => {
     setError(null);
 
     try {
-      // Get the current user's session
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      
-      if (sessionError || !session) {
-        throw new Error('You must be logged in to make a purchase');
-      }
-
-      // Call the Supabase edge function
+      // Call the Supabase edge function (without requiring authentication)
       const { data, error } = await supabase.functions.invoke('stripe-checkout', {
         body: {
           price_id: priceId,
@@ -45,12 +38,9 @@ export const useStripe = (): UseStripeReturn => {
           success_url: successUrl,
           cancel_url: cancelUrl,
           metadata
-        },
-        headers: {
-          Authorization: `Bearer ${session.access_token}`
         }
       });
-
+      
       if (error) {
         console.error('Supabase function error:', error);
         throw new Error(error.message || 'Failed to create checkout session');

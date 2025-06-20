@@ -27,8 +27,8 @@ const BookingCalendarPage = () => {
   const [step, setStep] = useState(1); // 1: Calendar, 2: Time, 3: Details, 4: Payment
   const [loading, setLoading] = useState(false);
   const [bookingData, setBookingData] = useState<Partial<BookingFormData>>({});
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [createdBookingId, setCreatedBookingId] = useState<string | null>(null);
   
   // Use the calendar context to get available dates and time slots
   const { 
@@ -45,7 +45,6 @@ const BookingCalendarPage = () => {
   const checkAuthStatus = async () => {
     const { data: { user: currentUser } } = await supabase.auth.getUser();
     setUser(currentUser);
-    setIsAuthenticated(!!currentUser);
     
     if (currentUser) {
       // Fetch user profile to pre-fill form
@@ -140,7 +139,7 @@ const BookingCalendarPage = () => {
         customer_phone: bookingData.customerPhone,
         status: 'pending', // Will be updated to confirmed after payment
         booking_source: 'website',
-        user_id: user?.id || null
+        user_id: user?.id || null // This allows non-authenticated bookings
       };
 
       console.log('Submitting booking:', booking);
@@ -158,6 +157,9 @@ const BookingCalendarPage = () => {
       }
 
       console.log('Booking created successfully:', data);
+      
+      // Store the ID of the created booking for passing to Stripe
+      setCreatedBookingId(data.id);
       
       // Move to payment step instead of completing immediately
       setStep(4);
@@ -638,75 +640,48 @@ const BookingCalendarPage = () => {
                     </div>
                   </div>
 
-                  {isAuthenticated ? (
-                    <div className="space-y-6">
-                      <div className="bg-blue-50 p-6 rounded-lg">
-                        <h3 className="text-lg font-semibold text-blue-900 mb-4">Order Summary</h3>
-                        <div className="space-y-3">
-                          <div className="flex justify-between">
-                            <span className="text-blue-800">Date:</span>
-                            <span className="font-medium">{formatDisplayDate(selectedDate)}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-blue-800">Time:</span>
-                            <span className="font-medium">{selectedTime}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-blue-800">Participants:</span>
-                            <span className="font-medium">{participants}</span>
-                          </div>
-                          <div className="flex justify-between border-t border-blue-200 pt-2 mt-2">
-                            <span className="text-blue-800 font-semibold">Total:</span>
-                            <span className="font-bold text-blue-900">€{calculateTotalPrice()}</span>
-                          </div>
+                  <div className="space-y-6">
+                    <div className="bg-blue-50 p-6 rounded-lg">
+                      <h3 className="text-lg font-semibold text-blue-900 mb-4">Order Summary</h3>
+                      <div className="space-y-3">
+                        <div className="flex justify-between">
+                          <span className="text-blue-800">Date:</span>
+                          <span className="font-medium">{formatDisplayDate(selectedDate)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-blue-800">Time:</span>
+                          <span className="font-medium">{selectedTime}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-blue-800">Participants:</span>
+                          <span className="font-medium">{participants}</span>
+                        </div>
+                        <div className="flex justify-between border-t border-blue-200 pt-2 mt-2">
+                          <span className="text-blue-800 font-semibold">Total:</span>
+                          <span className="font-bold text-blue-900">€{calculateTotalPrice()}</span>
                         </div>
                       </div>
+                    </div>
 
-                      {gardaProduct && (
-                        <PaymentButton
-                          priceId={gardaProduct.priceId}
-                          mode={gardaProduct.mode}
-                          successUrl={`${window.location.origin}/success`}
-                          cancelUrl={`${window.location.origin}/booking`}
-                          metadata={{
-                            booking_date: selectedDate,
-                            time_slot: selectedTime,
-                            participants: participants.toString(),
-                            customer_name: bookingData.customerName || '',
-                            customer_email: bookingData.customerEmail || ''
-                          }}
-                          className="w-full py-4 text-lg"
-                          showPrice={true}
-                        />
-                      )}
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <div className="bg-blue-50 p-6 rounded-lg">
-                        <div className="flex items-start space-x-3">
-                          <AlertCircle className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
-                          <div>
-                            <h3 className="font-semibold text-blue-900 mb-2">Please sign in to continue</h3>
-                            <p className="text-blue-800 text-sm">
-                              You need to be signed in to complete your booking. This helps us keep track of your bookings and provide better service.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex flex-col space-y-4">
-                        <a
-                          href="/login"
-                          className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105 text-center"
-                        >
-                          Sign in to continue
-                        </a>
-                        <p className="text-sm text-gray-600 text-center">
-                          Don't have an account? <a href="/login" className="text-blue-600 hover:underline">Create one now</a>
-                        </p>
-                      </div>
-                    </div>
-                  )}
+                    {gardaProduct && createdBookingId && (
+                      <PaymentButton
+                        priceId={gardaProduct.priceId}
+                        mode={gardaProduct.mode}
+                        successUrl={`${window.location.origin}/success`}
+                        cancelUrl={`${window.location.origin}/booking`}
+                        metadata={{
+                          booking_id: createdBookingId,
+                          booking_date: selectedDate,
+                          time_slot: selectedTime,
+                          participants: participants.toString(),
+                          customer_name: bookingData.customerName || '',
+                          customer_email: bookingData.customerEmail || ''
+                        }}
+                        className="w-full py-4 text-lg"
+                        showPrice={true}
+                      />
+                    )}
+                  </div>
                 </div>
               )}
             </div>

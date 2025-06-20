@@ -76,6 +76,28 @@ serve(async (req) => {
 async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
   console.log('Checkout session completed:', session.id)
 
+  // Update booking status if booking_id is present in metadata
+  if (session.metadata?.booking_id) {
+    try {
+      console.log('Updating booking status for booking ID:', session.metadata.booking_id)
+      
+      const { error } = await supabase
+        .from('reservations')
+        .update({ status: 'confirmed' })
+        .eq('id', session.metadata.booking_id);
+        
+      if (error) {
+        console.error('Error updating booking status:', error)
+        // Continue with order processing even if booking update fails
+      } else {
+        console.log('Booking status updated to confirmed')
+      }
+    } catch (error) {
+      console.error('Error updating booking status:', error)
+      // Continue with order processing even if booking update fails
+    }
+  }
+
   if (session.mode === 'payment') {
     // Handle one-time payment
     const { error } = await supabase

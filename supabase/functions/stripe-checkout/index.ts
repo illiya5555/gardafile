@@ -34,51 +34,67 @@ serve(async (req) => {
     // Get the current user
     const {
       data: { user },
-    } = await supabaseClient.auth.getUser()
-
-    if (!user) {
-      throw new Error('User not authenticated')
-    }
+    } = await supabaseClient.auth.getUser();
 
     // Parse the request body
-    const { price_id, mode = 'payment', success_url, cancel_url } = await req.json()
+    const { price_id, mode = 'payment', success_url, cancel_url, metadata = {} } = await req.json();
 
     if (!price_id) {
       throw new Error('Price ID is required')
     }
 
-    // Check if customer already exists in our database
-    let { data: customerData, error: customerError } = await supabaseClient
-      .from('stripe_customers')
-      .select('customer_id')
-      .eq('user_id', user.id)
-      .single()
+    let customerId;
 
-    let customerId = customerData?.customer_id
-
-    // If customer doesn't exist in our database, create one in Stripe
-    if (!customerId) {
-      const stripeCustomer = await stripe.customers.create({
-        email: user.email,
-        metadata: {
-          supabase_user_id: user.id,
-        },
-      })
-
-      customerId = stripeCustomer.id
-
-      // Save customer to our database
-      const { error: insertError } = await supabaseClient
+    // Handle authenticated vs. non-authenticated users differently
+    if (user) {
+      // Authenticated user - check if customer exists in database
+      let { data: customerData } = await supabaseClient
         .from('stripe_customers')
-        .insert({
-          user_id: user.id,
-          customer_id: customerId,
-        })
+        .select('customer_id')
+        .eq('user_id', user.id)
+        .single();
 
-      if (insertError) {
-        console.error('Error saving customer to database:', insertError)
-        throw new Error('Failed to save customer data')
+      customerId = customerData?.customer_id;
+
+      // If customer doesn't exist in our database, create one in Stripe
+      if (!customerId) {
+        const stripeCustomer = await stripe.customers.create({
+          email: user.email,
+          metadata: {
+            supabase_user_id: user.id,
+          },
+        });
+
+        customerId = stripeCustomer.id;
+
+        // Save customer to our database
+        const { error: insertError } = await supabaseClient
+          .from('stripe_customers')
+          .insert({
+            user_id: user.id,
+            customer_id: customerId,
+          });
+
+        if (insertError) {
+          console.error('Error saving customer to database:', insertError);
+          throw new Error('Failed to save customer data');
+        }
       }
+    } else {
+      // Non-authenticated user - create a temporary Stripe customer using email from metadata
+      if (!metadata.customer_email) {
+        throw new Error('Customer email is required for non-authenticated users');
+      }
+
+      const stripeCustomer = await stripe.customers.create({
+        email: metadata.customer_email,
+        name: metadata.customer_name || undefined,
+        metadata: {
+          is_guest: 'true',
+        },
+      });
+
+      customerId = stripeCustomer.id;
     }
 
     // Create checkout session
@@ -95,7 +111,8 @@ serve(async (req) => {
       success_url: success_url || `${req.headers.get('origin')}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: cancel_url || `${req.headers.get('origin')}/booking`,
       metadata: {
-        user_id: user.id,
+        user_id: user?.id || 'guest',
+        ...metadata
       },
     })
 

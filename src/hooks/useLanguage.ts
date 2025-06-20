@@ -118,7 +118,13 @@ const FALLBACK_TRANSLATIONS: Record<string, Record<string, string>> = {
     'home.features.item4.title': 'Entièrement Assuré',
     'home.features.item4.description': 'Couverture de sécurité complète et équipement moderne inclus.',
     'home.features.item5.title': 'Accessible et Premium',
-    'home.features.item5.description': 'Une expérience de régate de haut niveau ouverte à tous - aucune expérience nécessaire.'
+    'home.features.item5.description': 'Une expérience de régate de haut niveau ouverte à tous - aucune expérience nécessaire.',
+    'home.experience.step1.title': 'Briefing du Matin',
+    'home.experience.step1.description': 'Rencontrez votre skipper professionnel et apprenez les bases de la course de yacht dans un environnement détendu et amical.',
+    'home.experience.step2.title': 'Expérience de Course',
+    'home.experience.step2.description': 'Participez à d'authentiques courses de yacht avec d'autres bateaux, en vivant le frisson de la compétition sur le magnifique lac de Garde.',
+    'home.experience.step3.title': 'Cérémonie des Médailles',
+    'home.experience.step3.description': 'Célébrez votre réussite avec une cérémonie officielle de remise des médailles et recevez votre certificat de course personnalisé.'
   },
   es: {
     'nav.home': 'Inicio',
@@ -149,7 +155,13 @@ const FALLBACK_TRANSLATIONS: Record<string, Record<string, string>> = {
     'home.features.item4.title': 'Totalmente Asegurado',
     'home.features.item4.description': 'Cobertura de seguridad completa y equipo moderno incluido.',
     'home.features.item5.title': 'Accesible y Premium',
-    'home.features.item5.description': 'Una experiencia de regata de alto nivel abierta a todos - no se necesita experiencia.'
+    'home.features.item5.description': 'Una experiencia de regata de alto nivel abierta a todos - no se necesita experiencia.',
+    'home.experience.step1.title': 'Briefing Matutino',
+    'home.experience.step1.description': 'Conozca a su patrón profesional y aprenda los conceptos básicos de las regatas de yates en un ambiente relajado y amigable.',
+    'home.experience.step2.title': 'Experiencia de Regata',
+    'home.experience.step2.description': 'Participe en auténticas regatas de yates con otros barcos, experimentando la emoción de la competición en el hermoso lago de Garda.',
+    'home.experience.step3.title': 'Ceremonia de Medallas',
+    'home.experience.step3.description': 'Celebre su logro con una ceremonia oficial de medallas y reciba su certificado de regata personalizado.'
   },
   ru: {
     'nav.home': 'Главная',
@@ -174,6 +186,9 @@ const FALLBACK_TRANSLATIONS: Record<string, Record<string, string>> = {
     'home.features.item3.description': 'Профессиональные фото и видео с вашего гоночного дня, чтобы запомнить и поделиться.',
     'home.features.item4.title': 'Полностью Застраховано',
     'home.features.item4.description': 'Полное покрытие безопасности и современное оборудование включены.',
+    'home.experience.step1.description': 'Познакомьтесь с вашим профессиональным шкипером и изучите основы яхтенных гонок в непринужденной, дружелюбной обстановке.',
+    'home.experience.step2.description': 'Участвуйте в настоящих яхтенных гонках с другими лодками, испытывая острые ощущения от соревнований на прекрасном озере Гарда.',
+    'home.experience.step3.description': 'Отпразднуйте свое достижение официальной церемонией награждения медалями и получите персонализированный гоночный сертификат.',
     'form.name': 'Имя',
     'form.email': 'Электронная почта',
     'form.phone': 'Телефон',

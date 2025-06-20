@@ -60,57 +60,22 @@ const ClientsManagement = () => {
     try {
       setLoading(true);
       
-      // Шаг 1: Получаем всех клиентов
-      const { data: clients, error: clientsError } = await supabase
-        .from('profiles')
-        .select('*')
-        .order(sortBy, { ascending: sortOrder === 'asc' });
+      // Используем оптимизированную функцию для получения клиентов со статистикой
+      const { data, error } = await supabase
+        .rpc('get_clients_with_stats');
 
-      if (clientsError) throw clientsError;
-      
-      if (!clients || clients.length === 0) {
-        setClients([]);
-        setLoading(false);
-        return;
-      }
+      if (error) throw error;
 
-      // Шаг 2: Получаем все бронирования в одном запросе
-      const clientIds = clients.map(client => client.id);
-      
-      const { data: reservations, error: reservationsError } = await supabase
-        .from('reservations')
-        .select('user_id, total_price, created_at, status')
-        .in('user_id', clientIds)
-        .not('user_id', 'is', null);
-        
-      if (reservationsError) throw reservationsError;
-      
-      // Шаг 3: Обрабатываем данные на стороне клиента
-      const clientsWithStats = clients.map(client => {
-        // Фильтруем бронирования для этого клиента
-        const clientReservations = reservations?.filter(r => r.user_id === client.id) || [];
-        
-        // Рассчитываем статистику
-        const bookingsCount = clientReservations.length;
-        const totalSpent = clientReservations.reduce((sum, booking) => 
-          sum + parseFloat(booking.total_price || '0'), 0);
-        
-        // Получаем дату последнего бронирования
-        let lastBooking = null;
-        if (clientReservations.length > 0) {
-          // Сортируем по дате создания в убывающем порядке, чтобы получить самое последнее бронирование
-          const sortedReservations = [...clientReservations].sort(
-            (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-          );
-          lastBooking = sortedReservations[0].created_at;
-        }
+      // Обрабатываем данные клиентов - добавляем client_category если он отсутствует
+      const clientsWithStats = (data || []).map(client => {
+        // Используем fallback категорию "new" если категория отсутствует
+        const client_category = client.client_category || 'new';
         
         return {
           ...client,
-          bookings_count: bookingsCount,
-          total_spent: totalSpent,
-          last_booking: lastBooking,
-          client_category: client.client_category || 'new'
+          client_category: client.client_category || 'new',
+          // Данные уже присутствуют из функции get_clients_with_stats
+          bookings_count: client.total_bookings,
         };
       });
 
@@ -168,7 +133,10 @@ const ClientsManagement = () => {
     try {
       const { error } = await supabase
         .from('profiles')
-        .update({ client_category: category })
+        .update({ 
+          client_category: category,
+          updated_at: new Date().toISOString() 
+        })
         .eq('id', clientId);
 
       if (error) throw error;

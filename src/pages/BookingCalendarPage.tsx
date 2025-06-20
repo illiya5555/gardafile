@@ -28,6 +28,7 @@ const BookingCalendarPage = () => {
   const [loading, setLoading] = useState(false);
   const [bookingData, setBookingData] = useState<Partial<BookingFormData>>({});
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<any>(null);
   
   // Use the calendar context to get available dates and time slots
   const { 
@@ -42,26 +43,27 @@ const BookingCalendarPage = () => {
   }, []);
 
   const checkAuthStatus = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    setIsAuthenticated(!!user);
+    const { data: { user: currentUser } } = await supabase.auth.getUser();
+    setUser(currentUser);
+    setIsAuthenticated(!!currentUser);
     
-    if (user) {
+    if (currentUser) {
       // Fetch user profile to pre-fill form
       const { data } = await supabase
         .from('profiles')
         .select('first_name, last_name, email, phone')
-        .eq('id', user.id)
+        .eq('id', currentUser.id)
         .maybeSingle();
       
       if (data) {
         setBookingData({
           customerName: `${data.first_name || ''} ${data.last_name || ''}`.trim(),
-          customerEmail: data.email || user.email,
+          customerEmail: data.email || currentUser.email,
           customerPhone: data.phone || '+39 '
         });
       } else {
         setBookingData({
-          customerEmail: user.email,
+          customerEmail: currentUser.email,
           customerPhone: '+39 '
         });
       }
@@ -136,8 +138,9 @@ const BookingCalendarPage = () => {
         customer_name: bookingData.customerName,
         customer_email: bookingData.customerEmail,
         customer_phone: bookingData.customerPhone,
-        status: 'confirmed',
-        booking_source: 'website'
+        status: 'pending', // Will be updated to confirmed after payment
+        booking_source: 'website',
+        user_id: user?.id || null
       };
 
       console.log('Submitting booking:', booking);
@@ -155,14 +158,9 @@ const BookingCalendarPage = () => {
       }
 
       console.log('Booking created successfully:', data);
-      alert('Booking successfully created! You will receive confirmation by email.');
       
-      // Reset form
-      setStep(1);
-      setSelectedDate('');
-      setSelectedTime('');
-      setParticipants(1);
-      setBookingData({});
+      // Move to payment step instead of completing immediately
+      setStep(4);
       
     } catch (error: any) {
       console.error('Booking error:', error);
@@ -188,7 +186,7 @@ const BookingCalendarPage = () => {
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   // Get the Garda product
-  const gardaProduct = stripeProducts.find(product => product.name === 'Garda');
+  const gardaProduct = stripeProducts.find(product => product.name === 'Garda Racing Experience');
 
   // Format date for display
   const formatDisplayDate = (dateStr: string) => {
@@ -599,11 +597,18 @@ const BookingCalendarPage = () => {
                   </div>
 
                   <button
-                    onClick={() => setStep(4)}
-                    disabled={!bookingData.customerName || !bookingData.customerEmail || !bookingData.customerPhone}
-                    className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={handleBookingSubmit}
+                    disabled={!bookingData.customerName || !bookingData.customerEmail || !bookingData.customerPhone || loading}
+                    className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                   >
-                    {t('booking.proceed_payment', 'Proceed to payment')}
+                    {loading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                        <span>Creating booking...</span>
+                      </>
+                    ) : (
+                      <span>{t('booking.proceed_payment', 'Proceed to payment')}</span>
+                    )}
                   </button>
                 </div>
               )}
@@ -625,9 +630,9 @@ const BookingCalendarPage = () => {
                     <div className="flex items-start space-x-3">
                       <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
                       <div>
-                        <h3 className="font-semibold text-green-900 mb-2">Secure payment</h3>
+                        <h3 className="font-semibold text-green-900 mb-2">Secure payment with Stripe</h3>
                         <p className="text-green-800 text-sm">
-                          Your data is protected by SSL encryption. We do not store credit card data.
+                          Your payment is secured by Stripe's industry-leading encryption. We never store your credit card information.
                         </p>
                       </div>
                     </div>
@@ -661,10 +666,18 @@ const BookingCalendarPage = () => {
                         <PaymentButton
                           priceId={gardaProduct.priceId}
                           mode={gardaProduct.mode}
-                          className="w-full bg-green-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-green-700 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          Pay €{calculateTotalPrice()} with Stripe
-                        </PaymentButton>
+                          successUrl={`${window.location.origin}/success`}
+                          cancelUrl={`${window.location.origin}/booking`}
+                          metadata={{
+                            booking_date: selectedDate,
+                            time_slot: selectedTime,
+                            participants: participants.toString(),
+                            customer_name: bookingData.customerName || '',
+                            customer_email: bookingData.customerEmail || ''
+                          }}
+                          className="w-full py-4 text-lg"
+                          showPrice={true}
+                        />
                       )}
                     </div>
                   ) : (

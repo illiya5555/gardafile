@@ -192,7 +192,7 @@ const FALLBACK_TRANSLATIONS: Record<string, Record<string, string>> = {
     'home.experience.step2.title': 'Experiencia de Regata',
     'home.experience.step2.description': 'Participe en auténticas regatas de yates con otros barcos, experimentando la emoción de la competición en el hermoso lago de Garda.',
     'home.experience.step3.title': 'Ceremonia de Medallas',
-    'home.experience.step3.description': 'Celebre su logro con una ceremonia oficial de medallas y reciba su certificado de regata personalizado.'
+    'home.experience.step3.description': 'Celebre su logro con una ceremonia oficial de medallas y reciba su certificado de regata personalizado.',
     'corporate.teambuilding.title': 'El yachting como team building perfecto',
     'corporate.teambuilding.subtitle': 'Formato único, emociones que unen',
     'corporate.teambuilding.cta': 'Enviar solicitud',

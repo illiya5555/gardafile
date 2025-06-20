@@ -2,78 +2,103 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import Stripe from 'https://esm.sh/stripe@14.5.0'
 
-const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
-  apiVersion: '2023-10-16',
-})
-
-const supabase = createClient(
-  Deno.env.get('SUPABASE_URL') ?? '',
-  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-)
-
 serve(async (req) => {
-  const signature = req.headers.get('stripe-signature')
-  const body = await req.text()
-  
-  let event: Stripe.Event
-
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      signature!,
-      Deno.env.get('STRIPE_WEBHOOK_SECRET')!
-    )
-  } catch (err) {
-    console.error('Error verifying webhook signature:', err.message)
-    return new Response(`Webhook signature verification failed: ${err.message}`, {
-      status: 400,
-    })
-  }
+    // Validate required environment variables
+    const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
+    const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET');
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
-  try {
-    switch (event.type) {
-      case 'checkout.session.completed':
-        await handleCheckoutSessionCompleted(event.data.object as Stripe.Checkout.Session)
-        break
-      
-      case 'customer.subscription.created':
-      case 'customer.subscription.updated':
-        await handleSubscriptionChange(event.data.object as Stripe.Subscription)
-        break
-      
-      case 'customer.subscription.deleted':
-        await handleSubscriptionDeleted(event.data.object as Stripe.Subscription)
-        break
-      
-      case 'invoice.payment_succeeded':
-        await handleInvoicePaymentSucceeded(event.data.object as Stripe.Invoice)
-        break
-      
-      case 'invoice.payment_failed':
-        await handleInvoicePaymentFailed(event.data.object as Stripe.Invoice)
-        break
-
-      default:
-        console.log(`Unhandled event type: ${event.type}`)
+    if (!stripeSecretKey) {
+      console.error('STRIPE_SECRET_KEY environment variable is not set');
+      return new Response('Stripe configuration is missing', { status: 500 })
     }
 
-    return new Response(JSON.stringify({ received: true }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
+    if (!webhookSecret) {
+      console.error('STRIPE_WEBHOOK_SECRET environment variable is not set');
+      return new Response('Webhook configuration is missing', { status: 500 })
+    }
+
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('Supabase environment variables are not set');
+      return new Response('Database configuration is missing', { status: 500 })
+    }
+
+    // Initialize Stripe and Supabase
+    const stripe = new Stripe(stripeSecretKey, {
+      apiVersion: '2023-10-16',
     })
-  } catch (error) {
-    console.error('Error processing webhook:', error)
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
+
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+
+    const signature = req.headers.get('stripe-signature')
+    const body = await req.text()
+    
+    if (!signature) {
+      console.error('Missing stripe-signature header');
+      return new Response('Missing stripe-signature header', { status: 400 })
+    }
+
+    let event: Stripe.Event
+
+    try {
+      event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
+    } catch (err) {
+      console.error('Error verifying webhook signature:', err.message)
+      return new Response(`Webhook signature verification failed: ${err.message}`, {
+        status: 400,
+      })
+    }
+
+    try {
+      switch (event.type) {
+        case 'checkout.session.completed':
+          await handleCheckoutSessionCompleted(event.data.object as Stripe.Checkout.Session, supabase)
+          break
+        
+        case 'customer.subscription.created':
+        case 'customer.subscription.updated':
+          await handleSubscriptionChange(event.data.object as Stripe.Subscription, stripe, supabase)
+          break
+        
+        case 'customer.subscription.deleted':
+          await handleSubscriptionDeleted(event.data.object as Stripe.Subscription, supabase)
+          break
+        
+        case 'invoice.payment_succeeded':
+          await handleInvoicePaymentSucceeded(event.data.object as Stripe.Invoice, supabase)
+          break
+        
+        case 'invoice.payment_failed':
+          await handleInvoicePaymentFailed(event.data.object as Stripe.Invoice, supabase)
+          break
+
+        default:
+          console.log(`Unhandled event type: ${event.type}`)
       }
-    )
+
+      return new Response(JSON.stringify({ received: true }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    } catch (error) {
+      console.error('Error processing webhook:', error)
+      return new Response(
+        JSON.stringify({ error: 'Internal server error' }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+    }
+  } catch (error) {
+    console.error('Error in webhook handler:', error)
+    return new Response('Internal server error', { status: 500 })
   }
 })
 
-async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
+async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session, supabase: any) {
   console.log('Checkout session completed:', session.id)
 
   // Update booking status if booking_id is present in metadata
@@ -123,7 +148,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
   }
 }
 
-async function handleSubscriptionChange(subscription: Stripe.Subscription) {
+async function handleSubscriptionChange(subscription: Stripe.Subscription, stripe: Stripe, supabase: any) {
   console.log('Subscription changed:', subscription.id)
 
   const subscriptionData = {
@@ -164,7 +189,7 @@ async function handleSubscriptionChange(subscription: Stripe.Subscription) {
   }
 }
 
-async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+async function handleSubscriptionDeleted(subscription: Stripe.Subscription, supabase: any) {
   console.log('Subscription deleted:', subscription.id)
 
   const { error } = await supabase
@@ -181,7 +206,7 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   }
 }
 
-async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
+async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice, supabase: any) {
   console.log('Invoice payment succeeded:', invoice.id)
   
   if (invoice.subscription) {
@@ -197,7 +222,7 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
   }
 }
 
-async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
+async function handleInvoicePaymentFailed(invoice: Stripe.Invoice, supabase: any) {
   console.log('Invoice payment failed:', invoice.id)
   
   if (invoice.subscription) {

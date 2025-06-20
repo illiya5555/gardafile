@@ -24,6 +24,72 @@
       "subtitle": "Yacht Club"
     }
   },
+  "chat": {
+    "support_title": "Garda Racing Support",
+    "initial_message": "Hello! How can I help you with your yacht racing experience today?",
+    "placeholder": "Type your message...",
+    "auto_response": "Thank you for your message! Our team will get back to you shortly. For immediate assistance, please call +39 344 777 00 77."
+  },
+  "payment": {
+    "processing": "Processing...",
+    "pay_now": "Pay Now",
+    "subscribe_now": "Subscribe Now",
+    "secure_payment": "Secure payment powered by Stripe"
+  },
+  "phone": {
+    "select_country": "Select country code",
+    "countries": {
+      "italy": "Italy",
+      "germany": "Germany",
+      "austria": "Austria",
+      "france": "France",
+      "switzerland": "Switzerland",
+      "netherlands": "Netherlands",
+      "united_kingdom": "United Kingdom",
+      "spain": "Spain",
+      "sweden": "Sweden",
+      "norway": "Norway",
+      "finland": "Finland",
+      "denmark": "Denmark",
+      "poland": "Poland",
+      "czech_republic": "Czech Republic",
+      "slovakia": "Slovakia",
+      "hungary": "Hungary",
+      "belgium": "Belgium",
+      "israel": "Israel",
+      "australia": "Australia",
+      "united_states": "United States",
+      "canada": "Canada",
+      "brazil": "Brazil",
+      "uae": "UAE",
+      "turkey": "Turkey",
+      "romania": "Romania",
+      "greece": "Greece",
+      "slovenia": "Slovenia",
+      "croatia": "Croatia",
+      "serbia": "Serbia",
+      "ukraine": "Ukraine",
+      "bulgaria": "Bulgaria"
+    }
+  },
+  "language": {
+    "select_language": "Select language",
+    "english": "English",
+    "italian": "Italiano",
+    "german": "Deutsch",
+    "french": "Français",
+    "spanish": "Español",
+    "russian": "Русский"
+  },
+  "admin_login": {
+    "title": "Admin Access",
+    "username": "Username",
+    "password": "Password",
+    "enter_username": "Enter username",
+    "enter_password": "Enter password",
+    "cancel": "Cancel",
+    "login": "Login"
+  },
   "footer": {
     "logo": {
       "title": "Garda Racing",
@@ -57,6 +123,532 @@
     "season": "March - October",
     "season_period": "March - October",
     "links": {
+      "privacy_policy": "Privacy Policy",
+  },
+  "corporate": {
+    "title": "Corporate Sailing Events",
+    "subtitle": "Create unforgettable team experiences on the beautiful waters of Lake Garda. Professional sailing instruction, team building activities, and premium service.",
+    "overview": {
+      "team_building": "Team building",
+      "premium_service": "Premium Service",
+      "stunning_location": "Lake Garda"
+    },
+    "packages": {
+      "title": "Corporate Packages",
+      "subtitle": "Choose from our carefully designed corporate sailing packages, each tailored to different group sizes and objectives.",
+      "most_popular": "Most Popular",
+      "team_spirit": {
+        "name": "Team Spirit",
+        "description": "Perfect for small teams looking to build stronger connections",
+        "participants": "12-24 people",
+        "duration": "4 hours",
+        "features": {
+          "1": "Professional skippers",
+          "2": "Safety briefing",
+          "3": "Team races",
+          "4": "Event photography",
+          "5": "Participant certificates",
+          "6": "Light lunch on shore"
+        }
+      },
+      "corporate_challenge": {
+        "name": "Corporate Challenge",
+        "description": "Our most popular package for medium-sized corporate groups",
+        "participants": "24-48 people",
+        "duration": "6 hours",
+        "features": {
+          "1": "Everything from Team Spirit",
+          "2": "Professional videography",
+          "3": "Award ceremony",
+          "4": "Trophies and medals",
+          "5": "Italian cuisine banquet",
+          "6": "Hotel transfer",
+          "7": "Personal coordinator"
+        }
+      },
+      "executive_regatta": {
+        "name": "Executive Regatta",
+        "description": "Premium experience for large corporate events",
+        "participants": "48-96 people",
+        "duration": "8 hours",
+        "features": {
+          "1": "Everything from Corporate Challenge",
+          "2": "VIP area for executives",
+          "3": "Live music and entertainment",
+          "4": "Premium beverages",
+          "5": "Personalized gifts",
+          "6": "Professional host",
+          "7": "Additional activities organization"
+        }
+      },
+      "request_quote": "Request Quote"
+    },
+    "benefits": {
+      "title": "Why Choose Corporate Sailing?",
+      "team_building": {
+        "title": "Team Building",
+        "description": "Strengthen team bonds through collaborative sailing challenges and shared experiences on the water."
+      },
+      "professional_service": {
+        "title": "Professional Service",
+        "description": "Expert instructors, premium equipment, and dedicated event coordination for a seamless experience."
+      },
+      "stunning_location": {
+        "title": "Stunning Location",
+        "description": "Lake Garda's beautiful waters and mountain scenery provide the perfect backdrop for corporate events."
+      }
+    },
+    "cta": {
+      "title": "Ready to Plan Your Corporate Event?",
+      "subtitle": "Contact our team to discuss your requirements and create a customized sailing experience for your group.",
+      "contact": "Contact Us",
+      "call": "Call +39 344 777 00 77"
+    }
+  },
+  "gift": {
+    "title": "Gift Certificates",
+    "subtitle": "Give the gift of adventure! Our yacht racing experiences on Lake Garda make perfect gifts for sailing enthusiasts and adventure seekers.",
+    "form": {
+      "title": "Create Your Gift Certificate",
+      "amount": "Select Amount",
+      "recipient": "Recipient Information",
+      "recipient_name": "Recipient Name",
+      "recipient_email": "Recipient Email",
+      "purchaser": "Your Information",
+      "your_name": "Your Name",
+      "your_email": "Your Email",
+      "message": "Personal Message",
+      "optional": "Optional",
+      "message_placeholder": "Add a personal message to your gift...",
+      "purchase": "Purchase Gift Certificate"
+    },
+    "features": {
+      "title": "Perfect Gift for Any Occasion",
+      "romantic": "Romantic getaways",
+      "birthdays": "Birthdays & celebrations",
+      "family": "Family adventures",
+      "special": "Special achievements"
+    },
+    "how_it_works": {
+      "title": "How It Works",
+      "step1": "Purchase Certificate",
+      "step1_desc": "Choose amount and recipient details",
+      "step2": "Receive Certificate",
+      "step2_desc": "Digital certificate sent via email",
+      "step3": "Book Experience",
+      "step3_desc": "Recipient books their sailing adventure"
+    },
+    "validity": {
+      "title": "Certificate Validity",
+      "duration": "Valid for 12 months from purchase date",
+      "flexible": "Flexible booking - no blackout dates"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "loading": "Loading admin dashboard...",
+      "garda_racing": "Garda Racing",
+      "admin_panel": "Admin Panel",
+      "administrator": "Administrator",
+      "logout": "Logout",
+      "welcome": "Welcome back!",
+      "date_today": "{weekday}, {month} {day}, {year}",
+      "system_health": "System: {percentage}%",
+      "notifications": "Notifications"
+    },
+    "menu": {
+      "main": "Main",
+      "content_management": "Content Management",
+      "business_management": "Business Management",
+      "analytics_insights": "Analytics & Insights",
+      "business_operations": "Business Operations",
+      "system_settings": "System & Settings",
+      "dashboard": "Dashboard",
+      "calendar_management": "Calendar Management",
+      "home_editor": "Home Editor",
+      "events_editor": "Events Editor",
+      "services_editor": "Services Editor",
+      "contact_editor": "Contact Editor",
+      "booking_editor": "Booking Editor",
+      "media_library": "Media Library",
+      "inquiries": "Inquiries",
+      "bookings_calendar": "Bookings Calendar",
+      "client_management": "Client Management",
+      "analytics": "Analytics",
+      "seo_marketing": "SEO & Marketing",
+      "payments": "Payments",
+      "fleet_management": "Fleet Management",
+      "reports": "Reports",
+      "database": "Database",
+      "design_system": "Design System",
+      "security": "Security",
+      "notifications": "Notifications",
+      "settings": "Settings"
+    },
+    "stats": {
+      "total_bookings": "Total Bookings",
+      "total_revenue": "Total Revenue",
+      "active_clients": "Active Clients",
+      "conversion_rate": "Conversion Rate",
+      "media_files": "Media Files",
+      "website_views": "Website Views",
+      "system_health": "System Health",
+      "increase_this_month": "+{percentage}% this month",
+      "plan_vs_actual": "Plan vs Actual (Current Month)",
+      "target": "Target",
+      "actual": "Actual",
+      "variance": "Variance",
+      "recent_bookings": "Recent Bookings",
+      "view_all": "View All →",
+      "recent_activity": "Recent Activity",
+      "quick_actions": "Quick Actions",
+      "manage_calendar": "Manage Calendar",
+      "edit_homepage": "Edit Homepage",
+      "media_library_action": "Media Library",
+      "database_action": "Database"
+    },
+    "analytics": {
+      "analytics_reports": "Analytics and Reports",
+      "traffic_sources": "Traffic Sources",
+      "instagram": "Instagram",
+      "website": "Website",
+      "referrals": "Referrals",
+      "conversion": "Conversion",
+      "view_inquiry": "View → Inquiry",
+      "inquiry_payment": "Inquiry → Payment",
+      "overall": "Overall",
+      "popular_time_slots": "Popular Time Slots"
+    },
+    "placeholder": {
+      "under_development": "This section is under development. Full functionality will be available soon.",
+      "notify_when_ready": "Notify When Ready"
+    },
+    "sidebar": {
+      "expand": "Expand sidebar",
+      "collapse": "Collapse sidebar"
+    },
+    "bookings": {
+      "title": "Bookings Calendar",
+      "subtitle": "Manage yacht and racing bookings with drag-and-drop",
+      "export": "Export",
+      "new_booking": "New Booking",
+      "all_statuses": "All Statuses",
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "completed": "Completed",
+      "search_placeholder": "Search bookings...",
+      "conflicts_detected": "{count} booking conflicts detected",
+      "loading": "Loading calendar...",
+      "more": "+{count} more",
+      "details_title": "Booking Details",
+      "customer": "Customer",
+      "yacht": "Yacht",
+      "email": "Email",
+      "phone": "Phone",
+      "date_time": "Date & Time",
+      "participants": "Participants",
+      "participants_people": "{count} people",
+      "total_price": "Total Price",
+      "status": "Status",
+      "conflict_warning": "This booking conflicts with another booking for the same yacht",
+      "close": "Close",
+      "send_confirmation": "Send Confirmation",
+      "edit_booking": "Edit Booking",
+      "moved_successfully": "Booking moved successfully!",
+      "error_moving": "Error moving booking",
+      "error_updating_status": "Error updating status"
+    },
+    "calendar": {
+      "title": "Calendar Management",
+      "subtitle": "Manage booking availability - control which dates are open for client bookings",
+      "refresh": "Refresh",
+      "how_to_use": "How to use Calendar Management",
+      "instructions": "Click on any date to manage its availability. You can make dates \"Available for booking\" (clients can book) or \"Booked\" (blocked for clients). Green dots indicate available dates, gray indicates blocked dates.",
+      "loading": "Loading calendar...",
+      "legend": "Legend",
+      "available_client_booking": "Available for client booking",
+      "booked_blocked": "Booked (blocked for clients)",
+      "not_configured": "Not configured",
+      "today": "Today",
+      "manage_date": "Manage Date: {date}",
+      "current_status": "Current Status:",
+      "no_slots_configured": "No time slots configured",
+      "available_booking": "Available for booking",
+      "some_slots_blocked": "Some slots blocked",
+      "slots_configured": "{count} time slots configured",
+      "available_for_booking": "Available for Booking",
+      "clients_can_book": "Clients can book this date",
+      "booked": "Booked",
+      "block_date": "Block this date from client booking",
+      "remove_all_slots": "Remove All Slots",
+      "delete_all_slots": "Delete all time slots for this date",
+      "cancel": "Cancel",
+      "date_available_success": "Date made available for booking with default time slots!",
+      "date_booked_success": "Date marked as booked - no longer available for client booking!",
+      "slots_removed_success": "All time slots removed for this date!",
+      "error_making_available": "Error making date available",
+      "error_marking_booked": "Error marking date as booked",
+      "error_removing_slots": "Error removing slots",
+      "confirm_remove_slots": "Are you sure you want to remove all time slots for this date?"
+    },
+    "clients": {
+      "title": "Client Management",
+      "subtitle": "Manage customer relationships and track client history",
+      "add_client": "Add Client",
+      "total_clients": "Total Clients",
+      "vip_clients": "VIP Clients",
+      "active_this_month": "Active This Month",
+      "avg_lifetime_value": "Avg. Lifetime Value",
+      "search_placeholder": "Search clients...",
+      "all_categories": "All Categories",
+      "newest_first": "Newest First",
+      "oldest_first": "Oldest First",
+      "name_a_z": "Name A-Z",
+      "highest_value": "Highest Value",
+      "most_bookings": "Most Bookings",
+      "export": "Export",
+      "showing_results": "Showing {showing} of {total} clients",
+      "categories": {
+        "vip": "VIP",
+        "regular": "Regular",
+        "corporate": "Corporate",
+        "new": "New",
+        "inactive": "Inactive"
+      },
+      "loading": "Loading clients...",
+      "client": "Client",
+      "contact": "Contact",
+      "category": "Category",
+      "bookings": "Bookings",
+      "total_spent": "Total Spent",
+      "last_booking": "Last Booking",
+      "actions": "Actions",
+      "value": {
+        "new": "New",
+        "high": "High Value",
+        "medium": "Medium Value",
+        "low": "Low Value"
+      },
+      "bookings_count": "{count} bookings",
+      "never": "Never",
+      "details_title": "Client Details",
+      "personal_info": "Personal Information",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "booking_stats": "Booking Statistics",
+      "total_bookings": "Total Bookings",
+      "client_since": "Client Since",
+      "send_email": "Send Email",
+      "view_bookings": "View Bookings",
+      "error_updating_category": "Error updating category"
+    },
+    "inquiries": {
+      "title": "Corporate Inquiries",
+      "subtitle": "Manage and track corporate event requests",
+      "new_inquiry": "New Inquiry",
+      "search_placeholder": "Search inquiries...",
+      "all_dates": "All Dates",
+      "today": "Today",
+      "this_week": "This Week",
+      "this_month": "This Month",
+      "priority_high_low": "Priority (High to Low)",
+      "company_a_z": "Company A-Z",
+      "most_participants": "Most Participants",
+      "showing_results": "Showing {showing} of {total} inquiries",
+      "export_csv": "Export CSV",
+      "loading": "Loading inquiries...",
+      "priority": "Priority",
+      "company": "Company",
+      "contact": "Contact",
+      "participants": "{count} people",
+      "priority": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      },
+      "status": {
+        "contacted": "Contacted",
+        "quoted": "Quoted"
+      },
+      "details_title": "Inquiry Details",
+      "participants_count": "Participants",
+      "preferred_date": "Preferred Date",
+      "not_specified": "Not specified",
+      "message": "Message",
+      "send_email": "Send Email"
+    },
+    "media": {
+      "title": "Media Library",
+      "subtitle": "Manage images, videos, and documents",
+      "new_folder": "New Folder",
+      "upload_files": "Upload Files",
+      "search_placeholder": "Search media...",
+      "all_folders": "All Folders",
+      "all_types": "All Types",
+      "images": "Images",
+      "videos": "Videos",
+      "documents": "Documents",
+      "items_count": "{count} of {total} items",
+      "total_size": "Total size: {size}",
+      "drag_drop": "Drag and drop files here, or click to browse",
+      "supported_formats": "Supports: JPG, PNG, GIF, MP4, MOV, PDF, DOC (Max 10MB each)",
+      "choose_files": "Choose Files",
+      "uploading_files": "Uploading Files",
+      "loading": "Loading media library...",
+      "copy_url": "Copy URL",
+      "preview": "Preview",
+      "delete": "Delete",
+      "edit": "Edit",
+      "featured_badge": "Featured",
+      "grid_view": "Grid View",
+      "list_view": "List View",
+      "selected_count": "{count} selected",
+      "preview_column": "Preview",
+      "name_column": "Name",
+      "type_column": "Type",
+      "size_column": "Size",
+      "folder_column": "Folder",
+      "created_column": "Created",
+      "actions_column": "Actions",
+      "type": {
+        "image": "Image",
+        "video": "Video",
+        "document": "Document"
+      },
+      "url_copied": "URL copied to clipboard!"
+    },
+    "database": {
+      "title": "Database Management",
+      "subtitle": "Manage your Supabase database tables and records",
+      "refresh": "Refresh",
+      "connection_status": {
+        "connected": "Connected",
+        "disconnected": "Disconnected",
+        "checking": "Checking..."
+      },
+      "connection_failed": "Database Connection Failed",
+      "connection_failed_desc": "Unable to connect to the database. Please check your Supabase configuration and try again.",
+      "loading": "Loading database information...",
+      "database_tables": "Database Tables",
+      "table_name": "Table Name",
+      "row_count": "Row Count",
+      "table_schema": "Table Schema",
+      "table_data": "Table Data",
+      "search_records": "Search records...",
+      "loading_data": "Loading table data...",
+      "add_record": "Add Record",
+      "export": "Export",
+      "actions": "Actions",
+      "create_record": "Create New Record",
+      "edit_record": "Edit Record",
+      "cancel": "Cancel",
+      "create": "Create Record",
+      "update": "Update Record",
+      "delete_confirm": "Are you sure you want to delete this record?",
+      "record_created": "Record created successfully!",
+      "record_updated": "Record updated successfully!",
+      "record_deleted": "Record deleted successfully!",
+      "error_creating": "Error creating record",
+      "error_updating": "Error updating record",
+      "error_deleting": "Error deleting record",
+      "showing_page": "Showing page {page} of table data",
+      "previous": "Previous",
+      "next": "Next",
+      "select_table": "Select a Table",
+      "select_table_desc": "Choose a table from the left sidebar to view and manage its data."
+    },
+    "content": {
+      "home_editor": "Home Page Editor",
+      "events_editor": "Events Page Editor",
+      "services_editor": "Services Page Editor",
+      "contact_editor": "Contact Page Editor",
+      "booking_editor": "Booking Page Editor",
+      "under_development": "will be implemented here. This will allow editing of:",
+      "home": {
+        "hero_section": "Hero section content and imagery",
+        "features_benefits": "Features and benefits sections",
+        "testimonials": "Customer testimonials",
+        "partner_logos": "Partner logos and descriptions",
+        "call_to_action": "Call-to-action sections"
+      },
+      "events": {
+        "descriptions": "Event descriptions and schedules",
+        "gallery": "Gallery images and videos",
+        "weather": "Weather information",
+        "equipment": "Equipment details",
+        "faq": "FAQ sections"
+      },
+      "services": {
+        "packages": "Corporate packages and pricing",
+        "additional": "Additional services",
+        "benefits": "Team building benefits",
+        "testimonials": "Corporate testimonials",
+        "contact": "Contact information"
+      },
+      "contact": {
+        "information": "Contact information and hours",
+        "location": "Location and map settings",
+        "faq": "FAQ sections",
+        "form_config": "Contact form configuration",
+        "quick_contact": "Quick contact options"
+      },
+      "booking": {
+        "calendar": "Calendar configuration",
+        "time_slots": "Time slot management",
+        "pricing": "Pricing and packages",
+        "payment": "Payment integration settings",
+        "confirmation": "Confirmation email templates"
+      }
+    }
+  },
+  "stripe": {
+    "garda_racing_experience": "Garda Racing Experience",
+    "garda_racing_description": "Premium yacht racing experience on Lake Garda with professional skipper, equipment, and medal ceremony.",
+    "premium_membership": "Premium Membership",
+    "premium_membership_description": "Monthly membership with exclusive benefits and discounts.",
+    "features": {
+      "professional_experience": "Professional yacht racing experience",
+      "certified_skipper": "Certified skipper and instruction",
+      "safety_equipment": "All safety equipment provided",
+      "racing_medal": "Racing medal and certificate",
+      "professional_photography": "Professional photography",
+      "sailing_experience": "4-hour sailing experience",
+      "priority_booking": "Priority booking access",
+      "discount_20": "20% discount on all experiences",
+      "member_events": "Exclusive member events",
+      "free_photos": "Free professional photos",
+      "equipment_upgrades": "Complimentary equipment upgrades"
+    }
+  },
+  "seo": {
+    "home": {
+      "title": "Garda Racing Yacht Club - Premium Sailing Experiences on Lake Garda",
+      "description": "Daily yacht racing experiences in world-famous Lake Garda. Professional skipper, racing medals, and unforgettable memories. Book your €195 sailing adventure today!",
+      "keywords": "Lake Garda sailing, yacht racing, Riva del Garda, sailing experience, yacht charter, racing course"
+    },
+    "events": {
+      "title": "Yacht Racing Events - Complete Day Program | Garda Racing",
+      "description": "Discover our complete yacht racing program on Lake Garda. Professional instruction, authentic racing, medal ceremony, and professional photos included.",
+      "keywords": "yacht racing program, sailing lessons Lake Garda, racing events, sailing instruction"
+    },
+    "services": {
+      "title": "Corporate Services & Team Building | Garda Racing Yacht Club",
+      "description": "Professional corporate sailing events and team building activities on Lake Garda. Custom packages for groups from 12 to 96 participants.",
+      "keywords": "corporate sailing, team building Lake Garda, corporate events, sailing team building"
+    },
+    "contact": {
+      "title": "Contact Us - Garda Racing Yacht Club | Lake Garda Sailing",
+      "description": "Get in touch with Garda Racing Yacht Club. Located in Riva del Garda, Italy. Phone: +39 345 678 9012. Professional sailing experiences since 2008.",
+      "keywords": "contact Garda Racing, Riva del Garda sailing, yacht club contact, Lake Garda sailing contact"
+    },
+    "booking": {
+      "title": "Book Your Yacht Racing Adventure | Garda Racing Yacht Club",
+      "description": "Book your yacht racing experience on Lake Garda. €195 per person includes professional skipper, equipment, racing medal, and photos. Easy online booking.",
+      "keywords": "book yacht racing, Lake Garda booking, sailing reservation, yacht charter booking"
+    }
+  },
       "privacy_policy": "Privacy Policy",
       "terms_conditions": "Terms & Conditions",
       "cancellation_policy": "Cancellation Policy",

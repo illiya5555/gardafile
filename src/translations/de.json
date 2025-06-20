@@ -1,0 +1,539 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "events": "Veranstaltungen",
+    "services": "Dienstleistungen",
+    "contact": "Kontakt",
+    "book_now": "Jetzt Buchen",
+    "admin": "Admin",
+    "dashboard": "Dashboard",
+    "profile": "Profil",
+    "logout": "Abmelden",
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "back_to_top": "Nach oben",
+    "previous_page": "Vorherige Seite",
+    "next_page": "Nächste Seite",
+    "first_page": "Erste Seite",
+    "last_page": "Letzte Seite",
+    "go_to_page": "Gehe zu Seite {{page}}"
+  },
+  "header": {
+    "logo": {
+      "title": "Garda Racing",
+      "subtitle": "Yacht Club"
+    }
+  },
+  "footer": {
+    "logo": {
+      "title": "Garda Racing",
+      "subtitle": "Yacht Club"
+    },
+    "description": "Erleben Sie den Nervenkitzel des Segelns am weltberühmten Gardasee. Professionelle Anleitung, erstklassige Ausrüstung und unvergessliche Erinnerungen.",
+    "quick_links": {
+      "title": "Schnellzugriff"
+    },
+    "contact": {
+      "title": "Kontakt"
+    },
+    "address": {
+      "street": "Viale Giancarlo Maroni 4",
+      "city": "38066 Riva del Garda TN",
+      "country": "Italien"
+    },
+    "phone": "+39 344 777 00 77",
+    "email": "info@gardaracing.com",
+    "certifications": {
+      "title": "Zertifizierungen",
+      "insured": "Vollversichert",
+      "support": "24/7 Support",
+      "fully_insured": "Vollversichert",
+      "support_24_7": "24/7 Support"
+    },
+    "operating_hours": "Öffnungszeiten:",
+    "operating_hours_label": "Öffnungszeiten:",
+    "daily_hours": "Täglich: 8:00 - 19:00",
+    "daily_schedule": "Täglich: 8:00 - 19:00",
+    "season": "März - Oktober",
+    "season_period": "März - Oktober",
+    "links": {
+      "privacy_policy": "Datenschutz",
+      "terms_conditions": "Geschäftsbedingungen",
+      "cancellation_policy": "Stornierungsrichtlinien",
+      "gdpr": "DSGVO"
+    },
+    "copyright": "© 2025 Garda Racing Yacht Club. Alle Rechte vorbehalten."
+  },
+  "home": {
+    "hero": {
+      "title_part1": "Erleben Sie den Nervenkitzel des",
+      "title_part2": "Segelrennsports",
+      "subtitle": "Tägliche Segelregatta-Erlebnisse am weltberühmten Gardasee mit professionellen Skippern, Medaillen und unvergesslichen Erinnerungen",
+      "price_description": "pro Person • Ganztägiges Erlebnis",
+      "feature1": "Echtes Regatta-Format",
+      "feature2": "Professioneller Skipper auf jedem Boot",
+      "feature3": "Für alle Niveaus geeignet - keine Erfahrung erforderlich",
+      "feature4": "Professionelle Fotos & Videos vom Rennen",
+      "feature5": "Gesamte Ausrüstung inklusive",
+      "cta": "Buchen Sie Ihr Abenteuer"
+    },
+    "features": {
+      "title": "Warum Garda Racing wählen?",
+      "subtitle": "Wir bieten das komplette Segelregatta-Erlebnis mit professioneller Anleitung, erstklassiger Ausrüstung und Erinnerungen fürs Leben.",
+      "duration": "3-4 Stunden",
+      "participants": "4-5 Personen",
+      "medal": "Medaille inklusive",
+      "item1": {
+        "title": "Echtes Regatta-Format",
+        "description": "Authentische Segelregatta mit Teamdynamik, Medaillen und echtem Wettbewerb."
+      },
+      "item2": {
+        "title": "Professioneller Skipper",
+        "description": "Zertifizierte und erfahrene Segelkapitäne auf jedem Boot."
+      },
+      "item3": {
+        "title": "Foto & Video",
+        "description": "Professionelle Fotos und Videos Ihres Renntages zum Erinnern und Teilen."
+      },
+      "item4": {
+        "title": "Vollversichert",
+        "description": "Komplette Sicherheitsabdeckung und moderne Ausrüstung inklusive."
+      },
+      "item5": {
+        "title": "Zugänglich & Premium",
+        "description": "Ein Regatta-Erlebnis auf höchstem Niveau für alle - keine Erfahrung nötig."
+      }
+    },
+    "experience": {
+      "title": "Ihr perfekter Tag am Gardasee",
+      "step1": {
+        "title": "Morgen-Briefing",
+        "description": "Treffen Sie Ihren professionellen Skipper und lernen Sie die Grundlagen des Segelrennsports in entspannter, freundlicher Atmosphäre."
+      },
+      "step2": {
+        "title": "Regatta-Erlebnis",
+        "description": "Nehmen Sie an authentischen Segelrennen mit anderen Booten teil und erleben Sie den Nervenkitzel des Wettbewerbs auf dem wunderschönen Gardasee."
+      },
+      "step3": {
+        "title": "Medaillenzeremonie",
+        "description": "Feiern Sie Ihren Erfolg mit einer offiziellen Medaillenzeremonie und erhalten Sie Ihr personalisiertes Regatta-Zertifikat."
+      },
+      "cta": "Mehr über das Erlebnis erfahren"
+    },
+    "testimonials": {
+      "title": "Was unsere Segler sagen",
+      "subtitle": "Schließen Sie sich Tausenden zufriedener Kunden an, die die Magie der Gardasee-Regatten erlebt haben",
+      "connection_error": "Derzeit werden Beispiel-Testimonials angezeigt - Datenbankverbindung nicht verfügbar"
+    },
+    "location": {
+      "title": "Erstklassige Lage in Riva del Garda",
+      "google_rating": "Google-Bewertung",
+      "item1": {
+        "title": "Einfache Anreise von München",
+        "description": "Nur 4 Stunden Fahrt von München, perfekt für Wochenendausflüge und Firmenevents."
+      },
+      "item2": {
+        "title": "Weltklasse-Segelbedingungen",
+        "description": "Der Gardasee bietet beständige Winde und atemberaubende Alpenlandschaft und ist damit Europas führendes Segelziel."
+      },
+      "item3": {
+        "title": "Tägliche Abfahrten",
+        "description": "Mehrere Zeitfenster täglich von März bis Oktober verfügbar, mit flexiblen Buchungsoptionen."
+      }
+    },
+    "partners": {
+      "title": "Unsere vertrauenswürdigen Partner",
+      "subtitle": "Wir arbeiten mit den weltweit führenden Yacht- und Marineausrüstungsherstellern zusammen, um Ihnen das bestmögliche Segelerlebnis zu bieten.",
+      "cta_text": "Interessiert an einer Partnerschaft? Wir suchen immer nach Qualitätsmarken, die unsere Leidenschaft für das Segeln teilen.",
+      "cta": "Kontaktieren Sie uns für Partnerschaften",
+      "bavaria_yachts": {
+        "name": "Bavaria Yachts",
+        "description": "Premium-Yachthersteller"
+      },
+      "garmin_marine": {
+        "name": "Garmin Marine",
+        "description": "Navigationstechnologie"
+      },
+      "helly_hansen": {
+        "name": "Helly Hansen",
+        "description": "Professionelle Segelausrüstung"
+      },
+      "musto_sailing": {
+        "name": "Musto Sailing",
+        "description": "Technische Segelbekleidung"
+      },
+      "raymarine": {
+        "name": "Raymarine",
+        "description": "Marine-Elektronik"
+      },
+      "spinlock": {
+        "name": "Spinlock",
+        "description": "Sicherheitsausrüstung"
+      }
+    },
+    "final_cta": {
+      "title": "Bereit für Ihr Segelabenteuer?",
+      "subtitle": "Begleiten Sie uns für einen unvergesslichen Tag des Segelrennsports am Gardasee. Keine Erfahrung nötig - bringen Sie nur Ihren Abenteuergeist mit!",
+      "cta": "Jetzt buchen - €195"
+    }
+  },
+  "booking": {
+    "title": "Buchen Sie Ihr Regatta-Erlebnis",
+    "subtitle": "Wählen Sie Datum und Uhrzeit für ein unvergessliches Segelregatta-Erlebnis am Gardasee",
+    "proceed_payment": "Zur Zahlung",
+    "cta": "Buchen Sie Ihr Erlebnis - €195",
+    "steps": {
+      "select_date": "Datum wählen",
+      "time_participants": "Zeit & Teilnehmer",
+      "details": "Details",
+      "payment": "Zahlung"
+    },
+    "time": {
+      "morning": "Morgen: 8:30-12:30",
+      "afternoon": "Nachmittag: 13:30-18:00"
+    },
+    "progress": {
+      "step": "Schritt"
+    },
+    "calendar": {
+      "select_date": "Datum wählen",
+      "change_date": "← Datum ändern",
+      "time_participants": "Zeit und Teilnehmer wählen",
+      "participants_max": "Anzahl Teilnehmer (max. 5 pro Regatta)",
+      "available_times": "Verfügbare Regatta-Zeiten",
+      "loading_times": "Lade verfügbare Zeiten...",
+      "no_slots": "Keine verfügbaren Zeitfenster",
+      "no_slots_description": "Für dieses Datum sind keine Zeitfenster verfügbar. Bitte wählen Sie ein anderes Datum.",
+      "choose_another_date": "Anderes Datum wählen",
+      "continue_details": "Zu Details",
+      "morning_regatta": "Morgen-Regatta",
+      "afternoon_regatta": "Nachmittag-Regatta",
+      "per_person": "pro Person",
+      "up_to_participants": "Bis zu {{count}} Teilnehmer",
+      "4_hours": "(4 Stunden)",
+      "selected_date": "Gewähltes Datum:"
+    },
+    "details": {
+      "your_details": "Ihre Angaben",
+      "back_to_time": "← Zurück zur Zeitauswahl"
+    },
+    "payment": {
+      "payment": "Zahlung",
+      "back_to_details": "← Zurück zu Details",
+      "secure_payment": "Sichere Zahlung mit Stripe",
+      "secure_description": "Ihre Zahlung wird durch Stripes branchenführende Verschlüsselung gesichert. Wir speichern niemals Ihre Kreditkarteninformationen.",
+      "order_summary": "Bestellübersicht",
+      "date": "Datum:",
+      "time": "Zeit:",
+      "participants": "Teilnehmer:",
+      "total": "Gesamt:",
+      "sign_in_required": "Bitte melden Sie sich an",
+      "sign_in_description": "Sie müssen angemeldet sein, um Ihre Buchung abzuschließen. Das hilft uns, Ihre Buchungen zu verfolgen und besseren Service zu bieten.",
+      "sign_in_button": "Anmelden um fortzufahren",
+      "no_account": "Kein Konto?",
+      "create_account": "Jetzt erstellen"
+    },
+    "summary": {
+      "regatta_summary": "Regatta-Zusammenfassung",
+      "duration": "Dauer:",
+      "duration_4_hours": "4 Stunden",
+      "price_per_person": "€195 pro Person für 4-Stunden-Regatta"
+    },
+    "included": {
+      "professional_skipper": "Professioneller Skipper",
+      "safety_equipment": "Gesamte Sicherheitsausrüstung",
+      "racing_instruction": "Regatta-Unterricht und Training",
+      "medal_ceremony": "Medaillenzeremonie",
+      "professional_photography": "Professionelle Fotografie"
+    },
+    "notices": {
+      "free_cancellation": "Kostenlose Stornierung 48 Stunden vorher",
+      "insurance_included": "Vollversicherung inklusive"
+    },
+    "availability": {
+      "june_july_notice": "Juni/Juli Verfügbarkeitshinweis",
+      "june_weekends": "Im Juni sind Regatten nur an Wochenenden (Samstag & Sonntag) verfügbar. Wochentage sind für private Veranstaltungen ausgebucht.",
+      "july_weekends": "Im Juli sind Regatten nur an Wochenenden (Samstag & Sonntag) verfügbar. Wochentage sind für private Veranstaltungen ausgebucht.",
+      "full_availability": "{{month}} - Volle Verfügbarkeit",
+      "all_dates": "Alle Termine sind im {{month}} buchbar. Wählen Sie jeden Tag, der Ihnen passt!"
+    },
+    "legend": {
+      "selected": "Ausgewählt",
+      "available": "Verfügbar",
+      "booked": "Gebucht",
+      "past_unavailable": "Vergangen/Nicht verfügbar"
+    },
+    "form": {
+      "creating_booking": "Buchung wird erstellt..."
+    }
+  },
+  "events": {
+    "title": "Das komplette Regatta-Erlebnis",
+    "subtitle": "Vom Anfänger zum Champion an einem Tag. Erleben Sie authentischen Segelrennsport am Gardasee mit professionellem Unterricht, Wettkampfregatten und offizieller Anerkennung Ihrer Leistung."
+  },
+  "services": {
+    "title": "Firmenservice",
+    "subtitle": "Schaffen Sie unvergessliche Firmenevents am Gardasee. Professionell organisierte Regatten zur Stärkung des Teamgeists."
+  },
+  "contact": {
+    "title": "Kontaktieren Sie uns",
+    "subtitle": "Nehmen Sie Kontakt mit unserem Team auf für Fragen zu Segelregatta-Erlebnissen am Gardasee"
+  },
+  "form": {
+    "name": "Vollständiger Name",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "message": "Nachricht",
+    "submit": "Nachricht senden",
+    "required": "Pflichtfeld",
+    "invalid_email": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "invalid_phone": "Bitte geben Sie eine gültige Telefonnummer ein",
+    "password_too_short": "Passwort muss mindestens 8 Zeichen haben",
+    "passwords_dont_match": "Passwörter stimmen nicht überein",
+    "please_fill_required": "Bitte füllen Sie alle Pflichtfelder aus"
+  },
+  "auth": {
+    "login": {
+      "title": "Bei Ihrem Konto anmelden",
+      "no_account": "Kein Konto?",
+      "sign_up": "Registrieren",
+      "remember_me": "Angemeldet bleiben",
+      "forgot_password": "Passwort vergessen?",
+      "sign_in_button": "Anmelden"
+    },
+    "register": {
+      "title": "Konto erstellen",
+      "have_account": "Bereits ein Konto?",
+      "sign_in": "Anmelden",
+      "first_name": "Vorname",
+      "last_name": "Nachname",
+      "confirm_password": "Passwort bestätigen",
+      "sign_up_button": "Registrieren"
+    },
+    "email": "E-Mail-Adresse",
+    "password": "Passwort"
+  },
+  "success": {
+    "title": "Buchung bestätigt!",
+    "subtitle": "Vielen Dank, dass Sie Garda Racing gewählt haben. Ihr Segelregatta-Erlebnis wurde erfolgreich gebucht.",
+    "next_steps": "Was passiert als nächstes?",
+    "email_confirmation": "E-Mail-Bestätigung",
+    "email_description": "Sie erhalten innerhalb von 5 Minuten eine Bestätigungs-E-Mail mit allen Details.",
+    "contact_call": "Wir rufen Sie an",
+    "contact_description": "Unser Team kontaktiert Sie innerhalb von 24 Stunden, um Details zu bestätigen und Fragen zu beantworten.",
+    "prepare_experience": "Bereiten Sie sich auf Ihr Erlebnis vor",
+    "prepare_description": "Wir senden Ihnen einen Vorbereitungsleitfaden mit allem, was Sie wissen müssen.",
+    "booking_reference": "Buchungsreferenz:",
+    "reference_note": "Bitte bewahren Sie diese Referenz für Ihre Unterlagen auf.",
+    "view_booking": "Meine Buchungen anzeigen",
+    "back_home": "Zurück zur Startseite",
+    "questions": "Fragen oder Änderungen nötig?",
+    "call_us": "Rufen Sie uns an: +39 344 777 00 77",
+    "email_us": "E-Mail: info@gardaracing.com"
+  },
+  "dashboard": {
+    "welcome": "Willkommen zurück!",
+    "subtitle": "Verwalten Sie Ihre Segelregatta-Buchungen und Ihr Profil",
+    "settings": "Einstellungen",
+    "your_bookings": "Ihre Buchungen",
+    "no_bookings": "Keine Buchungen gefunden"
+  },
+  "common": {
+    "loading": "Lädt...",
+    "error": "Fehler",
+    "retry": "Wiederholen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "view": "Anzeigen",
+    "close": "Schließen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "previous": "Vorherige",
+    "submit": "Absenden",
+    "yes": "Ja",
+    "no": "Nein",
+    "confirm": "Bestätigen",
+    "success": "Erfolg",
+    "warning": "Warnung",
+    "info": "Information",
+    "search": "Suchen",
+    "filter": "Filter",
+    "sort": "Sortieren",
+    "all": "Alle",
+    "none": "Keine",
+    "select": "Auswählen",
+    "add": "Hinzufügen",
+    "remove": "Entfernen",
+    "update": "Aktualisieren",
+    "create": "Erstellen",
+    "manage": "Verwalten",
+    "settings": "Einstellungen",
+    "help": "Hilfe",
+    "about": "Über",
+    "more": "Mehr",
+    "less": "Weniger",
+    "show": "Anzeigen",
+    "hide": "Verstecken",
+    "expand": "Erweitern",
+    "collapse": "Einklappen",
+    "refresh": "Aktualisieren",
+    "reload": "Neu laden",
+    "reset": "Zurücksetzen",
+    "clear": "Löschen",
+    "upload": "Hochladen",
+    "download": "Herunterladen",
+    "export": "Exportieren",
+    "import": "Importieren",
+    "copy": "Kopieren",
+    "paste": "Einfügen",
+    "cut": "Ausschneiden",
+    "undo": "Rückgängig",
+    "redo": "Wiederholen",
+    "print": "Drucken",
+    "share": "Teilen",
+    "send": "Senden",
+    "receive": "Empfangen",
+    "open": "Öffnen",
+    "new": "Neu",
+    "recent": "Kürzlich",
+    "popular": "Beliebt",
+    "featured": "Hervorgehoben",
+    "recommended": "Empfohlen",
+    "available": "Verfügbar",
+    "unavailable": "Nicht verfügbar",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "enabled": "Aktiviert",
+    "disabled": "Deaktiviert",
+    "online": "Online",
+    "offline": "Offline",
+    "public": "Öffentlich",
+    "private": "Privat",
+    "draft": "Entwurf",
+    "published": "Veröffentlicht",
+    "archived": "Archiviert"
+  },
+  "status": {
+    "pending": "Ausstehend",
+    "confirmed": "Bestätigt",
+    "cancelled": "Storniert",
+    "completed": "Abgeschlossen",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "approved": "Genehmigt",
+    "rejected": "Abgelehnt",
+    "processing": "Verarbeitung",
+    "failed": "Fehlgeschlagen",
+    "draft": "Entwurf",
+    "published": "Veröffentlicht",
+    "archived": "Archiviert",
+    "new": "Neu",
+    "in_progress": "In Bearbeitung",
+    "on_hold": "Wartend",
+    "expired": "Abgelaufen"
+  },
+  "currency": {
+    "eur": "EUR",
+    "usd": "USD",
+    "symbol": {
+      "eur": "€",
+      "usd": "$"
+    }
+  },
+  "price": {
+    "per_person": "pro Person",
+    "total": "Gesamt",
+    "subtotal": "Zwischensumme",
+    "discount": "Rabatt",
+    "tax": "Steuer",
+    "fee": "Gebühr",
+    "free": "Kostenlos",
+    "from": "Ab",
+    "starting_at": "Ab",
+    "contact_for_price": "Preis auf Anfrage",
+    "price_on_request": "Preis auf Anfrage"
+  },
+  "date": {
+    "today": "Heute",
+    "tomorrow": "Morgen",
+    "yesterday": "Gestern",
+    "this_week": "Diese Woche",
+    "next_week": "Nächste Woche",
+    "this_month": "Dieser Monat",
+    "next_month": "Nächster Monat",
+    "this_year": "Dieses Jahr",
+    "next_year": "Nächstes Jahr",
+    "last_week": "Letzte Woche",
+    "last_month": "Letzter Monat",
+    "last_year": "Letztes Jahr"
+  },
+  "time": {
+    "morning": "Morgen",
+    "afternoon": "Nachmittag",
+    "evening": "Abend",
+    "night": "Nacht",
+    "hour": "Stunde",
+    "hours": "Stunden",
+    "minute": "Minute",
+    "minutes": "Minuten",
+    "second": "Sekunde",
+    "seconds": "Sekunden",
+    "am": "AM",
+    "pm": "PM",
+    "now": "Jetzt",
+    "recently": "Kürzlich"
+  },
+  "messages": {
+    "success": {
+      "general": "Vorgang erfolgreich abgeschlossen"
+    },
+    "error": {
+      "general": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    },
+    "warning": {
+      "general": "Bitte überprüfen Sie Ihre Eingabe und versuchen Sie es erneut"
+    },
+    "info": {
+      "general": "Information aktualisiert"
+    },
+    "confirm": {
+      "delete": "Sind Sie sicher, dass Sie dieses Element löschen möchten?",
+      "save": "Änderungen speichern?",
+      "cancel": "Vorgang abbrechen?"
+    },
+    "no_data": "Keine Daten verfügbar",
+    "loading_data": "Lade Daten...",
+    "data_saved": "Daten erfolgreich gespeichert",
+    "data_updated": "Daten erfolgreich aktualisiert",
+    "data_deleted": "Daten erfolgreich gelöscht",
+    "operation_failed": "Vorgang fehlgeschlagen",
+    "try_again": "Bitte versuchen Sie es erneut",
+    "contact_support": "Bitte kontaktieren Sie den Support, wenn das Problem weiterhin besteht"
+  },
+  "actions": {
+    "book_now": "Jetzt buchen",
+    "learn_more": "Mehr erfahren",
+    "get_started": "Loslegen",
+    "contact_us": "Kontaktieren Sie uns",
+    "call_now": "Jetzt anrufen",
+    "email_us": "E-Mail senden",
+    "request_quote": "Angebot anfordern",
+    "view_details": "Details anzeigen",
+    "read_more": "Mehr lesen",
+    "show_less": "Weniger anzeigen",
+    "load_more": "Mehr laden",
+    "try_again": "Erneut versuchen",
+    "go_back": "Zurück gehen",
+    "continue": "Fortfahren",
+    "proceed": "Fortfahren",
+    "finish": "Beenden",
+    "complete": "Abschließen",
+    "start": "Starten",
+    "stop": "Stoppen",
+    "pause": "Pausieren",
+    "resume": "Fortsetzen",
+    "restart": "Neu starten"
+  }
+}

@@ -24,6 +24,72 @@
       "subtitle": "Yacht Club"
     }
   },
+  "chat": {
+    "support_title": "Supporto Garda Racing",
+    "initial_message": "Ciao! Come posso aiutarti con la tua esperienza di vela da regata oggi?",
+    "placeholder": "Scrivi il tuo messaggio...",
+    "auto_response": "Grazie per il tuo messaggio! Il nostro team ti risponderà a breve. Per assistenza immediata, chiama il +39 344 777 00 77."
+  },
+  "payment": {
+    "processing": "Elaborazione...",
+    "pay_now": "Paga Ora",
+    "subscribe_now": "Abbonati Ora",
+    "secure_payment": "Pagamento sicuro con Stripe"
+  },
+  "phone": {
+    "select_country": "Seleziona prefisso",
+    "countries": {
+      "italy": "Italia",
+      "germany": "Germania",
+      "austria": "Austria",
+      "france": "Francia",
+      "switzerland": "Svizzera",
+      "netherlands": "Paesi Bassi",
+      "united_kingdom": "Regno Unito",
+      "spain": "Spagna",
+      "sweden": "Svezia",
+      "norway": "Norvegia",
+      "finland": "Finlandia",
+      "denmark": "Danimarca",
+      "poland": "Polonia",
+      "czech_republic": "Repubblica Ceca",
+      "slovakia": "Slovacchia",
+      "hungary": "Ungheria",
+      "belgium": "Belgio",
+      "israel": "Israele",
+      "australia": "Australia",
+      "united_states": "Stati Uniti",
+      "canada": "Canada",
+      "brazil": "Brasile",
+      "uae": "Emirati Arabi Uniti",
+      "turkey": "Turchia",
+      "romania": "Romania",
+      "greece": "Grecia",
+      "slovenia": "Slovenia",
+      "croatia": "Croazia",
+      "serbia": "Serbia",
+      "ukraine": "Ucraina",
+      "bulgaria": "Bulgaria"
+    }
+  },
+  "language": {
+    "select_language": "Seleziona lingua",
+    "english": "English",
+    "italian": "Italiano",
+    "german": "Deutsch",
+    "french": "Français",
+    "spanish": "Español",
+    "russian": "Русский"
+  },
+  "admin_login": {
+    "title": "Accesso Admin",
+    "username": "Nome utente",
+    "password": "Password",
+    "enter_username": "Inserisci nome utente",
+    "enter_password": "Inserisci password",
+    "cancel": "Annulla",
+    "login": "Accedi"
+  },
   "footer": {
     "logo": {
       "title": "Garda Racing",
@@ -58,11 +124,6 @@
     "season_period": "Marzo - Ottobre",
     "links": {
       "privacy_policy": "Privacy Policy",
-      "terms_conditions": "Termini e Condizioni",
-      "cancellation_policy": "Politica di Cancellazione",
-      "gdpr": "GDPR"
-    },
-    "copyright": "© 2025 Garda Racing Yacht Club. Tutti i diritti riservati."
   },
   "home": {
     "hero": {

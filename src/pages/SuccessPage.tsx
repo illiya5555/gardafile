@@ -1,17 +1,36 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle, Calendar, Mail, Phone, ArrowRight } from 'lucide-react';
+import { CheckCircle, Calendar, Mail, Phone, ArrowRight, Check } from 'lucide-react';
 import { useTranslation } from '../context/LanguageContext';
+
+// Conversion tracking function
+const trackConversion = () => {
+  // Check if gtag is available
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'conversion', {
+      'send_to': 'AW-17237804462/WJ2PCMqk7ZIZEL33x5Q9',
+      'value': 195.0,
+      'currency': 'EUR',
+      'transaction_id': Date.now().toString().slice(-6)
+    });
+    console.log('Conversion tracked successfully');
+  }
+};
 
 const SuccessPage = () => {
   const { t } = useTranslation();
+  
+  // Track conversion when component mounts
+  React.useEffect(() => {
+    trackConversion();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <div className="mx-auto flex items-center justify-center h-24 w-24 rounded-full bg-green-100 mb-6">
-            <CheckCircle className="h-16 w-16 text-green-600" />
+            <Check className="h-16 w-16 text-green-600" />
           </div>
           
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -21,6 +40,12 @@ const SuccessPage = () => {
           <p className="text-lg text-gray-600 mb-8">
             {t('success.subtitle', 'Thank you for choosing Garda Racing. Your yacht racing experience has been successfully booked.')}
           </p>
+
+          {/* Conversion badge */}
+          <div className="bg-green-50 p-2 rounded-lg text-center text-xs text-green-700 font-semibold mt-2">
+            <CheckCircle className="h-3 w-3 inline-block mr-1" /> 
+            {t('success.conversion_tracked', 'Payment successfully recorded')}
+          </div>
 
           <div className="bg-white rounded-lg shadow-md p-6 mb-8 text-left">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">

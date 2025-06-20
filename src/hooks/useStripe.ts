@@ -49,6 +49,16 @@ export const useStripe = (): UseStripeReturn => {
       if (!data?.url) {
         throw new Error('No checkout URL received from Stripe');
       }
+      
+      // Track Google Ads begin_checkout event
+      if (window.gtag) {
+        window.gtag('event', 'begin_checkout', {
+          'send_to': 'AW-17237804462',
+          'value': price_id === 'price_1RbAbcHGLVvZbOy8R1225QhL' ? 195.0 : null,
+          'currency': 'EUR',
+          'items': [{ 'id': price_id }]
+        });
+      }
 
       return data.url;
     } catch (err: any) {

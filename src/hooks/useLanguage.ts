@@ -122,7 +122,7 @@ const FALLBACK_TRANSLATIONS: Record<string, Record<string, string>> = {
     'home.experience.step1.title': 'Briefing du Matin',
     'home.experience.step1.description': 'Rencontrez votre skipper professionnel et apprenez les bases de la course de yacht dans un environnement détendu et amical.',
     'home.experience.step2.title': 'Expérience de Course',
-    'home.experience.step2.description': 'Participez à d'authentiques courses de yacht avec d'autres bateaux, en vivant le frisson de la compétition sur le magnifique lac de Garde.',
+    'home.experience.step2.description': 'Participez à d\'authentiques courses de yacht avec d'autres bateaux, en vivant le frisson de la compétition sur le magnifique lac de Garde.',
     'home.experience.step3.title': 'Cérémonie des Médailles',
     'home.experience.step3.description': 'Célébrez votre réussite avec une cérémonie officielle de remise des médailles et recevez votre certificat de course personnalisé.'
   },

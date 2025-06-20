@@ -1,0 +1,138 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "events": "Événements",
+    "services": "Services",
+    "contact": "Contact",
+    "book_now": "Réserver"
+  },
+  "home": {
+    "hero": {
+      "title_part1": "Vivez le Frisson de la",
+      "title_part2": "Régate en Yacht",
+      "subtitle": "Expériences quotidiennes de régate sur le célèbre Lac de Garde avec des skippers professionnels, des médailles et des souvenirs inoubliables",
+      "price_description": "par personne • Expérience journée complète",
+      "feature1": "Format de régate réel",
+      "feature2": "Skipper professionnel sur chaque bateau",
+      "feature3": "Ouvert à tous les niveaux - aucune expérience nécessaire",
+      "feature4": "Photos et vidéos professionnelles de la course",
+      "feature5": "Tout l'équipement fourni",
+      "cta": "Réservez Votre Aventure"
+    },
+    "features": {
+      "title": "Pourquoi Choisir Garda Racing?",
+      "subtitle": "Nous offrons l'expérience complète de régate avec un encadrement professionnel, un équipement premium et des souvenirs qui durent toute une vie.",
+      "item1": {
+        "title": "Format de Régate Réel",
+        "description": "Authentique régate de yacht avec dynamique d'équipe, médailles et vraie compétition."
+      },
+      "item2": {
+        "title": "Skipper Professionnel",
+        "description": "Capitaines de voile certifiés et expérimentés sur chaque bateau."
+      },
+      "item3": {
+        "title": "Photo & Vidéo",
+        "description": "Photos et vidéos professionnelles de votre journée de course à retenir et à partager."
+      },
+      "item4": {
+        "title": "Entièrement Assuré",
+        "description": "Couverture de sécurité complète et équipement moderne inclus."
+      },
+      "item5": {
+        "title": "Accessible et Premium",
+        "description": "Une expérience de régate de haut niveau ouverte à tous - aucune expérience nécessaire."
+      }
+    },
+    "experience": {
+      "title": "Votre Journée Parfaite sur le Lac de Garde",
+      "step1": {
+        "title": "Briefing du Matin",
+        "description": "Rencontrez votre skipper professionnel et apprenez les bases de la course de yacht dans un environnement détendu et amical."
+      },
+      "step2": {
+        "title": "Expérience de Course",
+        "description": "Participez à d'authentiques courses de yacht avec d'autres bateaux, en vivant le frisson de la compétition sur le magnifique lac de Garde."
+      },
+      "step3": {
+        "title": "Cérémonie des Médailles",
+        "description": "Célébrez votre réussite avec une cérémonie officielle de remise des médailles et recevez votre certificat de course personnalisé."
+      },
+      "cta": "En Savoir Plus sur l'Expérience"
+    }
+  },
+  "corporate": {
+    "title": "Événements de Voile d'Entreprise",
+    "subtitle": "Créez des expériences d'équipe inoubliables sur les magnifiques eaux du Lac de Garde. Instruction professionnelle de voile, activités de team building et service premium.",
+    "overview": {
+      "team_building": "Team Building",
+      "premium_service": "Service Premium",
+      "lake_garda": "Lac de Garde"
+    },
+    "teambuilding": {
+      "title": "La Voile comme Team Building Parfait",
+      "subtitle": "Format unique, émotions qui unissent",
+      "cta": "Envoyer une demande",
+      "image_alt": "Équipe sur un yacht"
+    },
+    "why_sailing": {
+      "title": "Pourquoi la Voile = Team Building Parfait?",
+      "team": {
+        "title": "Développement de l'Interaction d'Équipe",
+        "description": "La gestion conjointe du yacht nécessite cohésion et répartition claire des rôles"
+      },
+      "leadership": {
+        "title": "Leadership et Responsabilité",
+        "description": "Prise de décision en conditions réelles où chacun impacte le résultat global"
+      },
+      "stress": {
+        "title": "Réduction du Stress et Reset",
+        "description": "Nature, air frais et nouvelles expériences – l'environnement idéal pour une remise à zéro"
+      },
+      "emotions": {
+        "title": "Charge Émotionnelle et Confiance",
+        "description": "Des émotions vibrantes et le dépassement conjoint des défis rapprochent l'équipe"
+      }
+    },
+    "how_it_works": {
+      "title": "Comment Fonctionne le Team Building?",
+      "step1": {
+        "title": "Briefing et Instruction",
+        "description": "Introduction au yacht, principes de base de contrôle, techniques de sécurité"
+      },
+      "step2": {
+        "title": "Division des Équipes",
+        "description": "Formation des équipages, distribution des rôles et responsabilités"
+      },
+      "step3": {
+        "title": "Régates avec Jury",
+        "description": "Compétitions entre équipes le long d'un parcours défini, avec évaluation professionnelle"
+      },
+      "step4": {
+        "title": "Exercices d'Équipe sur l'Eau",
+        "description": "Exercices spécifiques visant à développer la communication et la confiance"
+      },
+      "step5": {
+        "title": "Remise de Prix et Afterparty",
+        "description": "Clôture cérémoniale, remise des récompenses et dîner de célébration"
+      }
+    },
+    "inquiry": {
+      "title": "Prêt à Unir Votre Équipe sur une Vague d'Émotions?",
+      "subtitle": "Laissez-nous une demande — nous vous proposerons une solution adaptée à vos objectifs et budget",
+      "form": {
+        "name": "Nom",
+        "phone": "Téléphone",
+        "company": "Entreprise",
+        "participants": "Nombre de participants",
+        "submit": "Envoyer la demande"
+      }
+    }
+  },
+  "form": {
+    "name": "Nom",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "message": "Message",
+    "submit": "Envoyer le Message"
+  }
+}

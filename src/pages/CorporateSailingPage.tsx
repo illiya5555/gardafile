@@ -66,7 +66,7 @@ const CorporateSailingPage = () => {
       <div className="relative bg-primary-900 text-white py-24">
         <div className="absolute inset-0 bg-gradient-to-r from-primary-900 to-primary-800 opacity-90"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl font-bold mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">
             {t('corporate.title', 'Corporate Sailing Events')}
           </h1>
           <p className="text-xl text-primary-100 max-w-3xl mx-auto mb-8">
@@ -75,15 +75,15 @@ const CorporateSailingPage = () => {
           <div className="flex items-center justify-center space-x-8 text-sm">
             <div className="flex items-center space-x-2">
               <Users className="h-5 w-5" />
-              <span>Team Building</span>
+              <span>{t('corporate.overview.team_building', 'Team Building')}</span>
             </div>
             <div className="flex items-center space-x-2">
               <Star className="h-5 w-5" />
-              <span>Premium Service</span>
+              <span>{t('corporate.overview.premium_service', 'Premium Service')}</span>
             </div>
             <div className="flex items-center space-x-2">
               <MapPin className="h-5 w-5" />
-              <span>Lake Garda</span>
+              <span>{t('corporate.overview.lake_garda', 'Lake Garda')}</span>
             </div>
           </div>
         </div>
@@ -94,10 +94,10 @@ const CorporateSailingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Яхтинг как идеальный тимбилдинг
+              {t('corporate.teambuilding.title', 'Yachting as Perfect Team Building')}
             </h2>
             <p className="text-xl text-gray-700 max-w-3xl mx-auto mb-8">
-              Нестандартный формат, эмоции, которые объединяют
+              {t('corporate.teambuilding.subtitle', 'Unique format, emotions that unite')}
             </p>
             
             <div className="flex justify-center mb-12">
@@ -105,7 +105,7 @@ const CorporateSailingPage = () => {
                 to="/contact" 
                 className="bg-primary-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg inline-flex items-center space-x-2"
               >
-                <span>Оставить заявку</span>
+                <span>{t('corporate.teambuilding.cta', 'Submit Request')}</span>
                 <ArrowRight className="h-5 w-5" />
               </Link>
             </div>
@@ -113,7 +113,7 @@ const CorporateSailingPage = () => {
             <div className="rounded-2xl overflow-hidden shadow-2xl mb-12 max-w-4xl mx-auto">
               <img 
                 src="https://images.pexels.com/photos/273886/pexels-photo-273886.jpeg" 
-                alt="Команда на яхте" 
+                alt={t('corporate.teambuilding.image_alt', 'Team on a yacht')}
                 className="w-full h-[500px] object-cover" 
               />
             </div>
@@ -122,32 +122,32 @@ const CorporateSailingPage = () => {
           {/* Почему яхтинг = идеальный тимбилдинг */}
           <div className="mb-20">
             <h3 className="text-3xl font-bold text-gray-900 mb-10 text-center">
-              Почему яхтинг = идеальный тимбилдинг?
+              {t('corporate.why_sailing.title', 'Why Sailing = Perfect Team Building?')}
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <div className="text-4xl font-bold text-primary-600 mb-4">🤝</div>
-                <h4 className="text-xl font-semibold text-gray-900 mb-3">Развитие командного взаимодействия</h4>
-                <p className="text-gray-600">Совместное управление яхтой требует слаженности и четкого распределения ролей</p>
+                <h4 className="text-xl font-semibold text-gray-900 mb-3">{t('corporate.why_sailing.team.title', 'Team Interaction Development')}</h4>
+                <p className="text-gray-600">{t('corporate.why_sailing.team.description', 'Joint yacht management requires cohesion and clear role distribution')}</p>
               </div>
               
               <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <div className="text-4xl font-bold text-primary-600 mb-4">🧭</div>
-                <h4 className="text-xl font-semibold text-gray-900 mb-3">Лидерство и ответственность</h4>
-                <p className="text-gray-600">Принятие решений в реальных условиях, когда от каждого зависит общий результат</p>
+                <h4 className="text-xl font-semibold text-gray-900 mb-3">{t('corporate.why_sailing.leadership.title', 'Leadership and Responsibility')}</h4>
+                <p className="text-gray-600">{t('corporate.why_sailing.leadership.description', 'Decision-making in real conditions where everyone impacts the overall result')}</p>
               </div>
               
               <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <div className="text-4xl font-bold text-primary-600 mb-4">🧘</div>
-                <h4 className="text-xl font-semibold text-gray-900 mb-3">Снятие стресса и перезагрузка</h4>
-                <p className="text-gray-600">Природа, свежий воздух и новый опыт – идеальная среда для перезагрузки</p>
+                <h4 className="text-xl font-semibold text-gray-900 mb-3">{t('corporate.why_sailing.stress.title', 'Stress Relief and Reset')}</h4>
+                <p className="text-gray-600">{t('corporate.why_sailing.stress.description', 'Nature, fresh air, and new experiences – the perfect environment for a reset')}</p>
               </div>
               
               <div className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <div className="text-4xl font-bold text-primary-600 mb-4">🌊</div>
-                <h4 className="text-xl font-semibold text-gray-900 mb-3">Эмоциональный заряд и доверие</h4>
-                <p className="text-gray-600">Яркие эмоции и совместное преодоление трудностей сближают команду</p>
+                <h4 className="text-xl font-semibold text-gray-900 mb-3">{t('corporate.why_sailing.emotions.title', 'Emotional Charge and Trust')}</h4>
+                <p className="text-gray-600">{t('corporate.why_sailing.emotions.description', 'Vibrant emotions and jointly overcoming challenges bring the team closer together')}</p>
               </div>
             </div>
           </div>
@@ -155,7 +155,7 @@ const CorporateSailingPage = () => {
           {/* Как проходит тимбилдинг */}
           <div className="mb-20">
             <h3 className="text-3xl font-bold text-gray-900 mb-10 text-center">
-              Как проходит тимбилдинг?
+              {t('corporate.how_it_works.title', 'How Does the Team Building Work?')}
             </h3>
             
             <div className="max-w-3xl mx-auto">
@@ -163,40 +163,40 @@ const CorporateSailingPage = () => {
                 <div className="flex items-center space-x-6">
                   <div className="bg-primary-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0">1</div>
                   <div>
-                    <h4 className="text-xl font-semibold text-gray-900 mb-2">Брифинг и инструктаж</h4>
-                    <p className="text-gray-600">Знакомство с яхтой, базовые принципы управления, техника безопасности</p>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('corporate.how_it_works.step1.title', 'Briefing and Instruction')}</h4>
+                    <p className="text-gray-600">{t('corporate.how_it_works.step1.description', 'Introduction to the yacht, basic control principles, safety techniques')}</p>
                   </div>
                 </div>
                 
                 <div className="flex items-center space-x-6">
                   <div className="bg-primary-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0">2</div>
                   <div>
-                    <h4 className="text-xl font-semibold text-gray-900 mb-2">Разделение на команды</h4>
-                    <p className="text-gray-600">Формирование экипажей, распределение ролей и ответственности</p>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('corporate.how_it_works.step2.title', 'Team Division')}</h4>
+                    <p className="text-gray-600">{t('corporate.how_it_works.step2.description', 'Forming crews, distributing roles and responsibilities')}</p>
                   </div>
                 </div>
                 
                 <div className="flex items-center space-x-6">
                   <div className="bg-primary-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0">3</div>
                   <div>
-                    <h4 className="text-xl font-semibold text-gray-900 mb-2">Яхтенные гонки с судейством</h4>
-                    <p className="text-gray-600">Соревнования между командами по заданному маршруту, с профессиональной оценкой</p>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('corporate.how_it_works.step3.title', 'Yacht Races with Judging')}</h4>
+                    <p className="text-gray-600">{t('corporate.how_it_works.step3.description', 'Competitions between teams along a set route, with professional evaluation')}</p>
                   </div>
                 </div>
                 
                 <div className="flex items-center space-x-6">
                   <div className="bg-primary-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0">4</div>
                   <div>
-                    <h4 className="text-xl font-semibold text-gray-900 mb-2">Командные задания на воде</h4>
-                    <p className="text-gray-600">Выполнение специальных упражнений, направленных на развитие коммуникации и доверия</p>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('corporate.how_it_works.step4.title', 'Team Tasks on Water')}</h4>
+                    <p className="text-gray-600">{t('corporate.how_it_works.step4.description', 'Special exercises aimed at developing communication and trust')}</p>
                   </div>
                 </div>
                 
                 <div className="flex items-center space-x-6">
                   <div className="bg-primary-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0">5</div>
                   <div>
-                    <h4 className="text-xl font-semibold text-gray-900 mb-2">Награждение и афтепати</h4>
-                    <p className="text-gray-600">Торжественное подведение итогов, вручение наград и праздничный ужин</p>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-2">{t('corporate.how_it_works.step5.title', 'Awards and Afterparty')}</h4>
+                    <p className="text-gray-600">{t('corporate.how_it_works.step5.description', 'Ceremonial wrap-up, award presentation and celebration dinner')}</p>
                   </div>
                 </div>
               </div>
@@ -254,10 +254,10 @@ const CorporateSailingPage = () => {
       <div className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-6">
-            Готовы объединить команду на волне эмоций?
+            {t('corporate.inquiry.title', 'Ready to Unite Your Team on a Wave of Emotions?')}
           </h2>
           <p className="text-lg text-gray-600 mb-10">
-            Оставьте заявку — мы предложим решение под ваши цели и бюджет
+            {t('corporate.inquiry.subtitle', 'Leave a request — we will offer a solution tailored to your goals and budget')}
           </p>
           
           <div className="bg-white shadow-xl rounded-2xl p-8 max-w-xl mx-auto border border-gray-100">
@@ -265,7 +265,7 @@ const CorporateSailingPage = () => {
               <div>
                 <input 
                   type="text" 
-                  placeholder="Имя" 
+                  placeholder={t('corporate.inquiry.form.name', 'Name')}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   required
                 />
@@ -274,7 +274,7 @@ const CorporateSailingPage = () => {
               <div>
                 <input 
                   type="tel" 
-                  placeholder="Телефон" 
+                  placeholder={t('corporate.inquiry.form.phone', 'Phone')}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   required
                 />
@@ -283,7 +283,7 @@ const CorporateSailingPage = () => {
               <div>
                 <input 
                   type="text" 
-                  placeholder="Компания" 
+                  placeholder={t('corporate.inquiry.form.company', 'Company')}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
@@ -291,7 +291,7 @@ const CorporateSailingPage = () => {
               <div>
                 <input 
                   type="number" 
-                  placeholder="Количество участников" 
+                  placeholder={t('corporate.inquiry.form.participants', 'Number of participants')}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
@@ -300,7 +300,7 @@ const CorporateSailingPage = () => {
                 type="submit" 
                 className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg inline-flex items-center justify-center space-x-2"
               >
-                <span>Оставить заявку</span>
+                <span>{t('corporate.inquiry.form.submit', 'Submit Request')}</span>
                 <ArrowRight className="h-5 w-5" />
               </button>
             </form>

@@ -52,16 +52,16 @@ import {
 } from 'lucide-react';
 import { supabase } from '../../../src/lib/supabase';
 import HomeContentEditor from '../components/admin/HomeContentEditor';
-import EventsContentEditor from '../components/admin/EventsContentEditor';
+import EventsContentEditor from '../../../src/components/admin/EventsContentEditor';
 import ServicesContentEditor from '../components/admin/ServicesContentEditor';
-import ContactContentEditor from '../components/admin/ContactContentEditor';
+import ContactContentEditor from '../../../src/components/admin/ContactContentEditor';
 import BookingContentEditor from '../components/admin/BookingContentEditor';
-import InquiriesManagement from '../components/admin/InquiriesManagement';
-import ClientsManagement from '../components/admin/ClientsManagement';
+import InquiriesManagement from '../../../src/components/admin/InquiriesManagement';
+import ClientsManagement from '../../../src/components/admin/ClientsManagement';
 import BookingsCalendar from '../components/admin/BookingsCalendar';
-import MediaLibrary from '../components/admin/MediaLibrary';
-import DatabaseManagement from '../components/admin/DatabaseManagement';
-import CalendarManagement from '../components/admin/CalendarManagement';
+import MediaLibrary from '../../../src/components/admin/MediaLibrary';
+import DatabaseManagement from '../../../src/components/admin/DatabaseManagement';
+import CalendarManagement from '../../../src/components/admin/CalendarManagement';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();

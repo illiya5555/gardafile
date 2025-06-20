@@ -1,4 +1,4 @@
-# Извлеченные строки для перевода
+# Извлеченные строки для перевода - ПОЛНЫЙ АНАЛИЗ
 # Формат: ключ=английский_текст
 # Если строка уже использует t(), записан только ключ
 
@@ -100,6 +100,7 @@ booking.calendar.morning_regatta=Morning Regatta
 booking.calendar.afternoon_regatta=Afternoon Regatta
 booking.calendar.per_person=per person
 booking.calendar.up_to_participants=Up to {count} participants
+booking.calendar.4_hours=(4 hours)
 booking.details.your_details=Your details
 booking.details.back_to_time=← Back to time selection
 booking.details.back_to_details=← Back to details
@@ -137,6 +138,7 @@ booking.legend.available=Available
 booking.legend.booked=Booked
 booking.legend.past_unavailable=Past/Unavailable
 booking.form.creating_booking=Creating booking...
+booking.form.selected_date=Selected date:
 
 # src/pages/EventsPage.tsx
 # Уже переведенные строки (только ключи):
@@ -196,6 +198,7 @@ events.equipment.safety_first=Safety First
 events.equipment.safety_description=All safety equipment meets international standards. Our boats are regularly inspected and maintained to the highest standards. Every participant receives a comprehensive safety briefing before departure.
 events.equipment.premium_yachts=Premium Yachts
 events.equipment.premium_yachts_desc=We use modern J-70/J-80 high-performance yachts. These boats are specifically chosen for their racing capabilities while maintaining comfort and safety for our participants.
+events.equipment.professional_j70_yacht=Professional J-70/J-80 Racing Yacht
 events.equipment.complete_list=Complete Equipment List
 events.equipment.racing_yacht=Professional racing yacht (J-70/J-80)
 events.equipment.safety_equipment=All safety equipment (life jackets, water)
@@ -411,6 +414,79 @@ dashboard.booking.status.confirmed=confirmed
 dashboard.booking.status.pending=pending
 dashboard.booking.status.cancelled=cancelled
 
+# src/pages/AdminDashboard.tsx
+# Жестко закодированные строки, требующие перевода:
+admin.dashboard.loading=Loading admin dashboard...
+admin.dashboard.garda_racing=Garda Racing
+admin.dashboard.admin_panel=Admin Panel
+admin.dashboard.administrator=Administrator
+admin.dashboard.logout=Logout
+admin.dashboard.welcome=Welcome back!
+admin.dashboard.date_today={weekday}, {month} {day}, {year}
+admin.dashboard.system_health=System: {percentage}%
+admin.dashboard.notifications=Notifications
+admin.menu.main=Main
+admin.menu.content_management=Content Management
+admin.menu.business_management=Business Management
+admin.menu.analytics_insights=Analytics & Insights
+admin.menu.business_operations=Business Operations
+admin.menu.system_settings=System & Settings
+admin.menu.dashboard=Dashboard
+admin.menu.calendar_management=Calendar Management
+admin.menu.home_editor=Home Editor
+admin.menu.events_editor=Events Editor
+admin.menu.services_editor=Services Editor
+admin.menu.contact_editor=Contact Editor
+admin.menu.booking_editor=Booking Editor
+admin.menu.media_library=Media Library
+admin.menu.inquiries=Inquiries
+admin.menu.bookings_calendar=Bookings Calendar
+admin.menu.client_management=Client Management
+admin.menu.analytics=Analytics
+admin.menu.seo_marketing=SEO & Marketing
+admin.menu.payments=Payments
+admin.menu.fleet_management=Fleet Management
+admin.menu.reports=Reports
+admin.menu.database=Database
+admin.menu.design_system=Design System
+admin.menu.security=Security
+admin.menu.notifications=Notifications
+admin.menu.settings=Settings
+admin.stats.total_bookings=Total Bookings
+admin.stats.total_revenue=Total Revenue
+admin.stats.active_clients=Active Clients
+admin.stats.conversion_rate=Conversion Rate
+admin.stats.media_files=Media Files
+admin.stats.website_views=Website Views
+admin.stats.system_health=System Health
+admin.stats.increase_this_month=+{percentage}% this month
+admin.stats.plan_vs_actual=Plan vs Actual (Current Month)
+admin.stats.target=Target
+admin.stats.actual=Actual
+admin.stats.variance=Variance
+admin.stats.recent_bookings=Recent Bookings
+admin.stats.view_all=View All →
+admin.stats.recent_activity=Recent Activity
+admin.stats.quick_actions=Quick Actions
+admin.stats.manage_calendar=Manage Calendar
+admin.stats.edit_homepage=Edit Homepage
+admin.stats.media_library_action=Media Library
+admin.stats.database_action=Database
+admin.analytics.analytics_reports=Analytics and Reports
+admin.analytics.traffic_sources=Traffic Sources
+admin.analytics.instagram=Instagram
+admin.analytics.website=Website
+admin.analytics.referrals=Referrals
+admin.analytics.conversion=Conversion
+admin.analytics.view_inquiry=View → Inquiry
+admin.analytics.inquiry_payment=Inquiry → Payment
+admin.analytics.overall=Overall
+admin.analytics.popular_time_slots=Popular Time Slots
+admin.placeholder.under_development=This section is under development. Full functionality will be available soon.
+admin.placeholder.notify_when_ready=Notify When Ready
+admin.sidebar.expand=Expand sidebar
+admin.sidebar.collapse=Collapse sidebar
+
 # === ФАЙЛЫ КОМПОНЕНТОВ (src/components/) ===
 
 # src/components/Header.tsx
@@ -505,25 +581,25 @@ phone.countries.serbia=Serbia
 phone.countries.ukraine=Ukraine
 phone.countries.bulgaria=Bulgaria
 
-# === СЛУЖЕБНЫЕ ФАЙЛЫ (src/utils/) ===
-
-# src/utils/seo.ts
+# src/components/LanguageSelector.tsx
 # Жестко закодированные строки, требующие перевода:
-seo.home.title=Garda Racing Yacht Club - Premium Sailing Experiences on Lake Garda
-seo.home.description=Daily yacht racing experiences in world-famous Lake Garda. Professional skipper, racing medals, and unforgettable memories. Book your €195 sailing adventure today!
-seo.home.keywords=Lake Garda sailing, yacht racing, Riva del Garda, sailing experience, yacht charter, racing course
-seo.events.title=Yacht Racing Events - Complete Day Program | Garda Racing
-seo.events.description=Discover our complete yacht racing program on Lake Garda. Professional instruction, authentic racing, medal ceremony, and professional photos included.
-seo.events.keywords=yacht racing program, sailing lessons Lake Garda, racing events, sailing instruction
-seo.services.title=Corporate Services & Team Building | Garda Racing Yacht Club
-seo.services.description=Professional corporate sailing events and team building activities on Lake Garda. Custom packages for groups from 12 to 96 participants.
-seo.services.keywords=corporate sailing, team building Lake Garda, corporate events, sailing team building
-seo.contact.title=Contact Us - Garda Racing Yacht Club | Lake Garda Sailing
-seo.contact.description=Get in touch with Garda Racing Yacht Club. Located in Riva del Garda, Italy. Phone: +39 345 678 9012. Professional sailing experiences since 2008.
-seo.contact.keywords=contact Garda Racing, Riva del Garda sailing, yacht club contact, Lake Garda sailing contact
-seo.booking.title=Book Your Yacht Racing Adventure | Garda Racing Yacht Club
-seo.booking.description=Book your yacht racing experience on Lake Garda. €195 per person includes professional skipper, equipment, racing medal, and photos. Easy online booking.
-seo.booking.keywords=book yacht racing, Lake Garda booking, sailing reservation, yacht charter booking
+language.select_language=Select language
+language.english=English
+language.italian=Italiano
+language.german=Deutsch
+language.french=Français
+language.spanish=Español
+language.russian=Русский
+
+# src/components/AdminLogin.tsx
+# Жестко закодированные строки, требующие перевода:
+admin_login.title=Admin Access
+admin_login.username=Username
+admin_login.password=Password
+admin_login.enter_username=Enter username
+admin_login.enter_password=Enter password
+admin_login.cancel=Cancel
+admin_login.login=Login
 
 # === КОМПОНЕНТЫ АДМИНИСТРАТОРА (src/components/admin/) ===
 
@@ -556,8 +632,273 @@ admin.bookings.conflict_warning=This booking conflicts with another booking for 
 admin.bookings.close=Close
 admin.bookings.send_confirmation=Send Confirmation
 admin.bookings.edit_booking=Edit Booking
+admin.bookings.moved_successfully=Booking moved successfully!
+admin.bookings.error_moving=Error moving booking
+admin.bookings.error_updating_status=Error updating status
 
-# И так далее для остальных admin компонентов...
+# src/components/admin/CalendarManagement.tsx
+# Жестко закодированные строки, требующие перевода:
+admin.calendar.title=Calendar Management
+admin.calendar.subtitle=Manage booking availability - control which dates are open for client bookings
+admin.calendar.refresh=Refresh
+admin.calendar.how_to_use=How to use Calendar Management
+admin.calendar.instructions=Click on any date to manage its availability. You can make dates "Available for booking" (clients can book) or "Booked" (blocked for clients). Green dots indicate available dates, gray indicates blocked dates.
+admin.calendar.loading=Loading calendar...
+admin.calendar.legend=Legend
+admin.calendar.available_client_booking=Available for client booking
+admin.calendar.booked_blocked=Booked (blocked for clients)
+admin.calendar.not_configured=Not configured
+admin.calendar.today=Today
+admin.calendar.manage_date=Manage Date: {date}
+admin.calendar.current_status=Current Status:
+admin.calendar.no_slots_configured=No time slots configured
+admin.calendar.available_booking=Available for booking
+admin.calendar.some_slots_blocked=Some slots blocked
+admin.calendar.slots_configured={count} time slots configured
+admin.calendar.available_for_booking=Available for Booking
+admin.calendar.clients_can_book=Clients can book this date
+admin.calendar.booked=Booked
+admin.calendar.block_date=Block this date from client booking
+admin.calendar.remove_all_slots=Remove All Slots
+admin.calendar.delete_all_slots=Delete all time slots for this date
+admin.calendar.cancel=Cancel
+admin.calendar.date_available_success=Date made available for booking with default time slots!
+admin.calendar.date_booked_success=Date marked as booked - no longer available for client booking!
+admin.calendar.slots_removed_success=All time slots removed for this date!
+admin.calendar.error_making_available=Error making date available
+admin.calendar.error_marking_booked=Error marking date as booked
+admin.calendar.error_removing_slots=Error removing slots
+admin.calendar.confirm_remove_slots=Are you sure you want to remove all time slots for this date?
+
+# src/components/admin/ClientsManagement.tsx
+# Жестко закодированные строки, требующие перевода:
+admin.clients.title=Client Management
+admin.clients.subtitle=Manage customer relationships and track client history
+admin.clients.add_client=Add Client
+admin.clients.total_clients=Total Clients
+admin.clients.vip_clients=VIP Clients
+admin.clients.active_this_month=Active This Month
+admin.clients.avg_lifetime_value=Avg. Lifetime Value
+admin.clients.search_placeholder=Search clients...
+admin.clients.all_categories=All Categories
+admin.clients.newest_first=Newest First
+admin.clients.oldest_first=Oldest First
+admin.clients.name_a_z=Name A-Z
+admin.clients.highest_value=Highest Value
+admin.clients.most_bookings=Most Bookings
+admin.clients.export=Export
+admin.clients.showing_results=Showing {showing} of {total} clients
+admin.clients.categories.vip=VIP
+admin.clients.categories.regular=Regular
+admin.clients.categories.corporate=Corporate
+admin.clients.categories.new=New
+admin.clients.categories.inactive=Inactive
+admin.clients.loading=Loading clients...
+admin.clients.client=Client
+admin.clients.contact=Contact
+admin.clients.category=Category
+admin.clients.bookings=Bookings
+admin.clients.total_spent=Total Spent
+admin.clients.last_booking=Last Booking
+admin.clients.actions=Actions
+admin.clients.value.new=New
+admin.clients.value.high=High Value
+admin.clients.value.medium=Medium Value
+admin.clients.value.low=Low Value
+admin.clients.bookings_count={count} bookings
+admin.clients.never=Never
+admin.clients.details_title=Client Details
+admin.clients.personal_info=Personal Information
+admin.clients.name=Name
+admin.clients.email=Email
+admin.clients.phone=Phone
+admin.clients.booking_stats=Booking Statistics
+admin.clients.total_bookings=Total Bookings
+admin.clients.client_since=Client Since
+admin.clients.send_email=Send Email
+admin.clients.view_bookings=View Bookings
+admin.clients.error_updating_category=Error updating category
+
+# src/components/admin/InquiriesManagement.tsx
+# Жестко закодированные строки, требующие перевода:
+admin.inquiries.title=Corporate Inquiries
+admin.inquiries.subtitle=Manage and track corporate event requests
+admin.inquiries.new_inquiry=New Inquiry
+admin.inquiries.search_placeholder=Search inquiries...
+admin.inquiries.all_dates=All Dates
+admin.inquiries.today=Today
+admin.inquiries.this_week=This Week
+admin.inquiries.this_month=This Month
+admin.inquiries.priority_high_low=Priority (High to Low)
+admin.inquiries.company_a_z=Company A-Z
+admin.inquiries.most_participants=Most Participants
+admin.inquiries.showing_results=Showing {showing} of {total} inquiries
+admin.inquiries.export_csv=Export CSV
+admin.inquiries.loading=Loading inquiries...
+admin.inquiries.priority=Priority
+admin.inquiries.company=Company
+admin.inquiries.contact=Contact
+admin.inquiries.participants={count} people
+admin.inquiries.priority.high=High
+admin.inquiries.priority.medium=Medium
+admin.inquiries.priority.low=Low
+admin.inquiries.status.contacted=Contacted
+admin.inquiries.status.quoted=Quoted
+admin.inquiries.details_title=Inquiry Details
+admin.inquiries.participants_count=Participants
+admin.inquiries.preferred_date=Preferred Date
+admin.inquiries.not_specified=Not specified
+admin.inquiries.message=Message
+admin.inquiries.send_email=Send Email
+
+# src/components/admin/MediaLibrary.tsx
+# Жестко закодированные строки, требующие перевода:
+admin.media.title=Media Library
+admin.media.subtitle=Manage images, videos, and documents
+admin.media.new_folder=New Folder
+admin.media.upload_files=Upload Files
+admin.media.search_placeholder=Search media...
+admin.media.all_folders=All Folders
+admin.media.all_types=All Types
+admin.media.images=Images
+admin.media.videos=Videos
+admin.media.documents=Documents
+admin.media.items_count={count} of {total} items
+admin.media.total_size=Total size: {size}
+admin.media.drag_drop=Drag and drop files here, or click to browse
+admin.media.supported_formats=Supports: JPG, PNG, GIF, MP4, MOV, PDF, DOC (Max 10MB each)
+admin.media.choose_files=Choose Files
+admin.media.uploading_files=Uploading Files
+admin.media.loading=Loading media library...
+admin.media.copy_url=Copy URL
+admin.media.preview=Preview
+admin.media.delete=Delete
+admin.media.edit=Edit
+admin.media.featured_badge=Featured
+admin.media.grid_view=Grid View
+admin.media.list_view=List View
+admin.media.selected_count={count} selected
+admin.media.preview_column=Preview
+admin.media.name_column=Name
+admin.media.type_column=Type
+admin.media.size_column=Size
+admin.media.folder_column=Folder
+admin.media.created_column=Created
+admin.media.actions_column=Actions
+admin.media.type.image=Image
+admin.media.type.video=Video
+admin.media.type.document=Document
+admin.media.url_copied=URL copied to clipboard!
+
+# src/components/admin/DatabaseManagement.tsx
+# Жестко закодированные строки, требующие перевода:
+admin.database.title=Database Management
+admin.database.subtitle=Manage your Supabase database tables and records
+admin.database.refresh=Refresh
+admin.database.connection_status.connected=Connected
+admin.database.connection_status.disconnected=Disconnected
+admin.database.connection_status.checking=Checking...
+admin.database.connection_failed=Database Connection Failed
+admin.database.connection_failed_desc=Unable to connect to the database. Please check your Supabase configuration and try again.
+admin.database.loading=Loading database information...
+admin.database.database_tables=Database Tables
+admin.database.table_name=Table Name
+admin.database.row_count=Row Count
+admin.database.table_schema=Table Schema
+admin.database.table_data=Table Data
+admin.database.search_records=Search records...
+admin.database.loading_data=Loading table data...
+admin.database.add_record=Add Record
+admin.database.export=Export
+admin.database.actions=Actions
+admin.database.create_record=Create New Record
+admin.database.edit_record=Edit Record
+admin.database.cancel=Cancel
+admin.database.create=Create Record
+admin.database.update=Update Record
+admin.database.delete_confirm=Are you sure you want to delete this record?
+admin.database.record_created=Record created successfully!
+admin.database.record_updated=Record updated successfully!
+admin.database.record_deleted=Record deleted successfully!
+admin.database.error_creating=Error creating record
+admin.database.error_updating=Error updating record
+admin.database.error_deleting=Error deleting record
+admin.database.showing_page=Showing page {page} of table data
+admin.database.previous=Previous
+admin.database.next=Next
+admin.database.select_table=Select a Table
+admin.database.select_table_desc=Choose a table from the left sidebar to view and manage its data.
+
+# src/components/admin/ContentEditors (базовые строки для всех редакторов)
+admin.content.home_editor=Home Page Editor
+admin.content.events_editor=Events Page Editor
+admin.content.services_editor=Services Page Editor
+admin.content.contact_editor=Contact Page Editor
+admin.content.booking_editor=Booking Page Editor
+admin.content.under_development=will be implemented here. This will allow editing of:
+admin.content.home.hero_section=Hero section content and imagery
+admin.content.home.features_benefits=Features and benefits sections
+admin.content.home.testimonials=Customer testimonials
+admin.content.home.partner_logos=Partner logos and descriptions
+admin.content.home.call_to_action=Call-to-action sections
+admin.content.events.descriptions=Event descriptions and schedules
+admin.content.events.gallery=Gallery images and videos
+admin.content.events.weather=Weather information
+admin.content.events.equipment=Equipment details
+admin.content.events.faq=FAQ sections
+admin.content.services.packages=Corporate packages and pricing
+admin.content.services.additional=Additional services
+admin.content.services.benefits=Team building benefits
+admin.content.services.testimonials=Corporate testimonials
+admin.content.services.contact=Contact information
+admin.content.contact.information=Contact information and hours
+admin.content.contact.location=Location and map settings
+admin.content.contact.faq=FAQ sections
+admin.content.contact.form_config=Contact form configuration
+admin.content.contact.quick_contact=Quick contact options
+admin.content.booking.calendar=Calendar configuration
+admin.content.booking.time_slots=Time slot management
+admin.content.booking.pricing=Pricing and packages
+admin.content.booking.payment=Payment integration settings
+admin.content.booking.confirmation=Confirmation email templates
+
+# === СЛУЖЕБНЫЕ ФАЙЛЫ (src/utils/) ===
+
+# src/utils/seo.ts
+# Жестко закодированные строки, требующие перевода:
+seo.home.title=Garda Racing Yacht Club - Premium Sailing Experiences on Lake Garda
+seo.home.description=Daily yacht racing experiences in world-famous Lake Garda. Professional skipper, racing medals, and unforgettable memories. Book your €195 sailing adventure today!
+seo.home.keywords=Lake Garda sailing, yacht racing, Riva del Garda, sailing experience, yacht charter, racing course
+seo.events.title=Yacht Racing Events - Complete Day Program | Garda Racing
+seo.events.description=Discover our complete yacht racing program on Lake Garda. Professional instruction, authentic racing, medal ceremony, and professional photos included.
+seo.events.keywords=yacht racing program, sailing lessons Lake Garda, racing events, sailing instruction
+seo.services.title=Corporate Services & Team Building | Garda Racing Yacht Club
+seo.services.description=Professional corporate sailing events and team building activities on Lake Garda. Custom packages for groups from 12 to 96 participants.
+seo.services.keywords=corporate sailing, team building Lake Garda, corporate events, sailing team building
+seo.contact.title=Contact Us - Garda Racing Yacht Club | Lake Garda Sailing
+seo.contact.description=Get in touch with Garda Racing Yacht Club. Located in Riva del Garda, Italy. Phone: +39 345 678 9012. Professional sailing experiences since 2008.
+seo.contact.keywords=contact Garda Racing, Riva del Garda sailing, yacht club contact, Lake Garda sailing contact
+seo.booking.title=Book Your Yacht Racing Adventure | Garda Racing Yacht Club
+seo.booking.description=Book your yacht racing experience on Lake Garda. €195 per person includes professional skipper, equipment, racing medal, and photos. Easy online booking.
+seo.booking.keywords=book yacht racing, Lake Garda booking, sailing reservation, yacht charter booking
+
+# src/stripe-config.ts
+# Жестко закодированные строки, требующие перевода:
+stripe.garda_racing_experience=Garda Racing Experience
+stripe.garda_racing_description=Premium yacht racing experience on Lake Garda with professional skipper, equipment, and medal ceremony.
+stripe.premium_membership=Premium Membership
+stripe.premium_membership_description=Monthly membership with exclusive benefits and discounts.
+stripe.features.professional_experience=Professional yacht racing experience
+stripe.features.certified_skipper=Certified skipper and instruction
+stripe.features.safety_equipment=All safety equipment provided
+stripe.features.racing_medal=Racing medal and certificate
+stripe.features.professional_photography=Professional photography
+stripe.features.sailing_experience=4-hour sailing experience
+stripe.features.priority_booking=Priority booking access
+stripe.features.discount_20=20% discount on all experiences
+stripe.features.member_events=Exclusive member events
+stripe.features.free_photos=Free professional photos
+stripe.features.equipment_upgrades=Complimentary equipment upgrades
 
 # === ОБЩИЕ ЭЛЕМЕНТЫ ===
 common.loading=Loading...
@@ -579,6 +920,62 @@ common.confirm=Confirm
 common.success=Success
 common.warning=Warning
 common.info=Information
+common.search=Search
+common.filter=Filter
+common.sort=Sort
+common.all=All
+common.none=None
+common.select=Select
+common.add=Add
+common.remove=Remove
+common.update=Update
+common.create=Create
+common.manage=Manage
+common.settings=Settings
+common.help=Help
+common.about=About
+common.more=More
+common.less=Less
+common.show=Show
+common.hide=Hide
+common.expand=Expand
+common.collapse=Collapse
+common.refresh=Refresh
+common.reload=Reload
+common.reset=Reset
+common.clear=Clear
+common.upload=Upload
+common.download=Download
+common.export=Export
+common.import=Import
+common.copy=Copy
+common.paste=Paste
+common.cut=Cut
+common.undo=Undo
+common.redo=Redo
+common.print=Print
+common.share=Share
+common.send=Send
+common.receive=Receive
+common.open=Open
+common.new=New
+common.recent=Recent
+common.popular=Popular
+common.featured=Featured
+common.recommended=Recommended
+common.available=Available
+common.unavailable=Unavailable
+common.active=Active
+common.inactive=Inactive
+common.enabled=Enabled
+common.disabled=Disabled
+common.online=Online
+common.offline=Offline
+common.public=Public
+common.private=Private
+common.draft=Draft
+common.published=Published
+common.archived=Archived
 
 # === ФОРМЫ ===
 form.required=Required field
@@ -587,6 +984,36 @@ form.invalid_phone=Please enter a valid phone number
 form.password_too_short=Password must be at least 8 characters
 form.passwords_dont_match=Passwords do not match
 form.please_fill_required=Please fill in all required fields
+form.name=Name
+form.email=Email
+form.phone=Phone
+form.message=Message
+form.subject=Subject
+form.address=Address
+form.city=City
+form.country=Country
+form.postal_code=Postal Code
+form.company=Company
+form.position=Position
+form.website=Website
+form.description=Description
+form.notes=Notes
+form.date=Date
+form.time=Time
+form.duration=Duration
+form.price=Price
+form.quantity=Quantity
+form.total=Total
+form.first_name=First Name
+form.last_name=Last Name
+form.full_name=Full Name
+form.username=Username
+form.password=Password
+form.confirm_password=Confirm Password
+form.current_password=Current Password
+form.new_password=New Password
+form.optional=Optional
+form.required_field=Required field
 
 # === НАВИГАЦИЯ ===
 nav.admin=Admin
@@ -595,6 +1022,12 @@ nav.profile=Profile
 nav.logout=Logout
 nav.login=Login
 nav.register=Register
+nav.back_to_top=Back to top
+nav.previous_page=Previous page
+nav.next_page=Next page
+nav.first_page=First page
+nav.last_page=Last page
+nav.go_to_page=Go to page {page}
 
 # === СТАТУСЫ ===
 status.pending=Pending
@@ -603,15 +1036,34 @@ status.cancelled=Cancelled
 status.completed=Completed
 status.active=Active
 status.inactive=Inactive
+status.approved=Approved
+status.rejected=Rejected
+status.processing=Processing
+status.failed=Failed
+status.draft=Draft
+status.published=Published
+status.archived=Archived
+status.new=New
+status.in_progress=In Progress
+status.on_hold=On Hold
+status.expired=Expired
 
 # === ВАЛЮТА И ЦЕНЫ ===
 currency.eur=EUR
 currency.usd=USD
+currency.symbol.eur=€
+currency.symbol.usd=$
 price.per_person=per person
 price.total=Total
 price.subtotal=Subtotal
 price.discount=Discount
 price.tax=Tax
+price.fee=Fee
+price.free=Free
+price.from=From
+price.starting_at=Starting at
+price.contact_for_price=Contact for price
+price.price_on_request=Price on request
 
 # === ДАТЫ И ВРЕМЯ ===
 date.today=Today
@@ -621,6 +1073,63 @@ date.this_week=This week
 date.next_week=Next week
 date.this_month=This month
 date.next_month=Next month
+date.this_year=This year
+date.next_year=Next year
+date.last_week=Last week
+date.last_month=Last month
+date.last_year=Last year
 time.morning=Morning
 time.afternoon=Afternoon
 time.evening=Evening
+time.night=Night
+time.hour=Hour
+time.hours=Hours
+time.minute=Minute
+time.minutes=Minutes
+time.second=Second
+time.seconds=Seconds
+time.am=AM
+time.pm=PM
+time.now=Now
+time.recently=Recently
+
+# === СООБЩЕНИЯ ===
+messages.success.general=Operation completed successfully
+messages.error.general=An error occurred. Please try again.
+messages.warning.general=Please check your input and try again
+messages.info.general=Information updated
+messages.confirm.delete=Are you sure you want to delete this item?
+messages.confirm.save=Save changes?
+messages.confirm.cancel=Cancel operation?
+messages.no_data=No data available
+messages.loading_data=Loading data...
+messages.data_saved=Data saved successfully
+messages.data_updated=Data updated successfully
+messages.data_deleted=Data deleted successfully
+messages.operation_failed=Operation failed
+messages.try_again=Please try again
+messages.contact_support=Please contact support if the problem persists
+
+# === ДЕЙСТВИЯ ===
+actions.book_now=Book Now
+actions.learn_more=Learn More
+actions.get_started=Get Started
+actions.contact_us=Contact Us
+actions.call_now=Call Now
+actions.email_us=Email Us
+actions.request_quote=Request Quote
+actions.view_details=View Details
+actions.read_more=Read More
+actions.show_less=Show Less
+actions.load_more=Load More
+actions.try_again=Try Again
+actions.go_back=Go Back
+actions.continue=Continue
+actions.proceed=Proceed
+actions.finish=Finish
+actions.complete=Complete
+actions.start=Start
+actions.stop=Stop
+actions.pause=Pause
+actions.resume=Resume
+actions.restart=Restart

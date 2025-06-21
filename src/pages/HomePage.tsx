@@ -162,15 +162,13 @@ const HomePage = () => {
       <section className="relative min-h-screen flex items-center justify-center">
         {/* Background Video - No overlay for maximum quality */}
         <div className="absolute inset-0">
-          <div style={{padding:'56.25% 0 0 0',position:'relative'}}>
-            <iframe 
-              src="https://player.vimeo.com/video/1094455548?h=dee6f219c4&badge=0&autopause=0&player_id=0&app_id=58479&background=1&loop=1&autoplay=1&muted=1" 
-              frameBorder="0" 
-              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
-              style={{position:'absolute',top:0,left:0,width:'100%',height:'100%'}} 
-              title="Vimeo Background Video">
-            </iframe>
-          </div>
+          <iframe 
+            src="https://player.vimeo.com/video/1094455548?h=dee6f219c4&badge=0&autopause=0&player_id=0&app_id=58479&background=1&loop=1&autoplay=1&muted=1" 
+            frameBorder="0" 
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
+            style={{position:'absolute', top:0, left:0, width:'100%', height:'100%', objectFit:'cover'}} 
+            title="Vimeo Background Video">
+          </iframe>
           <script src="https://player.vimeo.com/api/player.js"></script>
           {/* Minimal overlay only for text readability */}
           <div className="absolute inset-0 bg-black/30"></div>

@@ -2,22 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Users, Award, Camera, MapPin, Star, Wind, Anchor, Trophy, Shield, Clock, CheckCircle } from 'lucide-react';
 import { supabase, Testimonial, safeQuery } from '../lib/supabase';
-import { useTranslation } from '../context/LanguageContext'; // Import useTranslation
+import { useTranslation } from '../context/LanguageContext';
 
 const HomePage = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [isOffline, setIsOffline] = useState(false);
   const [showPlaceholder, setShowPlaceholder] = useState(true);
-  const { t } = useTranslation(); // Initialize useTranslation
+  const { t } = useTranslation();
 
   // Experience section gallery images
   const experienceImages = [
-    'https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif',
-    'https://i.postimg.cc/m2Z4581j/temp-Image3ioz3-A.avif',
-    'https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif',
-    'https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif'
+    'https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif', 
+    'https://i.postimg.cc/m2Z4581j/temp-Image3ioz3-A.avif', 
+    'https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif', 
+    'https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif' 
   ];
-
   const [experienceImageIndex, setExperienceImageIndex] = useState(0);
 
   // Fallback testimonials
@@ -56,23 +55,18 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchTestimonials();
-    
-    // Set a timeout to hide the placeholder after 5 seconds regardless of video loading
     const timer = setTimeout(() => {
       setShowPlaceholder(false);
-    }, 4000);
-    
+    }, 7000);
     return () => clearTimeout(timer);
   }, []);
 
-  // Auto-rotate experience images every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setExperienceImageIndex((prevIndex) => 
+      setExperienceImageIndex((prevIndex) =>
         (prevIndex + 1) % experienceImages.length
       );
     }, 9000);
-
     return () => clearInterval(interval);
   }, [experienceImages.length]);
 
@@ -87,13 +81,10 @@ const HomePage = () => {
           .limit(3),
         fallbackTestimonials
       );
-      
       setIsOffline(offline);
-
       if (data && data.length > 0 && !offline) {
         setTestimonials(data);
       } else {
-        // Use fallback testimonials when offline or no data
         setTestimonials(fallbackTestimonials);
       }
     } catch (error) {
@@ -101,10 +92,6 @@ const HomePage = () => {
       setIsOffline(true);
       setTestimonials(fallbackTestimonials);
     }
-  };
-
-  const handleVideoLoaded = () => {
-    setShowPlaceholder(false);
   };
 
   const features = [
@@ -172,38 +159,53 @@ const HomePage = () => {
     <div className="overflow-hidden">
       {/* Hero Section with Background Video */}
       <section className="relative min-h-screen flex items-center justify-center">
-        {/* Background Video - No overlay for maximum quality */}
+        {/* Background Video */}
         <div className="absolute inset-0">
-          {/* Placeholder Image */}
+          {/* Placeholder Image with Overlay */}
           {showPlaceholder && (
-            <img
-              src="https://i.postimg.cc/nhXpjyhW/Boas-2214.jpg"
-              alt="Lake Garda Sailing"
-              className="w-full h-full object-cover"
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                zIndex: 5
-              }}
-            />
-          )}
-          
-          <div style={{padding:'56.25% 0 0 0',position:'relative', zIndex: 1 }}>
-            <iframe 
-              src="https://player.vimeo.com/video/1094455548?h=dee6f219c4&badge=0&autopause=0&player_id=0&app_id=58479&background=1&loop=1&autoplay=1&muted=1" 
+  <>
+    {/* Превью изображение */}
+    <img
+      src="https://i.postimg.cc/BvWwxhwm/logogarda.webp" 
+      alt="Lake Garda Sailing"
+      className="w-full h-full object-cover transition-opacity duration-500"
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        zIndex: 30,
+        opacity: showPlaceholder ? 1 : 0
+      }}
+    />
+    {/* Синяя дымка */}
+    <div
+      className="absolute inset-0 z-31 pointer-events-none"
+      style={{
+        backgroundColor: 'rgba(15, 23, 42, 0.4)',
+        opacity: showPlaceholder ? 1 : 0,
+        transition: 'opacity 0.5s ease-in-out'
+      }}
+    ></div>
+    {/* Градиент */}
+    <div
+      className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/70 via-[#0f172a]/40 to-transparent z-32 pointer-events-none"
+    ></div>
+  </>
+)}
+          {/* Vimeo Video Frame */}
+          <div style={{ padding: '56.25% 0 0 0', position: 'relative' }}>
+            <iframe
+              src="https://player.vimeo.com/video/1094455548?h=dee6f219c4&badge=0&autopause=0&player_id=0&app_id=58479&background=1&loop=1&autoplay=1&muted=1"
               frameBorder="0"
-              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
-              style={{position:'absolute',top:0,left:0,width:'100%',height:'100%'}} 
-              title="Vimeo Background Video">
-            </iframe>
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+              title="Vimeo Background Video"
+            ></iframe>
           </div>
-          <script src="https://player.vimeo.com/api/player.js"></script>
-          {/* Minimal overlay only for text readability */}
-          <div className="absolute inset-0 bg-black/20 z-2"></div>
         </div>
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
+        {/* Text content */}
+        <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="animate-slide-up">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 font-serif">
               {t('home.hero.title_part1', "Experience the Thrill of")}
@@ -212,14 +214,12 @@ const HomePage = () => {
             <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
               {t('home.hero.subtitle', "Daily yacht racing experiences in world-famous Lake Garda with professional skippers, racing medals, and unforgettable memories")}
             </p>
-            
             {/* Price & CTA */}
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 mb-8 max-w-md mx-auto border border-white/20">
               <div className="text-center mb-6">
                 <div className="text-5xl font-bold text-gold-300 mb-2">€195</div>
                 <p className="text-white/80">{t('home.hero.price_description', "per person • Full day experience")}</p>
               </div>
-              
               <div className="space-y-3 mb-6 text-left">
                 <div className="flex items-center space-x-3 text-white/90">
                   <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
@@ -242,7 +242,6 @@ const HomePage = () => {
                   <span>{t('home.hero.feature5', "All equipment provided")}</span>
                 </div>
               </div>
-              
               <Link
                 to="/booking"
                 className="w-full bg-primary-600 text-white py-4 px-6 rounded-xl font-semibold text-lg hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
@@ -261,6 +260,7 @@ const HomePage = () => {
         </div>
       </section>
 
+      
       {/* Features Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

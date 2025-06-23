@@ -31,6 +31,8 @@ export default {
           700: '#1d4ed8',
           800: '#1e40af',
           900: '#1e3a8a',
+          // Добавлен синий цвет с поддержкой прозрачности
+          950: '#0f172a', // очень темно-синий (Tailwind не предоставляет его по умолчанию)
         },
         gold: {
           50: '#fffbeb',
@@ -73,24 +75,35 @@ export default {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'hero-pattern': 'linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%)',
-      }
-    },
-    // Add RTL-aware spacing utilities
-    spacing: {
-      ...Array.from({ length: 101 }, (_, i) => i * 0.5)
-        .reduce((acc, i) => {
-          acc[i] = `${i * 0.25}rem`;
-          return acc;
-        }, {}),
-      'start-0': '0',
-      'end-0': '0',
-      'inset-inline-start-0': '0',
-      'inset-inline-end-0': '0',
+      },
+      // Поддержка прозрачности цветов, например bg-blue-950/40
+      backgroundColor: {
+        'blue-950/40': 'rgba(15, 23, 42, 0.4)', // blue-950 с 40% прозрачностью
+        'blue-950/70': 'rgba(15, 23, 42, 0.7)',
+        'blue-900/40': 'rgba(23, 23, 45, 0.4)',
+      },
+      textColor: {
+        'blue-950/40': 'rgba(15, 23, 42, 0.4)',
+      },
+      borderColor: {
+        'blue-950/40': 'rgba(15, 23, 42, 0.4)',
+      },
+      spacing: {
+        ...Array.from({ length: 101 }, (_, i) => i * 0.5)
+          .reduce((acc, i) => {
+            acc[i] = `${i * 0.25}rem`;
+            return acc;
+          }, {}),
+        'start-0': '0',
+        'end-0': '0',
+        'inset-inline-start-0': '0',
+        'inset-inline-end-0': '0',
+      },
     },
   },
   plugins: [
     // Add a plugin for RTL-aware CSS
-    function({ addUtilities }) {
+    function ({ addUtilities }) {
       const newUtilities = {
         '.start-0': {
           left: '0',

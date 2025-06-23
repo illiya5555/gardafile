@@ -2,15 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Lock, User, AlertCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import TwoFactorAuth from './TwoFactorAuth';
 
 interface AdminLoginProps {
   onClose: () => void;
 }
 
-/**
- * Admin login component with two-factor authentication support
- */
 const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
@@ -19,7 +15,6 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showTwoFactor, setShowTwoFactor] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +22,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
     setError(null);
     
     try {
+      // Attempt to sign in with provided credentials
       const { data, error } = await supabase.auth.signInWithPassword({
         email: credentials.email,
         password: credentials.password,
@@ -35,53 +31,64 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
       if (error) throw error;
       
       if (data.user) {
-        // Check if 2FA is required
-        // In a real implementation, you would check if the user has 2FA enabled
-        const needsTwoFactor = false; // Placeholder - would come from Supabase MFA check
+        // Check if user has admin or manager role
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select(`
+            role_id,
+            user_roles(role_name)
+          `)
+          .eq('id', data.user.id)
+          .maybeSingle();
+          
+        if (profileError) throw profileError;
         
-        if (needsTwoFactor) {
-          // Show 2FA verification screen
-          setShowTwoFactor(true);
-          setLoading(false);
-          return;
+        // If no profile exists, create one with default role
+        if (!profileData) {
+          // Get client role ID
+          const { data: roleData } = await supabase
+            .from('user_roles')
+            .select('id')
+            .eq('role_name', 'client')
+            .maybeSingle();
+            
+          if (roleData) {
+            // Use upsert to handle possible race conditions with auth triggers
+            await supabase
+              .from('profiles')
+              .upsert({
+                id: data.user.id,
+                email: data.user.email,
+                role_id: roleData.id
+              }, { onConflict: 'id' });
+          }
+          
+          // Not an admin, don't allow access
+          throw new Error('Access denied: User does not have admin privileges');
         }
         
-        // Close modal and navigate to admin dashboard
-        // Access control and role checking will be handled by ProtectedRoute
+        // Check if user has admin or manager role
+        const roleName = profileData.user_roles?.role_name;
+        
+        if (roleName !== 'admin' && roleName !== 'manager') {
+          throw new Error('Access denied: User does not have required permissions');
+        }
+        
+        // Success! Close modal and navigate to admin dashboard
         onClose();
         navigate('/admin');
       }
     } catch (error: any) {
       console.error('Authentication error:', error);
       setError(error.message || 'Failed to sign in');
+    } finally {
       setLoading(false);
     }
   };
 
-  const handleTwoFactorSuccess = () => {
-    // 2FA verification was successful, complete login
-    setShowTwoFactor(false);
-    onClose();
-    navigate('/admin');
-  };
-
-  if (showTwoFactor) {
-    return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-          <TwoFactorAuth
-            email={credentials.email}
-            onSuccess={handleTwoFactorSuccess}
-            onCancel={() => setShowTwoFactor(false)}
-          />
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 md:p-8 max-w-md w-full mx-4 shadow-2xl">
+      <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center space-x-2">
             <Lock className="h-6 w-6 text-gray-600" />
@@ -90,7 +97,6 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
-            aria-label="Close"
           >
             <X className="h-6 w-6" />
           </button>
@@ -118,7 +124,6 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 placeholder="Enter email"
                 required
-                aria-required="true"
               />
             </div>
           </div>
@@ -137,7 +142,6 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 placeholder="Enter password"
                 required
-                aria-required="true"
               />
             </div>
           </div>
@@ -153,8 +157,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50"
-              aria-busy={loading}
+              className="flex-1 px-4 py-2 text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
             >
               {loading ? 'Signing in...' : 'Login'}
             </button>

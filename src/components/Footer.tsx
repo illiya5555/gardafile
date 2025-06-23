@@ -130,7 +130,9 @@ const Footer = () => {
               </button>
             </div>
             <p className="text-sm text-gray-400">
-              {t('footer.copyright', '© 2025 Garda Racing Yacht Club. All rights reserved. Italia. P.IVA :02802120226, C.F. : TITOLARE: VYVDYT79A16Z138Y')}
+              {t('footer.copyright', '© 2025 Garda Racing Yacht Club. All rights reserved.')}
+             <br />
+             Italia. P.IVA :02802120226, C.F. : TITOLARE: VYVDYT79A16Z138Y
             </p>
           </div>
         </div>

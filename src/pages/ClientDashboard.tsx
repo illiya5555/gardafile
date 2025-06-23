@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, MapPin, Phone, Mail, User, Settings } from 'lucide-react';
+import { Calendar, Clock, MapPin, Phone, Mail, User, Settings, X, CheckCircle, AlertCircle, Info } from 'lucide-react';
 import { useTranslation } from '../context/LanguageContext';
 
 interface Booking {
@@ -14,6 +14,8 @@ interface Booking {
 const ClientDashboard = () => {
   const { t } = useTranslation();
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -40,6 +42,16 @@ const ClientDashboard = () => {
       setLoading(false);
     }, 1000);
   }, []);
+
+  const openBookingDetails = (booking: Booking) => {
+    setSelectedBooking(booking);
+    setShowDetailsModal(true);
+  };
+
+  const closeBookingDetails = () => {
+    setShowDetailsModal(false);
+    setSelectedBooking(null);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -136,7 +148,11 @@ const ClientDashboard = () => {
             ) : (
               <div className="space-y-4">
                 {bookings.map((booking) => (
-                  <div key={booking.id} className="border border-gray-200 rounded-lg p-4">
+                  <div 
+                    key={booking.id} 
+                    className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-300 cursor-pointer"
+                    onClick={() => openBookingDetails(booking)}
+                  >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4">
                         <div>
@@ -165,6 +181,105 @@ const ClientDashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* Booking Details Modal */}
+      {showDetailsModal && selectedBooking && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-bold text-gray-900">
+                  {t('dashboard.booking_details', 'Booking Details')}
+                </h2>
+                <button 
+                  onClick={closeBookingDetails}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                  aria-label="Close"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              {/* Status Badge */}
+              <div className="flex justify-center mb-4">
+                <span className={`px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-2 ${getStatusColor(selectedBooking.status)}`}>
+                  {selectedBooking.status === 'confirmed' && <CheckCircle className="h-4 w-4 mr-1" />}
+                  {selectedBooking.status === 'pending' && <AlertCircle className="h-4 w-4 mr-1" />}
+                  {selectedBooking.status === 'cancelled' && <X className="h-4 w-4 mr-1" />}
+                  <span>{selectedBooking.status}</span>
+                </span>
+              </div>
+              
+              {/* Booking Details */}
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <Calendar className="h-5 w-5 text-primary-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-gray-900">{t('dashboard.booking_date', 'Date')}</p>
+                    <p className="text-gray-600">{new Date(selectedBooking.date).toLocaleDateString()}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-3">
+                  <Clock className="h-5 w-5 text-primary-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-gray-900">{t('dashboard.booking_time', 'Time')}</p>
+                    <p className="text-gray-600">{selectedBooking.time}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-3">
+                  <User className="h-5 w-5 text-primary-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-gray-900">{t('dashboard.participants', 'Participants')}</p>
+                    <p className="text-gray-600">
+                      {selectedBooking.participants} {selectedBooking.participants === 1 
+                        ? t('dashboard.booking.participants_single', 'participant') 
+                        : t('dashboard.booking.participants_plural', 'participants')}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-3">
+                  <Info className="h-5 w-5 text-primary-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-gray-900">{t('dashboard.booking_id', 'Booking ID')}</p>
+                    <p className="text-gray-600">{selectedBooking.id.substring(0, 8)}</p>
+                  </div>
+                </div>
+                
+                <div className="pt-4 border-t border-gray-200">
+                  <p className="font-medium text-gray-900 mb-2">{t('dashboard.price_details', 'Price Details')}</p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">{t('dashboard.total_price', 'Total Price')}</span>
+                    <span className="text-xl font-bold text-primary-600">€{selectedBooking.total}</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Action Buttons */}
+              <div className="pt-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button
+                  onClick={closeBookingDetails}
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  {t('common.close', 'Close')}
+                </button>
+                
+                {selectedBooking.status === 'pending' && (
+                  <button
+                    className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                  >
+                    {t('dashboard.view_payment', 'View Payment')}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

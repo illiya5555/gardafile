@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import Stripe from 'https://esm.sh/stripe@14.5.0'
+import { SmtpClient } from "https://deno.land/x/smtp@v0.7.0/mod.ts";
 
 serve(async (req) => {
   try {
@@ -9,6 +10,13 @@ serve(async (req) => {
     const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET');
     const supabaseUrl = Deno.env.get('SUPABASE_URL');
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+
+    // SMTP configuration
+    const smtpHost = Deno.env.get('SMTP_HOST') || 'smtp.gmail.com';
+    const smtpPort = parseInt(Deno.env.get('SMTP_PORT') || '465');
+    const smtpUser = Deno.env.get('SMTP_USER');
+    const smtpPass = Deno.env.get('SMTP_PASS');
+    const emailFrom = Deno.env.get('EMAIL_FROM') || 'info@gardaracing.com';
 
     if (!stripeSecretKey) {
       console.error('STRIPE_SECRET_KEY environment variable is not set');
@@ -23,6 +31,12 @@ serve(async (req) => {
     if (!supabaseUrl || !supabaseServiceKey) {
       console.error('Supabase environment variables are not set');
       return new Response('Database configuration is missing', { status: 500 })
+    }
+
+    if (!smtpUser || !smtpPass) {
+      console.error('SMTP environment variables are not set');
+      console.warn('Email confirmation will not be sent');
+      // Still continue processing the webhook, just won't send emails
     }
 
     // Initialize Stripe and Supabase
@@ -54,7 +68,13 @@ serve(async (req) => {
     try {
       switch (event.type) {
         case 'checkout.session.completed':
-          await handleCheckoutSessionCompleted(event.data.object as Stripe.Checkout.Session, supabase)
+          await handleCheckoutSessionCompleted(event.data.object as Stripe.Checkout.Session, supabase, {
+            smtpHost,
+            smtpPort,
+            smtpUser, 
+            smtpPass,
+            emailFrom
+          })
           break
         
         case 'customer.subscription.created':
@@ -98,7 +118,19 @@ serve(async (req) => {
   }
 })
 
-async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session, supabase: any) {
+interface EmailConfig {
+  smtpHost: string;
+  smtpPort: number;
+  smtpUser?: string;
+  smtpPass?: string;
+  emailFrom: string;
+}
+
+async function handleCheckoutSessionCompleted(
+  session: Stripe.Checkout.Session, 
+  supabase: any, 
+  emailConfig: EmailConfig
+) {
   console.log('Checkout session completed:', session.id)
 
   // Update booking status if booking_id is present in metadata
@@ -106,16 +138,34 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session, 
     try {
       console.log('Updating booking status for booking ID:', session.metadata.booking_id)
       
-      const { error } = await supabase
+      const { data: bookingData, error: bookingError } = await supabase
         .from('reservations')
         .update({ status: 'confirmed' })
-        .eq('id', session.metadata.booking_id);
+        .eq('id', session.metadata.booking_id)
+        .select()
+        .single();
         
-      if (error) {
-        console.error('Error updating booking status:', error)
+      if (bookingError) {
+        console.error('Error updating booking status:', bookingError)
         // Continue with order processing even if booking update fails
       } else {
         console.log('Booking status updated to confirmed')
+        
+        // Check if an email has already been sent for this booking
+        if (!bookingData.email_sent && emailConfig.smtpUser && emailConfig.smtpPass) {
+          // Send confirmation email
+          await sendConfirmationEmail(bookingData, emailConfig);
+          
+          // Update email_sent status
+          const { error: updateError } = await supabase
+            .from('reservations')
+            .update({ email_sent: true })
+            .eq('id', session.metadata.booking_id);
+            
+          if (updateError) {
+            console.error('Error updating email_sent status:', updateError)
+          }
+        }
       }
     } catch (error) {
       console.error('Error updating booking status:', error)
@@ -145,6 +195,98 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session, 
   } else if (session.mode === 'subscription') {
     // Subscription will be handled by subscription.created event
     console.log('Subscription checkout completed, waiting for subscription.created event')
+  }
+}
+
+async function sendConfirmationEmail(booking: any, config: EmailConfig) {
+  try {
+    console.log('Sending confirmation email for booking:', booking.id)
+
+    const client = new SmtpClient();
+    
+    await client.connectTLS({
+      hostname: config.smtpHost,
+      port: config.smtpPort,
+      username: config.smtpUser,
+      password: config.smtpPass,
+    });
+
+    // Format date for display
+    const bookingDate = new Date(booking.booking_date).toLocaleDateString('ru-RU', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+
+    // Build email subject and content
+    const subject = `Garda Racing - Подтверждение бронирования #${booking.id.substring(0, 8)}`;
+    const content = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background-color: #dc2626; color: white; padding: 20px; text-align: center; }
+          .content { padding: 20px; }
+          .booking-details { background-color: #f9f9f9; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+          .footer { font-size: 12px; color: #666; text-align: center; margin-top: 30px; }
+          .button { display: inline-block; background-color: #dc2626; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Спасибо за ваш заказ!</h1>
+          </div>
+          <div class="content">
+            <p>Здравствуйте, <strong>${booking.customer_name}</strong>!</p>
+            <p>Благодарим вас за бронирование яхтенной регаты с Garda Racing. Ваша оплата успешно получена, и мы рады подтвердить вашу регату.</p>
+            
+            <div class="booking-details">
+              <h3>Детали бронирования:</h3>
+              <p><strong>Номер бронирования:</strong> ${booking.id.substring(0, 8)}</p>
+              <p><strong>Дата:</strong> ${bookingDate}</p>
+              <p><strong>Время:</strong> ${booking.time_slot}</p>
+              <p><strong>Количество участников:</strong> ${booking.participants}</p>
+              <p><strong>Общая стоимость:</strong> €${booking.total_price}</p>
+            </div>
+            
+            <p>Вы можете войти в свой личный кабинет, чтобы просмотреть детали бронирования:</p>
+            <p><strong>Email:</strong> ${booking.customer_email}</p>
+            
+            <p style="text-align: center; margin-top: 30px;">
+              <a href="${Deno.env.get('SITE_URL') || 'https://gardaracing.com'}/dashboard" class="button">Перейти в личный кабинет</a>
+            </p>
+            
+            <p>Если у вас возникнут вопросы, пожалуйста, свяжитесь с нами:</p>
+            <p><strong>Телефон:</strong> +39 344 777 00 77</p>
+            <p><strong>Email:</strong> info@gardaracing.com</p>
+          </div>
+          <div class="footer">
+            <p>&copy; ${new Date().getFullYear()} Garda Racing Yacht Club. Все права защищены.</p>
+            <p>Viale Giancarlo Maroni 4, 38066 Riva del Garda TN, Italia</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    await client.send({
+      from: config.emailFrom,
+      to: booking.customer_email,
+      subject: subject,
+      content: content,
+      html: content,
+    });
+
+    await client.close();
+    console.log('Confirmation email sent successfully')
+    return true;
+  } catch (error) {
+    console.error('Error sending confirmation email:', error)
+    return false;
   }
 }
 

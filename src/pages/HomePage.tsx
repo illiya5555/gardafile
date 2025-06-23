@@ -182,6 +182,7 @@ const HomePage = () => {
         allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
         style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
         title="Vimeo Background Video"
+        loading="eager"
       ></iframe>
     </div>
   </div>
@@ -375,6 +376,7 @@ const HomePage = () => {
                     className={`w-full h-96 object-cover transition-opacity duration-1000 ${
                       index === experienceImageIndex ? 'opacity-100' : 'opacity-0 absolute inset-0'
                     }`}
+                    loading="lazy"
                   />
                 ))}
               </div>
@@ -390,6 +392,7 @@ const HomePage = () => {
                         ? 'bg-white scale-110' 
                         : 'bg-white/50 hover:bg-white/75'
                     }`}
+                    aria-label={`View image ${index + 1}`}
                   />
                 ))}
               </div>
@@ -430,6 +433,7 @@ const HomePage = () => {
                       src={testimonial.image_url}
                       alt={testimonial.name}
                       className="w-12 h-12 rounded-full object-cover"
+                      loading="lazy"
                     />
                   )}
                   <div>
@@ -486,6 +490,7 @@ const HomePage = () => {
                     frameBorder="0"
                     allow="autoplay; encrypted-media"
                     allowFullScreen={false}
+                    loading="lazy"
                   />
                 </div>
               </div>
@@ -521,6 +526,7 @@ const HomePage = () => {
                     src={partner.logo}
                     alt={partner.name}
                     className="w-full h-16 object-cover rounded-lg mb-4 grayscale group-hover:grayscale-0 transition-all duration-300" 
+                    loading="lazy"
                   />
                   <h3 className="font-semibold text-gray-900 mb-1">{t(`home.partners.${partner.name.toLowerCase().replace(/\s+/g, '_')}.name`, partner.name)}</h3>
                   <p className="text-sm text-gray-600">{t(`home.partners.${partner.name.toLowerCase().replace(/\s+/g, '_')}.description`, partner.description)}</p>

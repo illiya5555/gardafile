@@ -118,11 +118,16 @@ const EventsPage = () => {
                 src={galleryImages[0].url}
                 alt={galleryImages[0].caption}
                 className="rounded-2xl shadow-2xl w-full h-96 object-cover"
+                loading="eager" // Eagerly load this above-the-fold image
               />
               <div className="absolute bottom-4 left-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-3">
                 <p className="text-white text-center">{galleryImages[0].caption}</p>
               </div>
-              <button className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-2xl hover:bg-black/30 transition-colors duration-300 group">
+              <button 
+                className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-2xl hover:bg-black/30 transition-colors duration-300 group"
+                onClick={() => openGallery(0)}
+                aria-label="Open gallery"
+              >
                 <div className="bg-white/20 backdrop-blur-sm rounded-full p-4 group-hover:scale-110 transition-transform duration-300">
                   <Play className="h-8 w-8 text-white" />
                 </div>
@@ -286,6 +291,7 @@ const EventsPage = () => {
                     src={image.url}
                     alt={image.caption}
                     className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <p className="text-white font-semibold text-center px-4">{image.caption}</p>
@@ -393,6 +399,7 @@ const EventsPage = () => {
                   src="https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif"
                   alt={t('events.equipment.professional_j70_yacht', 'Professional J-70/J-80 Racing Yacht')}
                   className="w-full h-96 object-cover"
+                  loading="lazy"
                 />
                 <div className="absolute bottom-4 left-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-4">
                   <p className="text-white text-center font-semibold">{t('events.equipment.professional_j70_yacht', 'Professional J-70/J-80 Racing Yacht')}</p>

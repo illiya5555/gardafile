@@ -1,21 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Users, Award, Camera, MapPin, Star, Wind, Anchor, Trophy, Shield, Clock, CheckCircle } from 'lucide-react';
+import {
+  Calendar,
+  Users,
+  Award,
+  Camera,
+  MapPin,
+  Star,
+  Wind,
+  Anchor,
+  Trophy,
+  Shield,
+  Clock,
+  CheckCircle,
+} from 'lucide-react';
 import { supabase, Testimonial, safeQuery } from '../lib/supabase';
-import { useTranslation } from '../context/LanguageContext';
+import { useTranslation } from '../context/LanguageContext'; // Import useTranslation
 
 const HomePage = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [isOffline, setIsOffline] = useState(false);
   const [showPlaceholder, setShowPlaceholder] = useState(true);
-  const { t } = useTranslation();
+  const { t } = useTranslation(); // Initialize useTranslation
 
   // Experience section gallery images
   const experienceImages = [
     'https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif', 
     'https://i.postimg.cc/m2Z4581j/temp-Image3ioz3-A.avif', 
     'https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif', 
-    'https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif' 
+    'https://i.postimg.cc/65HKJndX/temp-Image-WZ1-EPq.avif', 
   ];
   const [experienceImageIndex, setExperienceImageIndex] = useState(0);
 
@@ -27,9 +40,10 @@ const HomePage = () => {
       location: "Munich, Germany",
       rating: 5,
       text: "Incredible experience! The professional skipper made us feel safe while we enjoyed the thrill of racing. The photos they took are amazing memories.",
-      image_url: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
+      image_url:
+        "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
       is_featured: true,
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
     },
     {
       id: '2',
@@ -37,9 +51,10 @@ const HomePage = () => {
       location: "London, UK",
       rating: 5,
       text: "Perfect day on Lake Garda! No sailing experience needed - they taught us everything. The medal ceremony was a nice touch. Highly recommended!",
-      image_url: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
+      image_url:
+        "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
       is_featured: true,
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
     },
     {
       id: '3',
@@ -47,20 +62,23 @@ const HomePage = () => {
       location: "Vienna, Austria",
       rating: 5,
       text: "Brought our corporate team here for a unique experience. Everyone loved it! Great organization, beautiful location, and unforgettable memories.",
-      image_url: "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
+      image_url:
+        "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
       is_featured: true,
-      created_at: new Date().toISOString()
-    }
+      created_at: new Date().toISOString(),
+    },
   ];
 
   useEffect(() => {
     fetchTestimonials();
+    // Скрываем превью через 7 секунд
     const timer = setTimeout(() => {
       setShowPlaceholder(false);
     }, 7000);
     return () => clearTimeout(timer);
   }, []);
 
+  // Auto-rotate experience images every 9 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setExperienceImageIndex((prevIndex) =>
@@ -73,12 +91,7 @@ const HomePage = () => {
   const fetchTestimonials = async () => {
     try {
       const { data, error, isOffline: offline } = await safeQuery(
-        () => supabase
-          .from('testimonials')
-          .select('*')
-          .eq('is_featured', true)
-          .order('created_at', { ascending: false })
-          .limit(3),
+        () => supabase.from('testimonials').select('*').eq('is_featured', true).order('created_at', { ascending: false }).limit(3),
         fallbackTestimonials
       );
       setIsOffline(offline);
@@ -98,61 +111,61 @@ const HomePage = () => {
     {
       icon: Trophy,
       title: t('home.features.item1.title', "Real Racing Format"),
-      description: t('home.features.item1.description', "Authentic yacht regatta with team dynamics, medals, and true competition.")
+      description: t('home.features.item1.description', "Authentic yacht regatta with team dynamics, medals, and true competition."),
     },
     {
       icon: Users,
       title: t('home.features.item2.title', "Professional Skipper"),
-      description: t('home.features.item2.description', "Certified and experienced sailing captains on every boat.")
+      description: t('home.features.item2.description', "Certified and experienced sailing captains on every boat."),
     },
     {
       icon: Camera,
       title: t('home.features.item3.title', "Photo & Video"),
-      description: t('home.features.item3.description', "Professional photos and videos of your race day to remember and share.")
+      description: t('home.features.item3.description', "Professional photos and videos of your race day to remember and share."),
     },
     {
       icon: Shield,
       title: t('home.features.item4.title', "Fully Insured"),
-      description: t('home.features.item4.description', "Complete safety coverage and modern equipment included.")
+      description: t('home.features.item4.description', "Complete safety coverage and modern equipment included."),
     },
     {
       icon: Star,
       title: t('home.features.item5.title', "Accessible & Premium"),
-      description: t('home.features.item5.description', "A top-level regatta experience open to everyone — no experience needed.")
-    }
+      description: t('home.features.item5.description', "A top-level regatta experience open to everyone — no experience needed."),
+    },
   ];
 
   const partners = [
     {
       name: "Bavaria Yachts",
       logo: "https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop",
-      description: "Premium yacht manufacturer"
+      description: "Premium yacht manufacturer",
     },
     {
       name: "Garmin Marine",
       logo: "https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop",
-      description: "Navigation technology"
+      description: "Navigation technology",
     },
     {
       name: "Helly Hansen",
       logo: "https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop",
-      description: "Professional sailing gear"
+      description: "Professional sailing gear",
     },
     {
       name: "Musto Sailing",
       logo: "https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop",
-      description: "Technical sailing clothing"
+      description: "Technical sailing clothing",
     },
     {
       name: "Raymarine",
       logo: "https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop",
-      description: "Marine electronics"
+      description: "Marine electronics",
     },
     {
       name: "Spinlock",
       logo: "https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop",
-      description: "Safety equipment"
-    }
+      description: "Safety equipment",
+    },
   ];
 
   return (
@@ -163,34 +176,32 @@ const HomePage = () => {
         <div className="absolute inset-0">
           {/* Placeholder Image with Overlay */}
           {showPlaceholder && (
-  <>
-    {/* Превью изображение */}
-    <img
-      src="https://i.postimg.cc/BvWwxhwm/logogarda.webp" 
-      alt="Lake Garda Sailing"
-      className="w-full h-full object-cover transition-opacity duration-500"
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        zIndex: 30,
-        opacity: showPlaceholder ? 1 : 0
-      }}
-    />
-   {/* Синяя дымка с анимацией исчезновения */}
-<div
-  className={`absolute inset-0 z-31 pointer-events-none transition-opacity duration-500 ${
-    showPlaceholder ? 'opacity-100' : 'opacity-0'
-  }`}
-  style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)' }}
-></div>
-    
-    {/* Градиент */}
-    <div
-      className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/70 via-[#0f172a]/40 to-transparent z-32 pointer-events-none"
-    ></div>
-  </>
-)}
+            <>
+              {/* Превью изображение */}
+              <img
+                src="https://i.postimg.cc/BvWwxhwm/logogarda.webp"
+                alt="Lake Garda Sailing"
+                className="w-full h-full object-cover transition-opacity duration-500"
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  zIndex: 30,
+                  opacity: showPlaceholder ? 1 : 0,
+                }}
+              />
+              {/* Синяя дымка с анимацией исчезновения */}
+              <div
+                className={`absolute inset-0 z-31 pointer-events-none bg-black bg-opacity-40 transition-opacity duration-500 ${
+                  showPlaceholder ? 'opacity-100' : 'opacity-0'
+                }`}
+              ></div>
+              {/* Градиент с синими тонами */}
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/70 via-[#0f172a]/40 to-transparent z-32 pointer-events-none" 
+              ></div>
+            </>
+          )}
           {/* Vimeo Video Frame */}
           <div style={{ padding: '56.25% 0 0 0', position: 'relative' }}>
             <iframe
@@ -259,7 +270,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      
       {/* Features Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

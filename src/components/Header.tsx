@@ -28,11 +28,11 @@ const Header = () => {
   return (
     <header
       className={`fixed w-full z-50 transition-all duration-500 ease-in-out
-        border-b border-gray-200/50
-        ${scrolled
-          ? 'bg-white/40 shadow-2xl backdrop-blur-xl py-1'
-          : 'bg-white/70 shadow-md backdrop-blur-sm py-2'
-        }`}
+    border-b border-white/20
+    ${scrolled
+      ? 'bg-white/40 shadow-white/30 shadow-xl backdrop-blur-xl py-1'
+      : 'bg-white/70 shadow-white/20 shadow-md backdrop-blur-sm py-2'
+    }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">

@@ -189,7 +189,7 @@ const HomePage = () => {
             />
           )}
           
-          <div style={{padding:'56.25% 0 0 0',position:'relative', zIndex: 1 ? 0 : 2}}>
+          <div style={{padding:'56.25% 0 0 0',position:'relative', zIndex: 1 }}>
             <iframe 
               src="https://player.vimeo.com/video/1094455548?h=dee6f219c4&badge=0&autopause=0&player_id=0&app_id=58479&background=1&loop=1&autoplay=1&muted=1" 
               frameBorder="0"

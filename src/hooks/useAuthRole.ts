@@ -27,6 +27,14 @@ export const useAuthRole = (): UseAuthRoleReturn => {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
         
         if (userError) {
+          // Check if the error is due to an invalid session that doesn't exist on the server
+          if (userError.message?.includes('Session from session_id claim in JWT does not exist')) {
+            // Clear the invalid session from local storage
+            await supabase.auth.signOut();
+            setRole(null);
+            setUserId(null);
+            return;
+          }
           throw userError;
         }
         

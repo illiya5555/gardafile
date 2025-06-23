@@ -39,19 +39,87 @@ export const useAuthRole = (): UseAuthRoleReturn => {
 
         setUserId(user.id);
         
-        // Get user profile which contains role_id
+        // Get user profile which contains role_id - use maybeSingle() to handle missing profiles
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('role_id')
           .eq('id', user.id)
-          .single();
+          .maybeSingle();
         
         if (profileError) {
           throw profileError;
         }
         
-        if (!profile || !profile.role_id) {
-          // No profile or no role assigned
+        // If no profile exists, create one with default role
+        if (!profile) {
+          // First get the default role (assuming 'client' is the default)
+          const { data: defaultRole, error: defaultRoleError } = await supabase
+            .from('user_roles')
+            .select('id')
+            .eq('role_name', 'client')
+            .single();
+          
+          if (defaultRoleError) {
+            // If no 'client' role exists, try to get any role as fallback
+            const { data: anyRole, error: anyRoleError } = await supabase
+              .from('user_roles')
+              .select('id')
+              .limit(1)
+              .single();
+            
+            if (anyRoleError) {
+              console.error('No roles found in user_roles table');
+              setRole(null);
+              return;
+            }
+            
+            // Create profile with the first available role
+            const { error: createProfileError } = await supabase
+              .from('profiles')
+              .insert({
+                id: user.id,
+                email: user.email || '',
+                role_id: anyRole.id
+              });
+            
+            if (createProfileError) {
+              throw createProfileError;
+            }
+            
+            // Get the role name for the created profile
+            const { data: createdRoleData, error: createdRoleError } = await supabase
+              .from('user_roles')
+              .select('role_name')
+              .eq('id', anyRole.id)
+              .single();
+            
+            if (createdRoleError) {
+              throw createdRoleError;
+            }
+            
+            setRole(createdRoleData?.role_name || null);
+            return;
+          }
+          
+          // Create profile with default 'client' role
+          const { error: createProfileError } = await supabase
+            .from('profiles')
+            .insert({
+              id: user.id,
+              email: user.email || '',
+              role_id: defaultRole.id
+            });
+          
+          if (createProfileError) {
+            throw createProfileError;
+          }
+          
+          setRole('client');
+          return;
+        }
+        
+        if (!profile.role_id) {
+          // Profile exists but no role assigned
           setRole(null);
           return;
         }

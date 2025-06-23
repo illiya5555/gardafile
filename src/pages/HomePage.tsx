@@ -171,48 +171,52 @@ const HomePage = () => {
   return (
     <div className="overflow-hidden">
       {/* Hero Section with Background Video */}
-      <section className="relative min-h-screen flex items-center justify-center">
-        {/* Background Video */}
-        <div className="absolute inset-0">
-          {/* Placeholder Image with Overlay */}
-          {showPlaceholder && (
-            <>
-              {/* Превью изображение */}
-              <img
-                src="https://i.postimg.cc/BvWwxhwm/logogarda.webp"
-                alt="Lake Garda Sailing"
-                className="w-full h-full object-cover transition-opacity duration-500"
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  zIndex: 30,
-                  opacity: showPlaceholder ? 1 : 0,
-                }}
-              />
-              {/* Синяя дымка с анимацией исчезновения */}
-              <div
-                className={`absolute inset-0 z-31 pointer-events-none bg-black bg-opacity-40 transition-opacity duration-500 ${
-                  showPlaceholder ? 'opacity-100' : 'opacity-0'
-                }`}
-              ></div>
-              {/* Градиент с синими тонами */}
-              <div
-                className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/70 via-[#0f172a]/40 to-transparent z-32 pointer-events-none" 
-              ></div>
-            </>
-          )}
-          {/* Vimeo Video Frame */}
-          <div style={{ padding: '56.25% 0 0 0', position: 'relative' }}>
-            <iframe
-              src="https://player.vimeo.com/video/1094455548?h=dee6f219c4&badge=0&autopause=0&player_id=0&app_id=58479&background=1&loop=1&autoplay=1&muted=1"
-              frameBorder="0"
-              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-              title="Vimeo Background Video"
-            ></iframe>
-          </div>
-        </div>
+<section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+  {/* Background Video */}
+  <div className="absolute inset-0 z-20">
+    {/* Vimeo Video Frame */}
+    <div style={{ padding: '56.25% 0 0 0', position: 'relative' }}>
+      <iframe
+        src="https://player.vimeo.com/video/1094455548?h=dee6f219c4&badge=0&autopause=0&player_id=0&app_id=58479&background=1&loop=1&autoplay=1&muted=1"
+        frameBorder="0"
+        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+        title="Vimeo Background Video"
+      ></iframe>
+    </div>
+  </div>
+
+  {/* Placeholder Image + Overlay */}
+  {showPlaceholder && (
+    <>
+      {/* Превью изображение */}
+      <img
+        src="https://i.postimg.cc/BvWwxhwm/logogarda.webp"
+        alt="Lake Garda Sailing"
+        className="absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-500"
+        style={{
+          zIndex: 25,
+          opacity: showPlaceholder ? 1 : 0,
+        }}
+      />
+
+      {/* 🔥 Синяя дымка поверх изображения (zIndex выше) */}
+      <div
+        className="absolute top-0 left-0 w-full h-full pointer-events-none transition-opacity duration-500"
+        style={{
+          zIndex: 26,
+          backgroundColor: 'rgba(15, 23, 42, 0.4)',
+          opacity: showPlaceholder ? 1 : 0,
+        }}
+      ></div>
+
+      {/* Градиент с синими тонами */}
+      <div
+        className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-[#0f172a]/70 via-[#0f172a]/40 to-transparent z-27 pointer-events-none" 
+        style={{ zIndex: 27 }}
+      ></div>
+    </>
+  )}
 
         {/* Text content */}
         <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

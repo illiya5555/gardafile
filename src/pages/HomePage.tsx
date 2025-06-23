@@ -71,7 +71,7 @@ const HomePage = () => {
       setExperienceImageIndex((prevIndex) => 
         (prevIndex + 1) % experienceImages.length
       );
-    }, 5000);
+    }, 9000);
 
     return () => clearInterval(interval);
   }, [experienceImages.length]);
@@ -184,16 +184,15 @@ const HomePage = () => {
                 position: 'absolute',
                 top: 0,
                 left: 0,
-                zIndex: 4
+                zIndex: 5
               }}
             />
           )}
           
-          <div style={{padding:'56.25% 0 0 0',position:'relative', zIndex: showPlaceholder ? 0 : 2}}>
+          <div style={{padding:'56.25% 0 0 0',position:'relative', zIndex: 1 ? 0 : 2}}>
             <iframe 
               src="https://player.vimeo.com/video/1094455548?h=dee6f219c4&badge=0&autopause=0&player_id=0&app_id=58479&background=1&loop=1&autoplay=1&muted=1" 
               frameBorder="0"
-              onLoad={handleVideoLoaded}
               allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
               style={{position:'absolute',top:0,left:0,width:'100%',height:'100%'}} 
               title="Vimeo Background Video">

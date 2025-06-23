@@ -24,6 +24,26 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
     setError(null); // Clear any previous errors when switching roles
   };
 
+  const checkAccessPermissions = (requestedRole: LoginRole, actualRole: string | undefined): { hasAccess: boolean; errorMessage?: string } => {
+    if (requestedRole === 'admin' && actualRole !== 'admin') {
+      return {
+        hasAccess: false,
+        errorMessage: `Access denied: Your account has "${actualRole || 'no'}" privileges but admin access requires "admin" role. ` +
+          'Please contact an administrator to upgrade your account permissions, or try logging in with a different access level.'
+      };
+    }
+    
+    if (requestedRole === 'manager' && actualRole !== 'admin' && actualRole !== 'manager') {
+      return {
+        hasAccess: false,
+        errorMessage: `Access denied: Your account has "${actualRole || 'no'}" privileges but manager access requires "manager" or "admin" role. ` +
+          'Please contact an administrator to upgrade your account permissions, or try logging in as a client.'
+      };
+    }
+    
+    return { hasAccess: true };
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -36,7 +56,10 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
         password: credentials.password,
       });
       
-      if (error) throw error;
+      if (error) {
+        setError(error.message || 'Failed to sign in');
+        return;
+      }
       
       if (data.user) {
         // Check if user has admin or manager role
@@ -49,7 +72,10 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
           .eq('id', data.user.id)
           .maybeSingle();
           
-        if (profileError) throw profileError;
+        if (profileError) {
+          setError('Failed to retrieve user profile');
+          return;
+        }
         
         // If no profile exists, create one with default role
         if (!profileData) {
@@ -71,8 +97,11 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
               }, { onConflict: 'id' });
           }
           
-          if (selectedRole !== 'client') {
-            throw new Error(`ACCESS_DENIED:${selectedRole}:client`);
+          // Check if client access is allowed
+          const accessCheck = checkAccessPermissions(selectedRole!, 'client');
+          if (!accessCheck.hasAccess) {
+            setError(accessCheck.errorMessage!);
+            return;
           }
           
           // Success for client login
@@ -83,13 +112,11 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
         
         // Check if user has the required role for selected portal
         const roleName = profileData.user_roles?.role_name;
+        const accessCheck = checkAccessPermissions(selectedRole!, roleName);
         
-        if (selectedRole === 'admin' && roleName !== 'admin') {
-          throw new Error(`ACCESS_DENIED:${selectedRole}:${roleName || 'none'}`);
-        }
-        
-        if (selectedRole === 'manager' && roleName !== 'admin' && roleName !== 'manager') {
-          throw new Error(`ACCESS_DENIED:${selectedRole}:${roleName || 'none'}`);
+        if (!accessCheck.hasAccess) {
+          setError(accessCheck.errorMessage!);
+          return;
         }
         
         // Success! Close modal and navigate to appropriate dashboard
@@ -102,27 +129,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
       }
     } catch (error: any) {
       console.error('Authentication error:', error);
-      
-      // Handle specific access denied errors with helpful messages
-      if (error.message?.startsWith('ACCESS_DENIED:')) {
-        const [, requestedRole, actualRole] = error.message.split(':');
-        
-        if (requestedRole === 'admin') {
-          setError(
-            `Access denied: Your account has "${actualRole}" privileges but admin access requires "admin" role. ` +
-            'Please contact an administrator to upgrade your account permissions, or try logging in with a different access level.'
-          );
-        } else if (requestedRole === 'manager') {
-          setError(
-            `Access denied: Your account has "${actualRole}" privileges but manager access requires "manager" or "admin" role. ` +
-            'Please contact an administrator to upgrade your account permissions, or try logging in as a client.'
-          );
-        } else {
-          setError(`Access denied: Insufficient privileges for ${requestedRole} access.`);
-        }
-      } else {
-        setError(error.message || 'Failed to sign in');
-      }
+      setError(error.message || 'Failed to sign in');
     } finally {
       setLoading(false);
     }

@@ -69,10 +69,10 @@ const BookingsCalendar = () => {
 
       // Fetch regular bookings
       const { data: regularBookings, error: regularError } = await supabase
-        .from('bookings')
+        .from('reservations')
         .select(`
           *,
-          profiles(first_name, last_name, email, phone)
+          profiles:user_id(first_name, last_name, email, phone)
         `)
         .gte('booking_date', getMonthStart(currentDate).toISOString().split('T')[0])
         .lte('booking_date', getMonthEnd(currentDate).toISOString().split('T')[0]);
@@ -96,19 +96,19 @@ const BookingsCalendar = () => {
       }));
 
       const regularEvents: BookingEvent[] = (regularBookings || []).map(booking => {
-        const [startHour] = booking.time_slot.split('-');
+        const [startHour] = (booking.time_slot || '08:30-12:30').split('-');
         const startTime = `${startHour}:00`;
         const endTime = `${parseInt(startHour) + 4}:00`; // Assume 4-hour duration
         
         return {
           id: booking.id,
-          title: `${booking.profiles?.first_name} ${booking.profiles?.last_name} - Racing`,
+          title: `${booking.customer_name} - Racing`,
           start: new Date(`${booking.booking_date}T${startTime}`),
           end: new Date(`${booking.booking_date}T${endTime}`),
           yacht_name: 'Racing Yacht',
-          customer_name: `${booking.profiles?.first_name} ${booking.profiles?.last_name}`,
-          customer_email: booking.profiles?.email || '',
-          customer_phone: booking.profiles?.phone || '',
+          customer_name: booking.customer_name,
+          customer_email: booking.customer_email || '',
+          customer_phone: booking.customer_phone || '',
           participants: booking.participants,
           total_price: parseFloat(booking.total_price),
           status: booking.status,
@@ -239,7 +239,7 @@ const BookingsCalendar = () => {
     const newEnd = new Date(newStart.getTime() + timeDiff);
 
     try {
-      const table = draggedBooking.type === 'yacht' ? 'yacht_bookings' : 'bookings';
+      const table = draggedBooking.type === 'yacht' ? 'yacht_bookings' : 'reservations';
       const updateData = draggedBooking.type === 'yacht' 
         ? {
             start_date: newStart.toISOString().split('T')[0],
@@ -277,7 +277,7 @@ const BookingsCalendar = () => {
 
   const updateBookingStatus = async (bookingId: string, newStatus: string, type: 'yacht' | 'regular') => {
     try {
-      const table = type === 'yacht' ? 'yacht_bookings' : 'bookings';
+      const table = type === 'yacht' ? 'yacht_bookings' : 'reservations';
       const { error } = await supabase
         .from(table)
         .update({ status: newStatus })

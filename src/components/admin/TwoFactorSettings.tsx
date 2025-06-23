@@ -30,17 +30,13 @@ const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({ userId }) => {
     try {
       setLoading(true);
       
-      // This would be implemented using Supabase MFA API
-      // For now, we'll just simulate it
-      const { data, error } = await supabase.from('user_mfa_factors')
-        .select('*')
-        .eq('user_id', userId)
-        .single();
-        
-      setIsEnabled(!!data);
+      // Simulate 2FA status check since MFA table doesn't exist yet
+      // In a real implementation, this would use Supabase's MFA API
+      setIsEnabled(false);
     } catch (err) {
       console.error('Error checking 2FA status:', err);
-      setError('Failed to check 2FA status');
+      // Set default state instead of showing error for demo
+      setIsEnabled(false);
     } finally {
       setLoading(false);
     }

@@ -40,7 +40,7 @@ const Header = () => {
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="relative">
               <img
-                src="/gardalogo.png"
+                src="https://i.postimg.cc/KcTTLWRR/gardalogo.png"
                 alt={t("header.logo.title", "Garda Racing Yacht Club")}
                 className="h-16 w-16 object-contain group-hover:scale-110 transition-transform duration-300"
               />

@@ -17,7 +17,7 @@ const Footer = () => {
           <div className="space-y-6">
             <div className="flex items-center space-x-3">
               <img
-                src="/gardalogo.png"
+                src="https://i.postimg.cc/KcTTLWRR/gardalogo.png"
                 alt={t("footer.logo.title", "Garda Racing Logo")}
                 className="h-20 w-20 object-contain"
               />

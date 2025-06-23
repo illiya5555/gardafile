@@ -1,3 +1,4 @@
+/*
 # Database Migration Guide
 
 This document outlines the database migration process for optimizing the Garda Racing Yacht Club database structure.
@@ -122,3 +123,8 @@ If you encounter issues during migration:
 4. If necessary, run `CALL migrate_database()` with debug logging enabled
 
 For assistance, contact the database administrator.
+*/
+
+-- This is a documentation file, not an actual migration
+-- The actual migration is split across multiple files
+SELECT 'Documentation file - no actual migration' AS message;

@@ -42,13 +42,14 @@ const Header = () => {
               <img
                 src="https://i.postimg.cc/KcTTLWRR/gardalogo.png"
                 alt={t("header.logo.title", "Garda Racing Yacht Club")}
-                className="h-16 w-16 object-contain group-hover:scale-110 transition-transform duration-300"
+                className="h-12 w-12 md:h-16 md:w-16 object-contain group-hover:scale-110 transition-transform duration-300"
+                loading="eager"
               />
-              <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-yellow-400 rounded-full animate-pulse"></div>
+              <div className="absolute -top-1 -right-1 w-3 h-3 md:w-3.5 md:h-3.5 bg-yellow-400 rounded-full animate-pulse"></div>
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-xl font-bold text-gray-900">{t("header.logo.title", "Garda Racing")}</h1>
-              <p className="text-sm text-gray-600">{t("header.logo.subtitle", "Yacht Club")}</p>
+              <h1 className="text-lg md:text-xl font-bold text-gray-900">{t("header.logo.title", "Garda Racing")}</h1>
+              <p className="text-xs md:text-sm text-gray-600">{t("header.logo.subtitle", "Yacht Club")}</p>
             </div>
           </Link>
 
@@ -62,7 +63,7 @@ const Header = () => {
                   location.pathname === item.href
                     ? 'text-primary-600 border-b-2 border-primary-600'
                     : 'text-gray-700 hover:text-primary-600'
-                } pb-1`}
+                } pb-1 text-base`}
               >
                 {item.name}
               </Link>
@@ -77,21 +78,21 @@ const Header = () => {
             {/* Book Now Button */}
             <Link
               to="/booking"
-              className="flex items-center space-x-2 px-5 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow"
+              className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow text-sm"
             >
               <Calendar className="h-4 w-4" />
               <span>{t('nav.book_now', 'Book Now')}</span>
             </Link>
 
             {/* Social Media */}
-            <div className="flex items-center space-x-2 ml-4">
-              <a href="#" className="p-2 text-gray-600 hover:text-primary-600 transition duration-300 hover:scale-110">
+            <div className="hidden lg:flex items-center space-x-2 ml-4">
+              <a href="#" className="p-2 text-gray-600 hover:text-primary-600 transition duration-300 hover:scale-110" aria-label="Facebook">
                 <Facebook className="h-4 w-4" />
               </a>
-              <a href="https://www.instagram.com/garda_racing_yacht_club" target="_blank" rel="noopener noreferrer" className="p-2 text-gray-600 hover:text-primary-600 transition duration-300 hover:scale-110">
+              <a href="https://www.instagram.com/garda_racing_yacht_club" target="_blank" rel="noopener noreferrer" className="p-2 text-gray-600 hover:text-primary-600 transition duration-300 hover:scale-110" aria-label="Instagram">
                 <Instagram className="h-4 w-4" />
               </a>
-              <a href="#" className="p-2 text-gray-600 hover:text-primary-600 transition duration-300 hover:scale-110">
+              <a href="#" className="p-2 text-gray-600 hover:text-primary-600 transition duration-300 hover:scale-110" aria-label="YouTube">
                 <Youtube className="h-4 w-4" />
               </a>
             </div>
@@ -101,6 +102,7 @@ const Header = () => {
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -137,13 +139,13 @@ const Header = () => {
 
                 <div className="flex items-center justify-between mt-4">
                   <div className="flex space-x-4">
-                    <a href="#" className="text-gray-600 hover:text-primary-600">
+                    <a href="#" className="text-gray-600 hover:text-primary-600" aria-label="Facebook">
                       <Facebook className="h-5 w-5" />
                     </a>
-                    <a href="https://www.instagram.com/garda_racing_yacht_club" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary-600">
+                    <a href="https://www.instagram.com/garda_racing_yacht_club" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary-600" aria-label="Instagram">
                       <Instagram className="h-5 w-5" />
                     </a>
-                    <a href="#" className="text-gray-600 hover:text-primary-600">
+                    <a href="#" className="text-gray-600 hover:text-primary-600" aria-label="YouTube">
                       <Youtube className="h-5 w-5" />
                     </a>
                   </div>

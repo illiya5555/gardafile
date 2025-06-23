@@ -34,6 +34,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
           compact ? 'text-sm' : ''
         }`}
         aria-label="Select language"
+        aria-expanded={isOpen}
       >
         <Globe className="h-4 w-4" />
         {currentLang && (
@@ -67,6 +68,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
                 className={`w-full flex items-center justify-between px-4 py-3 text-left hover:bg-gray-100 transition-colors duration-300 ${
                   language.code === currentLanguage ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
                 }`}
+                aria-selected={language.code === currentLanguage}
               >
                 <div className="flex items-center space-x-3">
                   <span className="text-lg" role="img" aria-label={language.name}>

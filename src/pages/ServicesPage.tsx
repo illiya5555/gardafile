@@ -199,46 +199,45 @@ const ServicesPage = () => {
   return (
     <div className="pt-20">
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
+      <section className="relative py-16 md:py-20 bg-gradient-to-br from-blue-900 to-primary-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 font-serif animate-fade-in">
+          <h1 className="text-3xl md:text-6xl font-bold mb-4 md:mb-6 font-serif animate-fade-in">
             {t('services.title', 'Corporate Services')}
           </h1>
-          <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed animate-slide-up">
+          <p className="text-base md:text-xl text-white/90 mb-6 md:mb-8 max-w-3xl mx-auto leading-relaxed animate-slide-up">
             {t('services.subtitle', 'Create unforgettable corporate events on Lake Garda. Professionally organized regattas to strengthen team spirit.')}
           </p>
         </div>
       </section>
 
       {/* Services Overview */}
-      <section className="py-20 bg-white">
+      <section className="py-12 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-12 md:mb-16">
             {/* Corporate Regattas Card */}
             <div className="flex flex-col rounded-2xl shadow-lg overflow-hidden transition-all duration-500 hover:shadow-2xl group">
               <Link to="/corporate-sailing" className="block overflow-hidden">
                 <div 
-                  className="h-64 bg-cover bg-center relative transition-transform duration-500 group-hover:scale-105"
+                  className="h-48 md:h-64 bg-cover bg-center relative transition-transform duration-500 group-hover:scale-105"
                   style={{ backgroundImage: 'url(https://i.postimg.cc/JhjJ21S9/Boas-1775.jpg)' }}
                 >
                 </div>
               </Link>
-              <div className="p-6 bg-white flex-1 flex flex-col">
+              <div className="p-4 md:p-6 bg-white flex-1 flex flex-col">
                 <div className="flex items-center mb-4">
-                  <div className="bg-primary-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
-                    <Users className="h-6 w-6 text-primary-600" />
+                  <div className="bg-primary-100 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center mr-3 md:mr-4 flex-shrink-0">
+                    <Users className="h-5 w-5 md:h-6 md:w-6 text-primary-600" />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900">🧭 Corporate Sailing Regatta</h3>
+                  <h3 className="text-xl md:text-2xl font-bold text-gray-900">🧭 {t('services.corporate_regatta.title', 'Corporate Sailing Regatta')}</h3>
                 </div>
-                <p className="text-gray-700 leading-relaxed mb-4">
-                  We offer a unique team-building program through participation in a real sailing regatta. 
-                  Strengthen team spirit and create unforgettable memories on Lake Garda.
+                <p className="text-gray-700 leading-relaxed mb-4 text-sm md:text-base">
+                  {t('services.corporate_regatta.description', 'We offer a unique team-building program through participation in a real sailing regatta. Strengthen team spirit and create unforgettable memories on Lake Garda.')}
                 </p>
                 <Link 
                   to="/corporate-sailing"
-                  className="mt-auto text-primary-600 hover:text-primary-700 font-medium inline-flex items-center transition-colors duration-300"
+                  className="mt-auto text-primary-600 hover:text-primary-700 font-medium inline-flex items-center transition-colors duration-300 text-sm md:text-base"
                 >
-                  <span>Learn more →</span>
+                  <span>{t('services.corporate_regatta.learn_more', 'Learn more →')}</span>
                 </Link>
               </div>
             </div>
@@ -247,27 +246,26 @@ const ServicesPage = () => {
             <div className="flex flex-col rounded-2xl shadow-lg overflow-hidden transition-all duration-500 hover:shadow-2xl group">
               <Link to="/gift-certificates" className="block overflow-hidden">
                 <div 
-                  className="h-64 bg-cover bg-center relative transition-transform duration-500 group-hover:scale-105"
+                  className="h-48 md:h-64 bg-cover bg-center relative transition-transform duration-500 group-hover:scale-105"
                   style={{ backgroundImage: 'url(https://i.postimg.cc/1XvDrJbX/image.png)' }}
                 >
                 </div>
               </Link>
-              <div className="p-6 bg-white flex-1 flex flex-col">
+              <div className="p-4 md:p-6 bg-white flex-1 flex flex-col">
                 <div className="flex items-center mb-4">
-                  <div className="bg-primary-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
-                    <Award className="h-6 w-6 text-primary-600" />
+                  <div className="bg-primary-100 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center mr-3 md:mr-4 flex-shrink-0">
+                    <Award className="h-5 w-5 md:h-6 md:w-6 text-primary-600" />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900">🎁 Gift Certificates</h3>
+                  <h3 className="text-xl md:text-2xl font-bold text-gray-900">🎁 {t('services.gift_certificates.title', 'Gift Certificates')}</h3>
                 </div>
-                <p className="text-gray-700 leading-relaxed mb-4">
-                  Perfect gift for sailing enthusiasts. Give the gift of an unforgettable 
-                  yacht racing experience on beautiful Lake Garda.
+                <p className="text-gray-700 leading-relaxed mb-4 text-sm md:text-base">
+                  {t('services.gift_certificates.description', 'Perfect gift for sailing enthusiasts. Give the gift of an unforgettable yacht racing experience on beautiful Lake Garda.')}
                 </p>
                 <Link 
                   to="/gift-certificates"
-                  className="mt-auto text-primary-600 hover:text-primary-700 font-medium inline-flex items-center transition-colors duration-300"
+                  className="mt-auto text-primary-600 hover:text-primary-700 font-medium inline-flex items-center transition-colors duration-300 text-sm md:text-base"
                 >
-                  <span>Learn more →</span>
+                  <span>{t('services.gift_certificates.learn_more', 'Learn more →')}</span>
                 </Link>
               </div>
             </div>
@@ -280,13 +278,13 @@ const ServicesPage = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto animate-slide-up">
             <div className="p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Corporate Package Inquiry</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('services.inquiry.title', 'Corporate Package Inquiry')}</h2>
               
-              <form onSubmit={handleSubmitInquiry} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <form onSubmit={handleSubmitInquiry} className="space-y-4 md:space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Company Name *
+                      {t('services.inquiry.company_name', 'Company Name *')}
                     </label>
                     <input
                       type="text"
@@ -299,7 +297,7 @@ const ServicesPage = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Contact Person *
+                      {t('contact.form.name', 'Contact Person *')}
                     </label>
                     <input
                       type="text"
@@ -312,10 +310,10 @@ const ServicesPage = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Email *
+                      {t('form.email', 'Email *')}
                     </label>
                     <input
                       type="email"
@@ -328,7 +326,7 @@ const ServicesPage = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Phone *
+                      {t('form.phone', 'Phone *')}
                     </label>
                     <input
                       type="tel"
@@ -341,10 +339,10 @@ const ServicesPage = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Number of Participants *
+                      {t('services.inquiry.participants_count', 'Number of Participants *')}
                     </label>
                     <input
                       type="number"
@@ -358,7 +356,7 @@ const ServicesPage = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Preferred Date
+                      {t('services.inquiry.preferred_date', 'Preferred Date')}
                     </label>
                     <input
                       type="date"
@@ -373,7 +371,7 @@ const ServicesPage = () => {
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-2">
-                    Additional Requests
+                    {t('services.inquiry.additional_requests', 'Additional Requests')}
                   </label>
                   <textarea
                     name="message"
@@ -381,7 +379,7 @@ const ServicesPage = () => {
                     onChange={handleInputChange}
                     rows={4}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-300"
-                    placeholder="Tell us about your event requirements..."
+                    placeholder={t('services.inquiry.additional_requests_placeholder', 'Tell us about your event requirements...')}
                   />
                 </div>
 
@@ -391,14 +389,14 @@ const ServicesPage = () => {
                     onClick={() => setShowInquiryForm(false)}
                     className="px-6 py-3 text-gray-600 hover:text-gray-800 transition-colors duration-300"
                   >
-                    Cancel
+                    {t('services.inquiry.cancel', 'Cancel')}
                   </button>
                   <button
                     type="submit"
                     disabled={formLoading}
                     className="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 disabled:opacity-50 hover:scale-105"
                   >
-                    {formLoading ? 'Sending...' : 'Send Inquiry'}
+                    {formLoading ? t('services.inquiry.sending', 'Sending...') : t('services.inquiry.send', 'Send Inquiry')}
                   </button>
                 </div>
               </form>

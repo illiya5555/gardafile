@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Lock, User, AlertCircle, Shield, Users, Person } from 'lucide-react';
+import { X, Lock, User, AlertCircle, Shield, Users, PersonStanding as Person } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface AdminLoginProps {

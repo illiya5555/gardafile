@@ -54,9 +54,9 @@ export const useStripe = (): UseStripeReturn => {
       if (window.gtag) {
         window.gtag('event', 'begin_checkout', {
           'send_to': 'AW-17237804462',
-          'value': price_id === 'price_1RbAbcHGLVvZbOy8R1225QhL' ? 195.0 : null,
+          'value': priceId === 'price_1RbAbcHGLVvZbOy8R1225QhL' ? 195.0 : null,
           'currency': 'EUR',
-          'items': [{ 'id': price_id }]
+          'items': [{ 'id': priceId }]
         });
       }
 

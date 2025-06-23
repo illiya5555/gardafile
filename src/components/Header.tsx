@@ -30,8 +30,8 @@ const Header = () => {
       className={`fixed w-full z-50 transition-all duration-500 ease-in-out
         border-b border-gray-200/50
         ${scrolled
-          ? 'bg-white/60 shadow-2xl backdrop-blur-xl py-1'
-          : 'bg-white/90 shadow-md backdrop-blur-sm py-2'
+          ? 'bg-white/40 shadow-2xl backdrop-blur-xl py-1'
+          : 'bg-white/70 shadow-md backdrop-blur-sm py-2'
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

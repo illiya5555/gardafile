@@ -1,5 +1,5 @@
 import React from 'react';
-import { Person, Users, Shield } from 'lucide-react';
+import { PersonStanding as Person, Users, Shield } from 'lucide-react';
 
 interface LoginSelectionProps {
   onSelect: (role: 'client' | 'manager' | 'admin') => void;

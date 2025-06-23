@@ -184,7 +184,7 @@ const HomePage = () => {
                 position: 'absolute',
                 top: 0,
                 left: 0,
-                zIndex: 1
+                zIndex: 4
               }}
             />
           )}

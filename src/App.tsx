@@ -11,13 +11,14 @@ import ContactPage from './pages/ContactPage';
 import BookingCalendarPage from './pages/BookingCalendarPage';
 import CorporateSailingPage from './pages/CorporateSailingPage';
 import GiftCertificatesPage from './pages/GiftCertificatesPage';
-import AdminDashboard from '../modules/admin/pages/AdminDashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import ChatWidget from './components/ChatWidget';
 import LoginPage from './pages/LoginPage';
 import SuccessPage from './pages/SuccessPage';
 import ClientDashboard from './pages/ClientDashboard';
 import { CalendarProvider } from './context/CalendarContext';
 import { useLanguageContext } from './hooks/useLanguage';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // App wrapper to handle RTL/LTR based on language
 const AppContent = () => {
@@ -29,19 +30,25 @@ const AppContent = () => {
         <SEOHead />
         <Routes>
           {/* Admin route without header/footer */}
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/*" element={
+            <ProtectedRoute requiredRole="manager">
+              <AdminDashboard />
+            </ProtectedRoute>
+          } />
           
           {/* Auth routes without header/footer */}
           <Route path="/login" element={<LoginPage />} />
           
           {/* Dashboard route with header/footer */}
           <Route path="/dashboard" element={
-            <>
-              <Header />
-              <ClientDashboard />
-              <Footer />
-              <ChatWidget />
-            </>
+            <ProtectedRoute requiredRole="client">
+              <>
+                <Header />
+                <ClientDashboard />
+                <Footer />
+                <ChatWidget />
+              </>
+            </ProtectedRoute>
           } />
           
           {/* Success page */}

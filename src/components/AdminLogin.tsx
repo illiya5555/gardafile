@@ -46,39 +46,8 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
           return;
         }
         
-        // Get user role from profiles table
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('role_id')
-          .eq('id', data.user.id)
-          .maybeSingle();
-
-        if (profileError) {
-          throw profileError;
-        }
-
-        // Check if profile exists
-        if (!profile) {
-          throw new Error('Access denied: User profile not found. Please contact an administrator.');
-        }
-
-        // Get role name from user_roles table
-        const { data: role, error: roleError } = await supabase
-          .from('user_roles')
-          .select('role_name')
-          .eq('id', profile.role_id)
-          .single();
-
-        if (roleError) {
-          throw roleError;
-        }
-
-        // Check if user has admin or manager role
-        if (role.role_name !== 'admin' && role.role_name !== 'manager') {
-          throw new Error('Access denied: You do not have permission to access the admin area');
-        }
-        
         // Close modal and navigate to admin dashboard
+        // Access control and role checking will be handled by ProtectedRoute
         onClose();
         navigate('/admin');
       }

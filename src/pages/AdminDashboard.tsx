@@ -105,11 +105,42 @@ const AdminDashboard = () => {
           return;
         }
 
-        // For a production environment, you might want to check if the user has an admin role
-        // by creating the necessary tables (profiles, user_roles) and relationships
-        
+        // Get user role from profiles table
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('role_id')
+          .eq('id', user.id)
+          .single();
+
+        if (profileError || !profile) {
+          console.error('Error getting user profile:', profileError);
+          navigate('/');
+          return;
+        }
+
+        // Get role name from user_roles table
+        const { data: role, error: roleError } = await supabase
+          .from('user_roles')
+          .select('role_name')
+          .eq('id', profile.role_id)
+          .single();
+
+        if (roleError || !role) {
+          console.error('Error getting user role:', roleError);
+          navigate('/');
+          return;
+        }
+
+        // Check if user has admin role
+        if (role.role_name !== 'admin') {
+          console.error('Unauthorized access attempt: User does not have admin role');
+          // Redirect to home page with a flash message about insufficient permissions
+          navigate('/');
+          return;
+        }
+
         setUser(user);
-        // Only fetch data after authentication is confirmed
+        // Only fetch data after authentication and role verification are confirmed
         fetchStats();
         fetchBookings();
         fetchClients();
@@ -122,7 +153,7 @@ const AdminDashboard = () => {
     };
     
     checkAuth();
-  }, []);
+  }, [navigate]);
 
   const fetchStats = async () => {
     try {

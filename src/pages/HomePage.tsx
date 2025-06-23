@@ -464,19 +464,18 @@ const HomePage = () => {
               </div>
             </div>
             <div className="relative">
-              {/* YouTube Video */}
+              {/* YouTube Video - Updated with proper aspect ratio wrapper */}
               <div className="relative rounded-2xl shadow-2xl overflow-hidden">
-                <iframe
-                  src="https://www.youtube.com/embed/Xe6PkWx3i1c?autoplay=1&mute=1&loop=1&playlist=Xe6PkWx3i1c&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&disablekb=1&fs=0&cc_load_policy=0&playsinline=1&autohide=1"
-                  title="Lake Garda Location Video"
-                  className="w-full h-96 object-cover"
-                  style={{
-                    pointerEvents: 'none'
-                  }}
-                  frameBorder="0"
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen={false}
-                />
+                <div style={{padding:'56.25% 0 0 0', position:'relative'}}>
+                  <iframe
+                    src="https://www.youtube.com/embed/Xe6PkWx3i1c?autoplay=1&mute=1&loop=1&playlist=Xe6PkWx3i1c&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&disablekb=1&fs=0&cc_load_policy=0&playsinline=1&autohide=1"
+                    title="Lake Garda Location Video"
+                    style={{position:'absolute', top:0, left:0, width:'100%', height:'100%'}}
+                    frameBorder="0"
+                    allow="autoplay; encrypted-media"
+                    allowFullScreen={false}
+                  />
+                </div>
               </div>
               
               <div className="absolute -top-6 -right-6 bg-gold-500 text-white p-4 rounded-xl shadow-lg">

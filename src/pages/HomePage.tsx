@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import SwiperCore, { Autoplay, Pagination } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import {
   Calendar,
   Users,
@@ -17,30 +15,15 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import { supabase, Testimonial, safeQuery } from '../lib/supabase';
-import { useTranslation } from '../context/LanguageContext';
-
-// Инициализация Swiper
-SwiperCore.use([Autoplay, Pagination]);
-
-const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-  return isMobile;
-};
+import { useTranslation } from '../context/LanguageContext'; // Import useTranslation
 
 const HomePage = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [isOffline, setIsOffline] = useState(false);
   const [showPlaceholder, setShowPlaceholder] = useState(true);
-  const { t } = useTranslation();
-  const isMobile = useIsMobile();
+  const { t } = useTranslation(); // Initialize useTranslation
 
-  // Галерея изображений
+  // Experience section gallery images
   const experienceImages = [
     'https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif', 
     'https://i.postimg.cc/m2Z4581j/temp-Image3ioz3-A.avif', 
@@ -49,8 +32,8 @@ const HomePage = () => {
   ];
   const [experienceImageIndex, setExperienceImageIndex] = useState(0);
 
-  // Тестовые отзывы
-  const fallbackTestimonials = [
+  // Fallback testimonials
+  const fallbackTestimonials: Testimonial[] = [
     {
       id: '1',
       name: "Marco Rossi",
@@ -88,18 +71,22 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchTestimonials();
-    const timer = setTimeout(() => setShowPlaceholder(false), 7000);
+    // Скрываем превью через 7 секунд
+    const timer = setTimeout(() => {
+      setShowPlaceholder(false);
+    }, 7000);
     return () => clearTimeout(timer);
   }, []);
 
+  // Auto-rotate experience images every 9 seconds
   useEffect(() => {
-    if (!isMobile) {
-      const interval = setInterval(() => {
-        setExperienceImageIndex((prev) => (prev + 1) % experienceImages.length);
-      }, 9000);
-      return () => clearInterval(interval);
-    }
-  }, [isMobile, experienceImages.length]);
+    const interval = setInterval(() => {
+      setExperienceImageIndex((prevIndex) =>
+        (prevIndex + 1) % experienceImages.length
+      );
+    }, 9000);
+    return () => clearInterval(interval);
+  }, [experienceImages.length]);
 
   const fetchTestimonials = async () => {
     try {
@@ -108,9 +95,13 @@ const HomePage = () => {
         fallbackTestimonials
       );
       setIsOffline(offline);
-      setTestimonials(data || fallbackTestimonials);
+      if (data && data.length > 0 && !offline) {
+        setTestimonials(data);
+      } else {
+        setTestimonials(fallbackTestimonials);
+      }
     } catch (error) {
-      console.warn('Using fallback testimonials');
+      console.warn('Using fallback testimonials due to connection issues');
       setIsOffline(true);
       setTestimonials(fallbackTestimonials);
     }
@@ -179,69 +170,95 @@ const HomePage = () => {
 
   return (
     <div className="overflow-hidden">
-      {/* Hero Section */}
-      <section className="relative min-h-[80vh] sm:min-h-screen flex items-center justify-center overflow-hidden">
-        {!isMobile ? (
-          <div style={{ padding: '56.25% 0 0 0', position: 'relative' }}>
-            <iframe
-              src="https://player.vimeo.com/video/1094455548?h=dee6f219c4&badge=0&autopause=0&player_id=0&app_id=58479&background=1&loop=1&autoplay=1&muted=1"
-              frameBorder="0"
-              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-              title="Vimeo Background Video"
-            ></iframe>
-          </div>
-        ) : (
-          <img
-            src="https://i.postimg.cc/BvWwxhwm/logogarda.webp"
-            alt="Lake Garda Sailing"
-            className="absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-500"
-            loading="lazy"
-          />
-        )}
-        {showPlaceholder && !isMobile && (
-          <>
-            <img
-              src="https://i.postimg.cc/BvWwxhwm/logogarda.webp"
-              alt="Lake Garda Sailing"
-              className="absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-500"
-              style={{ zIndex: 25, opacity: showPlaceholder ? 1 : 0 }}
-            />
-            <div
-              className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-[#0f172a]/70 via-[#0f172a]/40 to-transparent z-27 pointer-events-none" 
-              style={{ zIndex: 27 }}
-            ></div>
-          </>
-        )}
+      {/* Hero Section with Background Video */}
+<section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+  {/* Background Video */}
+  <div className="absolute inset-0 z-20">
+    {/* Vimeo Video Frame */}
+    <div style={{ padding: '56.25% 0 0 0', position: 'relative' }}>
+      <iframe
+        src="https://player.vimeo.com/video/1094455548?h=dee6f219c4&badge=0&autopause=0&player_id=0&app_id=58479&background=1&loop=1&autoplay=1&muted=1"
+        frameBorder="0"
+        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+        title="Vimeo Background Video"
+      ></iframe>
+    </div>
+  </div>
+
+  {/* Placeholder Image + Overlay */}
+  {showPlaceholder && (
+    <>
+      {/* Превью изображение */}
+      <img
+        src="https://i.postimg.cc/BvWwxhwm/logogarda.webp"
+        alt="Lake Garda Sailing"
+        className="absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-500"
+        style={{
+          zIndex: 25,
+          opacity: showPlaceholder ? 1 : 0,
+        }}
+      />
+
+      {/* 🔥 Синяя дымка поверх изображения (zIndex выше) */}
+      <div
+        className="absolute top-0 left-0 w-full h-full pointer-events-none transition-opacity duration-500"
+        style={{
+          zIndex: 26,
+          backgroundColor: 'rgba(15, 23, 42, 0.4)',
+          opacity: showPlaceholder ? 1 : 0,
+        }}
+      ></div>
+
+      {/* Градиент с синими тонами */}
+      <div
+        className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-[#0f172a]/70 via-[#0f172a]/40 to-transparent z-27 pointer-events-none" 
+        style={{ zIndex: 27 }}
+      ></div>
+    </>
+  )}
 
         {/* Text content */}
         <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="animate-slide-up">
-            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 font-serif">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 font-serif">
               {t('home.hero.title_part1', "Experience the Thrill of")}
               <span className="block text-gold-300">{t('home.hero.title_part2', "Yacht Racing")}</span>
             </h1>
-            <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
               {t('home.hero.subtitle', "Daily yacht racing experiences in world-famous Lake Garda with professional skippers, racing medals, and unforgettable memories")}
             </p>
-
             {/* Price & CTA */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 sm:p-8 mb-8 max-w-md mx-auto border border-white/20">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 mb-8 max-w-md mx-auto border border-white/20">
               <div className="text-center mb-6">
-                <div className="text-4xl sm:text-5xl font-bold text-gold-300 mb-2">€195</div>
+                <div className="text-5xl font-bold text-gold-300 mb-2">€195</div>
                 <p className="text-white/80">{t('home.hero.price_description', "per person • Full day experience")}</p>
               </div>
               <div className="space-y-3 mb-6 text-left">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="flex items-center space-x-3 text-white/90">
-                    <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                    <span>{t(`home.hero.feature${i}`, '')}</span>
-                  </div>
-                ))}
+                <div className="flex items-center space-x-3 text-white/90">
+                  <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+                  <span>{t('home.hero.feature1', "Real yacht racing format")}</span>
+                </div>
+                <div className="flex items-center space-x-3 text-white/90">
+                  <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+                  <span>{t('home.hero.feature2', "Professional skipper on every boat")}</span>
+                </div>
+                <div className="flex items-center space-x-3 text-white/90">
+                  <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+                  <span>{t('home.hero.feature3', "Open to all skill levels – no experience needed")}</span>
+                </div>
+                <div className="flex items-center space-x-3 text-white/90">
+                  <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+                  <span>{t('home.hero.feature4', "Professional photos & videos from the race")}</span>
+                </div>
+                <div className="flex items-center space-x-3 text-white/90">
+                  <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+                  <span>{t('home.hero.feature5', "All equipment provided")}</span>
+                </div>
               </div>
               <Link
                 to="/booking"
-                className="w-full sm:w-auto bg-primary-600 text-white py-4 px-6 rounded-xl font-semibold text-lg hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
+                className="w-full bg-primary-600 text-white py-4 px-6 rounded-xl font-semibold text-lg hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
               >
                 {t('home.hero.cta', "Book Your Adventure")}
               </Link>
@@ -258,38 +275,41 @@ const HomePage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-white">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-serif">
               {t('home.features.title', "Why Choose Garda Racing?")}
             </h2>
-            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               {t('home.features.subtitle', "We provide the complete yacht racing experience with professional guidance, premium equipment, and memories that last a lifetime.")}
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.slice(0, 4).map((feature, index) => (
               <div key={index} className="text-center group hover:scale-105 transition-transform duration-300">
-                <div className="bg-primary-50 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 group-hover:bg-primary-100 transition-colors duration-300">
-                  <feature.icon className="h-8 w-8 sm:h-10 sm:w-10 text-primary-600" />
+                <div className="bg-primary-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-100 transition-colors duration-300">
+                  <feature.icon className="h-10 w-10 text-primary-600" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{feature.description}</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
-          <div className="flex justify-center mt-8 sm:mt-12">
-            <div className="text-center group hover:scale-105 transition-transform duration-300 max-w-xs sm:max-w-sm">
+
+          {/* Fifth feature centered below */}
+          <div className="flex justify-center mt-12">
+            <div className="text-center group hover:scale-105 transition-transform duration-300 max-w-sm">
               {(() => {
                 const FifthFeatureIcon = features[4].icon;
                 return (
                   <>
-                    <div className="bg-primary-50 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 group-hover:bg-primary-100 transition-colors duration-300">
-                      <FifthFeatureIcon className="h-8 w-8 sm:h-10 sm:w-10 text-primary-600" />
+                    <div className="bg-primary-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-100 transition-colors duration-300">
+                      <FifthFeatureIcon className="h-10 w-10 text-primary-600" />
                     </div>
-                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{features[4].title}</h3>
-                    <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{features[4].description}</p>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3">{features[4].title}</h3>
+                    <p className="text-gray-600 leading-relaxed">{features[4].description}</p>
                   </>
                 );
               })()}
@@ -298,91 +318,85 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Experience Preview */}
-      <section className="py-16 bg-gradient-to-br from-blue-50 to-primary-50">
+      {/* Experience Preview with Auto-rotating Images */}
+      <section className="py-20 bg-gradient-to-br from-blue-50 to-primary-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-serif">
                 {t('home.experience.title', "Your Perfect Day on Lake Garda")}
               </h2>
-              <div className="space-y-4 sm:space-y-6">
-                <div className="flex items-start space-x-3 sm:space-x-4">
-                  <div className="bg-primary-600 text-white w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-semibold flex-shrink-0">
+              <div className="space-y-6">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-primary-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-semibold flex-shrink-0">
                     1
                   </div>
                   <div>
-                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1">{t('home.experience.step1.title', "Morning Briefing")}</h3>
-                    <p className="text-sm sm:text-base text-gray-600">{t('home.experience.step1.description', "Meet your professional skipper and learn the basics of yacht racing in a relaxed, friendly environment.")}</p>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('home.experience.step1.title', "Morning Briefing")}</h3>
+                    <p className="text-gray-600">{t('home.experience.step1.description', "Meet your professional skipper and learn the basics of yacht racing in a relaxed, friendly environment.")}</p>
                   </div>
                 </div>
-                <div className="flex items-start space-x-3 sm:space-x-4">
-                  <div className="bg-primary-600 text-white w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-semibold flex-shrink-0">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-primary-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-semibold flex-shrink-0">
                     2
                   </div>
                   <div>
-                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1">{t('home.experience.step2.title', "Racing Experience")}</h3>
-                    <p className="text-sm sm:text-base text-gray-600">{t('home.experience.step2.description', "Participate in authentic yacht races with other boats, experiencing the thrill of competition on beautiful Lake Garda.")}</p>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('home.experience.step2.title', "Racing Experience")}</h3>
+                    <p className="text-gray-600">{t('home.experience.step2.description', "Participate in authentic yacht races with other boats, experiencing the thrill of competition on beautiful Lake Garda.")}</p>
                   </div>
                 </div>
-                <div className="flex items-start space-x-3 sm:space-x-4">
-                  <div className="bg-primary-600 text-white w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-semibold flex-shrink-0">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-primary-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-semibold flex-shrink-0">
                     3
                   </div>
                   <div>
-                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1">{t('home.experience.step3.title', "Medal Ceremony")}</h3>
-                    <p className="text-sm sm:text-base text-gray-600">{t('home.experience.step3.description', "Celebrate your achievement with an official medal ceremony and receive your personalized racing certificate.")}</p>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('home.experience.step3.title', "Medal Ceremony")}</h3>
+                    <p className="text-gray-600">{t('home.experience.step3.description', "Celebrate your achievement with an official medal ceremony and receive your personalized racing certificate.")}</p>
                   </div>
                 </div>
               </div>
-              <div className="mt-6 sm:mt-8">
+              <div className="mt-8">
                 <Link
                   to="/events"
-                  className="bg-primary-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
+                  className="bg-primary-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-primary-700 transition-all duration-300 hover:scale-105 shadow-lg inline-block"
                 >
                   {t('home.experience.cta', "Learn More About the Experience")}
                 </Link>
               </div>
             </div>
             <div className="relative">
-              {isMobile ? (
-                <Swiper
-                  slidesPerView={1}
-                  autoplay={{ delay: 9000 }}
-                  pagination={{ clickable: true }}
-                  className="rounded-2xl shadow-2xl overflow-hidden"
-                >
-                  {experienceImages.map((image, index) => (
-                    <SwiperSlide key={index}>
-                      <img
-                        src={image}
-                        alt={`Yacht racing experience ${index + 1}`}
-                        className="w-full h-64 sm:h-80 object-cover"
-                        loading="lazy"
-                      />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              ) : (
-                <div className="relative rounded-2xl shadow-2xl overflow-hidden">
-                  {experienceImages.map((image, index) => (
-                    <img
-                      key={index}
-                      src={image}
-                      alt={`Yacht racing experience ${index + 1}`}
-                      className={`w-full h-96 object-cover transition-opacity duration-1000 ${
-                        index === experienceImageIndex ? 'opacity-100' : 'opacity-0 absolute inset-0'
-                      }`}
-                      loading="lazy"
-                    />
-                  ))}
-                </div>
-              )}
+              {/* Auto-rotating experience images */}
+              <div className="relative rounded-2xl shadow-2xl overflow-hidden">
+                {experienceImages.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`Yacht racing experience ${index + 1}`}
+                    className={`w-full h-96 object-cover transition-opacity duration-1000 ${
+                      index === experienceImageIndex ? 'opacity-100' : 'opacity-0 absolute inset-0'
+                    }`}
+                  />
+                ))}
+              </div>
+              
+              {/* Image indicators */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                {experienceImages.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setExperienceImageIndex(index)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      index === experienceImageIndex 
+                        ? 'bg-white scale-110' 
+                        : 'bg-white/50 hover:bg-white/75'
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </section>
-
 
       {/* Testimonials */}
       <section className="py-20 bg-white">

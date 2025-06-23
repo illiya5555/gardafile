@@ -73,14 +73,14 @@ export const useAuthRole = (): UseAuthRoleReturn => {
               return;
             }
             
-            // Create profile with the first available role
+            // Create profile with the first available role using upsert to prevent conflicts
             const { error: createProfileError } = await supabase
               .from('profiles')
-              .insert({
+              .upsert({
                 id: user.id,
                 email: user.email || '',
                 role_id: anyRole.id
-              });
+              }, { onConflict: 'id' });
             
             if (createProfileError) {
               throw createProfileError;
@@ -101,14 +101,14 @@ export const useAuthRole = (): UseAuthRoleReturn => {
             return;
           }
           
-          // Create profile with default 'client' role
+          // Create profile with default 'client' role using upsert to prevent conflicts
           const { error: createProfileError } = await supabase
             .from('profiles')
-            .insert({
+            .upsert({
               id: user.id,
               email: user.email || '',
               role_id: defaultRole.id
-            });
+            }, { onConflict: 'id' });
           
           if (createProfileError) {
             throw createProfileError;

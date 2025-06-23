@@ -177,15 +177,13 @@ const HomePage = () => {
         opacity: showPlaceholder ? 1 : 0
       }}
     />
-    {/* Синяя дымка */}
-    <div
-      className="absolute inset-0 z-31 pointer-events-none"
-      style={{
-        backgroundColor: 'rgba(15, 23, 42, 0.4)',
-        opacity: showPlaceholder ? 1 : 0,
-        transition: 'opacity 0.5s ease-in-out'
-      }}
-    ></div>
+   {/* Синяя дымка с анимацией исчезновения */}
+<div
+  className={`absolute inset-0 z-31 pointer-events-none transition-opacity duration-500 ${
+    showPlaceholder ? 'opacity-100' : 'opacity-0'
+  }`}
+  style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)' }}
+></div>
     {/* Градиент */}
     <div
       className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/70 via-[#0f172a]/40 to-transparent z-32 pointer-events-none"

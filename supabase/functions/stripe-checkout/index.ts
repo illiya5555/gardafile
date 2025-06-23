@@ -64,9 +64,15 @@ serve(async (req) => {
     } = await supabaseClient.auth.getUser();
 
     // Parse the request body
-    const { price_id, mode = 'payment', success_url, cancel_url, metadata = {} } = await req.json();
+    const { 
+      price_id, 
+      mode = 'payment', 
+      success_url, 
+      cancel_url, 
+      metadata = {} 
+    } = await req.json();
 
-    // Check for undefined price_id first
+    // Check for undefined price_id
     if (price_id === undefined) {
       return new Response(
         JSON.stringify({ error: 'price_id is not defined' }),
@@ -153,6 +159,12 @@ serve(async (req) => {
       customerId = stripeCustomer.id;
     }
 
+    // Extract booking_id from metadata if it exists
+    const bookingId = metadata.booking_id || null;
+    
+    // Remove booking_id from metadata to avoid duplication
+    const { booking_id, ...stripeMetadata } = metadata;
+
     // Create checkout session
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
@@ -168,9 +180,30 @@ serve(async (req) => {
       cancel_url: cancel_url || `${req.headers.get('origin')}/booking`,
       metadata: {
         user_id: user?.id || 'guest',
-        ...metadata
+        ...stripeMetadata
       },
-    })
+    });
+
+    // If booking ID is present, save it in stripe_orders for easy reference
+    if (bookingId) {
+      // Pre-create the stripe_orders entry with the booking_id
+      await supabaseClient
+        .from('stripe_orders')
+        .insert({
+          checkout_session_id: session.id,
+          payment_intent_id: session.payment_intent as string || 'pending',
+          customer_id: customerId,
+          amount_subtotal: session.amount_subtotal || 0,
+          amount_total: session.amount_total || 0,
+          currency: session.currency || 'eur',
+          payment_status: session.payment_status || 'unpaid',
+          status: 'pending',
+          booking_id: bookingId
+        });
+    }
+
+    // Track Google Ads begin_checkout event
+    console.log('Tracking begin_checkout event for Google Ads');
 
     return new Response(
       JSON.stringify({ url: session.url }),

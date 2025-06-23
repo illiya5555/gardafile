@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Search, 
   Filter, 
@@ -15,9 +15,11 @@ import {
   Tag,
   MessageSquare,
   RefreshCw,
-  Users
+  Users,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase, paginatedQuery } from '../../lib/supabase';
 
 interface Client {
   id: string;
@@ -43,6 +45,12 @@ const ClientsManagement = () => {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
+  
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalClients, setTotalClients] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
 
   const categories = [
     { id: 'vip', name: 'VIP', color: 'bg-purple-100 text-purple-800' },
@@ -52,82 +60,80 @@ const ClientsManagement = () => {
     { id: 'inactive', name: 'Inactive', color: 'bg-gray-100 text-gray-800' }
   ];
 
-  useEffect(() => {
-    fetchClients();
-  }, []);
+  // Debounced search function
+  const debouncedSearch = useCallback(
+    (() => {
+      let timer: ReturnType<typeof setTimeout>;
+      return (callback: Function) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          callback();
+        }, 350);
+      };
+    })(),
+    []
+  );
 
-  const fetchClients = async () => {
+  // Fetch clients with pagination
+  const fetchClients = useCallback(async () => {
     try {
       setLoading(true);
       
-      // Используем оптимизированную функцию для получения клиентов со статистикой
-      const { data, error } = await supabase
-        .rpc('get_clients_with_stats');
+      // Create filter object
+      const filters: Record<string, any> = {};
+      
+      // Add category filter if not 'all'
+      if (categoryFilter !== 'all') {
+        filters.client_category = categoryFilter;
+      }
+      
+      // Add search filter if present
+      if (searchTerm) {
+        filters.search = {
+          ilike: `%${searchTerm}%`
+        };
+      }
+      
+      const { data, error, count, totalPages: pages } = await paginatedQuery<Client>(
+        'profiles',
+        {
+          page,
+          pageSize,
+          orderBy: sortBy,
+          orderDirection: sortOrder as 'asc' | 'desc',
+          filters,
+          select: `*,
+            (SELECT COUNT(*) FROM reservations WHERE reservations.customer_email = profiles.email) as bookings_count,
+            (SELECT COALESCE(SUM(total_price), 0) FROM reservations WHERE reservations.customer_email = profiles.email) as total_spent,
+            (SELECT MAX(created_at) FROM reservations WHERE reservations.customer_email = profiles.email) as last_booking
+          `
+        }
+      );
 
       if (error) throw error;
 
-      // Обрабатываем данные клиентов - добавляем client_category если он отсутствует
-      const clientsWithStats = (data || []).map(client => {
-        // Используем fallback категорию "new" если категория отсутствует
-        const client_category = client.client_category || 'new';
-        
-        return {
-          ...client,
-          client_category: client.client_category || 'new',
-          // Данные уже присутствуют из функции get_clients_with_stats
-          bookings_count: client.total_bookings,
-        };
-      });
-
-      setClients(clientsWithStats);
+      setClients(data || []);
+      setTotalClients(count || 0);
+      setTotalPages(pages || 1);
     } catch (error) {
       console.error('Error fetching clients:', error);
-      // Fallback data for demo
-      setClients([
-        {
-          id: '1',
-          first_name: 'John',
-          last_name: 'Smith',
-          email: 'john@example.com',
-          phone: '+1 555 123 4567',
-          client_category: 'vip',
-          created_at: '2024-01-15T10:30:00Z',
-          updated_at: '2024-01-15T10:30:00Z',
-          bookings_count: 5,
-          total_spent: 995,
-          last_booking: '2024-01-10T14:00:00Z'
-        },
-        {
-          id: '2',
-          first_name: 'Sarah',
-          last_name: 'Johnson',
-          email: 'sarah@example.com',
-          phone: '+1 555 987 6543',
-          client_category: 'regular',
-          created_at: '2024-01-14T14:20:00Z',
-          updated_at: '2024-01-14T14:20:00Z',
-          bookings_count: 2,
-          total_spent: 398,
-          last_booking: '2024-01-08T16:00:00Z'
-        },
-        {
-          id: '3',
-          first_name: 'Michael',
-          last_name: 'Brown',
-          email: 'michael@example.com',
-          phone: '+1 555 456 7890',
-          client_category: 'corporate',
-          created_at: '2024-01-13T09:15:00Z',
-          updated_at: '2024-01-13T09:15:00Z',
-          bookings_count: 1,
-          total_spent: 199,
-          last_booking: '2024-01-05T10:00:00Z'
-        }
-      ]);
+      // Fallback data for demo if needed
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, pageSize, searchTerm, categoryFilter, sortBy, sortOrder]);
+
+  // Effect for initial load and when dependencies change
+  useEffect(() => {
+    // Use debounce for search to avoid too many API calls
+    if (searchTerm) {
+      debouncedSearch(() => {
+        fetchClients();
+      });
+    } else {
+      fetchClients();
+    }
+  }, [fetchClients, debouncedSearch, searchTerm]);
 
   const updateClientCategory = async (clientId: string, category: string) => {
     try {
@@ -158,32 +164,16 @@ const ClientsManagement = () => {
     return categories.find(cat => cat.id === category) || categories[3]; // Default to 'new'
   };
 
-  const filteredClients = clients
-    .filter(client => {
-      const matchesSearch = 
-        `${client.first_name} ${client.last_name}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        client.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (client.phone && client.phone.includes(searchTerm));
-      
-      const matchesCategory = categoryFilter === 'all' || client.client_category === categoryFilter;
-      
-      return matchesSearch && matchesCategory;
-    })
-    .sort((a, b) => {
-      const aValue = a[sortBy as keyof Client];
-      const bValue = b[sortBy as keyof Client];
-      
-      if (sortOrder === 'desc') {
-        return aValue > bValue ? -1 : 1;
-      } else {
-        return aValue < bValue ? -1 : 1;
-      }
-    });
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setPage(newPage);
+    }
+  };
 
   const exportData = () => {
     const csvContent = [
       ['ID', 'First Name', 'Last Name', 'Email', 'Phone', 'Category', 'Bookings', 'Total Spent', 'Last Booking', 'Created Date'],
-      ...filteredClients.map(client => [
+      ...clients.map(client => [
         client.id,
         client.first_name,
         client.last_name,
@@ -221,7 +211,10 @@ const ClientsManagement = () => {
           <h2 className="text-2xl font-bold text-gray-900">Client Management</h2>
           <p className="text-gray-600">Manage customer relationships and track client history</p>
         </div>
-        <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
+        <button 
+          onClick={() => fetchClients()} 
+          className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
+        >
           <Plus className="h-4 w-4" />
           <span>Add Client</span>
         </button>
@@ -233,7 +226,7 @@ const ClientsManagement = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Total Clients</p>
-              <p className="text-2xl font-bold text-gray-900">{clients.length}</p>
+              <p className="text-2xl font-bold text-gray-900">{totalClients}</p>
             </div>
             <Users className="h-8 w-8 text-blue-600" />
           </div>
@@ -287,14 +280,19 @@ const ClientsManagement = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label="Search clients"
             />
           </div>
 
           {/* Category Filter */}
           <select
             value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
+            onChange={(e) => {
+              setCategoryFilter(e.target.value);
+              setPage(1); // Reset to first page on filter change
+            }}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Filter by category"
           >
             <option value="all">All Categories</option>
             {categories.map(category => (
@@ -309,8 +307,10 @@ const ClientsManagement = () => {
               const [field, order] = e.target.value.split('-');
               setSortBy(field);
               setSortOrder(order as 'asc' | 'desc');
+              setPage(1); // Reset to first page on sort change
             }}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Sort clients"
           >
             <option value="created_at-desc">Newest First</option>
             <option value="created_at-asc">Oldest First</option>
@@ -323,6 +323,7 @@ const ClientsManagement = () => {
           <button
             onClick={exportData}
             className="flex items-center justify-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-300"
+            aria-label="Export data to CSV"
           >
             <Download className="h-4 w-4" />
             <span>Export</span>
@@ -331,7 +332,7 @@ const ClientsManagement = () => {
 
         <div className="flex justify-between items-center mt-4">
           <div className="text-sm text-gray-600">
-            Showing {filteredClients.length} of {clients.length} clients
+            Showing {Math.min((page - 1) * pageSize + 1, totalClients)} - {Math.min(page * pageSize, totalClients)} of {totalClients} clients
           </div>
           <div className="flex space-x-2">
             {categories.map(category => (
@@ -353,104 +354,162 @@ const ClientsManagement = () => {
             <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
             <p className="text-gray-600">Loading clients...</p>
           </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Client</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Contact</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Category</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Bookings</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Total Spent</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Last Booking</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredClients.map((client) => {
-                  const categoryInfo = getCategoryInfo(client.client_category || 'new');
-                  return (
-                    <tr key={client.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                            <span className="text-white font-semibold text-sm">
-                              {client.first_name?.charAt(0)}{client.last_name?.charAt(0)}
-                            </span>
-                          </div>
-                          <div>
-                            <p className="font-medium text-gray-900">
-                              {client.first_name} {client.last_name}
-                            </p>
-                            <p className="text-sm text-gray-600">{getClientValue(client)}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="space-y-1">
-                          <div className="flex items-center space-x-2 text-sm">
-                            <Mail className="h-3 w-3 text-gray-400" />
-                            <span className="text-gray-600">{client.email}</span>
-                          </div>
-                          {client.phone && (
-                            <div className="flex items-center space-x-2 text-sm">
-                              <Phone className="h-3 w-3 text-gray-400" />
-                              <span className="text-gray-600">{client.phone}</span>
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <select
-                          value={client.client_category || 'new'}
-                          onChange={(e) => updateClientCategory(client.id, e.target.value)}
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border-0 focus:ring-2 focus:ring-blue-500 ${categoryInfo.color}`}
-                        >
-                          {categories.map(category => (
-                            <option key={category.id} value={category.id}>{category.name}</option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                          {client.bookings_count || 0} bookings
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 font-semibold text-gray-900">
-                        €{client.total_spent || 0}
-                      </td>
-                      <td className="px-6 py-4 text-gray-900">
-                        {client.last_booking 
-                          ? new Date(client.last_booking).toLocaleDateString()
-                          : 'Never'
-                        }
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center space-x-2">
-                          <button
-                            onClick={() => {
-                              setSelectedClient(client);
-                              setShowDetails(true);
-                            }}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-300"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </button>
-                          <button className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors duration-300">
-                            <Mail className="h-4 w-4" />
-                          </button>
-                          <button className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors duration-300">
-                            <MessageSquare className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+        ) : clients.length === 0 ? (
+          <div className="p-8 text-center">
+            <p className="text-gray-600">No clients found matching your search criteria</p>
           </div>
+        ) : (
+          <>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Client</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Contact</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Category</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Bookings</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Total Spent</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Last Booking</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {clients.map((client) => {
+                    const categoryInfo = getCategoryInfo(client.client_category || 'new');
+                    return (
+                      <tr key={client.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                              <span className="text-white font-semibold text-sm">
+                                {client.first_name?.charAt(0)}{client.last_name?.charAt(0)}
+                              </span>
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900">
+                                {client.first_name} {client.last_name}
+                              </p>
+                              <p className="text-sm text-gray-600">{getClientValue(client)}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="space-y-1">
+                            <div className="flex items-center space-x-2 text-sm">
+                              <Mail className="h-3 w-3 text-gray-400" />
+                              <span className="text-gray-600">{client.email}</span>
+                            </div>
+                            {client.phone && (
+                              <div className="flex items-center space-x-2 text-sm">
+                                <Phone className="h-3 w-3 text-gray-400" />
+                                <span className="text-gray-600">{client.phone}</span>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <select
+                            value={client.client_category || 'new'}
+                            onChange={(e) => updateClientCategory(client.id, e.target.value)}
+                            className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border-0 focus:ring-2 focus:ring-blue-500 ${categoryInfo.color}`}
+                            aria-label="Client category"
+                          >
+                            {categories.map(category => (
+                              <option key={category.id} value={category.id}>{category.name}</option>
+                            ))}
+                          </select>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                            {client.bookings_count || 0} bookings
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 font-semibold text-gray-900">
+                          €{client.total_spent || 0}
+                        </td>
+                        <td className="px-6 py-4 text-gray-900">
+                          {client.last_booking 
+                            ? new Date(client.last_booking).toLocaleDateString()
+                            : 'Never'
+                          }
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => {
+                                setSelectedClient(client);
+                                setShowDetails(true);
+                              }}
+                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-300"
+                              aria-label="View client details"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </button>
+                            <button 
+                              className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors duration-300"
+                              aria-label="Send email"
+                            >
+                              <Mail className="h-4 w-4" />
+                            </button>
+                            <button 
+                              className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors duration-300"
+                              aria-label="Send message"
+                            >
+                              <MessageSquare className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            
+            {/* Pagination Controls */}
+            <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-700">
+                  Showing <span className="font-medium">{Math.min((page - 1) * pageSize + 1, totalClients)}</span> to <span className="font-medium">{Math.min(page * pageSize, totalClients)}</span> of{' '}
+                  <span className="font-medium">{totalClients}</span> clients
+                </p>
+              </div>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => handlePageChange(page - 1)}
+                  disabled={page === 1}
+                  className="p-2 rounded-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Previous page"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                <span className="text-sm text-gray-700">Page {page} of {totalPages}</span>
+                <button
+                  onClick={() => handlePageChange(page + 1)}
+                  disabled={page === totalPages}
+                  className="p-2 rounded-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Next page"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+                
+                <select
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    setPage(1); // Reset to first page when changing page size
+                  }}
+                  className="ml-4 p-2 border border-gray-300 rounded-md text-sm"
+                  aria-label="Items per page"
+                >
+                  <option value={10}>10 per page</option>
+                  <option value={20}>20 per page</option>
+                  <option value={50}>50 per page</option>
+                  <option value={100}>100 per page</option>
+                </select>
+              </div>
+            </div>
+          </>
         )}
       </div>
 
@@ -464,13 +523,14 @@ const ClientsManagement = () => {
                 <button
                   onClick={() => setShowDetails(false)}
                   className="text-gray-400 hover:text-gray-600"
+                  aria-label="Close modal"
                 >
                   ×
                 </button>
               </div>
             </div>
             <div className="p-6 space-y-6">
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h4 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h4>
                   <div className="space-y-3">

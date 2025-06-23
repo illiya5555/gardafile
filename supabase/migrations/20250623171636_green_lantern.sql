@@ -1,0 +1,175 @@
+-- 1. Add email_sent column to reservations
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'reservations' AND column_name = 'email_sent'
+  ) THEN
+    ALTER TABLE reservations ADD COLUMN email_sent BOOLEAN DEFAULT FALSE;
+  END IF;
+END $$;
+
+-- 2. Add booking_id to stripe_orders
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'stripe_orders' AND column_name = 'booking_id'
+  ) THEN
+    ALTER TABLE stripe_orders ADD COLUMN booking_id UUID REFERENCES reservations(id) ON DELETE SET NULL;
+  END IF;
+END $$;
+
+-- 3. Add missing indexes for performance
+CREATE INDEX IF NOT EXISTS idx_reservations_date_status ON reservations(booking_date, status);
+CREATE INDEX IF NOT EXISTS idx_reservations_customer_email ON reservations(customer_email);
+CREATE INDEX IF NOT EXISTS idx_time_slots_date_active ON time_slots(date, is_active);
+CREATE INDEX IF NOT EXISTS idx_testimonials_is_featured ON testimonials(is_featured);
+CREATE INDEX IF NOT EXISTS idx_unified_inquiries_status ON unified_inquiries(status);
+CREATE INDEX IF NOT EXISTS idx_stripe_orders_booking_id ON stripe_orders(booking_id);
+
+-- 4. First drop the trigger that depends on the function
+DROP TRIGGER IF EXISTS refresh_dashboard_stats_trigger ON reservations;
+
+-- 5. Now it's safe to drop the function
+DROP FUNCTION IF EXISTS refresh_dashboard_stats();
+
+-- 6. Create the function with the correct syntax for REFRESH MATERIALIZED VIEW
+CREATE OR REPLACE FUNCTION refresh_dashboard_stats()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Check if materialized views exist before refreshing
+  PERFORM 1 FROM pg_matviews WHERE matviewname = 'dashboard_stats';
+  IF FOUND THEN
+    REFRESH MATERIALIZED VIEW dashboard_stats;
+  END IF;
+  
+  PERFORM 1 FROM pg_matviews WHERE matviewname = 'unified_dashboard_stats';
+  IF FOUND THEN
+    REFRESH MATERIALIZED VIEW unified_dashboard_stats;
+  END IF;
+  
+  RETURN NULL; -- For STATEMENT-level triggers, return value is ignored
+END;
+$$ LANGUAGE plpgsql;
+
+-- 7. Create or replace materialized view for dashboard stats
+DROP MATERIALIZED VIEW IF EXISTS dashboard_stats;
+CREATE MATERIALIZED VIEW dashboard_stats AS
+SELECT
+  COUNT(*) AS total_bookings,
+  (SELECT COUNT(*) FROM time_slots WHERE is_active = true) AS active_time_slots,
+  COALESCE(SUM(CASE WHEN status IN ('confirmed', 'completed') THEN total_price ELSE 0 END), 0) AS total_revenue,
+  (SELECT COUNT(*) FROM testimonials WHERE is_featured = true) AS featured_testimonials,
+  (SELECT COUNT(*) FROM unified_inquiries WHERE status = 'new') AS pending_inquiries,
+  now() AS last_updated
+FROM reservations;
+
+-- 8. Create or replace unified dashboard stats view with more metrics
+DROP MATERIALIZED VIEW IF EXISTS unified_dashboard_stats;
+CREATE MATERIALIZED VIEW unified_dashboard_stats AS
+SELECT
+  (SELECT COUNT(*) FROM reservations WHERE type = 'regular') AS total_regular_bookings,
+  (SELECT COUNT(*) FROM reservations WHERE type = 'corporate') AS total_corporate_bookings,
+  (SELECT COUNT(*) FROM reservations WHERE status = 'pending') AS pending_bookings,
+  (SELECT COUNT(*) FROM reservations WHERE status = 'confirmed') AS confirmed_bookings,
+  COALESCE((SELECT SUM(total_price) FROM reservations WHERE status IN ('confirmed', 'completed')), 0) AS total_revenue,
+  CASE 
+    WHEN (SELECT COUNT(*) FROM reservations) > 0 THEN 
+      ROUND(COALESCE((SELECT SUM(total_price) FROM reservations WHERE status IN ('confirmed', 'completed')), 0) / 
+      (SELECT COUNT(*) FROM reservations), 2)
+    ELSE 0 
+  END AS avg_booking_value,
+  (SELECT COUNT(*) FROM unified_customers) AS total_customers,
+  (SELECT COUNT(*) FROM unified_customers WHERE created_at >= NOW() - INTERVAL '30 days') AS new_customers_30d,
+  (SELECT COUNT(*) FROM unified_inquiries WHERE type = 'contact' AND status = 'new') AS pending_contact_inquiries,
+  (SELECT COUNT(*) FROM unified_inquiries WHERE type = 'corporate' AND status = 'new') AS pending_corporate_inquiries,
+  (SELECT COUNT(*) FROM time_slots WHERE is_active = true) AS active_time_slots,
+  now() AS last_updated;
+
+-- 9. Recreate trigger for dashboard stats refresh
+CREATE TRIGGER refresh_dashboard_stats_trigger
+AFTER INSERT OR UPDATE OR DELETE ON reservations
+FOR EACH STATEMENT
+EXECUTE FUNCTION refresh_dashboard_stats();
+
+-- 10. Update booking_after_payment trigger to use the booking_id in stripe_orders
+CREATE OR REPLACE FUNCTION update_booking_after_payment()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- If the order status changed to completed
+  IF NEW.status = 'completed' AND OLD.status != 'completed' THEN
+    -- Check if there's a booking_id in the order
+    IF NEW.booking_id IS NOT NULL THEN
+      -- Update the reservation status
+      UPDATE reservations 
+      SET status = 'confirmed' 
+      WHERE id = NEW.booking_id;
+    END IF;
+  END IF;
+  
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 11. Create trigger for order status changes
+DROP TRIGGER IF EXISTS stripe_order_status_change ON stripe_orders;
+
+CREATE TRIGGER stripe_order_status_change
+AFTER UPDATE OF status ON stripe_orders
+FOR EACH ROW
+EXECUTE FUNCTION update_booking_after_payment();
+
+-- 12. Create function for search vectors (if missing)
+CREATE OR REPLACE FUNCTION update_testimonials_search_vector()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.search_vector = 
+    setweight(to_tsvector('english', COALESCE(NEW.name, '')), 'A') ||
+    setweight(to_tsvector('english', COALESCE(NEW.location, '')), 'B') ||
+    setweight(to_tsvector('english', COALESCE(NEW.text, '')), 'C');
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 13. Create a general function to update search vectors for other tables
+CREATE OR REPLACE FUNCTION update_search_vectors()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Update search_vector field based on table name
+  IF TG_TABLE_NAME = 'unified_customers' THEN
+    NEW.search_vector = 
+      setweight(to_tsvector('english', COALESCE(NEW.first_name, '')), 'A') ||
+      setweight(to_tsvector('english', COALESCE(NEW.last_name, '')), 'A') ||
+      setweight(to_tsvector('english', COALESCE(NEW.email, '')), 'B') ||
+      setweight(to_tsvector('english', COALESCE(NEW.company_name, '')), 'C');
+  ELSIF TG_TABLE_NAME = 'unified_inquiries' THEN
+    NEW.search_vector = 
+      setweight(to_tsvector('english', COALESCE(NEW.customer_name, '')), 'A') ||
+      setweight(to_tsvector('english', COALESCE(NEW.customer_email, '')), 'A') ||
+      setweight(to_tsvector('english', COALESCE(NEW.company_name, '')), 'B') ||
+      setweight(to_tsvector('english', COALESCE(NEW.subject, '')), 'B') ||
+      setweight(to_tsvector('english', COALESCE(NEW.message, '')), 'C');
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 14. Create triggers for search vectors
+DROP TRIGGER IF EXISTS testimonials_search_vector_update ON testimonials;
+CREATE TRIGGER testimonials_search_vector_update
+BEFORE INSERT OR UPDATE ON testimonials
+FOR EACH ROW
+EXECUTE FUNCTION update_testimonials_search_vector();
+
+DROP TRIGGER IF EXISTS update_customers_search_vector ON unified_customers;
+CREATE TRIGGER update_customers_search_vector
+BEFORE INSERT OR UPDATE ON unified_customers
+FOR EACH ROW
+EXECUTE FUNCTION update_search_vectors();
+
+DROP TRIGGER IF EXISTS update_inquiries_search_vector ON unified_inquiries;
+CREATE TRIGGER update_inquiries_search_vector
+BEFORE INSERT OR UPDATE ON unified_inquiries
+FOR EACH ROW
+EXECUTE FUNCTION update_search_vectors();

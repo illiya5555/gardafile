@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Anchor, MapPin, Phone, Mail, Award, Shield, Clock, Lock } from 'lucide-react';
+import { Anchor, MapPin, Phone, Mail, Award, Shield, Clock, Lock, User, Users, ChevronRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import AdminLogin from './AdminLogin';
 import { useTranslation } from '../context/LanguageContext';
@@ -110,6 +110,19 @@ const Footer = () => {
               <p className="text-xs md:text-sm text-white">{t('footer.daily_hours', 'Daily: 8:00 AM - 7:00 PM')}</p>
               <p className="text-xs md:text-sm text-gray-400">{t('footer.season', 'March - October')}</p>
             </div>
+            
+            {/* Dashboard Login Button */}
+            <button
+              onClick={() => setShowAdminLogin(true)}
+              className="w-full mt-4 flex items-center justify-between px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg border border-gray-700 transition-all duration-300 text-sm"
+              aria-label="Dashboard Login"
+            >
+              <div className="flex items-center space-x-2">
+                <User className="h-4 w-4 text-primary-400" />
+                <span>Dashboard Login</span>
+              </div>
+              <ChevronRight className="h-4 w-4" />
+            </button>
           </div>
         </div>
 
@@ -121,15 +134,6 @@ const Footer = () => {
               <a href="#" className="hover:text-primary-500 transition-colors duration-300">{t('footer.links.terms_conditions', 'Terms & Conditions')}</a>
               <a href="#" className="hover:text-primary-500 transition-colors duration-300">{t('footer.links.cancellation_policy', 'Cancellation Policy')}</a>
               <a href="#" className="hover:text-primary-500 transition-colors duration-300">{t('footer.links.gdpr', 'GDPR')}</a>
-              {/* Малозаметная кнопка администратора */}
-              <button
-                onClick={() => setShowAdminLogin(true)}
-                className="text-gray-600 hover:text-gray-400 transition-colors duration-300 opacity-30 hover:opacity-60"
-                title="Admin Access"
-                aria-label="Admin login"
-              >
-                <Lock className="h-3 w-3" />
-              </button>
             </div>
             <p className="text-xs md:text-sm text-gray-400 text-center md:text-right">
               {t('footer.copyright', '© 2025 Garda Racing Yacht Club. All rights reserved.')}

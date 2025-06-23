@@ -21,6 +21,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
 
   const handleRoleSelection = (role: LoginRole) => {
     setSelectedRole(role);
+    setError(null); // Clear any previous errors when switching roles
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,7 +72,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
           }
           
           if (selectedRole !== 'client') {
-            throw new Error('Access denied: User does not have required permissions');
+            throw new Error(`ACCESS_DENIED:${selectedRole}:client`);
           }
           
           // Success for client login
@@ -84,11 +85,11 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
         const roleName = profileData.user_roles?.role_name;
         
         if (selectedRole === 'admin' && roleName !== 'admin') {
-          throw new Error('Access denied: Admin privileges required');
+          throw new Error(`ACCESS_DENIED:${selectedRole}:${roleName || 'none'}`);
         }
         
         if (selectedRole === 'manager' && roleName !== 'admin' && roleName !== 'manager') {
-          throw new Error('Access denied: Manager privileges required');
+          throw new Error(`ACCESS_DENIED:${selectedRole}:${roleName || 'none'}`);
         }
         
         // Success! Close modal and navigate to appropriate dashboard
@@ -101,7 +102,27 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
       }
     } catch (error: any) {
       console.error('Authentication error:', error);
-      setError(error.message || 'Failed to sign in');
+      
+      // Handle specific access denied errors with helpful messages
+      if (error.message?.startsWith('ACCESS_DENIED:')) {
+        const [, requestedRole, actualRole] = error.message.split(':');
+        
+        if (requestedRole === 'admin') {
+          setError(
+            `Access denied: Your account has "${actualRole}" privileges but admin access requires "admin" role. ` +
+            'Please contact an administrator to upgrade your account permissions, or try logging in with a different access level.'
+          );
+        } else if (requestedRole === 'manager') {
+          setError(
+            `Access denied: Your account has "${actualRole}" privileges but manager access requires "manager" or "admin" role. ` +
+            'Please contact an administrator to upgrade your account permissions, or try logging in as a client.'
+          );
+        } else {
+          setError(`Access denied: Insufficient privileges for ${requestedRole} access.`);
+        }
+      } else {
+        setError(error.message || 'Failed to sign in');
+      }
     } finally {
       setLoading(false);
     }
@@ -131,9 +152,14 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
             </div>
 
             {error && (
-              <div className="mt-4 mx-6 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm flex items-center">
-                <AlertCircle className="h-4 w-4 mr-2 flex-shrink-0" />
-                <span>{error}</span>
+              <div className="mt-4 mx-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                <div className="flex items-start">
+                  <AlertCircle className="h-4 w-4 mr-2 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium mb-1">Authentication Failed</p>
+                    <p>{error}</p>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -177,7 +203,10 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
               <div className="flex space-x-3 pt-4">
                 <button
                   type="button"
-                  onClick={() => setSelectedRole(null)}
+                  onClick={() => {
+                    setSelectedRole(null);
+                    setError(null);
+                  }}
                   className="flex-1 px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
                 >
                   Back

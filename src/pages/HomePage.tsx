@@ -184,6 +184,7 @@ const HomePage = () => {
   }`}
   style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)' }}
 ></div>
+    
     {/* Градиент */}
     <div
       className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/70 via-[#0f172a]/40 to-transparent z-32 pointer-events-none"

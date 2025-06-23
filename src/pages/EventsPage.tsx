@@ -116,9 +116,17 @@ const EventsPage = () => {
             <div className="relative">
               <img
                 src={galleryImages[0].url}
+                srcSet={`
+                  ${galleryImages[0].url}?width=400 400w,
+                  ${galleryImages[0].url}?width=800 800w,
+                  ${galleryImages[0].url} 1200w
+                `}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 40vw"
                 alt={galleryImages[0].caption}
                 className="rounded-2xl shadow-2xl w-full h-96 object-cover"
                 loading="eager" // Eagerly load this above-the-fold image
+                width="800"
+                height="384"
               />
               <div className="absolute bottom-4 left-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-3">
                 <p className="text-white text-center">{galleryImages[0].caption}</p>
@@ -280,24 +288,37 @@ const EventsPage = () => {
         {activeTab === 'gallery' && (
           <div className="animate-fade-in">
             <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('events.gallery.experience_gallery', 'Experience Gallery')}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {galleryImages.map((image, index) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {galleryImages.map((image, index) => {
+                // Create srcset variations
+                const baseUrl = image.url;
+                
+                return (
                 <div
                   key={index}
-                  className="relative group cursor-pointer overflow-hidden rounded-xl"
+                  className="relative group cursor-pointer overflow-hidden rounded-xl aspect-square"
                   onClick={() => openGallery(index)}
                 >
                   <img
                     src={image.url}
+                    srcSet={`
+                      ${baseUrl}?width=400 400w,
+                      ${baseUrl}?width=600 600w, 
+                      ${baseUrl} 800w
+                    `}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     alt={image.caption}
-                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     loading="lazy"
+                    width="400"
+                    height="400"
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <p className="text-white font-semibold text-center px-4">{image.caption}</p>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Modal Overlay */}
@@ -312,8 +333,15 @@ const EventsPage = () => {
                 >
                   <img
                     src={galleryImages[selectedImage].url}
+                    srcSet={`
+                      ${galleryImages[selectedImage].url}?width=800 800w,
+                      ${galleryImages[selectedImage].url}?width=1200 1200w,
+                      ${galleryImages[selectedImage].url}?width=2000 2000w
+                    `}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1536px) 80vw, 1200px"
                     alt={galleryImages[selectedImage].caption}
                     className="w-full max-h-[80vh] object-contain rounded-lg"
+                    loading="eager"
                   />
                   <p className="text-center text-white mt-2">{galleryImages[selectedImage].caption}</p>
                   <button
@@ -397,9 +425,17 @@ const EventsPage = () => {
               <div className="relative rounded-2xl shadow-2xl overflow-hidden">
                 <img
                   src="https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif"
+                  srcSet="
+                    https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif?width=800 800w,
+                    https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif?width=1200 1200w,
+                    https://i.postimg.cc/4yPg3hqp/temp-Image-Awvj-Tb.avif 1600w
+                  "
+                  sizes="(max-width: 768px) 100vw, 1200px"
                   alt={t('events.equipment.professional_j70_yacht', 'Professional J-70/J-80 Racing Yacht')}
                   className="w-full h-96 object-cover"
                   loading="lazy"
+                  width="1200"
+                  height="384"
                 />
                 <div className="absolute bottom-4 left-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-4">
                   <p className="text-white text-center font-semibold">{t('events.equipment.professional_j70_yacht', 'Professional J-70/J-80 Racing Yacht')}</p>

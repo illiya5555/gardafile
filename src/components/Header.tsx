@@ -41,9 +41,17 @@ const Header = () => {
             <div className="relative">
               <img
                 src="https://i.postimg.cc/KcTTLWRR/gardalogo.png"
+                srcSet="
+                  https://i.postimg.cc/KcTTLWRR/gardalogo.png?width=64 64w,
+                  https://i.postimg.cc/KcTTLWRR/gardalogo.png 128w,
+                  https://i.postimg.cc/KcTTLWRR/gardalogo.png?width=256 256w
+                "
+                sizes="(max-width: 640px) 48px, 64px"
                 alt={t("header.logo.title", "Garda Racing Yacht Club")}
                 className="h-12 w-12 md:h-16 md:w-16 object-contain group-hover:scale-110 transition-transform duration-300"
                 loading="eager"
+                width="64"
+                height="64"
               />
               <div className="absolute -top-1 -right-1 w-3 h-3 md:w-3.5 md:h-3.5 bg-yellow-400 rounded-full animate-pulse"></div>
             </div>

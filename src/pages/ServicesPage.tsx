@@ -221,6 +221,34 @@ const ServicesPage = () => {
                   className="h-48 md:h-64 bg-cover bg-center relative transition-transform duration-500 group-hover:scale-105"
                   style={{ backgroundImage: 'url(https://i.postimg.cc/JhjJ21S9/Boas-1775.jpg)' }}
                 >
+                  {/* Use picture element to provide different formats and sizes */}
+                  <picture>
+                    {/* WebP format for better compression */}
+                    <source 
+                      type="image/webp"
+                      srcSet="
+                        https://i.postimg.cc/JhjJ21S9/Boas-1775.jpg?format=webp&width=480 480w,
+                        https://i.postimg.cc/JhjJ21S9/Boas-1775.jpg?format=webp&width=800 800w,
+                        https://i.postimg.cc/JhjJ21S9/Boas-1775.jpg?format=webp&width=1200 1200w
+                      "
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                    {/* Fallback JPEG */}
+                    <img 
+                      src="https://i.postimg.cc/JhjJ21S9/Boas-1775.jpg" 
+                      srcSet="
+                        https://i.postimg.cc/JhjJ21S9/Boas-1775.jpg?width=480 480w,
+                        https://i.postimg.cc/JhjJ21S9/Boas-1775.jpg?width=800 800w,
+                        https://i.postimg.cc/JhjJ21S9/Boas-1775.jpg?width=1200 1200w
+                      "
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      alt="Corporate sailing regatta"
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      width="800"
+                      height="400"
+                    />
+                  </picture>
                 </div>
               </Link>
               <div className="p-4 md:p-6 bg-white flex-1 flex flex-col">
@@ -249,6 +277,32 @@ const ServicesPage = () => {
                   className="h-48 md:h-64 bg-cover bg-center relative transition-transform duration-500 group-hover:scale-105"
                   style={{ backgroundImage: 'url(https://i.postimg.cc/1XvDrJbX/image.png)' }}
                 >
+                  {/* Use picture element for gift certificates image */}
+                  <picture>
+                    <source 
+                      type="image/webp"
+                      srcSet="
+                        https://i.postimg.cc/1XvDrJbX/image.png?format=webp&width=480 480w,
+                        https://i.postimg.cc/1XvDrJbX/image.png?format=webp&width=800 800w,
+                        https://i.postimg.cc/1XvDrJbX/image.png?format=webp&width=1200 1200w
+                      "
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                    <img 
+                      src="https://i.postimg.cc/1XvDrJbX/image.png" 
+                      srcSet="
+                        https://i.postimg.cc/1XvDrJbX/image.png?width=480 480w,
+                        https://i.postimg.cc/1XvDrJbX/image.png?width=800 800w,
+                        https://i.postimg.cc/1XvDrJbX/image.png?width=1200 1200w
+                      "
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      alt="Gift certificates"
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      width="800"
+                      height="400"
+                    />
+                  </picture>
                 </div>
               </Link>
               <div className="p-4 md:p-6 bg-white flex-1 flex flex-col">

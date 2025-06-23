@@ -193,12 +193,17 @@ const HomePage = () => {
       {/* Превью изображение */}
       <img
         src="https://i.postimg.cc/BvWwxhwm/logogarda.webp"
+        srcSet="https://i.postimg.cc/BvWwxhwm/logogarda.webp 800w,
+                https://i.postimg.cc/BvWwxhwm/logogarda.webp?width=1200 1200w,
+                https://i.postimg.cc/BvWwxhwm/logogarda.webp?width=2000 2000w"
+        sizes="100vw"
         alt="Lake Garda Sailing"
         className="absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-500"
         style={{
           zIndex: 25,
           opacity: showPlaceholder ? 1 : 0,
         }}
+        loading="eager"
       />
 
       {/* 🔥 Синяя дымка поверх изображения (zIndex выше) */}
@@ -368,17 +373,30 @@ const HomePage = () => {
             <div className="relative">
               {/* Auto-rotating experience images */}
               <div className="relative rounded-2xl shadow-2xl overflow-hidden">
-                {experienceImages.map((image, index) => (
-                  <img
-                    key={index}
-                    src={image}
-                    alt={`Yacht racing experience ${index + 1}`}
-                    className={`w-full h-96 object-cover transition-opacity duration-1000 ${
-                      index === experienceImageIndex ? 'opacity-100' : 'opacity-0 absolute inset-0'
-                    }`}
-                    loading="lazy"
-                  />
-                ))}
+                {experienceImages.map((image, index) => {
+                  const imageUrl = new URL(image);
+                  // Generate srcset variations
+                  const srcSet = [
+                    `${imageUrl.href} 800w`,
+                    `${imageUrl.href}?width=500 500w`,
+                    `${imageUrl.href}?width=800 800w`,
+                    `${imageUrl.href}?width=1200 1200w`
+                  ].join(', ');
+                  
+                  return (
+                    <img
+                      key={index}
+                      src={image}
+                      srcSet={srcSet}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      alt={`Yacht racing experience ${index + 1}`}
+                      className={`w-full h-96 object-cover transition-opacity duration-1000 ${
+                        index === experienceImageIndex ? 'opacity-100' : 'opacity-0 absolute inset-0'
+                      }`}
+                      loading={index === 0 ? "eager" : "lazy"}
+                    />
+                  );
+                })}
               </div>
               
               {/* Image indicators */}
@@ -431,9 +449,17 @@ const HomePage = () => {
                   {testimonial.image_url && (
                     <img
                       src={testimonial.image_url}
+                      srcSet={`
+                        ${testimonial.image_url.replace('w=150', 'w=100')} 100w,
+                        ${testimonial.image_url} 150w,
+                        ${testimonial.image_url.replace('w=150', 'w=200')} 200w
+                      `}
+                      sizes="(max-width: 640px) 60px, 80px"
                       alt={testimonial.name}
                       className="w-12 h-12 rounded-full object-cover"
                       loading="lazy"
+                      width="48"
+                      height="48"
                     />
                   )}
                   <div>
@@ -519,20 +545,32 @@ const HomePage = () => {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-            {partners.map((partner, index) => (
+            {partners.map((partner, index) => {
+              // Create base URL for manipulating image sizes
+              const baseUrl = partner.logo.split('?')[0];
+              
+              return (
               <div key={index} className="group text-center">
                 <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 group-hover:scale-105">
                   <img
                     src={partner.logo}
-                    alt={partner.name}
-                    className="w-full h-16 object-cover rounded-lg mb-4 grayscale group-hover:grayscale-0 transition-all duration-300" 
+                    srcSet={`
+                      ${baseUrl}?auto=compress&cs=tinysrgb&w=100&h=50&fit=crop 100w,
+                      ${baseUrl}?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop 200w,
+                      ${baseUrl}?auto=compress&cs=tinysrgb&w=300&h=150&fit=crop 300w
+                    `}
+                    sizes="(max-width: 640px) 40vw, (max-width: 1024px) 25vw, 16vw"
+                    alt={t(`home.partners.${partner.name.toLowerCase().replace(/\s+/g, '_')}.name`, partner.name)}
+                    className="w-full h-16 object-cover rounded-lg mb-4 grayscale group-hover:grayscale-0 transition-all duration-300"
                     loading="lazy"
+                    width="200"
+                    height="100"
                   />
                   <h3 className="font-semibold text-gray-900 mb-1">{t(`home.partners.${partner.name.toLowerCase().replace(/\s+/g, '_')}.name`, partner.name)}</h3>
                   <p className="text-sm text-gray-600">{t(`home.partners.${partner.name.toLowerCase().replace(/\s+/g, '_')}.description`, partner.description)}</p>
                 </div>
               </div>
-            ))}
+            )})}
           </div>
 
           <div className="mt-12 text-center">

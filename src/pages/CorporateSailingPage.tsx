@@ -113,9 +113,17 @@ const CorporateSailingPage = () => {
             <div className="rounded-2xl overflow-hidden shadow-2xl mb-12 max-w-4xl mx-auto">
               <img 
                 src="https://images.pexels.com/photos/273886/pexels-photo-273886.jpeg" 
+                srcSet="
+                  https://images.pexels.com/photos/273886/pexels-photo-273886.jpeg?auto=compress&cs=tinysrgb&w=800 800w,
+                  https://images.pexels.com/photos/273886/pexels-photo-273886.jpeg?auto=compress&cs=tinysrgb&w=1200 1200w,
+                  https://images.pexels.com/photos/273886/pexels-photo-273886.jpeg?auto=compress&cs=tinysrgb&w=2000 2000w
+                "
+                sizes="(max-width: 640px) 90vw, (max-width: 1024px) 75vw, 900px"
                 alt={t('corporate.teambuilding.image_alt', 'Team on a yacht')}
                 className="w-full h-[300px] md:h-[500px] object-cover" 
                 loading="lazy"
+                width="900"
+                height="500"
               />
             </div>
           </div>
@@ -225,6 +233,7 @@ const CorporateSailingPage = () => {
                   placeholder={t('corporate.inquiry.form.name', 'Name')}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   required
+                  aria-label="Name"
                 />
               </div>
               
@@ -234,6 +243,7 @@ const CorporateSailingPage = () => {
                   placeholder={t('corporate.inquiry.form.phone', 'Phone')}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   required
+                  aria-label="Phone"
                 />
               </div>
               
@@ -242,6 +252,7 @@ const CorporateSailingPage = () => {
                   type="text" 
                   placeholder={t('corporate.inquiry.form.company', 'Company')}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  aria-label="Company"
                 />
               </div>
               
@@ -250,6 +261,7 @@ const CorporateSailingPage = () => {
                   type="number" 
                   placeholder={t('corporate.inquiry.form.participants', 'Number of participants')}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  aria-label="Number of participants"
                 />
               </div>
               

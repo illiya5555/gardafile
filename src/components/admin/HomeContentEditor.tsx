@@ -158,7 +158,7 @@ const HomeContentEditor = () => {
       textColor: '#1f2937',
       features: [
         'Professional Skipper - Expert guidance from certified sailing professionals',
-        'Racing Experience - Authentic yacht racing with medals and certificates', 
+        'Racing Experience - Authentic yacht racing with medals', 
         'Photo & Video - Professional documentation of your sailing adventure',
         'Fully Insured - Complete safety coverage and premium equipment'
       ],

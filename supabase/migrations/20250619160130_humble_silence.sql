@@ -68,12 +68,12 @@ INSERT INTO public.translations (key, language_code, text, category) VALUES
 ('home.hero.title_part2', 'es', 'Regatas de Vela', 'home'),
 ('home.hero.title_part2', 'ru', 'Парусных Гонок', 'home'),
 
-('home.hero.subtitle', 'en', 'Daily yacht racing experiences in world-famous Lake Garda with professional skippers, racing medals, and unforgettable memories'),
-('home.hero.subtitle', 'it', 'Esperienze quotidiane di regata sul famoso Lago di Garda con skipper professionali, medaglie di gara e ricordi indimenticabili', 'home'),
-('home.hero.subtitle', 'de', 'Tägliche Yacht-Rennerlebnisse am weltberühmten Gardasee mit professionellen Skippern, Rennmedaillen und unvergesslichen Erinnerungen', 'home'),
-('home.hero.subtitle', 'fr', 'Expériences quotidiennes de course de voiliers sur le célèbre lac de Garde avec des skippers professionnels, des médailles de course et des souvenirs inoubliables', 'home'),
-('home.hero.subtitle', 'es', 'Experiencias diarias de regatas en el famoso Lago de Garda con patrones profesionales, medallas de regata y recuerdos inolvidables', 'home'),
-('home.hero.subtitle', 'ru', 'Ежедневные парусные гонки на знаменитом озере Гарда с профессиональными шкиперами, медалями и незабываемыми воспоминаниями', 'home'),
+('home.hero.subtitle', 'en', 'Daily yacht racing experiences in world-famous Lake Garda with professional skippers and unforgettable memories', 'home'),
+    ('home.hero.subtitle', 'it', 'Esperienze quotidiane di regate sul famoso Lago di Garda con skipper professionali e ricordi indimenticabili', 'home'),
+    ('home.hero.subtitle', 'de', 'Tägliche Yacht-Rennerlebnisse am weltberühmten Gardasee mit professionellen Skippern und unvergesslichen Erinnerungen', 'home'),
+    ('home.hero.subtitle', 'fr', 'Expériences quotidiennes de course de voiliers sur le célèbre lac de Garde avec des skippers professionnels et des souvenirs inoubliables', 'home'),
+    ('home.hero.subtitle', 'es', 'Experiencias diarias de regatas en el famoso Lago de Garda con patrones profesionales e recuerdos inolvidables', 'home'),
+    ('home.hero.subtitle', 'ru', 'Ежедневные парусные гонки на знаменитом озере Гарда с профессиональными шкиперами и незабываемыми воспоминаниями', 'home')
 
 -- Booking page translations
 ('booking.title', 'en', 'Book Your Regatta Experience', 'booking'),

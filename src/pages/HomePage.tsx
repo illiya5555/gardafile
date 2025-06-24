@@ -157,7 +157,7 @@ const HomePage = () => {
         {/* ИЗМЕНЕНО: Оптимизированный контейнер для фонового видео */}
         <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-none">
           <iframe
-            src="https://player.vimeo.com/video/109445548?h=dee6f219c4&badge=0&autopause=0&player_id=0&app_id=58479&background=1&loop=1&autoplay=1&muted=1"
+            src="https://player.vimeo.com/video/1094455548?h=dee6f219c4&badge=0&autopause=0&player_id=0&app_id=58479&background=1&loop=1&autoplay=1&muted=1"
             frameBorder="0"
             allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
             // Классы для адаптивного "покрытия" фона

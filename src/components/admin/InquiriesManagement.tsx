@@ -40,11 +40,9 @@ const InquiriesManagement = () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from('corporate_inquiries')
-        .select(`
-          *,
-          corporate_packages(name)
-        `)
+        .from('inquiries')
+        .select('*, corporate_packages:package_id(name)')
+        .eq('type', 'corporate')
         .order(sortBy, { ascending: sortOrder === 'asc' });
 
       if (error) throw error;
@@ -101,7 +99,7 @@ const InquiriesManagement = () => {
   const updateInquiryStatus = async (inquiryId: string, newStatus: string) => {
     try {
       const { error } = await supabase
-        .from('corporate_inquiries')
+        .from('inquiries')
         .update({ status: newStatus })
         .eq('id', inquiryId);
 

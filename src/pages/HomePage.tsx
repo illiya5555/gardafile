@@ -142,15 +142,22 @@ const HomePage = () => {
   ];
 
   const partners = [
-    {{
-  name: "Fraglia Vela Riva",
-  logoUrl: "https://i.postimg.cc/RqxZCmxC/2025-06-24-17-44-12.png",
-  websiteUrl: "https://www.fragliavelariva.it/", // Пример ссылки на сайт партнера
-  altText: "Логотип Fraglia Vela Riva",
-  description: "Premium yacht manufacturer"
-    },
-    // ... остальной код партнеров
-  ];
+  {
+    name: "Fraglia Vela Riva",
+    logoUrl: "https://i.postimg.cc/RqxZCmxC/2025-06-24-17-44-12.png",
+    websiteUrl: "https://www.fragliavelariva.it/",
+  }, // <-- Запятая между элементами массива
+  {
+    name: "Jboats",
+    logoUrl: "https://адрес_логотипа_jboats.png",
+    websiteUrl: "https://www.jboats.com/",
+  },
+  {
+    name: "START CUP",
+    logoUrl: "https://адрес_логотипа_startcup.png",
+    websiteUrl: "https://ссылка_на_сайт_startcup.com/",
+  }
+];
 
   return (
     <div className="overflow-hidden">

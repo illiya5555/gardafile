@@ -442,22 +442,25 @@ INSERT INTO translations (key, language_code, text, category) VALUES
 ('events.faq.frequently_asked', 'ru', 'Часто задаваемые вопросы', 'events_page'),
 ('events.faq.frequently_asked', 'he', 'שאלות נפוצות', 'events_page'),
 
-('events.faq.sailing_experience', 'es', '¿Necesito experiencia en navegación?', 'events_page'),
-('events.faq.sailing_experience', 'it', 'Ho bisogno di esperienza di vela?', 'events_page'),
-('events.faq.sailing_experience', 'fr', 'Ai-je besoin d''une expérience en voile?', 'events_page'),
-('events.faq.sailing_experience', 'de', 'Benötige ich Segelerfahrung?', 'events_page'),
-('events.faq.sailing_experience', 'pl', 'Czy potrzebuję doświadczenia żeglarskiego?', 'events_page'),
-('events.faq.sailing_experience', 'ru', 'Нужен ли мне опыт в парусном спорте?', 'events_page'),
-('events.faq.sailing_experience', 'he', 'האם אני צריך ניסיון בשיט?', 'events_page'),
+# --- Questions --- "Do I need experience?"
+('events.faq.sailing_experience', 'es', '¿Necesito experiencia?', 'events_page'),
+('events.faq.sailing_experience', 'it', 'Serve esperienza?', 'events_page'),
+('events.faq.sailing_experience', 'fr', 'Faut-il de l\'expérience ?', 'events_page'),
+('events.faq.sailing_experience', 'de', 'Brauche ich Erfahrung?', 'events_page'),
+('events.faq.sailing_experience', 'pl', 'Czy potrzebne jest doświadczenie?', 'events_page'),
+('events.faq.sailing_experience', 'ru', 'Нужен ли опыт?', 'events_page'),
+('events.faq.sailing_experience', 'he', 'צריך ניסיון קודם?', 'events_page'),
 
-('events.faq.sailing_experience_answer', 'es', '¡No se requiere experiencia en navegación! Nuestros patrones profesionales te enseñarán todo lo que necesitas saber. Damos la bienvenida tanto a principiantes completos como a navegantes experimentados.', 'events_page'),
-('events.faq.sailing_experience_answer', 'it', 'Non è richiesta alcuna esperienza di vela! I nostri skipper professionisti ti insegneranno tutto ciò che devi sapere. Diamo il benvenuto sia ai principianti assoluti che ai velisti esperti.', 'events_page'),
-('events.faq.sailing_experience_answer', 'fr', 'Aucune expérience de voile n''est requise! Nos skippers professionnels vous apprendront tout ce que vous devez savoir. Nous accueillons aussi bien les débutants complets que les marins expérimentés.', 'events_page'),
-('events.faq.sailing_experience_answer', 'de', 'Es ist keine Segelerfahrung erforderlich! Unsere professionellen Skipper bringen Ihnen alles bei, was Sie wissen müssen. Wir heißen sowohl absolute Anfänger als auch erfahrene Segler willkommen.', 'events_page'),
-('events.faq.sailing_experience_answer', 'pl', 'Doświadczenie żeglarskie nie jest wymagane! Nasi profesjonalni skipperzy nauczą Cię wszystkiego, co musisz wiedzieć. Witamy zarówno całkowitych początkujących, jak i doświadczonych żeglarzy.', 'events_page'),
-('events.faq.sailing_experience_answer', 'ru', 'Опыт в парусном спорте не требуется! Наши профессиональные шкиперы научат вас всему, что вам нужно знать. Мы приветствуем как абсолютных новичков, так и опытных моряков.', 'events_page'),
-('events.faq.sailing_experience_answer', 'he', 'לא נדרש ניסיון בשיט! הסקיפרים המקצועיים שלנו ילמדו אותך כל מה שאתה צריך לדעת. אנחנו מקבלים בברכה הן מתחילים מוחלטים והן ימאים מנוסים.', 'events_page'),
-
+# --- Answers --- "No experience required! Our professional skippers will teach you everything you need to know. We welcome both beginners and experienced sailors."
+  
+('events.faq.sailing_experience_answer', 'es', '¡No se necesita experiencia! Nuestros patrones profesionales te enseñarán todo lo que necesitas saber. Son bienvenidos tanto principiantes como navegantes con experiencia.', 'events_page'),
+('events.faq.sailing_experience_answer', 'it', 'Nessuna esperienza richiesta! I nostri skipper professionisti ti insegneranno tutto ciò che c\'è da sapere. Diamo il benvenuto sia a principianti che a velisti esperti.', 'events_page'),
+('events.faq.sailing_experience_answer', 'fr', 'Aucune expérience n\'est requise ! Nos skippers professionnels vous apprendront tout ce que vous devez savoir. Bienvenue aux débutants comme aux navigateurs expérimentés.', 'events_page'),
+('events.faq.sailing_experience_answer', 'de', 'Keine Erfahrung erforderlich! Unsere professionellen Skipper bringen Ihnen alles bei, was Sie wissen müssen. Anfänger und erfahrene Segler sind bei uns herzlich willkommen.', 'events_page'),
+('events.faq.sailing_experience_answer', 'pl', 'Doświadczenie nie jest wymagane! Nasi profesjonalni skipperzy nauczą Cię wszystkiego, co musisz wiedzieć. Zapraszamy zarówno początkujących, jak i doświadczonych żeglarzy.', 'events_page'),
+('events.faq.sailing_experience_answer', 'ru', 'Опыт не требуется! Наши профессиональные шкиперы научат вас всему необходимому. Мы рады как новичкам, так и опытным яхтсменам.', 'events_page'),
+('events.faq.sailing_experience_answer', 'he', 'אין צורך בניסיון! הסקיפרים המקצועיים שלנו ילמדו אתכם כל מה שצריך לדעת. אנו מקבלים בברכה מתחילים ושייטים מנוסים כאחד.', 'events_page'),
+  
 ('events.faq.what_to_bring', 'es', '¿Qué debo traer?', 'events_page'),
 ('events.faq.what_to_bring', 'it', 'Cosa dovrei portare?', 'events_page'),
 ('events.faq.what_to_bring', 'fr', 'Que dois-je apporter?', 'events_page'),

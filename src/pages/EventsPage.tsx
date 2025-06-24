@@ -188,7 +188,6 @@ const EventsPage = () => {
                     </div>
                     <div>
                       <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('events.overview.professional_instruction', 'Сertified sailing professionals with years of racing experience on Lake Garda.')}</h3>
-                      <p className="text-gray-600">{t('events.overview.professional_instruction_desc', '  )}</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">

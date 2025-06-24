@@ -1,4 +1,3 @@
-
 // --- Функция: stripe-webhook ---
 // Назначение: Получает события от Stripe (например, об успешной оплате),
 // обновляет базу данных и отправляет email с подтверждением.
@@ -16,7 +15,6 @@ const corsHeaders = {
 
 // --- Главная функция-обработчик ---
 serve(async (req) => {
-  // Вебхуки Stripe не требуют CORS, но для единообразия оставим заголовки
   const handleResponse = (body: object, status: number) => {
     return new Response(JSON.stringify(body, null, 2), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   };
@@ -24,9 +22,9 @@ serve(async (req) => {
   try {
     // 1. Получение секретов из окружения
     const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
-    const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET'); // Важно! Этот секрет дает Stripe.
+    const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET');
     const supabaseUrl = Deno.env.get('PROJECT_URL');
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'); // Используем Service Key для полных прав
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
     if (!stripeSecretKey || !webhookSecret || !supabaseUrl || !supabaseServiceKey) {
       console.error('Missing required environment variables for webhook.');
@@ -71,35 +69,29 @@ serve(async (req) => {
 
           if (bookingError) {
             console.error(`Failed to update booking ${session.metadata.booking_id}`, bookingError);
-            // Не прерываем выполнение, т.к. запись о платеже важнее
           } else {
             console.log(`Booking ${session.metadata.booking_id} status updated to confirmed.`);
             // Здесь можно добавить логику отправки email
           }
         }
         
-        // Создаем запись о платеже в таблице 'payments'
-        const { error: paymentError } = await supabase
+        // Создаем или обновляем запись о платеже в таблице 'payments'
+        const { data: paymentData, error: paymentError } = await supabase
           .from('payments')
-          .update({
+          .upsert({
               status: 'completed',
               provider_payment_id: session.payment_intent as string,
-              completed_at: new Date().toISOString()
-          })
-          .eq('metadata->>checkout_session_id', session.id); // Находим предсозданную запись
+              completed_at: new Date().toISOString(),
+              metadata: { checkout_session_id: session.id } // Сохраняем идентификатор сессии
+          }, { onConflict: ['metadata->>checkout_session_id'] }); // Указываем, что это уникальный ключ
 
         if (paymentError) {
-            console.error(`Failed to update payment record for session ${session.id}`, paymentError);
+            console.error(`Failed to create/update payment record for session ${session.id}`, paymentError);
         } else {
-            console.log(`Payment record for session ${session.id} updated.`);
+            console.log(`Payment record for session ${session.id} updated/created.`);
         }
         break;
 
-      // Можно добавить обработчики для других событий (подписки, возвраты и т.д.)
-      // case 'customer.subscription.created':
-      //   // ...
-      //   break;
-        
       default:
         console.log(`Unhandled event type: ${event.type}`);
     }

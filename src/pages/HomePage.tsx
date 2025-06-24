@@ -144,7 +144,8 @@ const HomePage = () => {
   const partners = [
     {
       name: "Fraglia Vela Riva",
-      logo: "https://i.postimg.cc/RqxZCmxC/2025-06-24-17-44-12.png?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop",
+      logo: "<a href="https://postimages.org/" target="_blank"><img src="https://i.postimg.cc/RqxZCmxC/2025-06-24-17-44-12.png" alt="2025-06-24-17-44-12"/></a><br/><br/>
+",
       description: "Premium yacht manufacturer",
     },
     // ... остальной код партнеров

@@ -129,7 +129,7 @@ const BookingCalendarPage = () => {
 
       // Create booking object with all required fields for reservations table
       const booking = {
-        type: 'regular',
+        booking_type: 'sailing',
         booking_date: selectedDate,
         time_slot: selectedTime,
         participants: participants,
@@ -144,9 +144,9 @@ const BookingCalendarPage = () => {
 
       console.log('Submitting booking:', booking);
 
-      // Save to database using the correct reservations table
+      // Save to database using the correct bookings table
       const { data, error } = await supabase
-        .from('reservations')
+        .from('bookings')
         .insert(booking)
         .select()
         .single();

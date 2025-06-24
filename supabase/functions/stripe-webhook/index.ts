@@ -136,7 +136,7 @@ async function handleCheckoutSessionCompleted(
   // Update booking status if booking_id is present in metadata
   if (session.metadata?.booking_id) {
     try {
-      console.log('Updating booking status for booking ID:', session.metadata.booking_id)
+      console.log('Updating booking status for booking ID:', session.metadata.booking_id);
       
       const { data: bookingData, error: bookingError } = await supabase
         .from('bookings')
@@ -175,26 +175,30 @@ async function handleCheckoutSessionCompleted(
 
   if (session.mode === 'payment') {
     // Handle one-time payment
+    console.log('Creating payment record for one-time payment:', session.id);
+    
     const { error } = await supabase
       .from('payments')
       .insert([{
+        booking_id: session.metadata?.booking_id || null,
+        user_id: session.metadata?.user_id !== 'guest' ? session.metadata?.user_id : null,
         type: 'order',
         provider: 'stripe',
         provider_payment_id: session.payment_intent as string,
         provider_customer_id: session.customer as string,
-        amount: (session.amount_total || 0) / 100, // Convert from cents
+        amount: ((session.amount_total || 0) / 100), // Convert from cents to whole currency units
         currency: session.currency || 'eur',
         status: 'completed',
         metadata: {
           checkout_session_id: session.id,
+          payment_status: session.payment_status,
           amount_subtotal: session.amount_subtotal,
         },
-        booking_id: session.metadata?.booking_id || null,
         completed_at: new Date().toISOString()
       }])
 
     if (error) {
-      console.error('Error inserting order:', error)
+      console.error('Error creating payment record:', error)
       throw error
     }
   } else if (session.mode === 'subscription') {

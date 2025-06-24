@@ -93,12 +93,15 @@ serve(async (req) => {
       )
     }
 
+    // Extract booking_id from metadata if it exists
+    const bookingId = metadata.booking_id || null;
+    
     let customerId;
 
     // Handle authenticated vs. non-authenticated users differently
     if (user) {
       // Authenticated user - check if customer exists in database
-      let { data: customerData, error: fetchError } = await supabaseClient
+      const { data: customerData, error: fetchError } = await supabaseClient
         .from('stripe_customers')
         .select('customer_id')
         .eq('user_id', user.id)
@@ -108,11 +111,23 @@ serve(async (req) => {
         console.error('Error fetching customer data:', fetchError);
       }
       
-      console.log('Booking ID present in session metadata:', bookingId);
+      if (customerData?.customer_id) {
+        // Customer exists, use existing customer ID
+        customerId = customerData.customer_id;
+        console.log('Using existing Stripe customer ID for user:', user.id);
+      } else {
+        // Create new customer in Stripe
+        console.log('Creating new Stripe customer for user:', user.id);
+        const stripeCustomer = await stripe.customers.create({
+          email: user.email,
+          metadata: {
+            supabase_user_id: user.id,
+          },
+        });
 
         customerId = stripeCustomer.id;
 
-        // Save customer to our database using upsert to handle duplicates
+        // Save customer to our database
         const { error: upsertError } = await supabaseClient
           .from('stripe_customers')
           .upsert({
@@ -135,6 +150,7 @@ serve(async (req) => {
             }
           )
         }
+      }
     } else {
       // Non-authenticated user - create a temporary Stripe customer using email from metadata
       if (!metadata.customer_email) {
@@ -147,6 +163,7 @@ serve(async (req) => {
         )
       }
 
+      console.log('Creating new Stripe customer for guest user with email:', metadata.customer_email);
       const stripeCustomer = await stripe.customers.create({
         email: metadata.customer_email,
         name: metadata.customer_name || undefined,
@@ -157,9 +174,27 @@ serve(async (req) => {
 
       customerId = stripeCustomer.id;
     }
-
-    // Extract booking_id from metadata if it exists
-    const bookingId = metadata.booking_id || null;
+    
+    // Check if customerId is set, which it should be at this point
+    if (!customerId) {
+      console.error('Customer ID is undefined after processing');
+      return new Response(
+        JSON.stringify({ error: 'Failed to create or retrieve customer' }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 500,
+        }
+      )
+    }
+    
+    console.log('Using customer ID for checkout:', customerId);
+    
+    if (bookingId) {
+      console.log('Booking ID present in session metadata:', bookingId);
+    }
+    
+    // Remove booking_id from metadata to avoid duplication
+    const { booking_id, ...stripeMetadata } = metadata;
     
     // Create checkout session
     const session = await stripe.checkout.sessions.create({
@@ -177,9 +212,40 @@ serve(async (req) => {
       metadata: {
         booking_id: bookingId,
         user_id: user?.id || 'guest',
-        ...metadata
+        ...stripeMetadata
       },
     });
+
+    // If booking ID is present, save it in payments for easy reference
+    if (bookingId) {
+      try {
+        const { error: preCreateError } = await supabaseClient
+          .from('payments')
+          .insert([{
+            booking_id: bookingId,
+            user_id: user?.id || null,
+            type: 'order',
+            provider: 'stripe',
+            provider_payment_id: session.payment_intent as string || 'pending',
+            provider_customer_id: customerId,
+            amount: ((session.amount_total || 0) / 100), // Convert from cents
+            currency: session.currency || 'EUR',
+            status: 'pending',
+            metadata: {
+              checkout_session_id: session.id,
+              payment_status: session.payment_status || 'unpaid'
+            }
+          }]);
+          
+        if (preCreateError) {
+          console.warn('Could not pre-create payment record:', preCreateError);
+          // Continue anyway - this is not critical
+        }
+      } catch (paymentError) {
+        console.warn('Error creating payment record:', paymentError);
+        // Continue with checkout - payment record will be created by webhook
+      }
+    }
 
     // Track Google Ads begin_checkout event
     console.log('Tracking begin_checkout event for Google Ads');

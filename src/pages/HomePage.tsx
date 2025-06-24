@@ -143,7 +143,7 @@ const HomePage = () => {
 
   const partners = [
     {
-      name: "Bavaria Yachts",
+      name: "Fraglia Vela Riva",
       logo: "https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop",
       description: "Premium yacht manufacturer",
     },

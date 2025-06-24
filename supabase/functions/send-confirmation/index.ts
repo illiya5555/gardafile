@@ -56,12 +56,12 @@ serve(async (req) => {
     
     // Retrieve booking details
     const { data: booking, error: bookingError } = await supabase
-      .from('reservations')
+      .from('bookings')
       .select(`
         *,
         customer_name,
         customer_email,
-        booking_date,
+        date,
         time_slot,
         participants,
         total_price,
@@ -102,7 +102,7 @@ serve(async (req) => {
     });
     
     // Format date for display
-    const bookingDate = new Date(booking.booking_date).toLocaleDateString('ru-RU', {
+    const bookingDate = new Date(booking.date).toLocaleDateString('ru-RU', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric'
@@ -287,7 +287,7 @@ serve(async (req) => {
     // Update email_sent flag for confirmation emails
     if (type === 'booking_confirmation') {
       await supabase
-        .from('reservations')
+        .from('bookings')
         .update({ email_sent: true })
         .eq('id', bookingId);
     }

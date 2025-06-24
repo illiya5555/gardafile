@@ -33,7 +33,7 @@ const EventsPage = () => {
     { time: "13:30", activity: t("events.schedule.safety_briefing", "Safety Briefing"), description: t("events.schedule.safety_briefing_desc", "Essential safety procedures and equipment overview") },
     { time: "14:00", activity: t("events.schedule.sailing_basics", "Sailing Basics"), description: t("events.schedule.sailing_basics_desc", "Learn fundamental sailing techniques") },
     { time: "14:30", activity: t("events.schedule.first_race", "First Race"), description: t("events.schedule.first_race_desc", "Practice race to get comfortable") },
-    { time: "18:00", activity: t("events.schedule.medal_ceremony_award", "Medal Ceremony"), description: t("events.schedule.medal_ceremony_desc", "Awards and certificate presentation") },
+    { time: "18:00", activity: t("events.schedule.medal_ceremony_award", "Medal Ceremony"), description: t("events.schedule.medal_ceremony_desc", "Awards presentation") },
     { time: "18:00", activity: t("events.schedule.photo_session", "Photo Session"), description: t("events.schedule.photo_session_desc", "Professional photos with your medals") }
   ];
 

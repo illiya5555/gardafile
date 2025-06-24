@@ -229,7 +229,7 @@ const EventsPage = () => {
                     </li>
                     <li className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-green-500" />
-                      <span className="text-gray-700">{t('events.overview.medal_ceremony_certificates', 'Medal ceremony and certificates for top crews')}</span>
+                      <span className="text-gray-700">{t('events.overview.medal_ceremony_certificates', 'Medal ceremony for top crews')}</span>
                     </li>
                   </ul>
                 </div>

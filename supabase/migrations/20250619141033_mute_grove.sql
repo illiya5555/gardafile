@@ -185,11 +185,11 @@ INSERT INTO public.translations (key, language_code, text, category) VALUES
 ('home.experience.step3.title', 'fr', 'Cérémonie de Remise des Médailles', 'homepage'),
 ('home.experience.step3.title', 'es', 'Ceremonia de Medallas', 'homepage'),
 
-('home.experience.step3.description', 'en', 'Celebrate your achievement with an official medal ceremony and receive your personalized racing certificate.', 'homepage'),
-('home.experience.step3.description', 'it', 'Festeggia il tuo successo con una cerimonia ufficiale di premiazione e ricevi il tuo certificato di gara personalizzato.', 'homepage'),
-('home.experience.step3.description', 'de', 'Feiern Sie Ihre Leistung mit einer offiziellen Siegerehrung und erhalten Sie Ihr personalisiertes Rennzertifikat.', 'homepage'),
-('home.experience.step3.description', 'fr', 'Célébrez votre réussite avec une cérémonie officielle de remise des médailles et recevez votre certificat de course personnalisé.', 'homepage'),
-('home.experience.step3.description', 'es', 'Celebra tu logro con una ceremonia oficial de medallas y recibe tu certificado de carrera personalizado.', 'homepage'),
+('home.experience.step3.description', 'en', 'Celebrate your achievement with an official medal.', 'homepage'),
+('home.experience.step3.description', 'it', 'Festeggia il tuo **traguardo** con una medaglia ufficiale.', 'homepage'),
+('home.experience.step3.description', 'de', 'Feiern Sie Ihre **Leistung** mit einer offiziellen Medaille.', 'homepage'),
+('home.experience.step3.description', 'fr', 'Célébrez votre **réussite** avec une médaille officielle.', 'homepage'),
+('home.experience.step3.description', 'es', 'Celebra tu **logro** con una medalla oficial.', 'homepage')
 
 ('home.experience.cta', 'en', 'Learn More About the Experience', 'homepage'),
 ('home.experience.cta', 'it', 'Scopri di Più sull''Esperienza', 'homepage'),

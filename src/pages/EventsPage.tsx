@@ -46,8 +46,8 @@ const EventsPage = () => {
 
   const faqs = [
     {
-      question: t("events.faq.sailing_experience", "Do I need sailing experience?"),
-      answer: t("events.faq.sailing_experience_answer", "No sailing experience is required! Our professional skippers will teach you everything you need to know. We welcome complete beginners and experienced sailors alike.")
+      question: t("events.faq.sailing_experience", "Do I need experience?"),
+      answer: t("events.faq.sailing_experience_answer", "No experience required! Our professional skippers will teach you everything you need to know. We welcome both beginners and experienced sailors.")
     },
     {
       question: t("events.faq.what_to_bring", "What should I bring?"),

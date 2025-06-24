@@ -81,7 +81,7 @@ const ClientsManagement = () => {
       
       // Build query for unified_customers table which has the aggregated stats
       let query = supabase
-        .from('unified_customers')
+        .from('users_core')
         .select('*');
       
       // Add search filter if present
@@ -117,7 +117,7 @@ const ClientsManagement = () => {
         last_name: customer.last_name || '',
         email: customer.email,
         phone: customer.phone,
-        client_category: 'regular', // Default category since unified_customers doesn't have this field
+        client_category: 'regular', // Default category 
         created_at: customer.created_at,
         updated_at: customer.updated_at,
         bookings_count: customer.total_bookings || 0,

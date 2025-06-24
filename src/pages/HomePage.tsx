@@ -91,7 +91,12 @@ const HomePage = () => {
   const fetchTestimonials = async () => {
     try {
       const { data, error, isOffline: offline } = await safeQuery(
-        () => supabase.from('testimonials').select('*').eq('is_featured', true).order('created_at', { ascending: false }).limit(3),
+        () => supabase
+          .from('testimonials')
+          .select('*')
+          .eq('is_featured', true)
+          .order('created_at', { ascending: false })
+          .limit(3),
         fallbackTestimonials
       );
       setIsOffline(offline);

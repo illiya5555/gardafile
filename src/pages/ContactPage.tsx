@@ -18,11 +18,39 @@ const ContactPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      const inquiry = {
+        type: 'contact',
+        status: 'new',
+        priority: 'normal',
+        customer_name: formData.name,
+        customer_email: formData.email,
+        customer_phone: formData.phone,
+        subject: 'Website Contact Form',
+        message: formData.message,
+        source: 'website'
+      };
+      
+      const { error } = await supabase
+        .from('inquiries')
+        .insert([inquiry]);
+        
+      if (error) throw error;
+      
+      // Success
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("There was an error submitting your form. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
     
-    setIsSubmitting(false);
-    setSubmitted(true);
+    // Simulate form submission
+    // await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // setIsSubmitting(false);
+    // setSubmitted(true);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

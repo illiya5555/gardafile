@@ -49,7 +49,7 @@ export const useAuthRole = (): UseAuthRoleReturn => {
         
         // Get user profile which contains role_id - use maybeSingle() to handle missing profiles
         const { data: profile, error: profileError } = await supabase
-          .from('profiles')
+          .from('users_core')
           .select('role_id')
           .eq('id', user.id)
           .maybeSingle();
@@ -83,7 +83,7 @@ export const useAuthRole = (): UseAuthRoleReturn => {
             
             // Create profile with the first available role using upsert to prevent conflicts
             const { error: createProfileError } = await supabase
-              .from('profiles')
+              .from('users_core')
               .upsert({
                 id: user.id,
                 email: user.email || '',
@@ -111,7 +111,7 @@ export const useAuthRole = (): UseAuthRoleReturn => {
           
           // Create profile with default 'client' role using upsert to prevent conflicts
           const { error: createProfileError } = await supabase
-            .from('profiles')
+            .from('users_core')
             .upsert({
               id: user.id,
               email: user.email || '',

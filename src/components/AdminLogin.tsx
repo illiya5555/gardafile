@@ -64,7 +64,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
       if (data.user) {
         // Check if user has admin or manager role
         const { data: profileData, error: profileError } = await supabase
-          .from('profiles')
+          .from('users_core')
           .select(`
             role_id,
             user_roles(role_name)
@@ -89,7 +89,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onClose }) => {
           if (roleData) {
             // Use upsert to handle possible race conditions with auth triggers
             await supabase
-              .from('profiles')
+              .from('users_core')
               .upsert({
                 id: data.user.id,
                 email: data.user.email,

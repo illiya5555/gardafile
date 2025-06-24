@@ -154,16 +154,17 @@ const ServicesPage = () => {
         package_id: selectedPackage,
         company_name: inquiryForm.company_name,
         contact_person: inquiryForm.contact_person,
-        email: inquiryForm.email,
+        customer_email: inquiryForm.email,
         phone: inquiryForm.phone,
         participants_count: parseInt(inquiryForm.participants_count),
         preferred_date: inquiryForm.preferred_date || undefined,
         message: inquiryForm.message || undefined,
-        status: 'pending'
+        type: 'corporate',
+        status: 'new'
       };
 
       const { error } = await supabase
-        .from('corporate_inquiries')
+        .from('inquiries')
         .insert(inquiryData);
 
       if (error) throw error;

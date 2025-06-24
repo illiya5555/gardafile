@@ -139,7 +139,7 @@ async function handleCheckoutSessionCompleted(
       console.log('Updating booking status for booking ID:', session.metadata.booking_id)
       
       const { data: bookingData, error: bookingError } = await supabase
-        .from('reservations')
+        .from('bookings')
         .update({ status: 'confirmed' })
         .eq('id', session.metadata.booking_id)
         .select()
@@ -176,17 +176,22 @@ async function handleCheckoutSessionCompleted(
   if (session.mode === 'payment') {
     // Handle one-time payment
     const { error } = await supabase
-      .from('stripe_orders')
-      .insert({
-        checkout_session_id: session.id,
-        payment_intent_id: session.payment_intent as string,
-        customer_id: session.customer as string,
-        amount_subtotal: session.amount_subtotal || 0,
-        amount_total: session.amount_total || 0,
+      .from('payments')
+      .insert([{
+        type: 'order',
+        provider: 'stripe',
+        provider_payment_id: session.payment_intent as string,
+        provider_customer_id: session.customer as string,
+        amount: (session.amount_total || 0) / 100, // Convert from cents
         currency: session.currency || 'eur',
-        payment_status: session.payment_status,
         status: 'completed',
-      })
+        metadata: {
+          checkout_session_id: session.id,
+          amount_subtotal: session.amount_subtotal,
+        },
+        booking_id: session.metadata?.booking_id || null,
+        completed_at: new Date().toISOString()
+      }])
 
     if (error) {
       console.error('Error inserting order:', error)

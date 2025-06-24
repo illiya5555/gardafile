@@ -56,69 +56,63 @@ const BookingsCalendar = () => {
       setLoading(true);
       
       // Fetch yacht bookings
-      const { data: yachtBookings, error: yachtError } = await supabase
-        .from('yacht_bookings')
+      const { data: bookingsData, error: bookingsError } = await supabase
+        .from('bookings')
         .select(`
           *,
-          yachts(name)
+          users_core:user_id(first_name, last_name, email, phone),
+          yachts:yacht_id(name)
         `)
-        .gte('start_date', getMonthStart(currentDate).toISOString().split('T')[0])
-        .lte('end_date', getMonthEnd(currentDate).toISOString().split('T')[0]);
+        .gte('date', getMonthStart(currentDate).toISOString().split('T')[0])
+        .lte('date', getMonthEnd(currentDate).toISOString().split('T')[0])
+        .order('date', { ascending: true });
 
-      if (yachtError) throw yachtError;
-
-      // Fetch regular bookings
-      const { data: regularBookings, error: regularError } = await supabase
-        .from('reservations')
-        .select(`
-          *,
-          profiles:user_id(first_name, last_name, email, phone)
-        `)
-        .gte('booking_date', getMonthStart(currentDate).toISOString().split('T')[0])
-        .lte('booking_date', getMonthEnd(currentDate).toISOString().split('T')[0]);
-
-      if (regularError) throw regularError;
+      if (bookingsError) throw bookingsError;
 
       // Transform data to calendar events
-      const yachtEvents: BookingEvent[] = (yachtBookings || []).map(booking => ({
-        id: booking.id,
-        title: `${booking.customer_name} - ${booking.yachts?.name || 'Yacht'}`,
-        start: new Date(`${booking.start_date}T${booking.start_time}`),
-        end: new Date(`${booking.end_date}T${booking.end_time}`),
-        yacht_name: booking.yachts?.name || 'Unknown Yacht',
-        customer_name: booking.customer_name,
-        customer_email: booking.customer_email,
-        customer_phone: booking.customer_phone,
-        participants: booking.participants,
-        total_price: parseFloat(booking.total_price),
-        status: booking.status,
-        type: 'yacht'
-      }));
+      const events: BookingEvent[] = (bookingsData || []).map(booking => {
+        if (booking.booking_type === 'yacht') {
+          return {
+            id: booking.id,
+            title: `${booking.customer_name} - ${booking.yachts?.name || 'Yacht'}`,
+            start: new Date(`${booking.date}T${booking.start_time}`),
+            end: booking.end_date 
+              ? new Date(`${booking.end_date}T${booking.end_time}`)
+              : new Date(`${booking.date}T${booking.end_time}`),
+            yacht_name: booking.yachts?.name || 'Unknown Yacht',
+            customer_name: booking.customer_name,
+            customer_email: booking.customer_email,
+            customer_phone: booking.customer_phone,
+            participants: booking.participants,
+            total_price: parseFloat(booking.total_price),
+            status: booking.status,
+            type: 'yacht'
+          };
+        } else {
+          // Sailing booking (formerly 'regular')
+          const [startHour] = (booking.time_slot || '08:30-12:30').split('-');
+          const startTime = `${startHour}:00`;
+          const endTime = `${parseInt(startHour) + 4}:00`; // Assume 4-hour duration
 
-      const regularEvents: BookingEvent[] = (regularBookings || []).map(booking => {
-        const [startHour] = (booking.time_slot || '08:30-12:30').split('-');
-        const startTime = `${startHour}:00`;
-        const endTime = `${parseInt(startHour) + 4}:00`; // Assume 4-hour duration
-        
-        return {
-          id: booking.id,
-          title: `${booking.customer_name} - Racing`,
-          start: new Date(`${booking.booking_date}T${startTime}`),
-          end: new Date(`${booking.booking_date}T${endTime}`),
-          yacht_name: 'Racing Yacht',
-          customer_name: booking.customer_name,
-          customer_email: booking.customer_email || '',
-          customer_phone: booking.customer_phone || '',
-          participants: booking.participants,
-          total_price: parseFloat(booking.total_price),
-          status: booking.status,
-          type: 'regular'
-        };
+          return {
+            id: booking.id,
+            title: `${booking.customer_name} - Racing`,
+            start: new Date(`${booking.date}T${startTime}`),
+            end: new Date(`${booking.date}T${endTime}`),
+            yacht_name: 'Racing Yacht',
+            customer_name: booking.customer_name,
+            customer_email: booking.customer_email || '',
+            customer_phone: booking.customer_phone || '',
+            participants: booking.participants,
+            total_price: parseFloat(booking.total_price),
+            status: booking.status,
+            type: booking.booking_type === 'sailing' ? 'regular' : booking.booking_type // Keep 'regular' for backwards compatibility
+          };
+        }
       });
 
-      const allBookings = [...yachtEvents, ...regularEvents];
-      setBookings(allBookings);
-      checkConflicts(allBookings);
+      setBookings(events);
+      checkConflicts(events);
     } catch (error) {
       console.error('Error fetching bookings:', error);
       // Fallback demo data

@@ -19,28 +19,53 @@ const ClientDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading bookings
-    setTimeout(() => {
-      setBookings([
-        {
-          id: '1',
-          date: '2025-01-25',
-          time: '08:30-12:30',
-          participants: 2,
-          status: 'confirmed',
-          total: 398
-        },
-        {
-          id: '2',
-          date: '2025-02-10',
-          time: '13:30-17:30',
-          participants: 4,
-          status: 'pending',
-          total: 796
+    // Load bookings for the current user
+    const fetchBookings = async () => {
+      try {
+        setLoading(true);
+        const { data: userData, error: userError } = await supabase.auth.getUser();
+        
+        if (userError) {
+          console.error("Error fetching user:", userError);
+          return;
         }
-      ]);
+        
+        if (!userData.user) {
+          console.log("No user logged in");
+          return;
+        }
+        
+        const { data: bookingsData, error: bookingsError } = await supabase
+          .from('bookings')
+          .select('*')
+          .eq('user_id', userData.user.id)
+          .order('date', { ascending: false });
+        
+        if (bookingsError) {
+          console.error("Error fetching bookings:", bookingsError);
+          return;
+        }
+        
+        // Convert to the interface expected by the component
+        const transformedBookings = bookingsData.map(booking => ({
+          id: booking.id,
+          date: booking.date,
+          time: booking.time_slot || `${booking.start_time}-${booking.end_time}`,
+          participants: booking.participants,
+          status: booking.status,
+          total: booking.total_price
+        }));
+        
+        setBookings(transformedBookings);
+      } catch (error) {
+        console.error("Error in fetchBookings:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchBookings();
       setLoading(false);
-    }, 1000);
   }, []);
 
   const openBookingDetails = (booking: Booking) => {

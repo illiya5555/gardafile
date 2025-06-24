@@ -8,10 +8,10 @@ const trackConversion = () => {
   // Check if gtag is available
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'conversion', {
-      'send_to': 'AW-17237804462/WJ2PCMqk7ZIZEL33x5Q9',
-      'value': 195.0,
-      'currency': 'EUR',
-      'transaction_id': Date.now().toString().slice(-6)
+      send_to: 'AW-17237804462/WJ2PCMqk7ZIZEL33x5Q9',
+      value: 195.0,
+      currency: 'EUR',
+      transaction_id: Date.now().toString().slice(-6)
     });
     console.log('Conversion tracked successfully');
   }

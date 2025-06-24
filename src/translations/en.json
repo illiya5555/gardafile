@@ -240,7 +240,7 @@
     },
     "validity": {
       "title": "Certificate Validity",
-      "duration": "Valid for 12 months from purchase date",
+      "duration": "Valid for 2 months from purchase date",
       "flexible": "Flexible booking - no blackout dates"
     }
   },

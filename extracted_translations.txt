@@ -147,7 +147,7 @@ events.subtitle
 
 # Жестко закодированные строки, требующие перевода:
 events.complete_experience=The Complete Racing Experience
-events.beginner_to_champion=From beginner to champion in one day. Experience authentic yacht racing on Lake Garda with professional instruction, competitive races, and official recognition of your achievement.
+events.beginner_to_champion=Discover the thrill of real yacht racing on Lake Garda. Step aboard a racing yacht and join the crew for an unforgettable day of teamwork, adrenaline, and wind in your sails. No license or previous experience required – just your curiosity and spirit!
 events.tabs.overview=Overview
 events.tabs.schedule=Schedule
 events.tabs.gallery=Gallery

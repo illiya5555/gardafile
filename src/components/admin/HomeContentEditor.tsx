@@ -270,7 +270,7 @@ const HomeContentEditor = () => {
       partners: [
         {
           id: '1',
-          name: 'Bavaria Yachts',
+          name: 'Fraglia Vela Riva',
           logo: 'https://i.postimg.cc/RqxZCmxC/2025-06-24-17-44-12.png?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop',
           description: 'Premium yacht manufacturer'
         },

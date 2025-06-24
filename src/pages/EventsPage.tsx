@@ -225,7 +225,7 @@ const EventsPage = () => {
                     </li>
                     <li className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-green-500" />
-                      <span className="text-gray-700">{t('events.overview.official_races', '3–5 official races per day, scored under sailing sport rules')}</span>
+                      <span className="text-gray-700">{t('events.overview.official_races', '3–5 official races per day')}</span>
                     </li>
                     <li className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-green-500" />

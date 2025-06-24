@@ -129,12 +129,12 @@ INSERT INTO translations (key, language_code, text, category) VALUES
 ('events.overview.official_races', 'ru', '3–5 официальных регат в день', 'events_page'),
 
 
-('events.overview.medal_ceremony_certificates', 'en', 'Medal ceremony and certificates for top crews', 'events_page'),
-('events.overview.medal_ceremony_certificates', 'de', 'Medaillenzeremonie und Zertifikate für die besten Crews', 'events_page'),
-('events.overview.medal_ceremony_certificates', 'fr', 'Cérémonie de remise des médailles et certificats pour les meilleurs équipages', 'events_page'),
-('events.overview.medal_ceremony_certificates', 'it', 'Cerimonia delle medaglie e certificati per i migliori equipaggi', 'events_page'),
-('events.overview.medal_ceremony_certificates', 'es', 'Ceremonia de medallas y certificados para las mejores tripulaciones', 'events_page'),
-('events.overview.medal_ceremony_certificates', 'ru', 'Церемония награждения медалями и сертификаты для лучших экипажей', 'events_page'),
+('events.overview.medal_ceremony_certificates', 'en', 'Medal ceremony for top crews', 'events_page'),
+('events.overview.medal_ceremony_certificates', 'de', 'Siegerehrung für die besten Crews', 'events_page'),
+('events.overview.medal_ceremony_certificates', 'fr', 'Cérémonie de remise des médailles pour les meilleurs équipages', 'events_page'),
+('events.overview.medal_ceremony_certificates', 'it', 'Cerimonia di premiazione per i migliori equipaggi', 'events_page'),
+('events.overview.medal_ceremony_certificates', 'es', 'Ceremonia de entrega de medallas para las mejores tripulaciones', 'events_page'),
+('events.overview.medal_ceremony_certificates', 'ru', 'Церемония вручения медалей лучшим экипажам', 'events_page'),
 
 -- Services Page Translations
 ('services.corporate_regatta.title', 'en', '🧭 Corporate Sailing Regatta', 'services_page'),

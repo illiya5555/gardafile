@@ -229,7 +229,6 @@ const EventsPage = () => {
                     </li>
                     <li className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-green-500" />
-                      <span className="text-gray-700">{t('events.overview.judging_team', 'Supervised by a qualified judging team and technical support boats')}</span>
                     </li>
                     <li className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-green-500" />

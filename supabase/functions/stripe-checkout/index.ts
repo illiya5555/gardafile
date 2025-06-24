@@ -107,17 +107,8 @@ serve(async (req) => {
       if (fetchError) {
         console.error('Error fetching customer data:', fetchError);
       }
-
-      customerId = customerData?.customer_id;
-
-      // If customer doesn't exist in our database, create one in Stripe
-      if (!customerId) {
-        const stripeCustomer = await stripe.customers.create({
-          email: user.email,
-          metadata: {
-            supabase_user_id: user.id,
-          },
-        });
+      
+      console.log('Booking ID present in session metadata:', bookingId);
 
         customerId = stripeCustomer.id;
 
@@ -128,6 +119,10 @@ serve(async (req) => {
             user_id: user.id,
             customer_id: customerId,
             created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }, {
+            onConflict: 'user_id'
+            created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           }, {
             onConflict: 'user_id'
@@ -135,6 +130,7 @@ serve(async (req) => {
 
         if (upsertError) {
           console.error('Error saving customer to database:', upsertError);
+          console.error('Details:', JSON.stringify(upsertError));
           console.error('Details:', JSON.stringify(upsertError));
           return new Response(
             JSON.stringify({ error: 'Failed to save customer data' }),

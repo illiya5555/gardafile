@@ -177,7 +177,11 @@ async function handleCheckoutSessionCompleted(
     // Handle one-time payment
     console.log('Creating payment record for one-time payment:', session.id);
     
+    console.log('Creating payment record for one-time payment:', session.id);
+    
     const { error } = await supabase
+      .from('payments')
+      .insert([{
       .from('payments')
       .insert([{
         booking_id: session.metadata?.booking_id || null,
@@ -187,9 +191,14 @@ async function handleCheckoutSessionCompleted(
         provider_payment_id: session.payment_intent as string,
         provider_customer_id: session.customer as string,
         amount: ((session.amount_total || 0) / 100), // Convert from cents to whole currency units
-        currency: session.currency || 'eur',
         status: 'completed',
         metadata: {
+          checkout_session_id: session.id,
+          payment_status: session.payment_status,
+          amount_subtotal: session.amount_subtotal,
+        },
+        completed_at: new Date().toISOString()
+      }])
           checkout_session_id: session.id,
           payment_status: session.payment_status,
           amount_subtotal: session.amount_subtotal,

@@ -271,7 +271,7 @@ const HomeContentEditor = () => {
         {
           id: '1',
           name: 'Bavaria Yachts',
-          logo: 'https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop',
+          logo: 'https://i.postimg.cc/RqxZCmxC/2025-06-24-17-44-12.png?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop',
           description: 'Premium yacht manufacturer'
         },
         {

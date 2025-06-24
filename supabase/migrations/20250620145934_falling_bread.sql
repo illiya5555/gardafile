@@ -121,12 +121,12 @@ INSERT INTO translations (key, language_code, text, category) VALUES
 ('events.overview.licensed_skipper', 'es', 'Cada barco incluye un patrón con licencia y una tripulación completa', 'events_page'),
 ('events.overview.licensed_skipper', 'ru', 'Каждая лодка включает лицензированного шкипера и полный экипаж', 'events_page'),
 
-('events.overview.official_races', 'en', '3–5 official races per day, scored under sailing sport rules', 'events_page'),
-('events.overview.official_races', 'de', '3–5 offizielle Rennen pro Tag, gewertet nach Segelsportregeln', 'events_page'),
-('events.overview.official_races', 'fr', '3 à 5 courses officielles par jour, notées selon les règles du sport nautique', 'events_page'),
-('events.overview.official_races', 'it', '3-5 regate ufficiali al giorno, punteggiate secondo le regole dello sport velico', 'events_page'),
-('events.overview.official_races', 'es', '3-5 regatas oficiales por día, puntuadas según las reglas del deporte de vela', 'events_page'),
-('events.overview.official_races', 'ru', '3–5 официальных гонок в день, оцениваемых по правилам парусного спорта', 'events_page'),
+('events.overview.official_races', 'en', '3–5 official races per day', 'events_page'),
+('events.overview.official_races', 'de', '3–5 offizielle Regatten pro Tag', 'events_page'),
+('events.overview.official_races', 'fr', '3 à 5 régates officielles par jour', 'events_page'),
+('events.overview.official_races', 'it', '3–5 regate ufficiali al giorno', 'events_page'),
+('events.overview.official_races', 'es', '3–5 regatas oficiales por día', 'events_page'),
+('events.overview.official_races', 'ru', '3–5 официальных регат в день', 'events_page'),
 
 ('events.overview.judging_team', 'en', 'Supervised by a qualified judging team and technical support boats', 'events_page'),
 ('events.overview.judging_team', 'de', 'Beaufsichtigt von einem qualifizierten Schiedsrichterteam und technischen Supportbooten', 'events_page'),

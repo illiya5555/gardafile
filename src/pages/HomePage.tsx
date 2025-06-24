@@ -85,7 +85,7 @@ const HomePage = () => {
       setExperienceImageIndex((prevIndex) =>
         (prevIndex + 1) % experienceImages.length
       );
-    }, 9000);
+    }, 3000);
     return () => clearInterval(interval);
   }, [experienceImages.length]);
 
@@ -169,8 +169,6 @@ const HomePage = () => {
 
         {/* УДАЛЕНО: Блок с фото-заглушкой и его наложениями */}
 
-        {/* ДОБАВЛЕНО: Градиентное наложение для читаемости текста */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/70 via-[#0f172a]/40 to-transparent z-20"></div>
 
         {/* Text content (z-index выше видео и градиента) */}
         <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

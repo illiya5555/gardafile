@@ -128,12 +128,6 @@ INSERT INTO translations (key, language_code, text, category) VALUES
 ('events.overview.official_races', 'es', '3–5 regatas oficiales por día', 'events_page'),
 ('events.overview.official_races', 'ru', '3–5 официальных регат в день', 'events_page'),
 
-('events.overview.judging_team', 'en', 'Supervised by a qualified judging team and technical support boats', 'events_page'),
-('events.overview.judging_team', 'de', 'Beaufsichtigt von einem qualifizierten Schiedsrichterteam und technischen Supportbooten', 'events_page'),
-('events.overview.judging_team', 'fr', 'Supervisé par une équipe de juges qualifiés et des bateaux de support technique', 'events_page'),
-('events.overview.judging_team', 'it', 'Supervisionato da un team di giudici qualificati e barche di supporto tecnico', 'events_page'),
-('events.overview.judging_team', 'es', 'Supervisado por un equipo de jueces calificados y barcos de apoyo técnico', 'events_page'),
-('events.overview.judging_team', 'ru', 'Под наблюдением квалифицированной судейской команды и лодок технической поддержки', 'events_page'),
 
 ('events.overview.medal_ceremony_certificates', 'en', 'Medal ceremony and certificates for top crews', 'events_page'),
 ('events.overview.medal_ceremony_certificates', 'de', 'Medaillenzeremonie und Zertifikate für die besten Crews', 'events_page'),

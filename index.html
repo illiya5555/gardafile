@@ -2,52 +2,49 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- Favicon setup for all browsers including Safari -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Garda Racing Yacht Club - Premium Sailing Experiences on Lake Garda</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Daily yacht racing experiences in world-famous Lake Garda. Professional skipper, racing medals, and unforgettable memories. Book your €199 sailing adventure today!" />
+    <meta name="keywords" content="Lake Garda sailing, yacht racing, Riva del Garda, sailing experience, yacht charter, racing course" />
+
+    <!-- Favicon Configuration -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" href="/gardalogo.png" sizes="32x32" />
     <link rel="apple-touch-icon" href="/gardalogo.png" />
     <link rel="mask-icon" href="/favicon.svg" color="#dc2626" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17237804462">
-    </script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
 
-      gtag('config', 'AW-17237804462');
-    </script>
-    <!-- End Google Tag -->
-    <meta name="description" content="Daily yacht racing experiences in world-famous Lake Garda. Professional skipper, racing medals, and unforgettable memories. Book your €199 sailing adventure today!" />
-    <meta name="keywords" content="Lake Garda sailing, yacht racing, Riva del Garda, sailing experience, yacht charter, racing course" />
-    <title>Garda Racing Yacht Club - Premium Sailing Experiences on Lake Garda</title>
-    
-    <!-- Open Graph / Facebook -->
+    <!-- Social Media Meta Tags (Open Graph for Facebook, etc. & Twitter) -->
+    <!-- ИЗМЕНЕНИЕ: Использование абсолютных URL для изображений для лучшей совместимости -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://gardaracing.com/" />
     <meta property="og:title" content="Garda Racing Yacht Club - Premium Sailing Experiences" />
     <meta property="og:description" content="Daily yacht racing experiences in world-famous Lake Garda. Professional skipper, racing medals, and unforgettable memories." />
-    <meta property="og:image" content="/IMG_0967.webp" />
+    <meta property="og:image" content="https://gardayachtclub.com/IMG_0967.webp" />
 
-    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://gardaracing.com/" />
     <meta property="twitter:title" content="Garda Racing Yacht Club - Premium Sailing Experiences" />
     <meta property="twitter:description" content="Daily yacht racing experiences in world-famous Lake Garda. Professional skipper, racing medals, and unforgettable memories." />
-    <meta property="twitter:image" content="/IMG_0967.webp" />
+    <meta property="twitter:image" content="https://gardayachtclub.com/IMG_0967.webp" />
 
-    <!-- Preload critical resources -->
-<link rel="preload" href="https://gardayachtclub.com/IMG_0967.webp" as="image">
-<link rel="preload" href="https://gardayachtclub.com/gardalogo.png" as="image">
-    
-    <!-- Preconnect to Google Fonts with crossorigin attribute -->
+    <!-- Performance & Fonts -->
+    <!-- ИЗМЕНЕНИЕ: Удалены теги preload, которые вызывали предупреждения -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Google Fonts with display=swap for better font loading experience -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
    
-    <!-- Meta Pixel Code (script part) -->
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17237804462"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-17237804462');
+    </script>
+
+    <!-- Meta Pixel Code -->
     <script>
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -60,20 +57,17 @@
     fbq('init', '1040552124920921');
     fbq('track', 'PageView');
     </script>
-    <!-- End Meta Pixel Code (script part) -->
     
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P4D2H5KH"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-
-    <!-- Meta Pixel Code (noscript part) -->
+    
+    <!-- Meta Pixel Code (noscript) -->
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=1040552124920921&ev=PageView&noscript=1"
     /></noscript>
-    <!-- End Meta Pixel Code (noscript part) -->
     
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>

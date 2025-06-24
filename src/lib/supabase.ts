@@ -324,7 +324,9 @@ export const paginatedQuery = async <T>(
   };
 };
 
-// Backward compatibility interfaces for other entities
+// TypeScript interfaces for database entities
+export interface StripeOrder {
+  id: string;
   amount: number;
   currency: string;
   status: 'pending' | 'completed' | 'failed' | 'refunded' | 'cancelled';
@@ -334,6 +336,27 @@ export const paginatedQuery = async <T>(
   completed_at?: string;
 }
 
+export interface StripeSubscription {
+  id: string;
+  customer_id: string;
+  subscription_id: string;
+  price_id: string;
+  status: string;
+  current_period_start: number;
+  current_period_end: number;
+  cancel_at_period_end: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface StripeCustomer {
+  id: string;
+  user_id: string;
+  customer_id: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Inquiry {
   id: string;
   type: 'contact' | 'corporate' | 'support';
@@ -341,9 +364,60 @@ export interface Inquiry {
   priority?: 'low' | 'normal' | 'high' | 'urgent';
   customer_id?: string;
   customer_name?: string;
-export interface ChatMessage {
+  customer_email: string;
+  customer_phone?: string;
+  company_name?: string;
+  contact_person?: string;
+  subject?: string;
+  message?: string;
+  participants_count?: number;
+  preferred_date?: string;
+  estimated_budget?: number;
+  source?: string;
+  assigned_to?: string;
+  internal_notes?: string;
+  created_at: string;
   updated_at?: string;
+  resolved_at?: string;
 }
+
+export interface ChatMessage {
+  id: string;
+  message: string;
+  sender_type: 'user' | 'bot';
+  created_at: string;
+}
+
+export interface Testimonial {
+  id: string;
+  name: string;
+  location: string;
+  rating: number;
+  text: string;
+  image_url?: string;
+  is_featured: boolean;
+  created_at: string;
+}
+
+export interface CorporatePackage {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  participants_range: string;
+  duration: string;
+  features: string[];
+  is_popular: boolean;
+  created_at: string;
+}
+
+export interface AdditionalService {
+  id: string;
+  name: string;
+  description: string;
+  created_at: string;
+}
+
 export interface TimeSlot {
   id: string;
   time: string;
@@ -351,10 +425,6 @@ export interface TimeSlot {
   max_participants: number;
   price_per_person: number;
   is_active: boolean;
-  created_at: string;
-}
-  message: string;
-  sender_type: 'user' | 'bot';
   created_at: string;
 }
 

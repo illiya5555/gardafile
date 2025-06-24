@@ -239,7 +239,7 @@ const GiftCertificatesPage = () => {
                   {t('gift.validity.title', 'Certificate Validity')}
                 </h3>
                 <p className="text-primary-700 text-xs md:text-sm mb-1 md:mb-2">
-                  {t('gift.validity.duration', 'Valid for 12 months from purchase date')}
+                  {t('gift.validity.duration', 'Valid for 2 months from purchase date')}
                 </p>
                 <p className="text-primary-700 text-xs md:text-sm">
                   {t('gift.validity.flexible', 'Flexible booking - no blackout dates')}

@@ -14,12 +14,12 @@
 INSERT INTO public.translations (key, language_code, text, category) VALUES 
 
 -- Footer translations
-('footer.company.description', 'en', 'Experience the thrill of yacht racing on the world-famous Lake Garda. Professional instruction, premium equipment, and unforgettable memories.', 'footer'),
-('footer.company.description', 'it', 'Vivi l''emozione delle regate sul famoso Lago di Garda. Istruzione professionale, attrezzature premium e ricordi indimenticabili.', 'footer'),
-('footer.company.description', 'de', 'Erleben Sie den Nervenkitzel des Yachtrennsports am weltberühmten Gardasee. Professionelle Anleitung, Premium-Ausrüstung und unvergessliche Erinnerungen.', 'footer'),
-('footer.company.description', 'fr', 'Vivez le frisson des courses de voiliers sur le célèbre lac de Garde. Instruction professionnelle, équipement premium et souvenirs inoubliables.', 'footer'),
-('footer.company.description', 'es', 'Experimenta la emoción de las regatas en el famoso Lago de Garda. Instrucción profesional, equipamiento premium y recuerdos inolvidables.', 'footer'),
-('footer.company.description', 'ru', 'Испытайте азарт парусных гонок на знаменитом озере Гарда. Профессиональное обучение, премиальное оборудование и незабываемые воспоминания.', 'footer'),
+('footer.company.description', 'en', 'Experience the thrill of yacht racing on world-famous Lake Garda. Premium equipment, unforgettable memories.', 'footer'),
+('footer.company.description', 'it', 'Vivi l''emozione delle regate sul celebre Lago di Garda. Attrezzatura premium e ricordi indimenticabili.', 'footer'),
+('footer.company.description', 'de', 'Erleben Sie den Nervenkitzel von Segelregatten auf dem weltberühmten Gardasee. Premium-Ausrüstung und unvergessliche Erlebnisse.', 'footer'),
+('footer.company.description', 'fr', 'Vivez le frisson des régates sur le célèbre lac de Garde. Équipement premium et souvenirs inoubliables.', 'footer'),
+('footer.company.description', 'es', 'Experimenta la emoción de las regatas en el mundialmente famoso Lago de Garda. Equipamiento premium y recuerdos inolvidables.', 'footer'),
+('footer.company.description', 'ru', 'Испытайте азарт парусных регат на всемирно известном озере Гарда. Премиальное оборудование и незабываемые впечатления.', 'footer'),
 
 ('footer.links.quick_links', 'en', 'Quick Links', 'footer'),
 ('footer.links.quick_links', 'it', 'Link Rapidi', 'footer'),

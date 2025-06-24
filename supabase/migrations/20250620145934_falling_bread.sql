@@ -51,12 +51,12 @@ INSERT INTO translations (key, language_code, text, category) VALUES
 ('events.overview.what_makes_special', 'es', 'Lo que hace especial nuestra experiencia', 'events_page'),
 ('events.overview.what_makes_special', 'ru', 'Что делает наш опыт особенным', 'events_page'),
 
-('events.overview.professional_instruction', 'en', 'Professional Instruction', 'events_page'),
-('events.overview.professional_instruction', 'de', 'Professioneller Unterricht', 'events_page'),
-('events.overview.professional_instruction', 'fr', 'Instruction professionnelle', 'events_page'),
-('events.overview.professional_instruction', 'it', 'Istruzione professionale', 'events_page'),
-('events.overview.professional_instruction', 'es', 'Instrucción profesional', 'events_page'),
-('events.overview.professional_instruction', 'ru', 'Профессиональное обучение', 'events_page'),
+('events.overview.professional_instruction', 'en', 'Certified sailing professionals with years of racing experience on Lake Garda.', 'events_page'),
+('events.overview.professional_instruction', 'de', 'Zertifizierte Segelprofis mit jahrelanger Regattaerfahrung auf dem Gardasee.', 'events_page'),
+('events.overview.professional_instruction', 'fr', 'Professionnels de la voile certifiés, avec des années d''expérience en régate sur le lac de Garde.', 'events_page'),
+('events.overview.professional_instruction', 'it', 'Professionisti della vela certificati con anni di esperienza di regate sul Lago di Garda.', 'events_page'),
+('events.overview.professional_instruction', 'es', 'Profesionales de la vela certificados con años de experiencia en regatas en el Lago de Garda.', 'events_page'),
+('events.overview.professional_instruction', 'ru', 'Сертифицированные профессионалы с многолетним опытом участия в регатах на озере Гарда.', 'events_page'),
 
 ('events.overview.professional_instruction_desc', 'en', 'Learn from certified sailing professionals with years of racing experience on Lake Garda.', 'events_page'),
 ('events.overview.professional_instruction_desc', 'de', 'Lernen Sie von zertifizierten Segelprofis mit jahrelanger Rennerfahrung am Gardasee.', 'events_page'),

@@ -24,7 +24,8 @@ import {
   FileText,
   Settings,
   Activity,
-  BarChart3
+  BarChart3,
+  CreditCard
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
@@ -68,15 +69,15 @@ const DatabaseManagement = () => {
 
   // Table configurations with icons and descriptions
   const tableConfigs: { [key: string]: { icon: React.ComponentType<any>; color: string; description: string } } = {
-    profiles: { icon: Users, color: 'text-blue-600', description: 'User profiles and account information' },
-    bookings: { icon: Calendar, color: 'text-green-600', description: 'Regular sailing experience bookings' },
-    yacht_bookings: { icon: Ship, color: 'text-blue-600', description: 'Private yacht charter bookings' },
+    users_core: { icon: Users, color: 'text-blue-600', description: 'User profiles and account information' },
+    bookings: { icon: Calendar, color: 'text-green-600', description: 'All bookings (sailing and yacht)' },
+    payments: { icon: CreditCard, color: 'text-green-600', description: 'All payment records' },
+    inquiries: { icon: MessageSquare, color: 'text-green-600', description: 'All contact and corporate inquiries' },
     yachts: { icon: Ship, color: 'text-blue-800', description: 'Fleet of available yachts' },
     time_slots: { icon: Calendar, color: 'text-purple-600', description: 'Available time slots for bookings' },
     testimonials: { icon: Star, color: 'text-yellow-600', description: 'Customer reviews and testimonials' },
     chat_messages: { icon: MessageSquare, color: 'text-green-600', description: 'Customer support chat messages' },
     corporate_packages: { icon: Package, color: 'text-orange-600', description: 'Corporate event packages' },
-    corporate_inquiries: { icon: Building, color: 'text-red-600', description: 'Corporate event inquiries' },
     additional_services: { icon: Settings, color: 'text-gray-600', description: 'Additional services offered' }
   };
 

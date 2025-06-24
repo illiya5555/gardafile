@@ -126,9 +126,7 @@ serve(async (req) => {
           .from('stripe_customers')
           .upsert({
             user_id: user.id,
-            customer_id: customerId
-          }, {
-            onConflict: 'user_id'
+            customer_id: customerId,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           }, {

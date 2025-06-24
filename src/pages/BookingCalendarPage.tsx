@@ -130,7 +130,7 @@ const BookingCalendarPage = () => {
       // Create booking object with all required fields for reservations table
       const booking = {
         booking_type: 'sailing',
-        booking_date: selectedDate,
+        date: selectedDate,
         time_slot: selectedTime,
         participants: participants,
         total_price: calculateTotalPrice(),
@@ -138,7 +138,7 @@ const BookingCalendarPage = () => {
         customer_email: bookingData.customerEmail,
         customer_phone: bookingData.customerPhone,
         status: 'pending', // Will be updated to confirmed after payment
-        booking_source: 'website',
+        source: 'website',
         user_id: user?.id || null // This allows non-authenticated bookings
       };
 

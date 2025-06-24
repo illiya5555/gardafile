@@ -110,32 +110,31 @@ serve(async (req) => {
       
       console.log('Booking ID present in session metadata:', bookingId);
 
-      customerId = stripeCustomer.id;
+        customerId = stripeCustomer.id;
 
-      // Save customer to our database using upsert to handle duplicates
-      const { error: upsertError } = await supabaseClient
-        .from('stripe_customers')
-        .upsert({
-          user_id: user.id,
-          customer_id: customerId,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }, {
-          onConflict: 'user_id'
-        });
+        // Save customer to our database using upsert to handle duplicates
+        const { error: upsertError } = await supabaseClient
+          .from('stripe_customers')
+          .upsert({
+            user_id: user.id,
+            customer_id: customerId,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }, {
+            onConflict: 'user_id'
+          });
 
-      if (upsertError) {
-        console.error('Error saving customer to database:', upsertError);
-        console.error('Details:', JSON.stringify(upsertError));
-        console.error('Details:', JSON.stringify(upsertError));
-        return new Response(
-          JSON.stringify({ error: 'Failed to save customer data' }),
-          {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            status: 500,
-          }
-        )
-      }
+        if (upsertError) {
+          console.error('Error saving customer to database:', upsertError);
+          console.error('Details:', JSON.stringify(upsertError));
+          return new Response(
+            JSON.stringify({ error: 'Failed to save customer data' }),
+            {
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+              status: 500,
+            }
+          )
+        }
     } else {
       // Non-authenticated user - create a temporary Stripe customer using email from metadata
       if (!metadata.customer_email) {

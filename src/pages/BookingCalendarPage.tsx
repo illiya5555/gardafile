@@ -146,7 +146,7 @@ const BookingCalendarPage = () => {
 
       // Save to database using the correct reservations table
       const { data, error } = await supabase
-        .from('yacht_bookings')
+        .from('reservations')
         .insert(booking)
         .select()
         .single();

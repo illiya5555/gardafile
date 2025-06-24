@@ -98,11 +98,11 @@ serve(async (req) => {
     // Handle authenticated vs. non-authenticated users differently
     if (user) {
       // Authenticated user - check if customer exists in database
-      let { data: customerData } = await supabaseClient
+      let { data: customerData, error: fetchError } = await supabaseClient
         .from('stripe_customers')
         .select('customer_id')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       customerId = customerData?.customer_id;
 
@@ -117,18 +117,20 @@ serve(async (req) => {
 
         customerId = stripeCustomer.id;
 
-        // Save customer to our database
-        const { error: insertError } = await supabaseClient
+        // Save customer to our database using upsert to handle duplicates
+        const { error: upsertError } = await supabaseClient
           .from('stripe_customers')
-          .insert({
+          .upsert({
             user_id: user.id,
             customer_id: customerId,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
+          }, {
+            onConflict: 'user_id'
           });
 
-        if (insertError) {
-          console.error('Error saving customer to database:', insertError);
+        if (upsertError) {
+          console.error('Error saving customer to database:', upsertError);
           return new Response(
             JSON.stringify({ error: 'Failed to save customer data' }),
             {

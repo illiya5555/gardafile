@@ -144,14 +144,14 @@ const HomePage = () => {
     },
     {
       name: "Jboats",
-      logoUrl: "https://i.postimg.cc/nrT0G2m5/j-boats-logo.png", // Заменен URL на реальный
+      logoUrl: "https://i.postimg.cc/P5hGQ4WR/mobile-logo3.jpg", 
       websiteUrl: "https://www.jboats.com/",
       description: "Premium yacht manufacturer"
     },
     {
       name: "START CUP",
-      logoUrl: "https://i.postimg.cc/L5b1dYxS/start-cup-logo.png", // Заменен URL на реальный
-      websiteUrl: "https://www.fragliavelariva.it/regatta-list/start-cup-optimist/",
+      logoUrl: "https://i.postimg.cc/Vsd42CsL/Start-Cup-new-logo-1-serialized2.jpg", 
+      websiteUrl: "https://startcup.de/",
       description: "Regattas and cruises"
     }
   ];

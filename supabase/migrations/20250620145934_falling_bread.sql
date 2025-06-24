@@ -369,12 +369,12 @@ INSERT INTO translations (key, language_code, text, category) VALUES
 ('gift.validity.title', 'es', 'Validez del Certificado', 'gift_page'),
 ('gift.validity.title', 'ru', 'Срок действия сертификата', 'gift_page'),
 
-('gift.validity.duration', 'en', 'Valid for 12 months from purchase date', 'gift_page'),
-('gift.validity.duration', 'de', 'Gültig für 12 Monate ab Kaufdatum', 'gift_page'),
-('gift.validity.duration', 'fr', 'Valable 12 mois à partir de la date d''achat', 'gift_page'),
-('gift.validity.duration', 'it', 'Valido per 12 mesi dalla data di acquisto', 'gift_page'),
-('gift.validity.duration', 'es', 'Válido por 12 meses desde la fecha de compra', 'gift_page'),
-('gift.validity.duration', 'ru', 'Действителен в течение 12 месяцев с даты покупки', 'gift_page'),
+('gift.validity.duration', 'en', 'Valid for 2 months from purchase date', 'gift_page'),
+('gift.validity.duration', 'de', 'Gültig für 2 Monate ab Kaufdatum', 'gift_page'),
+('gift.validity.duration', 'fr', 'Valable 2 mois à partir de la date d''achat', 'gift_page'),
+('gift.validity.duration', 'it', 'Valido per 2 mesi dalla data di acquisto', 'gift_page'),
+('gift.validity.duration', 'es', 'Válido por 2 meses desde la fecha de compra', 'gift_page'),
+('gift.validity.duration', 'ru', 'Действителен в течение 2 месяцев с даты покупки', 'gift_page'),
 
 ('gift.validity.flexible', 'en', 'Flexible booking - no blackout dates', 'gift_page'),
 ('gift.validity.flexible', 'de', 'Flexible Buchung - keine Sperrdaten', 'gift_page'),

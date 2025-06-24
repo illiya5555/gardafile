@@ -103,6 +103,10 @@ serve(async (req) => {
         .select('customer_id')
         .eq('user_id', user.id)
         .maybeSingle();
+      
+      if (fetchError) {
+        console.error('Error fetching customer data:', fetchError);
+      }
 
       customerId = customerData?.customer_id;
 
@@ -122,7 +126,9 @@ serve(async (req) => {
           .from('stripe_customers')
           .upsert({
             user_id: user.id,
-            customer_id: customerId,
+            customer_id: customerId
+          }, {
+            onConflict: 'user_id'
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           }, {
@@ -131,6 +137,7 @@ serve(async (req) => {
 
         if (upsertError) {
           console.error('Error saving customer to database:', upsertError);
+          console.error('Details:', JSON.stringify(upsertError));
           return new Response(
             JSON.stringify({ error: 'Failed to save customer data' }),
             {
@@ -166,9 +173,6 @@ serve(async (req) => {
     // Extract booking_id from metadata if it exists
     const bookingId = metadata.booking_id || null;
     
-    // Remove booking_id from metadata to avoid duplication
-    const { booking_id, ...stripeMetadata } = metadata;
-
     // Create checkout session
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
@@ -183,28 +187,11 @@ serve(async (req) => {
       success_url: success_url || `${req.headers.get('origin')}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: cancel_url || `${req.headers.get('origin')}/booking`,
       metadata: {
+        booking_id: bookingId,
         user_id: user?.id || 'guest',
-        ...stripeMetadata
+        ...metadata
       },
     });
-
-    // If booking ID is present, save it in stripe_orders for easy reference
-    if (bookingId) {
-      // Pre-create the stripe_orders entry with the booking_id
-      await supabaseClient
-        .from('stripe_orders')
-        .insert({
-          checkout_session_id: session.id,
-          payment_intent_id: session.payment_intent as string || 'pending',
-          customer_id: customerId,
-          amount_subtotal: session.amount_subtotal || 0,
-          amount_total: session.amount_total || 0,
-          currency: session.currency || 'eur',
-          payment_status: session.payment_status || 'unpaid',
-          status: 'pending',
-          booking_id: bookingId
-        });
-    }
 
     // Track Google Ads begin_checkout event
     console.log('Tracking begin_checkout event for Google Ads');

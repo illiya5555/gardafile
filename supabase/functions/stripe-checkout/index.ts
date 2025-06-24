@@ -15,10 +15,11 @@ serve(async (req) => {
   }
 
   try {
-    // Validate required environment variables
+    // --- ИЗМЕНЕНИЯ ЗДЕСЬ ---
+    // Validate required environment variables using new names
     const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
-    const supabaseUrl = Deno.env.get('SUPABASE_URL');
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY');
+    const supabaseUrl = Deno.env.get('PROJECT_URL'); // Было: SUPABASE_URL
+    const supabaseAnonKey = Deno.env.get('PROJECT_ANON_KEY'); // Было: SUPABASE_ANON_KEY
 
     if (!stripeSecretKey) {
       console.error('STRIPE_SECRET_KEY environment variable is not set');
@@ -32,7 +33,8 @@ serve(async (req) => {
     }
 
     if (!supabaseUrl || !supabaseAnonKey) {
-      console.error('Supabase environment variables are not set');
+      // Обновлено сообщение об ошибке для ясности
+      console.error('PROJECT_URL or PROJECT_ANON_KEY environment variables are not set');
       return new Response(
         JSON.stringify({ error: 'Database configuration is missing. Please contact support.' }),
         {
@@ -41,6 +43,7 @@ serve(async (req) => {
         }
       )
     }
+    // --- КОНЕЦ ИЗМЕНЕНИЙ ---
 
     // Initialize Stripe
     const stripe = new Stripe(stripeSecretKey, {

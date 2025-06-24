@@ -142,11 +142,12 @@ const HomePage = () => {
   ];
 
   const partners = [
-    {
-      name: "Fraglia Vela Riva",
-      logo: "<a href="https://postimages.org/" target="_blank"><img src="https://i.postimg.cc/RqxZCmxC/2025-06-24-17-44-12.png" alt="2025-06-24-17-44-12"/></a><br/><br/>
-",
-      description: "Premium yacht manufacturer",
+    {{
+  name: "Fraglia Vela Riva",
+  logoUrl: "https://i.postimg.cc/RqxZCmxC/2025-06-24-17-44-12.png",
+  websiteUrl: "https://www.fragliavelariva.it/", // Пример ссылки на сайт партнера
+  altText: "Логотип Fraglia Vela Riva",
+  description: "Premium yacht manufacturer"
     },
     // ... остальной код партнеров
   ];

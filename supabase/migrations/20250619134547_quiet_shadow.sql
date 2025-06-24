@@ -221,14 +221,14 @@ INSERT INTO translations (key, language_code, text, category) VALUES
 ('hero.title', 'he', 'חווה את הריגוש של מירוצי יאכטות', 'hero'),
 ('hero.title', 'ru', 'Почувствуйте азарт парусных гонок', 'hero'),
 
-('hero.subtitle', 'en', 'Daily yacht racing experiences in world-famous Lake Garda with professional skippers, racing medals, and unforgettable memories', 'hero'),
-('hero.subtitle', 'de', 'Tägliche Yachtrennen am weltberühmten Gardasee mit professionellen Skippern, Rennmedaillen und unvergesslichen Erinnerungen', 'hero'),
-('hero.subtitle', 'fr', 'Expériences quotidiennes de course de yachts sur le célèbre lac de Garde avec des skippers professionnels, des médailles de course et des souvenirs inoubliables', 'hero'),
-('hero.subtitle', 'it', 'Esperienze quotidiane di regata velica sul famoso Lago di Garda con skipper professionali, medaglie di regata e ricordi indimenticabili', 'hero'),
-('hero.subtitle', 'es', 'Experiencias diarias de regatas de yates en el mundialmente famoso Lago de Garda con patrones profesionales, medallas de regata y recuerdos inolvidables', 'hero'),
-('hero.subtitle', 'pl', 'Codzienne doświadczenia wyścigów jachtowych na słynnym jeziorze Garda z profesjonalnymi sternikami, medalami wyścigowymi i niezapomnianymi wspomnieniami', 'hero'),
-('hero.subtitle', 'he', 'חוויות יומיות של מירוצי יאכטות באגם גארדה המפורסם עם רבני חובל מקצועיים, מדליות מירוץ וזכרונות בלתי נשכחים', 'hero'),
-('hero.subtitle', 'ru', 'Ежедневные парусные гонки на всемирно известном озере Гарда с профессиональными шкиперами, медалями и незабываемыми воспоминаниями', 'hero')
+('hero.subtitle', 'en', 'Daily yacht racing on world-famous Lake Garda with professional skippers for an **unforgettable experience**.', 'hero'),
+('hero.subtitle', 'de', 'Tägliche **Segelregatten** auf dem weltberühmten Gardasee mit professionellen Skippern für **unvergessliche Erlebnisse**.', 'hero'),
+('hero.subtitle', 'fr', '**Régates quotidiennes** sur le célèbre lac de Garde avec des skippers professionnels pour des **souvenirs inoubliables**.', 'hero'),
+('hero.subtitle', 'it', '**Regate giornaliere** sul celebre Lago di Garda con skipper professionisti per **ricordi indimenticabili**.', 'hero'),
+('hero.subtitle', 'es', '**Regatas diarias** en el mundialmente famoso Lago de Garda con skippers profesionales para una **experiencia inolvidable**.', 'hero'),
+('hero.subtitle', 'pl', 'Codzienne **regaty** na słynnym Jeziorze Garda z profesjonalnymi skiperami – **gwarancja niezapomnianych wrażeń**!', 'hero'),
+('hero.subtitle', 'he', 'רגאטות יומיות באגם גארדה המפורסם עם סקיפרים מקצועיים **לחוויה בלתי נשכחת**.', 'hero'),
+('hero.subtitle', 'ru', 'Ежедневные **парусные регаты** на всемирно известном озере Гарда с профессиональными шкиперами — **незабываемые впечатления**!', 'hero')
 
 ON CONFLICT (key, language_code) DO NOTHING;
 

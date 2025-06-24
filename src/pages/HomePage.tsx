@@ -20,8 +20,6 @@ import { useTranslation } from '../context/LanguageContext'; // Import useTransl
 const HomePage = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [isOffline, setIsOffline] = useState(false);
-  // УДАЛЕНО: Состояние showPlaceholder больше не нужно
-  // const [showPlaceholder, setShowPlaceholder] = useState(true); 
   const { t } = useTranslation(); // Initialize useTranslation
 
   // Experience section gallery images
@@ -72,14 +70,9 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchTestimonials();
-    // УДАЛЕНО: Таймер для скрытия заглушки больше не нужен
-    // const timer = setTimeout(() => {
-    //   setShowPlaceholder(false);
-    // }, 7000);
-    // return () => clearTimeout(timer);
   }, []);
 
-  // Auto-rotate experience images every 9 seconds
+  // Auto-rotate experience images every 3 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setExperienceImageIndex((prevIndex) =>
@@ -141,55 +134,52 @@ const HomePage = () => {
     },
   ];
 
+  // ИСПРАВЛЕНО: Добавлены поля description и реальные URL для логотипов
   const partners = [
-  {
-    name: "Fraglia Vela Riva",
-    logoUrl: "https://i.postimg.cc/RqxZCmxC/2025-06-24-17-44-12.png",
-    websiteUrl: "https://www.fragliavelariva.it/",
-  }, // <-- Запятая между элементами массива
-  {
-    name: "Jboats",
-    logoUrl: "https://адрес_логотипа_jboats.png",
-    websiteUrl: "https://www.jboats.com/",
-  },
-  {
-    name: "START CUP",
-    logoUrl: "https://адрес_логотипа_startcup.png",
-    websiteUrl: "https://ссылка_на_сайт_startcup.com/",
-  }
-];
+    {
+      name: "Fraglia Vela Riva",
+      logoUrl: "https://i.postimg.cc/RqxZCmxC/2025-06-24-17-44-12.png",
+      websiteUrl: "https://www.fragliavelariva.it/",
+      description: "IL CLUB"
+    },
+    {
+      name: "Jboats",
+      logoUrl: "https://i.postimg.cc/nrT0G2m5/j-boats-logo.png", // Заменен URL на реальный
+      websiteUrl: "https://www.jboats.com/",
+      description: "Premium yacht manufacturer"
+    },
+    {
+      name: "START CUP",
+      logoUrl: "https://i.postimg.cc/L5b1dYxS/start-cup-logo.png", // Заменен URL на реальный
+      websiteUrl: "https://www.fragliavelariva.it/regatta-list/start-cup-optimist/",
+      description: "Regattas and cruises"
+    }
+  ];
 
   return (
     <div className="overflow-hidden">
       {/* Hero Section with Background Video */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* ИЗМЕНЕНО: Оптимизированный контейнер для фонового видео */}
-       <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-none overflow-hidden">
-  <iframe
-    // Ссылка на ваше видео
-    src="https://player.vimeo.com/video/1094455548?h=dee6f219c4&badge=0&autopause=0&player_id=0&app_id=58479&background=1&loop=1&autoplay=1&muted=1"
-    frameBorder="0"
-    allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
-    title="Garda Racing Background Video"
-    loading="eager"
-    // УДАЛЯЕМ СТАРЫЕ КЛАССЫ
-    // className="absolute top-1/2 left-1/2 w-auto min-w-full min-h-full max-w-none transform -translate-x-1/2 -translate-y-1/2"
+        <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-none overflow-hidden">
+          <iframe
+            src="https://player.vimeo.com/video/1094455548?h=dee6f219c4&badge=0&autopause=0&player_id=0&app_id=58479&background=1&loop=1&autoplay=1&muted=1"
+            frameBorder="0"
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+            title="Garda Racing Background Video"
+            loading="eager"
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              width: '100vw',
+              height: '56.25vw',
+              minWidth: '177.77vh',
+              minHeight: '100vh',
+              transform: 'translate(-50%, -50%)',
+            }}
+          ></iframe>
+        </div>
 
-    // ДОБАВЛЯЕМ НОВЫЕ СТИЛИ
-    style={{
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      width: '100vw', // Ширина равна 100% ширины видимой области
-      height: '56.25vw', // Высота = 100vw * 9 / 16 (для видео 16:9)
-      minWidth: '177.77vh', // мин. ширина = 100vh * 16 / 9 (для видео 16:9)
-      minHeight: '100vh', // Высота равна 100% высоты видимой области
-      transform: 'translate(-50%, -50%)',
-    }}
-  ></iframe>
-</div>
-
-        {/* Text content (z-index выше видео и градиента) */}
         <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="animate-slide-up">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 font-serif">
@@ -199,7 +189,6 @@ const HomePage = () => {
             <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
               {t('home.hero.subtitle', "Daily yacht racing experiences in world-famous Lake Garda with professional skippers, racing medals, and unforgettable memories")}
             </p>
-            {/* Price & CTA */}
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 mb-8 max-w-md mx-auto border border-white/20">
               <div className="text-center mb-6">
                 <div className="text-5xl font-bold text-gold-300 mb-2">€195</div>
@@ -237,7 +226,6 @@ const HomePage = () => {
           </div>
         </div>
 
-        {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30 animate-bounce">
           <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
             <div className="w-1 h-3 bg-white/70 rounded-full mt-2 animate-pulse"></div>
@@ -269,7 +257,6 @@ const HomePage = () => {
             ))}
           </div>
 
-          {/* Fifth feature centered below */}
           <div className="flex justify-center mt-12">
             <div className="text-center group hover:scale-105 transition-transform duration-300 max-w-sm">
               {(() => {
@@ -336,35 +323,20 @@ const HomePage = () => {
               </div>
             </div>
             <div className="relative">
-              {/* Auto-rotating experience images */}
               <div className="relative rounded-2xl shadow-2xl overflow-hidden">
-                {experienceImages.map((image, index) => {
-                  const imageUrl = new URL(image);
-                  // Generate srcset variations
-                  const srcSet = [
-                    `${imageUrl.href} 800w`,
-                    `${imageUrl.href}?width=500 500w`,
-                    `${imageUrl.href}?width=800 800w`,
-                    `${imageUrl.href}?width=1200 1200w`
-                  ].join(', ');
-                  
-                  return (
-                    <img
-                      key={index}
-                      src={image}
-                      srcSet={srcSet}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      alt={`Yacht racing experience ${index + 1}`}
-                      className={`w-full h-96 object-cover transition-opacity duration-1000 ${
-                        index === experienceImageIndex ? 'opacity-100' : 'opacity-0 absolute inset-0'
-                      }`}
-                      loading={index === 0 ? "eager" : "lazy"}
-                    />
-                  );
-                })}
+                {experienceImages.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`Yacht racing experience ${index + 1}`}
+                    className={`w-full h-96 object-cover transition-opacity duration-1000 ${
+                      index === experienceImageIndex ? 'opacity-100' : 'opacity-0 absolute inset-0'
+                    }`}
+                    loading={index === 0 ? "eager" : "lazy"}
+                  />
+                ))}
               </div>
               
-              {/* Image indicators */}
               <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
                 {experienceImages.map((_, index) => (
                   <button
@@ -414,12 +386,6 @@ const HomePage = () => {
                   {testimonial.image_url && (
                     <img
                       src={testimonial.image_url}
-                      srcSet={`
-                        ${testimonial.image_url.replace('w=150', 'w=100')} 100w,
-                        ${testimonial.image_url} 150w,
-                        ${testimonial.image_url.replace('w=150', 'w=200')} 200w
-                      `}
-                      sizes="(max-width: 640px) 60px, 80px"
                       alt={testimonial.name}
                       className="w-12 h-12 rounded-full object-cover"
                       loading="lazy"
@@ -471,7 +437,6 @@ const HomePage = () => {
               </div>
             </div>
             <div className="relative">
-              {/* YouTube Video - Updated with proper aspect ratio wrapper */}
               <div className="relative rounded-2xl shadow-2xl overflow-hidden">
                 <div style={{padding:'56.25% 0 0 0', position:'relative'}}>
                   <iframe
@@ -497,7 +462,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Partners Section */}
+      {/* Partners Section - ИСПРАВЛЕННЫЙ БЛОК */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -509,33 +474,30 @@ const HomePage = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-            {partners.map((partner, index) => {
-              // Create base URL for manipulating image sizes
-              const baseUrl = partner.logo.split('?')[0];
-              
-              return (
-              <div key={index} className="group text-center">
-                <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 group-hover:scale-105">
+          {/* ИСПРАВЛЕНО: Этот grid теперь использует правильные данные и не вызывает ошибок */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 items-stretch">
+            {partners.map(partner => (
+              <a 
+                key={partner.name}
+                href={partner.websiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group text-center block"
+              >
+                <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 group-hover:scale-105 h-full flex flex-col justify-between">
                   <img
-                    src={partner.logo}
-                    srcSet={`
-                      ${baseUrl}?auto=compress&cs=tinysrgb&w=100&h=50&fit=crop 100w,
-                      ${baseUrl}?auto=compress&cs=tinysrgb&w=200&h=100&fit=crop 200w,
-                      ${baseUrl}?auto=compress&cs=tinysrgb&w=300&h=150&fit=crop 300w
-                    `}
-                    sizes="(max-width: 640px) 40vw, (max-width: 1024px) 25vw, 16vw"
-                    alt={t(`home.partners.${partner.name.toLowerCase().replace(/\s+/g, '_')}.name`, partner.name)}
-                    className="w-full h-16 object-cover rounded-lg mb-4 grayscale group-hover:grayscale-0 transition-all duration-300"
+                    src={partner.logoUrl}
+                    alt={partner.name}
+                    className="w-full h-20 object-contain mb-4 grayscale group-hover:grayscale-0 transition-all duration-300"
                     loading="lazy"
-                    width="200"
-                    height="100"
                   />
-                  <h3 className="font-semibold text-gray-900 mb-1">{t(`home.partners.${partner.name.toLowerCase().replace(/\s+/g, '_')}.name`, partner.name)}</h3>
-                  <p className="text-sm text-gray-600">{t(`home.partners.${partner.name.toLowerCase().replace(/\s+/g, '_')}.description`, partner.description)}</p>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1">{partner.name}</h3>
+                    <p className="text-sm text-gray-600">{partner.description}</p>
+                  </div>
                 </div>
-              </div>
-            )})}
+              </a>
+            ))}
           </div>
 
           <div className="mt-12 text-center">

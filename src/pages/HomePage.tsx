@@ -155,20 +155,30 @@ const HomePage = () => {
       {/* Hero Section with Background Video */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* ИЗМЕНЕНО: Оптимизированный контейнер для фонового видео */}
-        <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-none">
-          <iframe
-            src="https://player.vimeo.com/video/1094455548?h=dee6f219c4&badge=0&autopause=0&player_id=0&app_id=58479&background=1&loop=1&autoplay=1&muted=1"
-            frameBorder="0"
-            allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
-            // Классы для адаптивного "покрытия" фона
-            className="absolute top-1/2 left-1/2 w-auto min-w-full min-h-full max-w-none transform -translate-x-1/2 -translate-y-1/2"
-            title="Garda Racing Background Video"
-            loading="eager"
-          ></iframe>
-        </div>
+       <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-none overflow-hidden">
+  <iframe
+    // Ссылка на ваше видео
+    src="https://player.vimeo.com/video/1094455548?h=dee6f219c4&badge=0&autopause=0&player_id=0&app_id=58479&background=1&loop=1&autoplay=1&muted=1"
+    frameBorder="0"
+    allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+    title="Garda Racing Background Video"
+    loading="eager"
+    // УДАЛЯЕМ СТАРЫЕ КЛАССЫ
+    // className="absolute top-1/2 left-1/2 w-auto min-w-full min-h-full max-w-none transform -translate-x-1/2 -translate-y-1/2"
 
-        {/* УДАЛЕНО: Блок с фото-заглушкой и его наложениями */}
-
+    // ДОБАВЛЯЕМ НОВЫЕ СТИЛИ
+    style={{
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      width: '100vw', // Ширина равна 100% ширины видимой области
+      height: '56.25vw', // Высота = 100vw * 9 / 16 (для видео 16:9)
+      minWidth: '177.77vh', // мин. ширина = 100vh * 16 / 9 (для видео 16:9)
+      minHeight: '100vh', // Высота равна 100% высоты видимой области
+      transform: 'translate(-50%, -50%)',
+    }}
+  ></iframe>
+</div>
 
         {/* Text content (z-index выше видео и градиента) */}
         <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

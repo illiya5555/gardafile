@@ -123,6 +123,8 @@ serve(async (req) => {
           .insert({
             user_id: user.id,
             customer_id: customerId,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
           });
 
         if (insertError) {

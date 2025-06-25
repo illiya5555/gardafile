@@ -3,27 +3,47 @@ import { Link } from 'react-router-dom';
 import { CheckCircle, Calendar, Mail, Phone, ArrowRight, Check } from 'lucide-react';
 import { useTranslation } from '../context/LanguageContext';
 
-// Conversion tracking function
-const trackConversion = () => {
-  // Check if gtag is available
+// Google Ads conversion tracking function
+const trackGoogleConversion = (transaction_id) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'conversion', {
       send_to: 'AW-17237804462/WJ2PCMqk7ZIZEL33x5Q9',
       value: 195.0,
       currency: 'EUR',
-      transaction_id: Date.now().toString().slice(-6)
+      transaction_id: transaction_id
     });
-    console.log('Conversion tracked successfully');
+    console.log('Google Ads conversion tracked successfully');
   }
 };
+
+// Meta Pixel (Facebook) conversion tracking function
+const trackFbPixelConversion = (transaction_id) => {
+  // Check if the fbq function is available
+  if (typeof window !== 'undefined' && window.fbq) {
+    // Fire the 'Purchase' event for tracking a successful transaction
+    window.fbq('track', 'Purchase', {
+      value: 195.0,
+      currency: 'EUR',
+      content_ids: [transaction_id], // Use the transaction_id for deduplication
+      content_type: 'product'
+    });
+    console.log('Meta Pixel conversion (Purchase) tracked successfully');
+  }
+};
+
 
 const SuccessPage = () => {
   const { t } = useTranslation();
   
-  // Track conversion when component mounts
+  // Create a single, unique transaction ID when the component mounts
+  const transactionId = React.useMemo(() => Date.now().toString(), []);
+
+  // Track conversions when the component mounts
   React.useEffect(() => {
-    trackConversion();
-  }, []);
+    // Pass the same transaction ID to both tracking systems for consistency
+    trackGoogleConversion(transactionId);
+    trackFbPixelConversion(transactionId);
+  }, [transactionId]); // This effect runs once when the component mounts
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -93,7 +113,7 @@ const SuccessPage = () => {
 
           <div className="bg-primary-50 rounded-lg p-4 mb-8">
             <p className="text-sm text-primary-800">
-              <strong>{t('success.booking_reference', 'Booking Reference:')}</strong> GR-{Date.now().toString().slice(-6)}
+              <strong>{t('success.booking_reference', 'Booking Reference:')}</strong> GR-{transactionId.slice(-6)}
             </p>
             <p className="text-sm text-primary-700 mt-1">
               {t('success.reference_note', 'Please keep this reference for your records.')}

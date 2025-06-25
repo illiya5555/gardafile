@@ -101,19 +101,20 @@ serve(async (req) => {
     // Handle authenticated vs. non-authenticated users differently
     if (user) {
       // Authenticated user - check if customer exists in database
-      const { data: customerData, error: fetchError } = await supabaseClient
-        .from('stripe_customers')
-        .select('customer_id')
-        .eq('user_id', user.id)
+      const { data: coreUserData, error: fetchError } = await supabaseClient
+        .from('users_core') // <--- ИЗМЕНЕНО
+        .select('stripe_customer_id') // <--- ИЗМЕНЕНО
+        .eq('id', user.id) // <--- ИЗМЕНЕНО
         .maybeSingle();
       
       if (fetchError) {
-        console.error('Error fetching customer data:', fetchError);
+        console.error('Error fetching user core data:', fetchError);
+        // Не прерываем выполнение, так как можем создать нового клиента
       }
       
-      if (customerData?.customer_id) {
+      if (coreUserData?.stripe_customer_id) {
         // Customer exists, use existing customer ID
-        customerId = customerData.customer_id;
+        customerId = coreUserData.stripe_customer_id; // <--- ИЗМЕНЕНО
         console.log('Using existing Stripe customer ID for user:', user.id);
       } else {
         // Create new customer in Stripe
@@ -127,28 +128,19 @@ serve(async (req) => {
 
         customerId = stripeCustomer.id;
 
-        // Save customer to our database
+        // Save/update customer ID in our users_core table
         const { error: upsertError } = await supabaseClient
-          .from('stripe_customers')
+          .from('users_core') // <--- ИЗМЕНЕНО
           .upsert({
-            user_id: user.id,
-            customer_id: customerId,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
+            id: user.id,
+            stripe_customer_id: customerId,
           }, {
-            onConflict: 'user_id'
+            onConflict: 'id' // <--- ИЗМЕНЕНО
           });
 
         if (upsertError) {
-          console.error('Error saving customer to database:', upsertError);
-          console.error('Details:', JSON.stringify(upsertError));
-          return new Response(
-            JSON.stringify({ error: 'Failed to save customer data' }),
-            {
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-              status: 500,
-            }
-          )
+          // Логируем ошибку, но не прерываем процесс оплаты
+          console.error('Error saving customer ID to users_core:', upsertError);
         }
       }
     } else {

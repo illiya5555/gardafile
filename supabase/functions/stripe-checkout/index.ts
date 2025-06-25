@@ -1,6 +1,3 @@
-// --- Функция: stripe-checkout ---
-// Назначение: Создает сессию оплаты Stripe и возвращает URL для редиректа.
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import Stripe from 'https://esm.sh/stripe@14.5.0'
@@ -18,11 +15,10 @@ serve(async (req) => {
   }
 
   try {
-    // --- ИЗМЕНЕНИЯ ЗДЕСЬ ---
-    // Validate required environment variables using new names
+    // Validate required environment variables
     const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
-    const supabaseUrl = Deno.env.get('PROJECT_URL'); // Было: SUPABASE_URL
-    const supabaseAnonKey = Deno.env.get('PROJECT_ANON_KEY'); // Было: SUPABASE_ANON_KEY
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY');
 
     if (!stripeSecretKey) {
       console.error('STRIPE_SECRET_KEY environment variable is not set');
@@ -36,8 +32,7 @@ serve(async (req) => {
     }
 
     if (!supabaseUrl || !supabaseAnonKey) {
-      // Обновлено сообщение об ошибке для ясности
-      console.error('PROJECT_URL or PROJECT_ANON_KEY environment variables are not set');
+      console.error('Supabase environment variables are not set');
       return new Response(
         JSON.stringify({ error: 'Database configuration is missing. Please contact support.' }),
         {
@@ -46,7 +41,6 @@ serve(async (req) => {
         }
       )
     }
-    // --- КОНЕЦ ИЗМЕНЕНИЙ ---
 
     // Initialize Stripe
     const stripe = new Stripe(stripeSecretKey, {

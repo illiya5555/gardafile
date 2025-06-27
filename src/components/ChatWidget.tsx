@@ -1,6 +1,6 @@
-// ChatWidget.tsx
+// ChatWidget.tsx (ИСПРАВЛЕННЫЙ КОД)
 
-import React, { useState, useEffect, useRef } from 'react'; // Добавили useEffect и useRef
+import React, { useState, useEffect, useRef } from 'react';
 import { MessageSquare, X, Send } from 'lucide-react';
 import { useTranslation } from '../context/LanguageContext';
 
@@ -11,13 +11,8 @@ interface Message {
   timestamp: Date;
 }
 
-// <<< НАЧАЛО ИЗМЕНЕНИЙ 1: Константы для API >>>
-// Вынесем URL и ключ в константы для удобства.
-// ВАЖНО: Хранить ключ в коде фронтенда небезопасно для продакшена!
 const API_URL = 'https://genai-app-animalinformationchatbot-1-175036711755-444678468039.us-central1.run.app';
-const API_KEY = 'vk4lll3o0neshm7b'; // Если ваш API его требует
-// <<< КОНЕЦ ИЗМЕНЕНИЙ 1 >>>
-
+const API_KEY = 'vk4lll3o0neshm7b';
 
 const ChatWidget = () => {
   const { t } = useTranslation();
@@ -31,8 +26,6 @@ const ChatWidget = () => {
     }
   ]);
   const [inputText, setInputText] = useState('');
-  
-  // <<< НАЧАЛО ИЗМЕНЕНИЙ 2: Состояние загрузки и ссылка на контейнер сообщений >>>
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -41,11 +34,11 @@ const ChatWidget = () => {
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-  // <<< КОНЕЦ ИЗМЕНЕНИЙ 2 >>>
+    if (isOpen) {
+        setTimeout(() => scrollToBottom(), 100);
+    }
+  }, [messages, isOpen]);
 
-  // <<< НАЧАЛО ИЗМЕНЕНИЙ 3: Обновленная функция отправки сообщения >>>
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedInput = inputText.trim();
@@ -63,24 +56,21 @@ const ChatWidget = () => {
     setIsLoading(true);
 
     try {
-      // Отправляем запрос к вашему AI-ассистенту
-      const response = await fetch(`${API_URL}?key=${API_KEY}`, { // Добавляем ключ, если нужно
+      const response = await fetch(`${API_URL}?key=${API_KEY}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        // Предполагаем, что ваш API ожидает JSON с полем "message" или "prompt"
-        // Если ваш API ожидает другой формат, измените тело запроса.
         body: JSON.stringify({ prompt: trimmedInput }), 
       });
 
       if (!response.ok) {
         throw new Error(`API Error: ${response.statusText}`);
       }
-
-      // Предполагаем, что API возвращает JSON с полем "reply" или "text"
+      
       const data = await response.json();
-      const botReply = data.reply || data.text || "Sorry, I couldn't process that.";
+      // Проверяем разные возможные ключи в ответе API
+      const botReply = data.reply || data.response || data.text || "Sorry, I couldn't process that.";
 
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -103,11 +93,10 @@ const ChatWidget = () => {
       setIsLoading(false);
     }
   };
-  // <<< КОНЕЦ ИЗМЕНЕНИЙ 3 >>>
 
   return (
     <>
-      {/* Chat Button (без изменений) */}
+      {/* Chat Button */}
       <button
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-6 right-6 z-50 bg-primary-600 hover:bg-primary-700 text-white p-3 md:p-4 rounded-full shadow-lg transition-all duration-300 ${
@@ -121,7 +110,7 @@ const ChatWidget = () => {
       {/* Chat Window */}
       {isOpen && (
         <div className="fixed bottom-6 right-6 z-50 w-72 sm:w-80 h-96 bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col">
-          {/* Header (без изменений) */}
+          {/* Header */}
           <div className="bg-primary-600 text-white p-3 md:p-4 rounded-t-lg flex justify-between items-center">
             <h3 className="font-semibold text-sm md:text-base">{t('chat.support_title', 'Garda Racing Support')}</h3>
             <button
@@ -135,27 +124,48 @@ const ChatWidget = () => {
 
           {/* Messages */}
           <div className="flex-1 p-3 md:p-4 overflow-y-auto space-y-2 md:space-y-3">
+            {/* === НАЧАЛО ИСПРАВЛЕННОГО БЛОКА === */}
             {messages.map((message) => (
-              /* ... ваш код для отображения сообщений остался без изменений ... */
+              <div
+                key={message.id}
+                className={`flex ${message.isBot ? 'justify-start' : 'justify-end'}`}
+              >
+                <div
+                  className={`max-w-[80%] p-2 md:p-3 rounded-lg ${
+                    message.isBot
+                      ? 'bg-gray-100 text-gray-800'
+                      : 'bg-primary-600 text-white'
+                  }`}
+                >
+                  <p className="text-xs md:text-sm">{message.text}</p>
+                  <p className={`text-xs mt-1 ${
+                    message.isBot ? 'text-gray-500' : 'text-primary-100'
+                  }`}>
+                    {message.timestamp.toLocaleTimeString([], { 
+                      hour: '2-digit', 
+                      minute: '2-digit' 
+                    })}
+                  </p>
+                </div>
+              </div>
             ))}
-            
-            {/* <<< НАЧАЛО ИЗМЕНЕНИЙ 4: Индикатор загрузки >>> */}
+            {/* === КОНЕЦ ИСПРАВЛЕННОГО БЛОКА === */}
+
             {isLoading && (
               <div className="flex justify-start">
                 <div className="bg-gray-100 text-gray-800 p-2 md:p-3 rounded-lg">
                   <p className="text-xs md:text-sm flex items-center">
-                    <span className="animate-pulse">●</span>
-                    <span className="animate-pulse delay-150">●</span>
-                    <span className="animate-pulse delay-300">●</span>
+                    <span className="animate-pulse">●</span> 
+                    <span className="animate-pulse [animation-delay:0.2s]">●</span> 
+                    <span className="animate-pulse [animation-delay:0.4s]">●</span>
                   </p>
                 </div>
               </div>
             )}
-            {/* <<< КОНЕЦ ИЗМЕНЕНИЙ 4 >>> */}
-            <div ref={messagesEndRef} /> {/* Пустой div для автоскролла */}
+            <div ref={messagesEndRef} />
           </div>
 
-          {/* Input (почти без изменений) */}
+          {/* Input */}
           <form onSubmit={handleSendMessage} className="p-2 md:p-4 border-t border-gray-200">
             <div className="flex space-x-2">
               <input
@@ -165,13 +175,13 @@ const ChatWidget = () => {
                 placeholder={t('chat.placeholder', 'Type your message...')}
                 className="flex-1 px-2 md:px-3 py-1 md:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-xs md:text-sm"
                 aria-label="Type a message"
-                disabled={isLoading} // Блокируем ввод во время загрузки
+                disabled={isLoading}
               />
               <button
                 type="submit"
                 className="bg-primary-600 hover:bg-primary-700 text-white p-1 md:p-2 rounded-lg transition-colors disabled:opacity-50"
                 aria-label="Send message"
-                disabled={isLoading} // Блокируем кнопку во время загрузки
+                disabled={isLoading}
               >
                 <Send className="h-3 w-3 md:h-4 md:w-4" />
               </button>

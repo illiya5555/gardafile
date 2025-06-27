@@ -1,6 +1,4 @@
-// ChatWidget.tsx (ИСПРАВЛЕННЫЙ КОД)
-
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { MessageSquare, X, Send } from 'lucide-react';
 import { useTranslation } from '../context/LanguageContext';
 
@@ -10,9 +8,6 @@ interface Message {
   isBot: boolean;
   timestamp: Date;
 }
-
-const API_URL = 'https://genai-app-animalinformationchatbot-1-175036711755-444678468039.us-central1.run.app';
-const API_KEY = 'vk4lll3o0neshm7b';
 
 const ChatWidget = () => {
   const { t } = useTranslation();
@@ -26,72 +21,31 @@ const ChatWidget = () => {
     }
   ]);
   const [inputText, setInputText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    if (isOpen) {
-        setTimeout(() => scrollToBottom(), 100);
-    }
-  }, [messages, isOpen]);
-
-  const handleSendMessage = async (e: React.FormEvent) => {
+  const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmedInput = inputText.trim();
-    if (!trimmedInput || isLoading) return;
+    if (!inputText.trim()) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: trimmedInput,
+      text: inputText,
       isBot: false,
       timestamp: new Date()
     };
 
     setMessages(prev => [...prev, userMessage]);
     setInputText('');
-    setIsLoading(true);
 
-    try {
-      const response = await fetch(`${API_URL}?key=${API_KEY}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ prompt: trimmedInput }), 
-      });
-
-      if (!response.ok) {
-        throw new Error(`API Error: ${response.statusText}`);
-      }
-      
-      const data = await response.json();
-      // Проверяем разные возможные ключи в ответе API
-      const botReply = data.reply || data.response || data.text || "Sorry, I couldn't process that.";
-
+    // Simulate bot response
+    setTimeout(() => {
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: botReply,
+        text: t('chat.auto_response', 'Thank you for your message! Our team will get back to you shortly. For immediate assistance, please call +39 344 777 00 77.'),
         isBot: true,
         timestamp: new Date()
       };
       setMessages(prev => [...prev, botMessage]);
-
-    } catch (error) {
-      console.error("Failed to fetch bot response:", error);
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: t('chat.error_message', 'Sorry, something went wrong. Please try again later.'),
-        isBot: true,
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
-    }
+    }, 1000);
   };
 
   return (
@@ -124,7 +78,6 @@ const ChatWidget = () => {
 
           {/* Messages */}
           <div className="flex-1 p-3 md:p-4 overflow-y-auto space-y-2 md:space-y-3">
-            {/* === НАЧАЛО ИСПРАВЛЕННОГО БЛОКА === */}
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -149,20 +102,6 @@ const ChatWidget = () => {
                 </div>
               </div>
             ))}
-            {/* === КОНЕЦ ИСПРАВЛЕННОГО БЛОКА === */}
-
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-gray-100 text-gray-800 p-2 md:p-3 rounded-lg">
-                  <p className="text-xs md:text-sm flex items-center">
-                    <span className="animate-pulse">●</span> 
-                    <span className="animate-pulse [animation-delay:0.2s]">●</span> 
-                    <span className="animate-pulse [animation-delay:0.4s]">●</span>
-                  </p>
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
           </div>
 
           {/* Input */}
@@ -175,13 +114,11 @@ const ChatWidget = () => {
                 placeholder={t('chat.placeholder', 'Type your message...')}
                 className="flex-1 px-2 md:px-3 py-1 md:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-xs md:text-sm"
                 aria-label="Type a message"
-                disabled={isLoading}
               />
               <button
                 type="submit"
-                className="bg-primary-600 hover:bg-primary-700 text-white p-1 md:p-2 rounded-lg transition-colors disabled:opacity-50"
+                className="bg-primary-600 hover:bg-primary-700 text-white p-1 md:p-2 rounded-lg transition-colors"
                 aria-label="Send message"
-                disabled={isLoading}
               >
                 <Send className="h-3 w-3 md:h-4 md:w-4" />
               </button>
